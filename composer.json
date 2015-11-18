@@ -18,21 +18,14 @@
     ],
     "autoload": {
         "psr-4": {
-            "Paynl\\Core\\": ""
-        },
-        "files": ["registration.php"]
-    },
-     "repositories": {
-        "magento": {
-            "type": "composer",
-            "url": "http://packages.magento.com"
+            "Paynl\\Payment\\": ""
         }
-    },
+    },    
     "extra": {
         "map": [
             [
                 "*",
-                "Paynl/Core"
+                "Paynl/Payment"
             ]
         ]
     }

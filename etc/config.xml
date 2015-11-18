@@ -20,10 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <default>
         <payment>
             <paynl_core>
-                <active>1</active>
-                <title>Pay.nl Instellingen</title>
-                <payment_action>true</payment_action>
-                <group>online</group>
+
             </paynl_core>
         </payment>
     </default>

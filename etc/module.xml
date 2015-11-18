@@ -18,5 +18,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 <config>
-   <module name="Paynl_Core" setup_version="2.0.0"/>
+   <module name="Paynl_Payment" setup_version="2.0.0"/>
 </config>

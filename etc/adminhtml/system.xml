@@ -18,36 +18,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../Config/etc/system_file.xsd">
-    <system>
+    <system>        
         <section id="payment">
             <group id="paynl" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Pay.nl Instellingen</label>
-                <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Enabled</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                </field>
-                <field id="title" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Title</label>
-                </field>                              
-                <field id="allowspecific" translate="label" type="allowspecific" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Payment from Applicable Countries</label>
-                    <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
-                </field>
-                <field id="specificcountry" translate="label" type="multiselect" sortOrder="41" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Payment from Specific Countries</label>
-                    <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
-                    <can_be_empty>1</can_be_empty>
-                </field>
+                <label>Pay.nl Instellingen</label>                
                 <field id="apitoken" translate="label" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>API-token</label>
                 </field>
                 <field id="serviceid" translate="label" sortOrder="51" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>ServiceId</label>
                 </field>
-                <field id="sort_order" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Sort Order</label>
-                    <frontend_class>validate-number</frontend_class>
-                </field>
+                <group id="paynl_paymentmethods" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Betaalmethoden</label>                      
+                    <include path="Paynl_Payment::paymentmethods/ideal.xml"/>
+                </group>
             </group>
         </section>
     </system>
