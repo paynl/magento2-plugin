@@ -19,38 +19,60 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../Config/etc/system_include.xsd">
 
-	<group id="paynl_ideal" sortOrder="102" showInDefault="1" showInWebsite="1" showInStore="1">                       
-		<label>iDEAL</label>
-		<field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0">
-			<label>Enabled</label>
-			<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>    
-			<config_path>payment/paynl_ideal/active</config_path>
-		</field>
-		<field id="title" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-			<label>Title</label>
-			<config_path>payment/paynl_ideal/title</config_path>
-		</field>
-		<field id="allowed_carrier" translate="label" type="multiselect" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
-			<label>Allowed Shipping Methods</label>
-			<source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
-			<config_path>payment/paynl_ideal/allowed_carrier</config_path>
-		</field>
-		<field id="allowspecific" translate="label" type="allowspecific" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
-			<label>Payment from Applicable Countries</label>
-			<source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
-			<config_path>payment/paynl_ideal/allowspecific</config_path>
-		</field>
-		<field id="specificcountry" translate="label" type="multiselect" sortOrder="41" showInDefault="1" showInWebsite="1" showInStore="0">
-			<label>Payment from Specific Countries</label>
-			<source_model>Magento\Directory\Model\Config\Source\Country</source_model>
-			<can_be_empty>1</can_be_empty>
-			<config_path>payment/paynl_ideal/specificcountry</config_path>
-		</field>
-		<field id="sort_order" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="0">
-			<label>Sort Order</label>
-			<frontend_class>validate-number</frontend_class>
-			<config_path>payment/paynl_ideal/sort_order</config_path>
-		</field>
-	</group>
+    <group id="paynl_ideal" sortOrder="102" showInDefault="1" showInWebsite="1" showInStore="1">     
+        <frontend_model>Paynl\Payment\Block\Adminhtml\System\Config\Fieldset\Expanded</frontend_model>	
+        <label>iDEAL</label>
+        <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0">
+            <label>Enabled</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>    
+            <config_path>payment/paynl_ideal/active</config_path>
+        </field>
+        <field id="title" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Title</label>
+            <config_path>payment/paynl_ideal/title</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+        <field id="order_status" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+            <label>New Order Status</label>
+            <source_model>Paynl\Payment\Model\Config\Source\Order\Status\PendingPayment</source_model>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+        <field id="allowspecific" translate="label" type="allowspecific" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
+            <label>Payment from Applicable Countries</label>
+            <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
+            <config_path>payment/paynl_ideal/allowspecific</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+        <field id="specificcountry" translate="label" type="multiselect" sortOrder="41" showInDefault="1" showInWebsite="1" showInStore="0">
+            <label>Payment from Specific Countries</label>
+            <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
+            <can_be_empty>1</can_be_empty>
+            <config_path>payment/paynl_ideal/specificcountry</config_path>
+            <depends>
+                <field id="allowspecific">1</field>
+                <field id="active">1</field>
+            </depends>
+        </field>
+        <field id="instructions" translate="label" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Instructions</label>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+        <field id="sort_order" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="0">
+            <label>Sort Order</label>
+            <frontend_class>validate-number</frontend_class>
+            <config_path>payment/paynl_ideal/sort_order</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+    </group>
 </include>
                 

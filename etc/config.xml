@@ -19,9 +19,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../Store/etc/config.xsd">
     <default>
         <payment>
-            <paynl_core>
-
-            </paynl_core>
+            <paynl_ideal>
+                <active>0</active>
+                <title>iDEAL</title>
+                <order_status>pending_payment</order_status>
+                <instructions>Veilig betalen via uw eigen bank</instructions>
+                <payment_action>true</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Ideal</model>
+                <group>online</group>
+            </paynl_ideal>
         </payment>
     </default>
 </config>
