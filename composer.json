@@ -1,0 +1,39 @@
+{
+    "name": "paynl/module-magento2-core",
+    "description": "Pay.nl Magento2 Payment methods",
+    "type": "magento2-module",
+    "require": {
+        "php": "~5.5.0|~5.6.0",
+        "magento/magento-composer-installer": "*",
+        "magento/module-sales": "*",
+        "magento/module-payment": "*",
+        "magento/module-quote": "*",
+        "paynl/sdk": "^1.0"
+    },
+    "authors": [
+        {
+            "name": "Andy Pieters",
+            "email": "andy@pay.nl"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Paynl\\Core\\": ""
+        },
+        "files": ["registration.php"]
+    },
+     "repositories": {
+        "magento": {
+            "type": "composer",
+            "url": "http://packages.magento.com"
+        }
+    },
+    "extra": {
+        "map": [
+            [
+                "*",
+                "Paynl/Core"
+            ]
+        ]
+    }
+}
