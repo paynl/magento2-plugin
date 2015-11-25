@@ -29,5 +29,6 @@ class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod{
     protected $_canOrder = true;
     protected $_canAuthorize = true;
 
+    protected $_formBlockType = 'Paynl\Payment\Block\Form\Default';
     
 }
