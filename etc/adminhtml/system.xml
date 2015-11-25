@@ -17,21 +17,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../Config/etc/system_file.xsd">
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../Config/etc/system_file.xsd">>
     <system>        
         <section id="payment">
             <group id="paynl" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Pay.nl Instellingen</label>                
-                <field id="apitoken" translate="label" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="apitoken" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>API-token</label>
                 </field>
-                <field id="serviceid" translate="label" sortOrder="51" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="serviceid" translate="label" type="text" sortOrder="51" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>ServiceId</label>
                 </field>
                 <group id="paynl_paymentmethods" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
                     <frontend_model>Paynl\Payment\Block\Adminhtml\System\Config\Fieldset\Expanded</frontend_model>
                     <label>Betaalmethoden</label>                      
                     <include path="Paynl_Payment::paymentmethods/ideal.xml"/>
+                    <include path="Paynl_Payment::paymentmethods/mistercash.xml"/>
                 </group>
             </group>
         </section>

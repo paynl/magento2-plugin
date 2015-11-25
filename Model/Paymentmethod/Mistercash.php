@@ -23,9 +23,9 @@ namespace Paynl\Payment\Model\Paymentmethod;
  *
  * @author Andy Pieters <andy@pay.nl>
  */
-class Ideal extends \Paynl\Payment\Model\Paymentmethod\PaymentMethod
+class Mistercash extends \Paynl\Payment\Model\Paymentmethod\PaymentMethod
 {
-    protected $_code = 'paynl_ideal';
+    protected $_code = 'paynl_mistercash';
   
 
 }

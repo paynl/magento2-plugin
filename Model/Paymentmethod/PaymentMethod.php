@@ -1,5 +1,5 @@
 <?php
-/*
+/* 
  * Copyright (C) 2015 Andy Pieters <andy@pay.nl>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,13 +19,15 @@
 namespace Paynl\Payment\Model\Paymentmethod;
 
 /**
- * Description of Ideal
+ * Description of AbstractPaymentMethod
  *
  * @author Andy Pieters <andy@pay.nl>
  */
-class Ideal extends \Paynl\Payment\Model\Paymentmethod\PaymentMethod
-{
-    protected $_code = 'paynl_ideal';
-  
+class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod{
+    protected $_isInitializeNeeded = false;
+    protected $_isGateway = true;
+    protected $_canOrder = true;
+    protected $_canAuthorize = true;
 
+    
 }

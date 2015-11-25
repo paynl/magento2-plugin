@@ -20,14 +20,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <default>
         <payment>
             <paynl_ideal>
-                <active>0</active>
+                <active>1</active>
                 <title>iDEAL</title>
                 <order_status>pending_payment</order_status>
                 <instructions>Veilig betalen via uw eigen bank</instructions>
-                <payment_action>true</payment_action>
+                <payment_action>authorize</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Ideal</model>
                 <group>online</group>
             </paynl_ideal>
+            <paynl_mistercash>
+                <active>1</active>
+                <title>Bancontact Mistercash</title>
+                <order_status>pending_payment</order_status>
+                <instructions>Veilig betalen via uw eigen bank</instructions>
+                <payment_action>authorize</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Mistercash</model>
+                <group>online</group>
+            </paynl_mistercash>
         </payment>
     </default>
 </config>
