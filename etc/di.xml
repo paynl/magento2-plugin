@@ -9,7 +9,7 @@
     <virtualType name="Paynl\Payment\Block\Form\Default" type="Magento\Payment\Block\Form" shared="false">
         <arguments>
             <argument name="data" xsi:type="array">
-                <item name="template" xsi:type="string">Paynl_Payment::form/default.phtml</item>
+                <item name="template" xsi:type="string">Paynl_Payment::form/paynl.phtml</item>
             </argument>
         </arguments>
     </virtualType>

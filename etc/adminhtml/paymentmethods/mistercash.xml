@@ -40,6 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <depends>
                 <field id="active">1</field>
             </depends>
+            <config_path>payment/paynl_mistercash/order_status</config_path>
         </field>
         <field id="allowspecific" translate="label" type="allowspecific" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
             <label>Payment from Applicable Countries</label>
