@@ -30,5 +30,21 @@ class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod{
     protected $_canAuthorize = true;
 
     protected $_formBlockType = 'Paynl\Payment\Block\Form\Default';
+    /**
+     * Sidebar payment info block
+     *
+     * @var string
+     */
+    protected $_infoBlockType = 'Magento\Payment\Block\Info\Instructions';
+
+    /**
+     * Get payment instructions text from config
+     *
+     * @return string
+     */
+    public function getInstructions()
+    {
+        return trim($this->getConfigData('instructions'));
+    }
     
 }
