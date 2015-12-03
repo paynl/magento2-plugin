@@ -25,7 +25,9 @@ namespace Paynl\Payment\Model\Paymentmethod;
  */
 class Mistercash extends \Paynl\Payment\Model\Paymentmethod\PaymentMethod
 {
-    protected $_code = 'paynl_mistercash';
+    protected $_code = 'paynl_payment_mistercash';
   
-
+    public function getPaymentOptionId(){
+        return 436;
+    }
 }

@@ -1,5 +1,5 @@
 <?php
-/* 
+/*
  * Copyright (C) 2015 Andy Pieters <andy@pay.nl>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,19 +23,20 @@ namespace Paynl\Payment\Model\Paymentmethod;
  *
  * @author Andy Pieters <andy@pay.nl>
  */
-class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod{
-    protected $_isInitializeNeeded = false;
-    protected $_isGateway = true;
-    protected $_canOrder = true;
-    protected $_canAuthorize = true;
+abstract class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod
+{
+    protected $_isInitializeNeeded = true;
+    protected $_isGateway          = false;
+    protected $_canOrder           = false;
+    protected $_canAuthorize       = false;
 
-    protected $_formBlockType = 'Paynl\Payment\Block\Form\Default';
+//    protected $_formBlockType = 'Paynl\Payment\Block\Form\Default';
     /**
      * Sidebar payment info block
      *
      * @var string
      */
-    protected $_infoBlockType = 'Magento\Payment\Block\Info\Instructions';
+//    protected $_infoBlockType = 'Magento\Payment\Block\Info\Instructions';
 
     /**
      * Get payment instructions text from config
@@ -46,5 +47,28 @@ class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod{
     {
         return trim($this->getConfigData('instructions'));
     }
-    
+
+    public function initSettings()
+    {
+
+        $storeId = $this->getStore();
+
+        $apitoken  = $this->_scopeConfig->getValue('payment/paynl/apitoken',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
+        $serviceId = $this->_scopeConfig->getValue('payment/paynl/serviceid',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $storeId);
+
+        \Paynl\Config::setApitoken($apitoken);
+        \Paynl\Config::setServiceId($serviceId);
+    }
+
+    abstract function getPaymentOptionId();
+
+    public function initialize($paymentAction, $stateObject)
+    {
+        $state = $this->getConfigData('order_status');
+        $stateObject->setState($state);
+        $stateObject->setStatus($state);
+        $stateObject->setIsNotified(false);
+    }
 }

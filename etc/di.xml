@@ -6,10 +6,10 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../lib/internal/Magento/Framework/ObjectManager/etc/config.xsd">
-    <virtualType name="Paynl\Payment\Block\Form\Default" type="Magento\Payment\Block\Form" shared="false">
+    <virtualType name="Paynl\Payment\Block\Form\Paymentmethod\Default" type="Magento\Payment\Block\Form" shared="false">
         <arguments>
             <argument name="data" xsi:type="array">
-                <item name="template" xsi:type="string">Paynl_Payment::form/paynl.phtml</item>
+                <item name="template" xsi:type="string">Paynl_Payment::form/paymentmethod/default.phtml</item>
             </argument>
         </arguments>
     </virtualType>

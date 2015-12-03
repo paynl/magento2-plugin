@@ -25,7 +25,9 @@ namespace Paynl\Payment\Model\Paymentmethod;
  */
 class Ideal extends \Paynl\Payment\Model\Paymentmethod\PaymentMethod
 {
-    protected $_code = 'paynl_ideal';
+    protected $_code = 'paynl_payment_ideal';
   
-
+    public function getPaymentOptionId(){
+        return 10;
+    }
 }
