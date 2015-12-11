@@ -35,8 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <group id="paynl_paymentmethods" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
                     <frontend_model>Paynl\Payment\Block\Adminhtml\System\Config\Fieldset\Expanded</frontend_model>
                     <label>Betaalmethoden</label>                      
-                    <include path="Paynl_Payment::paymentmethods/ideal.xml"/>
-                    <include path="Paynl_Payment::paymentmethods/mistercash.xml"/>
+                    <include path="Paynl_Payment::paymentmethods.xml"/>
                 </group>
             </group>
         </section>

@@ -13,15 +13,18 @@ define(
             defaults: {
                 template: 'Paynl_Payment/payment/default'
             },
-            /** Redirect to paypal */
-            placeOrderAction: function () {
+            /** Redirect to pay.nl */
+            placeOrderPaynl: function (data, event) {
+
                if (additionalValidators.validate()) {
                     //update payment method information if additional data was changed
                     this.selectPaymentMethod();
                     setPaymentMethodAction(this.messageContainer);
+
                     return false;
                 }
             }
+           
         });
     }
 );

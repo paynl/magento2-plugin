@@ -38,4 +38,25 @@ class Config
     {
        return $this->_scopeConfigInterface->getValue('payment/paynl/testmode') == 1;
     }
+
+    public function getPaymentOptionId($methodCode){
+        return $this->_scopeConfigInterface->getValue('payment/'.$methodCode.'/payment_option_id');
+    }
+
+    /**
+     * Configures the sdk with the API token and serviceId
+     *
+     * @return bool TRUE when config loaded, FALSE when the apitoken or serviceId are empty
+     */
+    public function configureSDK(){
+        $apiToken = $this->getApiToken();
+        $serviceId = $this->getServiceId();
+
+        if(!empty($apiToken) && !empty($serviceId)){
+            \Paynl\Config::setApiToken($apiToken);
+            \Paynl\Config::setServiceId($serviceId);
+            return true;
+        }
+        return false;
+    }
 }

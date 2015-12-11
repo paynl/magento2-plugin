@@ -35,6 +35,13 @@ class Index extends \Magento\Framework\App\Action\Action
         parent::__construct($context);
     }
 
+    private function _clearCart(){
+        /* @var $cart \Magento\Checkout\Model\Cart */
+        $cart  = $this->_objectManager->get('Magento\Checkout\Model\Cart');
+        $cart->truncate();
+        $cart->save();
+        return $this;
+    }
     private function _reorder($orderId)
     {  
         $order          = $this->_orderFactory->create()->loadByIncrementId($orderId);;
@@ -74,7 +81,7 @@ class Index extends \Magento\Framework\App\Action\Action
 
         if ($transaction->isPaid() || $transaction->isPending()) {
             $resultRedirect = $this->resultRedirectFactory->create();
-
+            $this->_clearCart();
             return $resultRedirect->setPath('checkout/onepage/success');
         } else {
             //canceled, reorder

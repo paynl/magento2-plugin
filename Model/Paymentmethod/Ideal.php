@@ -23,11 +23,8 @@ namespace Paynl\Payment\Model\Paymentmethod;
  *
  * @author Andy Pieters <andy@pay.nl>
  */
-class Ideal extends \Paynl\Payment\Model\Paymentmethod\PaymentMethod
+class Ideal extends PaymentMethod
 {
     protected $_code = 'paynl_payment_ideal';
-  
-    public function getPaymentOptionId(){
-        return 10;
-    }
+
 }

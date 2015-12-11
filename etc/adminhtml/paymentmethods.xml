@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../Config/etc/system_include.xsd">
+    <include path="Paynl_Payment::paymentmethods/afterpay.xml" />
+    <include path="Paynl_Payment::paymentmethods/billink.xml" />
+    <include path="Paynl_Payment::paymentmethods/cartebleue.xml" />
+    <include path="Paynl_Payment::paymentmethods/clickandbuy.xml" />
+    <include path="Paynl_Payment::paymentmethods/fashioncheque.xml" />
+    <include path="Paynl_Payment::paymentmethods/gezondheidsbon.xml" />
+    <include path="Paynl_Payment::paymentmethods/giropay.xml" />
+    <include path="Paynl_Payment::paymentmethods/givacard.xml" />
+    <include path="Paynl_Payment::paymentmethods/ideal.xml" />
+    <include path="Paynl_Payment::paymentmethods/maestro.xml" />
+    <include path="Paynl_Payment::paymentmethods/mistercash.xml" />
+    <include path="Paynl_Payment::paymentmethods/mybank.xml" />
+    <include path="Paynl_Payment::paymentmethods/overboeking.xml" />
+    <include path="Paynl_Payment::paymentmethods/paypal.xml" />
+    <include path="Paynl_Payment::paymentmethods/paysafecard.xml" />
+    <include path="Paynl_Payment::paymentmethods/podiumcadeaukaart.xml" />
+    <include path="Paynl_Payment::paymentmethods/postepay.xml" />
+    <include path="Paynl_Payment::paymentmethods/sofortbanking.xml" />
+    <include path="Paynl_Payment::paymentmethods/telefonischbetalen.xml" />
+    <include path="Paynl_Payment::paymentmethods/visamastercard.xml" />
+    <include path="Paynl_Payment::paymentmethods/webshopgiftcard.xml" />
+    <include path="Paynl_Payment::paymentmethods/wijncadeau.xml" />
+    <include path="Paynl_Payment::paymentmethods/yourgift.xml" />
+</include>

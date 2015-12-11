@@ -18,25 +18,24 @@
 
 namespace Paynl\Payment\Model\Paymentmethod;
 
+use \Magento\Payment\Model\Method\AbstractMethod;
 /**
  * Description of AbstractPaymentMethod
  *
  * @author Andy Pieters <andy@pay.nl>
  */
-abstract class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod
+abstract class PaymentMethod extends AbstractMethod
 {
     protected $_isInitializeNeeded = true;
-    protected $_isGateway          = false;
-    protected $_canOrder           = false;
-    protected $_canAuthorize       = false;
 
+    protected $_canRefund = false;
 //    protected $_formBlockType = 'Paynl\Payment\Block\Form\Default';
     /**
      * Sidebar payment info block
      *
      * @var string
      */
-//    protected $_infoBlockType = 'Magento\Payment\Block\Info\Instructions';
+    //protected $_infoBlockType = 'Magento\Payment\Block\Info\Instructions';
 
     /**
      * Get payment instructions text from config
@@ -47,6 +46,7 @@ abstract class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMetho
     {
         return trim($this->getConfigData('instructions'));
     }
+
 
     public function initSettings()
     {
@@ -62,7 +62,9 @@ abstract class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMetho
         \Paynl\Config::setServiceId($serviceId);
     }
 
-    abstract function getPaymentOptionId();
+    public function getPaymentOptionId(){
+        return $this->getConfigData('payment_option_id');
+    }
 
     public function initialize($paymentAction, $stateObject)
     {
@@ -71,4 +73,5 @@ abstract class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMetho
         $stateObject->setStatus($state);
         $stateObject->setIsNotified(false);
     }
+
 }

@@ -23,11 +23,8 @@ namespace Paynl\Payment\Model\Paymentmethod;
  *
  * @author Andy Pieters <andy@pay.nl>
  */
-class Mistercash extends \Paynl\Payment\Model\Paymentmethod\PaymentMethod
+class Mistercash extends PaymentMethod
 {
     protected $_code = 'paynl_payment_mistercash';
-  
-    public function getPaymentOptionId(){
-        return 436;
-    }
+
 }

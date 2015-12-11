@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2015 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<payment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Payment:etc/payment.xsd">    
+    <groups>
+        <group id="paynl_payment">
+            <label>Pay.nl</label>
+        </group>
+    </groups>
+    <methods>
+        <method name="paynl_payment_ideal">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+		<method name="paynl_payment_mistercash">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+
+    </methods>
+</payment>
+

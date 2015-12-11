@@ -18,32 +18,37 @@ define(
         return function (messageContainer) {
             var serviceUrl,
                 payload,
-                paymentData = quote.paymentMethod();
+                paymentData = quote.paymentMethod(),
+                billingAddress = quote.billingAddress();
 
             /**
              * Checkout for guest and registered customer.
              */
             if (!customer.isLoggedIn()) {
-                serviceUrl = urlBuilder.createUrl('/guest-carts/:cartId/selected-payment-method', {
+                serviceUrl = urlBuilder.createUrl('/guest-carts/:cartId/set-payment-information', {
                     cartId: quote.getQuoteId()
                 });
                 payload = {
                     cartId: quote.getQuoteId(),
-                    method: paymentData
+                    email: quote.guestEmail,
+                    paymentMethod: paymentData,
+                    billingAddress: billingAddress
                 };
+
             } else {
-                serviceUrl = urlBuilder.createUrl('/carts/mine/selected-payment-method', {});
+                serviceUrl = urlBuilder.createUrl('/carts/mine/set-payment-information', {});
                 payload = {
                     cartId: quote.getQuoteId(),
-                    method: paymentData
+                    paymentMethod: paymentData,
+                    billingAddress: billingAddress
                 };
-            }
-            fullScreenLoader.startLoader();
 
-            return storage.put(
+            }
+            return storage.post(
                 serviceUrl, JSON.stringify(payload)
             ).done(
                 function () {
+
                     $.mage.redirect('/paynl/checkout/redirect');
                 }
             ).fail(
@@ -52,6 +57,7 @@ define(
                     fullScreenLoader.stopLoader();
                 }
             );
+
         };
     }
 );

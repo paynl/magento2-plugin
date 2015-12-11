@@ -50,6 +50,11 @@ class Index extends \Magento\Framework\App\Action\Action
         \Paynl\Config::setApiToken($this->_config->getApiToken());
 
         $transaction = \Paynl\Transaction::getForExchange();
+
+        if($transaction->isPending()){
+            die("TRUE| Ignoring pending");
+        }
+
         $orderId     = $transaction->getDescription();
         $order       = $this->_orderFactory->create()->loadByIncrementId($orderId);
 
@@ -92,6 +97,7 @@ class Index extends \Magento\Framework\App\Action\Action
             die("TRUE| PAID");
         } elseif($transaction->isCanceled()){
             $order->cancel()->save();
+            die("TRUE| CANCELED");
         }
 
     }

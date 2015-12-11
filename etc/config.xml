@@ -16,27 +16,250 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../Store/etc/config.xsd">
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../../Store/etc/config.xsd">
     <default>
         <payment>
+            <paynl_payment_afterpay>
+                <active>0</active>
+                <title>Afterpay</title>
+                <payment_option_id>739</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <instructions></instructions>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Afterpay</model>
+                <group>paynl_payment</group>
+            </paynl_payment_afterpay>
+            <paynl_payment_billink>
+                <active>0</active>
+                <title>Billink</title>
+                <payment_option_id>1672</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <instructions></instructions>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Billink</model>
+                <group>paynl_payment</group>
+            </paynl_payment_billink>
+            <paynl_payment_cartebleue>
+                <active>0</active>
+                <title>Cartebleue</title>
+                <payment_option_id>710</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <instructions></instructions>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Cartebleue</model>
+                <group>paynl_payment</group>
+            </paynl_payment_cartebleue>
+            <paynl_payment_clickandbuy>
+                <active>0</active>
+                <title>Clickandbuy</title>
+                <payment_option_id>139</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <instructions></instructions>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Clickandbuy</model>
+                <group>paynl_payment</group>
+            </paynl_payment_clickandbuy>
+            <paynl_payment_fashioncheque>
+                <active>0</active>
+                <title>Fashioncheque</title>
+                <payment_option_id>815</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <instructions></instructions>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Fashioncheque</model>
+                <group>paynl_payment</group>
+            </paynl_payment_fashioncheque>
+            <paynl_payment_fashiongiftcard>
+                <active>0</active>
+                <title>Fashiongiftcard</title>
+                <payment_option_id>1699</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <instructions></instructions>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Fashiongiftcard</model>
+                <group>paynl_payment</group>
+            </paynl_payment_fashiongiftcard>
+            <paynl_payment_gezondheidsbon>
+                <active>0</active>
+                <title>Gezondheidsbon</title>
+                <payment_option_id>812</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <instructions></instructions>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Gezondheidsbon</model>
+                <group>paynl_payment</group>
+            </paynl_payment_gezondheidsbon>
+            <paynl_payment_giropay>
+                <active>0</active>
+                <title>Giropay</title>
+                <payment_option_id>694</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <instructions></instructions>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Giropay</model>
+                <group>paynl_payment</group>
+            </paynl_payment_giropay>
+            <paynl_payment_givacard>
+                <active>0</active>
+                <title>Givacard</title>
+                <payment_option_id>1657</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <instructions></instructions>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Givacard</model>
+                <group>paynl_payment</group>
+            </paynl_payment_givacard>
             <paynl_payment_ideal>
-                <active>1</active>
+                <active>0</active>
                 <title>iDEAL</title>
+                <payment_option_id>10</payment_option_id>
                 <order_status>pending_payment</order_status>
                 <instructions>Veilig betalen via uw eigen bank</instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Ideal</model>
-                <group>online</group>
+                <group>paynl_payment</group>
             </paynl_payment_ideal>
-            <paynl_payment_mistercash>
-                <active>1</active>
-                <title>Bancontact Mistercash</title>
+            <paynl_payment_maestro>
+                <active>0</active>
+                <title>Maestro</title>
+                <payment_option_id>712</payment_option_id>
                 <order_status>pending_payment</order_status>
-                <instructions>Veilig betalen via uw eigen bank</instructions>
+                <instructions></instructions>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Maestro</model>
+                <group>paynl_payment</group>
+            </paynl_payment_maestro>
+            <paynl_payment_mistercash>
+                <active>0</active>
+                <title>Mistercash / Bancontact</title>
+                <payment_option_id>436</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <instructions></instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Mistercash</model>
-                <group>online</group>
+                <group>paynl_payment</group>
             </paynl_payment_mistercash>
+            <paynl_payment_mybank>
+                <active>0</active>
+                <title>Mybank</title>
+                <payment_option_id>1588</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <instructions></instructions>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Mybank</model>
+                <group>paynl_payment</group>
+            </paynl_payment_mybank>
+            <paynl_payment_overboeking>
+                <active>0</active>
+                <title>Overboeking</title>
+                <payment_option_id>136</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <instructions></instructions>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Overboeking</model>
+                <group>paynl_payment</group>
+            </paynl_payment_overboeking>
+            <paynl_payment_paypal>
+                <active>0</active>
+                <title>Paypal</title>
+                <payment_option_id>138</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <instructions></instructions>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Paypal</model>
+                <group>paynl_payment</group>
+            </paynl_payment_paypal>
+            <paynl_payment_paysafecard>
+                <active>0</active>
+                <title>Paysafecard</title>
+                <payment_option_id>553</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <instructions></instructions>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Paysafecard</model>
+                <group>paynl_payment</group>
+            </paynl_payment_paysafecard>
+            <paynl_payment_podiumcadeaukaart>
+                <active>0</active>
+                <title>Podiumcadeaukaart</title>
+                <payment_option_id>816</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <instructions></instructions>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Podiumcadeaukaart</model>
+                <group>paynl_payment</group>
+            </paynl_payment_podiumcadeaukaart>
+            <paynl_payment_postepay>
+                <active>0</active>
+                <title>Postepay</title>
+                <payment_option_id>707</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <instructions></instructions>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Postepay</model>
+                <group>paynl_payment</group>
+            </paynl_payment_postepay>
+            <paynl_payment_sofortbanking>
+                <active>0</active>
+                <title>Sofortbanking</title>
+                <payment_option_id>559</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <instructions></instructions>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Sofortbanking</model>
+                <group>paynl_payment</group>
+            </paynl_payment_sofortbanking>
+            <paynl_payment_telefonischbetalen>
+                <active>0</active>
+                <title>Telefonisch Betalen</title>
+                <payment_option_id>1600</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <instructions></instructions>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Telefonischbetalen</model>
+                <group>paynl_payment</group>
+            </paynl_payment_telefonischbetalen>
+            <paynl_payment_visamastercard>
+                <active>0</active>
+                <title>Visa / Mastercard</title>
+                <payment_option_id>706</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <instructions></instructions>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Visamastercard</model>
+                <group>paynl_payment</group>
+            </paynl_payment_visamastercard>
+            <paynl_payment_webshopgiftcard>
+                <active>0</active>
+                <title>Webshopgiftcard</title>
+                <payment_option_id>811</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <instructions></instructions>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Webshopgiftcard</model>
+                <group>paynl_payment</group>
+            </paynl_payment_webshopgiftcard>
+            <paynl_payment_wijncadeau>
+                <active>0</active>
+                <title>Wijncadeau</title>
+                <payment_option_id>1666</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <instructions></instructions>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Wijncadeau</model>
+                <group>paynl_payment</group>
+            </paynl_payment_wijncadeau>
+            <paynl_payment_yourgift>
+                <active>0</active>
+                <title>Yourgift.nl</title>
+                <payment_option_id>1645</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <instructions></instructions>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Yourgift</model>
+                <group>paynl_payment</group>
+            </paynl_payment_yourgift>
         </payment>
     </default>
 </config>
