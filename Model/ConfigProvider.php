@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright © 2015 Magento. All rights reserved.
- * See COPYING.txt for license details.
+ * Copyright © 2015 Pay.nl All rights reserved.
  */
+
 namespace Paynl\Payment\Model;
 
 use Magento\Checkout\Model\ConfigProviderInterface;

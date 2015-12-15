@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright (C) 2015 Pay.nl
+/**
+ * Copyright © 2015 Pay.nl All rights reserved.
  */
 
 namespace Paynl\Payment\Controller\Finish;
@@ -77,8 +77,6 @@ class Index extends \Magento\Framework\App\Action\Action
 
         if ($transaction->isPaid() || $transaction->isPending()) {
             $resultRedirect = $this->resultRedirectFactory->create();
-
-
             return $resultRedirect->setPath('checkout/onepage/success');
         } else {
             //canceled, reorder

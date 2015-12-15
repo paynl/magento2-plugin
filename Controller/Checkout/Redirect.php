@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright (C) 2015 Pay.nl
+/**
+ * Copyright © 2015 Pay.nl All rights reserved.
  */
 
 namespace Paynl\Payment\Controller\Checkout;

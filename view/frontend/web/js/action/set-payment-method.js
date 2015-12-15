@@ -20,7 +20,6 @@ define(
                 payload,
                 paymentData = quote.paymentMethod(),
                 billingAddress = quote.billingAddress();
-
             /**
              * Checkout for guest and registered customer.
              */
@@ -44,6 +43,7 @@ define(
                 };
 
             }
+            fullScreenLoader.startLoader();
             return storage.post(
                 serviceUrl, JSON.stringify(payload)
             ).done(

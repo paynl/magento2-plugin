@@ -6,20 +6,84 @@
  */
 -->
 <payment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Payment:etc/payment.xsd">    
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Payment:etc/payment.xsd">
     <groups>
         <group id="paynl_payment">
             <label>Pay.nl</label>
         </group>
     </groups>
     <methods>
+        <method name="paynl_payment_afterpay">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_billink">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_cartebleue">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_clickandbuy">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_fashioncheque">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_fashiongiftcard">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_gezondheidsbon">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_giropay">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_givacard">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
         <method name="paynl_payment_ideal">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
-		<method name="paynl_payment_mistercash">
+        <method name="paynl_payment_maestro">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
-
+        <method name="paynl_payment_mistercash">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_mybank">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_overboeking">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_paypal">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_paysafecard">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_podiumcadeaukaart">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_postepay">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_sofortbanking">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_telefonischbetalen">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_visamastercard">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_webshopgiftcard">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_wijncadeau">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_yourgift">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
     </methods>
 </payment>
-

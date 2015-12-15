@@ -1,4 +1,7 @@
 <?php
+/**
+ * Copyright © 2015 Pay.nl All rights reserved.
+ */
 
 namespace Paynl\Payment\Model\Config\Source\Available;
 
@@ -51,10 +54,18 @@ abstract class Available implements ArrayInterface
      */
     public function toArray()
     {
-        if ($this->_isAvailable()) {
-            return [0 => __('No'), 1 => __('Yes')];
-        } else {
-            return [0 => __('Not available (please edit the serviceID ('.$this->_config->getServiceId().') on admin.pay.nl')];
+        $configured = $this->_config->configureSDK();
+        if (!$configured) {
+            return [0 => __('Enter your API-token and ServiceId first')];
+        }
+        try {
+            if ($this->_isAvailable()) {
+                return [0 => __('No'), 1 => __('Yes')];
+            } else {
+                return [0 => __('Not available, you can enable this on admin.pay.nl')];
+            }
+        } catch(\Exception $e){
+            return [0 => 'Error: '.$e->getMessage()];
         }
 
     }
