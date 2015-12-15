@@ -4,6 +4,8 @@
                name="payment[method]"
                class="radio"
                data-bind="attr: {'id': getCode()}, value: getCode(), checked: isChecked, click: selectPaymentMethod, visible: isRadioButtonVisible()"/>
+        <img data-bind="attr: {src: getPaymentIcon(), alt: getTitle()}"
+             class="payment-icon"/>
         <label data-bind="attr: {'for': getCode()}" class="label"><span data-bind="text: getTitle()"></span></label>
     </div>
     <div class="payment-method-content">
@@ -17,6 +19,8 @@
             <!-- ko template: getTemplate() --><!-- /ko -->
             <!--/ko-->
         </div>
+
+        <p data-bind="html: getInstructions();"></p>
         <div class="actions-toolbar">
             <div class="primary">
                 <button class="action primary checkout"

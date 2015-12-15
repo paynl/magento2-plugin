@@ -58,8 +58,11 @@ class Index extends \Magento\Framework\App\Action\Action
         $orderId     = $transaction->getDescription();
         $order       = $this->_orderFactory->create()->loadByIncrementId($orderId);
 
+        if(empty($order)){
+            die('FALSE| Cannot load order');
+        }
         if($order->getTotalDue() <= 0){
-            die('TRUE| Payment already processed');
+            die('TRUE| Total due <= 0, so iam not touching the status if the order');
         }
 
         if ($transaction->isPaid()) {

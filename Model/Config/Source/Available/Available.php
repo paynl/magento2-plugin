@@ -54,7 +54,7 @@ abstract class Available implements ArrayInterface
         if ($this->_isAvailable()) {
             return [0 => __('No'), 1 => __('Yes')];
         } else {
-            return [0 => __('Not available')];
+            return [0 => __('Not available (please edit the serviceID ('.$this->_config->getServiceId().') on admin.pay.nl')];
         }
 
     }

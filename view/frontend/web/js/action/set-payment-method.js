@@ -48,7 +48,6 @@ define(
                 serviceUrl, JSON.stringify(payload)
             ).done(
                 function () {
-
                     $.mage.redirect('/paynl/checkout/redirect');
                 }
             ).fail(

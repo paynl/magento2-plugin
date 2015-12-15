@@ -25,32 +25,28 @@ class Index extends \Magento\Framework\App\Action\Action
     protected $_orderFactory;
 
     public function __construct(
-    \Magento\Framework\App\Action\Context $context,
-    \Paynl\Payment\Model\Config $config,
-    \Magento\Sales\Model\OrderFactory $orderFactory
+        \Magento\Framework\App\Action\Context $context,
+        \Paynl\Payment\Model\Config $config,
+        \Magento\Sales\Model\OrderFactory $orderFactory
     )
     {
         $this->_config = $config;
         $this->_orderFactory = $orderFactory;
+
         parent::__construct($context);
     }
 
-    private function _clearCart(){
-        /* @var $cart \Magento\Checkout\Model\Cart */
-        $cart  = $this->_objectManager->get('Magento\Checkout\Model\Cart');
-        $cart->truncate();
-        $cart->save();
-        return $this;
-    }
     private function _reorder($orderId)
-    {  
-        $order          = $this->_orderFactory->create()->loadByIncrementId($orderId);;
+    {
+        /** @var \Magento\Sales\Model\Order $order */
+        $order = $this->_orderFactory->create()->loadByIncrementId($orderId);;
         /** @var \Magento\Framework\Controller\Result\Redirect $resultRedirect */
         $resultRedirect = $this->resultRedirectFactory->create();
 
         /* @var $cart \Magento\Checkout\Model\Cart */
-        $cart  = $this->_objectManager->get('Magento\Checkout\Model\Cart');
+        $cart = $this->_objectManager->get('Magento\Checkout\Model\Cart');
         $cart->truncate();
+
         $items = $order->getItemsCollection();
         foreach ($items as $item) {
             try {
@@ -81,11 +77,12 @@ class Index extends \Magento\Framework\App\Action\Action
 
         if ($transaction->isPaid() || $transaction->isPending()) {
             $resultRedirect = $this->resultRedirectFactory->create();
-            $this->_clearCart();
+
+
             return $resultRedirect->setPath('checkout/onepage/success');
         } else {
             //canceled, reorder
-            $this->messageManager->addNotice('Betaling geannuleerd');
+            $this->messageManager->addNotice(__('Payment canceled'));
             return $this->_reorder($transaction->getDescription());
         }
     }
