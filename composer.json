@@ -1,5 +1,5 @@
 {
-    "name": "paynl/module-magento2",
+    "name": "paynl/magento2-plugin",
     "description": "Pay.nl Magento2 Payment methods",
     "type": "magento2-module",
     "require": {
