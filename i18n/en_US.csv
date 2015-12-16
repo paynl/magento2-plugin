@@ -1,0 +1,23 @@
+Discount,Discount
+"Something went wrong, please try again later","Something went wrong, please try again later"
+"You notified customer about invoice #%1.","You notified customer about invoice #%1."
+"We can't add this item to your shopping cart right now.","We can't add this item to your shopping cart right now."
+"Payment canceled","Payment canceled"
+"Enter your API-token and ServiceId first","Enter your API-token and ServiceId first"
+No,No
+Yes,Yes
+"Not available, you can enable this on admin.pay.nl","Not available, you can enable this on admin.pay.nl"
+Enabled,Enabled
+Title,Title
+"New Order Status","New Order Status"
+"Payment from Applicable Countries","Payment from Applicable Countries"
+"Payment from Specific Countries","Payment from Specific Countries"
+Instructions,Instructions
+"Minimum Order Total","Minimum Order Total"
+"Maximum Order Total","Maximum Order Total"
+"Sort Order","Sort Order"
+"Pay.nl Settings","Pay.nl Settings"
+API-token,API-token
+ServiceId,ServiceId
+Testmode,Testmode
+Paymentmethods,Paymentmethods

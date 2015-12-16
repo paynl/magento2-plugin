@@ -28,9 +28,7 @@ define(
                     setPaymentMethodAction(this.messageContainer);
                     return false;
                 }
-            },
-
-
+            }
         });
     }
 );

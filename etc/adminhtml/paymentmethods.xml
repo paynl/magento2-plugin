@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright © 2015 Pay.nl All rights reserved.
+ */
+-->
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../Config/etc/system_include.xsd">
     <include path="Paynl_Payment::paymentmethods/afterpay.xml" />
     <include path="Paynl_Payment::paymentmethods/billink.xml" />

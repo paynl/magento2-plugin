@@ -1,0 +1,23 @@
+Discount,Korting
+"Something went wrong, please try again later","Er is iets mis gegaan, probeer het later nog eens"
+"You notified customer about invoice #%1.","Factuur: #%1 gemaakt."
+"We can't add this item to your shopping cart right now.","We kunnen dit product niet aan de winkelmand toevoegen"
+"Payment canceled","Betaling geannuleerd"
+"Enter your API-token and ServiceId first","Voer eerst uw API-token en ServiceId in"
+No,Nee
+Yes,Ja
+"Not available, you can enable this on admin.pay.nl","Niet beschikbaar, je kunt betaalmethoden inschakelen op admin.pay.nl"
+Enabled,Ingeschakeld
+Title,Titel
+"New Order Status","Nieuwe Order Status"
+"Payment from Applicable Countries","Betalingen toestaan uit alle toegestane landen"
+"Payment from Specific Countries","Betalingen alleen toestaan uit bepaalde landen"
+Instructions,Instructies
+"Minimum Order Total","Minimale order waarde"
+"Maximum Order Total","Maximale order waarde"
+"Sort Order","Sortering"
+"Pay.nl Settings","Pay.nl Instellingen"
+API-token,API-token
+ServiceId,ServiceId
+Testmode,Testmode
+Paymentmethods,Betaalmethoden

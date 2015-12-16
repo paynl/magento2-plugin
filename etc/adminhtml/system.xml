@@ -1,22 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-Copyright (C) 2015 Andy Pieters <andy@pay.nl>
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+/**
+ * Copyright © 2015 Pay.nl All rights reserved.
+ */
 -->
-
-
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../Config/etc/system_file.xsd">
     <system>        
         <section id="payment">
@@ -32,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     <label>Testmode</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>   
                 </field>
-                <group id="paynl_paymentmethods" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
+                <group id="paynl_paymentmethods" translate="label"  sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
                     <frontend_model>Paynl\Payment\Block\Adminhtml\System\Config\Fieldset\Expanded</frontend_model>
                     <label>Paymentmethods</label>
                     <include path="Paynl_Payment::paymentmethods.xml"/>

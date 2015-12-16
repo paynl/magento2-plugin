@@ -39,8 +39,7 @@ define(
         ];
         $.each(methods, function (k, method) {
             rendererList.push(method);
-        })
-
+        });
 
         return Component.extend({});
     }
