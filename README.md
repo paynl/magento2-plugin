@@ -12,7 +12,9 @@
 2. Enter the following commands:
 
 	$ composer require paynl/magento2-plugin
+	
 	$ php bin/magento setup:upgrade
+	
 	$ php bin/magento cache:clean
   
 3. The plugin is now installed
