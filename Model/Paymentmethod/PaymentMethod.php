@@ -26,7 +26,6 @@ abstract class PaymentMethod extends AbstractMethod
         return trim($this->getConfigData('instructions'));
     }
 
-
     public function initSettings()
     {
 
@@ -51,6 +50,11 @@ abstract class PaymentMethod extends AbstractMethod
         $stateObject->setState($state);
         $stateObject->setStatus($state);
         $stateObject->setIsNotified(false);
+    }
+
+    public function getOrderPlaceRedirectUrl()
+    {
+        return true;
     }
 
 }
