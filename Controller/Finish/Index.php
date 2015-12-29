@@ -6,7 +6,6 @@
 namespace Paynl\Payment\Controller\Finish;
 
 use Magento\Checkout\Model\Session;
-use Magento\Sales\Model\Order\Email\Sender\OrderSender;
 
 /**
  * Description of Redirect
@@ -22,12 +21,6 @@ class Index extends \Magento\Framework\App\Action\Action
     protected $_config;
 
     /**
-     *
-     * @var \Magento\Sales\Model\OrderFactory
-     */
-    protected $_orderFactory;
-
-    /**
      * @var Session
      */
     protected $_checkoutSession;
@@ -37,25 +30,18 @@ class Index extends \Magento\Framework\App\Action\Action
      * @param \Magento\Framework\App\Action\Context $context
      * @param \Paynl\Payment\Model\Config $config
      * @param Session $checkoutSession
-     * @param OrderSender $orderSender
-     * @param \Magento\Sales\Model\OrderFactory $orderFactory
      */
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
         \Paynl\Payment\Model\Config $config,
-        Session $checkoutSession,
-        OrderSender $orderSender,
-        \Magento\Sales\Model\OrderFactory $orderFactory
+        Session $checkoutSession
     )
     {
         $this->_config = $config;
         $this->_checkoutSession = $checkoutSession;
-        $this->orderSender = $orderSender;
-        $this->_orderFactory = $orderFactory;
 
         parent::__construct($context);
     }
-
 
     public function execute()
     {
@@ -67,6 +53,7 @@ class Index extends \Magento\Framework\App\Action\Action
 
         $resultRedirect = $this->resultRedirectFactory->create();
         if ($transaction->isPaid() || $transaction->isPending()) {
+            $this->_getCheckoutSession()->start();
             $resultRedirect->setPath('checkout/onepage/success');
         } else {
             //canceled, re-activate quote
