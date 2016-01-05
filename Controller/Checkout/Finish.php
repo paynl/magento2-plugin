@@ -3,7 +3,7 @@
  * Copyright © 2015 Pay.nl All rights reserved.
  */
 
-namespace Paynl\Payment\Controller\Finish;
+namespace Paynl\Payment\Controller\Checkout;
 
 use Magento\Checkout\Model\Session;
 
@@ -12,7 +12,7 @@ use Magento\Checkout\Model\Session;
  *
  * @author Andy Pieters <andy@pay.nl>
  */
-class Index extends \Magento\Framework\App\Action\Action
+class Finish extends \Magento\Framework\App\Action\Action
 {
     /**
      *

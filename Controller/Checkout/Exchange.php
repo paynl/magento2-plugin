@@ -3,14 +3,14 @@
  * Copyright © 2015 Pay.nl All rights reserved.
  */
 
-namespace Paynl\Payment\Controller\Exchange;
+namespace Paynl\Payment\Controller\Checkout;
 
 /**
  * Description of Index
  *
  * @author Andy Pieters <andy@pay.nl>
  */
-class Index extends \Magento\Framework\App\Action\Action
+class Finish extends \Magento\Framework\App\Action\Action
 {
     /**
      *

@@ -62,8 +62,8 @@ class Redirect extends \Magento\Framework\App\Action\Action
 
             $currency = $quote->getQuoteCurrencyCode();
 
-            $returnUrl = $this->_url->getUrl('paynl/finish/');
-            $exchangeUrl = $this->_url->getUrl('paynl/exchange/');
+            $returnUrl = $this->_url->getUrl('paynl/checkout/finish/');
+            $exchangeUrl = $this->_url->getUrl('paynl/checkout/exchange/');
 
             $paymentOptionId = $payment->getPaymentOptionId();
 
