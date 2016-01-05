@@ -45,13 +45,17 @@ class Finish extends \Magento\Framework\App\Action\Action
 
     public function execute()
     {
-        \Paynl\Config::setApiToken($this->_config->getApiToken());
-        $transaction = \Paynl\Transaction::getForReturn();
-
-        /** @var \Magento\Sales\Model\Order $order */
-        $order = $this->_getCheckoutSession()->getLastRealOrder();
-
         $resultRedirect = $this->resultRedirectFactory->create();
+
+        \Paynl\Config::setApiToken($this->_config->getApiToken());
+        $params = $this->getRequest()->getParams();
+        if(!isset($params['orderId'])){
+            $this->messageManager->addNotice(__('Invalid return, no transactionId specified'));
+            $resultRedirect->setPath('checkout/cart');
+            return $resultRedirect;
+        }
+        $transaction = \Paynl\Transaction::get($params['orderId']);
+
         if ($transaction->isPaid() || $transaction->isPending()) {
             $this->_getCheckoutSession()->start();
             $resultRedirect->setPath('checkout/onepage/success');

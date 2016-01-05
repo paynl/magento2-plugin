@@ -10,7 +10,7 @@ namespace Paynl\Payment\Controller\Checkout;
  *
  * @author Andy Pieters <andy@pay.nl>
  */
-class Finish extends \Magento\Framework\App\Action\Action
+class Exchange extends \Magento\Framework\App\Action\Action
 {
     /**
      *
@@ -49,7 +49,12 @@ class Finish extends \Magento\Framework\App\Action\Action
         $skipFraudDetection = false;
         \Paynl\Config::setApiToken($this->_config->getApiToken());
 
-        $transaction = \Paynl\Transaction::getForExchange();
+        $params = $this->getRequest()->getParams();
+        if(!isset($params['order_id'])){
+            die('FALSE| order_id is not set in the request');
+        }
+
+        $transaction = \Paynl\Transaction::get($params['order_id']);
 
         if($transaction->isPending()){
             die("TRUE| Ignoring pending");
@@ -62,14 +67,10 @@ class Finish extends \Magento\Framework\App\Action\Action
             die('FALSE| Cannot load order');
         }
         if($order->getTotalDue() <= 0){
-            die('TRUE| Total due <= 0, so iam not touching the status if the order');
+            die('TRUE| Total due <= 0, so iam not touching the status of the order');
         }
 
         if ($transaction->isPaid()) {
-            if ($order->getOrderCurrencyCode() != 'EUR') {
-                $skipFraudDetection = true;
-            }
-
             $payment = $order->getPayment();
             $payment->setTransactionId(
                 $transaction->getId()
@@ -81,7 +82,7 @@ class Finish extends \Magento\Framework\App\Action\Action
                 0
             );
             $payment->registerCaptureNotification(
-                $transaction->getPaidAmount(), $skipFraudDetection
+                $transaction->getPaidCurrencyAmount(), $skipFraudDetection
             );
             $order->save();
 
