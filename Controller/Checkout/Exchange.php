@@ -25,6 +25,11 @@ class Exchange extends \Magento\Framework\App\Action\Action
     protected $_orderFactory;
 
     /**
+     * @var \Psr\Log\LoggerInterface
+     */
+    protected $_logger;
+
+    /**
      *
      * @var \Magento\Sales\Model\Order\Email\Sender\OrderSender
      */
@@ -34,13 +39,15 @@ class Exchange extends \Magento\Framework\App\Action\Action
     \Magento\Framework\App\Action\Context $context,
     \Paynl\Payment\Model\Config $config,
     \Magento\Sales\Model\OrderFactory $orderFactory,
-    \Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender
+    \Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender,
+    \Psr\Log\LoggerInterface $logger
     )
     {
 
         $this->_config       = $config;
         $this->_orderFactory = $orderFactory;
         $this->_orderSender  = $orderSender;
+        $this->_logger       = $logger;
         parent::__construct($context);
     }
 
@@ -51,10 +58,16 @@ class Exchange extends \Magento\Framework\App\Action\Action
 
         $params = $this->getRequest()->getParams();
         if(!isset($params['order_id'])){
+            $this->_logger->critical('Exchange: order_id is not set in the request', $params);
             die('FALSE| order_id is not set in the request');
         }
 
-        $transaction = \Paynl\Transaction::get($params['order_id']);
+        try{
+            $transaction = \Paynl\Transaction::get($params['order_id']);
+        } catch(\Exception $e){
+            $this->_logger->critical($e, $params);
+            die('FALSE| Error fetching transaction. '. $e->getMessage());
+        }
 
         if($transaction->isPending()){
             die("TRUE| Ignoring pending");
@@ -64,9 +77,11 @@ class Exchange extends \Magento\Framework\App\Action\Action
         $order       = $this->_orderFactory->create()->loadByIncrementId($orderId);
 
         if(empty($order)){
+            $this->_logger->critical('Cannot load order: '.$orderId);
             die('FALSE| Cannot load order');
         }
         if($order->getTotalDue() <= 0){
+            $this->_logger->debug('Total due <= 0, so iam not touching the status of the order: '.$orderId);
             die('TRUE| Total due <= 0, so iam not touching the status of the order');
         }
 

@@ -29,13 +29,10 @@ class Redirect extends \Magento\Framework\App\Action\Action
      */
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
-        \Paynl\Payment\Model\Config $config,
-        \Magento\Framework\Message\ManagerInterface $messageManager
+        \Paynl\Payment\Model\Config $config
     )
     {
         $this->_config = $config; // Pay.nl config helper
-
-        $this->messageManager = $messageManager;
 
         parent::__construct($context);
     }
