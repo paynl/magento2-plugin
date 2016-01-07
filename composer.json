@@ -3,7 +3,7 @@
   "description": "Pay.nl Magento2 Payment methods",
   "type": "magento2-module",
   "require": {
-    "php": "~5.5.0|~5.6.0",
+    "php": "~5.5.0|~5.6.0|~7.0.0",
     "magento/magento-composer-installer": "*",
     "magento/module-sales": "*",
     "magento/module-payment": "*",
