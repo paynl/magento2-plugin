@@ -78,16 +78,8 @@ class Finish extends \Magento\Framework\App\Action\Action
         } else {
             //canceled, re-activate quote
             try {
-                // if there is an order - cancel it
-                /** @var \Magento\Sales\Model\Order $order */
-                $order = $this->_getCheckoutSession()->getLastRealOrder();
-                if ($order && $order->getId() && $order->getQuoteId() == $this->_getCheckoutSession()->getQuoteId()) {
-                    $order->cancel()->save();
-                    $this->_getCheckoutSession()->restoreQuote();
-                    $this->messageManager->addNotice(__('Payment canceled'));
-                } else {
-                    $this->messageManager->addNotice(__('Payment canceled, but unable to cancel order'));
-                }
+                $this->_getCheckoutSession()->restoreQuote();
+                $this->messageManager->addNotice(__('Payment canceled'));
             } catch (\Magento\Framework\Exception\LocalizedException $e) {
                 $this->_logger->error($e);
                 $this->messageManager->addExceptionMessage($e, $e->getMessage());
