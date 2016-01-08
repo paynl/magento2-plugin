@@ -120,7 +120,7 @@
             </paynl_payment_maestro>
             <paynl_payment_mistercash>
                 <active>0</active>
-                <title>Mistercash / Bancontact</title>
+                <title>Bancontact / Mister Cash</title>
                 <payment_option_id>436</payment_option_id>
                 <order_status>pending_payment</order_status>
                 <instructions></instructions>
@@ -200,7 +200,7 @@
             </paynl_payment_sofortbanking>
             <paynl_payment_telefonischbetalen>
                 <active>0</active>
-                <title>Telefonisch Betalen</title>
+                <title>Telefonisch Betalen (PFP)</title>
                 <payment_option_id>1600</payment_option_id>
                 <order_status>pending_payment</order_status>
                 <instructions></instructions>
