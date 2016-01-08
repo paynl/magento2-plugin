@@ -28,16 +28,17 @@ Bank Transfer | | Wijncadeau | |
 
 #####Installing
 
-1. In command line, navigate to the installation directory of magento2
-2. Enter the following commands:
+In command line, navigate to the installation directory of magento2
 
-	$ composer require paynl/magento2-plugin
-	
-	$ php bin/magento setup:upgrade
-	
-	$ php bin/magento cache:clean
-  
-3. The plugin is now installed
+Enter the following commands:
+
+```
+composer require paynl/magento2-plugin
+php bin/magento setup:upgrade
+php bin/magento cache:clean
+```
+
+The plugin is now installed
 
 #####Setup
 
@@ -46,6 +47,8 @@ Bank Transfer | | Wijncadeau | |
 3. Go to *Sales* / *Payment Methods*
 4. Scroll down to find the Pay.nl Settings
 5. Enter the API token and serviceID (these can be found in the Pay.nl Admin Panel --> https://admin.pay.nl
-6. Enable the desired payment methods and set allowed countries
+6. Save the settings
+7. Enable the desired payment methods and set allowed countries
+8. Save the settings
 
 Go to the *Manage* / *Services* tab in the Pay.nl Admin Panel to enable extra payment methods. 
