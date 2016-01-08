@@ -14,14 +14,13 @@ With this plugin by Pay.nl you can easily add all desired payment methods to you
 
 Bank Payments  | Creditcards | Gift cards & Vouchers | Others | 
 :-----------: | :-----------: | :-----------: | :-----------: | 
-iDEAL |Visa | PayPal | Paysafecard | AfterPay | 
+iDEAL |Visa | YourGift | Paysafecard | AfterPay | 
 Bancontact Mister Cash  |  Mastercard | Webshop Giftcard | Billink | 
 Giropay |American Express | FashionCheque | Pay Fixed Price (phone) | 
-MyBank | Carte Bleue | Podium Cadeaukaart | |  
+MyBank | Carte Bleue | Podium Cadeaukaart | PayPal |  
 SOFORT Banking | PostePay | Gezondheidsbon | | 
 Maestro | | Fashion Giftcard | |
 Bank Transfer | | Wijncadeau | |
-| | | YourGift | | 
 
 
 
