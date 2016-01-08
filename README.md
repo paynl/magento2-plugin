@@ -3,6 +3,7 @@
 ---
 - [Summary](#summary)
 - [Quickstart](#quickstart)
+- [Setup](#setup)
 
 ---
 ### Summary
@@ -40,3 +41,12 @@ Bank Transfer | | Wijncadeau | |
 3. The plugin is now installed
 
 #####Setup
+
+1. Log into the Magento Admin
+2. Go to *Stores* / *Configuration*
+3. Go to *Sales* / *Payment Methods*
+4. Scroll down to find the Pay.nl Settings
+5. Enter the API token and serviceID (these can be found in the Pay.nl Admin Panel --> https://admin.pay.nl
+6. Enable the desired payment methods and set allowed countries
+
+Go to the *Manage* / *Services* tab in the Pay.nl Admin Panel to enable extra payment methods. 
