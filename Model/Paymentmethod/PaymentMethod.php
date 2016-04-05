@@ -106,21 +106,23 @@ abstract class PaymentMethod extends AbstractMethod
         foreach ($items as $item) {
             $arrItem = $item->toArray();
             if ($arrItem['price_incl_tax'] != null) {
+                // taxamount is not valid, because on discount it returns the taxamount after discount
+                $taxAmount = $arrItem['price_incl_tax']-$arrItem['price'];
                 $product = array(
                     'id' => $arrItem['product_id'],
                     'name' => $arrItem['name'],
                     'price' => $arrItem['price_incl_tax'],
                     'qty' => $arrItem['qty_ordered'],
-                    'tax' => $arrItem['tax_amount'],
+                    'tax' => $taxAmount,
                 );
             }
             $arrProducts[] = $product;
         }
 
         //shipping
-        $shippingCost = $order->getShippingAddress()->getShippingInclTax();
-        $shippingTax = $order->getShippingAddress()->getShippingTaxAmount();
-        $shippingDescription = $order->getShippingAddress()->getShippingDescription();
+        $shippingCost = $order->getShippingInclTax();
+        $shippingTax = $order->getShippingTaxAmount();
+        $shippingDescription = $order->getShippingDescription();
 
         $arrProducts[] = array(
             'id' => 'shipping',
@@ -131,16 +133,16 @@ abstract class PaymentMethod extends AbstractMethod
         );
 
         // kortingen
-        $discount = $order->getSubtotal() - $order->getSubtotalWithDiscount();
+        $discount = $order->getDiscountAmount();
+        $discountDescription = $order->getDiscountDescription();
 
-
-        if ($discount > 0) {
+        if ($discount != 0) {
             $arrProducts[] = array(
                 'id' => 'discount',
-                'name' => __('Discount'),
-                'price' => $discount * -1,
+                'name' => $discountDescription,
+                'price' => $discount,
                 'qty' => 1,
-                'tax' => 0
+                'tax' => $order->getDiscountTaxCompensationAmount()*-1
             );
         }
 
