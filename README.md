@@ -21,6 +21,7 @@ MyBank | Carte Bleue | Podium Cadeaukaart | PayPal |
 SOFORT Banking | PostePay | Gezondheidsbon |  Pay Fixed Price (phone) | 
 Maestro | | Fashion Giftcard | Paysafecard  |
 Bank Transfer | | Wijncadeau | |
+ | | VVV Giftcard | | 
 
 
 
