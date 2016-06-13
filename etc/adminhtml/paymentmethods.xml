@@ -26,6 +26,7 @@
     <include path="Paynl_Payment::paymentmethods/sofortbanking.xml" />
     <include path="Paynl_Payment::paymentmethods/telefonischbetalen.xml" />
     <include path="Paynl_Payment::paymentmethods/visamastercard.xml" />
+    <include path="Paynl_Payment::paymentmethods/vvvgiftcard.xml" />
     <include path="Paynl_Payment::paymentmethods/webshopgiftcard.xml" />
     <include path="Paynl_Payment::paymentmethods/wijncadeau.xml" />
     <include path="Paynl_Payment::paymentmethods/yourgift.xml" />

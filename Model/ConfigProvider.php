@@ -37,6 +37,7 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_sofortbanking',
         'paynl_payment_telefonischbetalen',
         'paynl_payment_visamastercard',
+        'paynl_payment_vvvgiftcard',
         'paynl_payment_webshopgiftcard',
         'paynl_payment_wijncadeau',
         'paynl_payment_yourgift'

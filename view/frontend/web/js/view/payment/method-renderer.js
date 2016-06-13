@@ -33,6 +33,7 @@ define(
             {type: 'paynl_payment_sofortbanking', component: defaultComponent},
             {type: 'paynl_payment_telefonischbetalen', component: defaultComponent},
             {type: 'paynl_payment_visamastercard', component: defaultComponent},
+            {type: 'paynl_payment_vvvgiftcard', component: defaultComponent},
             {type: 'paynl_payment_webshopgiftcard', component: defaultComponent},
             {type: 'paynl_payment_wijncadeau', component: defaultComponent},
             {type: 'paynl_payment_yourgift', component: defaultComponent}

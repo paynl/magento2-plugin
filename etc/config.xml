@@ -218,6 +218,16 @@
                 <model>Paynl\Payment\Model\Paymentmethod\Visamastercard</model>
                 <group>paynl_payment</group>
             </paynl_payment_visamastercard>
+            <paynl_payment_vvvgiftcard>
+                <active>0</active>
+                <title>VVV Giftcard</title>
+                <payment_option_id>1714</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <instructions></instructions>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Vvvgiftcard</model>
+                <group>paynl_payment</group>
+            </paynl_payment_vvvgiftcard>
             <paynl_payment_webshopgiftcard>
                 <active>0</active>
                 <title>Webshopgiftcard</title>
