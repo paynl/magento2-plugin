@@ -1,26 +1,29 @@
 /*browser:true*/
 /*global define*/
 define(
-     [
+    [
         'jquery',
         'Magento_Checkout/js/view/payment/default',
-        'Magento_Checkout/js/model/payment/additional-validators'
+        'mage/url'
     ],
-    function ($, Component, additionalValidators) {
+    function ($, Component, url) {
         'use strict';
         return Component.extend({
+            redirectAfterPlaceOrder: false,
+
             defaults: {
                 template: 'Paynl_Payment/payment/default'
             },
             getInstructions: function () {
                 return window.checkoutConfig.payment.instructions[this.item.method];
             },
-            getPaymentIcon: function(){
+            getPaymentIcon: function () {
                 return window.checkoutConfig.payment.icon[this.item.method];
             },
             afterPlaceOrder: function () {
-                $.mage.redirect('/paynl/checkout/redirect');
+                window.location.replace(url.build('/paynl/checkout/redirect'));
             },
+
         });
     }
 );
