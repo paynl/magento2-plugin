@@ -72,15 +72,22 @@ abstract class PaymentMethod extends AbstractMethod
             'emailAddress' => $arrBillingAddress['email'],
         );
 
-        $address = array();
-        $arrAddress = \Paynl\Helper::splitAddress($arrBillingAddress['street']);
-        $address['streetName'] = $arrAddress[0];
-        $address['houseNumber'] = $arrAddress[1];
-        $address['zipCode'] = $arrBillingAddress['postcode'];
-        $address['city'] = $arrBillingAddress['city'];
-        $address['country'] = $arrBillingAddress['country_id'];
+        $invoiceAddress = array(
+            'initials' => substr($arrBillingAddress['firstname'], 0, 1),
+            'lastName' => $arrBillingAddress['lastname']
+        );
 
-        $shippingAddress = array();
+        $arrAddress = \Paynl\Helper::splitAddress($arrBillingAddress['street']);
+        $invoiceAddress['streetName'] = $arrAddress[0];
+        $invoiceAddress['houseNumber'] = $arrAddress[1];
+        $invoiceAddress['zipCode'] = $arrBillingAddress['postcode'];
+        $invoiceAddress['city'] = $arrBillingAddress['city'];
+        $invoiceAddress['country'] = $arrBillingAddress['country_id'];
+
+        $shippingAddress = array(
+            'initials' => substr($arrShippingAddress['firstname'], 0, 1),
+            'lastName' => $arrShippingAddress['lastname']
+        );
         $arrAddress2 = \Paynl\Helper::splitAddress($arrShippingAddress['street']);
         $shippingAddress['streetName'] = $arrAddress2[0];
         $shippingAddress['houseNumber'] = $arrAddress2[1];
@@ -98,8 +105,8 @@ abstract class PaymentMethod extends AbstractMethod
             'exchangeUrl' => $exchangeUrl,
             'currency' => $currency,
         );
-        $data['address'] = $address;
-        $data['shippingAddress'] = $shippingAddress;
+        $data['address'] = $shippingAddress;
+        $data['invoiceAddress'] = $invoiceAddress;
 
         $data['enduser'] = $enduser;
         $arrProducts = array();
