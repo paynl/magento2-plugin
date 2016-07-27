@@ -4,6 +4,7 @@
  */
 
 namespace Paynl\Payment\Model;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 
 /**
  * Description of Config
@@ -26,21 +27,21 @@ class Config
 
     public function getApiToken()
     {
-        return $this->_scopeConfigInterface->getValue('payment/paynl/apitoken');
+        return $this->_scopeConfigInterface->getValue('payment/paynl/apitoken', 'store');
     }
 
     public function getServiceId()
     {
-        return $this->_scopeConfigInterface->getValue('payment/paynl/serviceid');
+        return $this->_scopeConfigInterface->getValue('payment/paynl/serviceid', 'store');
     }
 
     public function isTestMode()
     {
-       return $this->_scopeConfigInterface->getValue('payment/paynl/testmode') == 1;
+       return $this->_scopeConfigInterface->getValue('payment/paynl/testmode', 'store') == 1;
     }
 
     public function getPaymentOptionId($methodCode){
-        return $this->_scopeConfigInterface->getValue('payment/'.$methodCode.'/payment_option_id');
+        return $this->_scopeConfigInterface->getValue('payment/'.$methodCode.'/payment_option_id', 'store');
     }
 
     /**
