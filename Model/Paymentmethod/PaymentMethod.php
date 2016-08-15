@@ -6,7 +6,7 @@
 namespace Paynl\Payment\Model\Paymentmethod;
 
 use Magento\Framework\UrlInterface;
-use \Magento\Payment\Model\Method\AbstractMethod;
+use Magento\Payment\Model\Method\AbstractMethod;
 use Magento\Sales\Model\Order;
 use Paynl\Payment\Model\Config;
 
@@ -20,6 +20,7 @@ abstract class PaymentMethod extends AbstractMethod
     protected $_isInitializeNeeded = true;
 
     protected $_canRefund = false;
+
     /**
      * Get payment instructions text from config
      *
@@ -30,10 +31,6 @@ abstract class PaymentMethod extends AbstractMethod
         return trim($this->getConfigData('instructions'));
     }
 
-    public function getPaymentOptionId(){
-        return $this->getConfigData('payment_option_id');
-    }
-
     public function initialize($paymentAction, $stateObject)
     {
         $state = $this->getConfigData('order_status');
@@ -42,8 +39,8 @@ abstract class PaymentMethod extends AbstractMethod
         $stateObject->setIsNotified(false);
     }
 
-
-    public function startTransaction(Order $order, UrlInterface $url){
+    public function startTransaction(Order $order, UrlInterface $url)
+    {
         $config = new Config($this->_scopeConfig);
 
         $config->configureSDK();
@@ -61,40 +58,50 @@ abstract class PaymentMethod extends AbstractMethod
 
         $paymentOptionId = $this->getPaymentOptionId();
 
-        $arrBillingAddress = $order->getBillingAddress()->toArray();
 
-        $arrShippingAddress = $order->getShippingAddress()->toArray();
+        $arrBillingAddress = $order->getBillingAddress();
+        if ($arrBillingAddress) {
+            $arrBillingAddress = $arrBillingAddress->toArray();
 
-        $enduser = array(
-            'initials' => substr($arrBillingAddress['firstname'], 0, 1),
-            'lastName' => $arrBillingAddress['lastname'],
-            'phoneNumber' => $arrBillingAddress['telephone'],
-            'emailAddress' => $arrBillingAddress['email'],
-        );
 
-        $invoiceAddress = array(
-            'initials' => substr($arrBillingAddress['firstname'], 0, 1),
-            'lastName' => $arrBillingAddress['lastname']
-        );
+            $enduser = array(
+                'initials' => substr($arrBillingAddress['firstname'], 0, 1),
+                'lastName' => $arrBillingAddress['lastname'],
+                'phoneNumber' => $arrBillingAddress['telephone'],
+                'emailAddress' => $arrBillingAddress['email'],
+            );
 
-        $arrAddress = \Paynl\Helper::splitAddress($arrBillingAddress['street']);
-        $invoiceAddress['streetName'] = $arrAddress[0];
-        $invoiceAddress['houseNumber'] = $arrAddress[1];
-        $invoiceAddress['zipCode'] = $arrBillingAddress['postcode'];
-        $invoiceAddress['city'] = $arrBillingAddress['city'];
-        $invoiceAddress['country'] = $arrBillingAddress['country_id'];
+            $invoiceAddress = array(
+                'initials' => substr($arrBillingAddress['firstname'], 0, 1),
+                'lastName' => $arrBillingAddress['lastname']
+            );
 
-        $shippingAddress = array(
-            'initials' => substr($arrShippingAddress['firstname'], 0, 1),
-            'lastName' => $arrShippingAddress['lastname']
-        );
-        $arrAddress2 = \Paynl\Helper::splitAddress($arrShippingAddress['street']);
-        $shippingAddress['streetName'] = $arrAddress2[0];
-        $shippingAddress['houseNumber'] = $arrAddress2[1];
-        $shippingAddress['zipCode'] = $arrShippingAddress['postcode'];
-        $shippingAddress['city'] = $arrShippingAddress['city'];
-        $shippingAddress['country'] = $arrShippingAddress['country_id'];
+            $arrAddress = \Paynl\Helper::splitAddress($arrBillingAddress['street']);
+            $invoiceAddress['streetName'] = $arrAddress[0];
+            $invoiceAddress['houseNumber'] = $arrAddress[1];
+            $invoiceAddress['zipCode'] = $arrBillingAddress['postcode'];
+            $invoiceAddress['city'] = $arrBillingAddress['city'];
+            $invoiceAddress['country'] = $arrBillingAddress['country_id'];
 
+        }
+
+        $arrShippingAddress = $order->getShippingAddress();
+        if ($arrShippingAddress) {
+            $arrShippingAddress = $arrShippingAddress->toArray();
+
+
+            $shippingAddress = array(
+                'initials' => substr($arrShippingAddress['firstname'], 0, 1),
+                'lastName' => $arrShippingAddress['lastname']
+            );
+            $arrAddress2 = \Paynl\Helper::splitAddress($arrShippingAddress['street']);
+            $shippingAddress['streetName'] = $arrAddress2[0];
+            $shippingAddress['houseNumber'] = $arrAddress2[1];
+            $shippingAddress['zipCode'] = $arrShippingAddress['postcode'];
+            $shippingAddress['city'] = $arrShippingAddress['city'];
+            $shippingAddress['country'] = $arrShippingAddress['country_id'];
+
+        }
         $data = array(
             'amount' => $total,
             'returnUrl' => $returnUrl,
@@ -105,16 +112,21 @@ abstract class PaymentMethod extends AbstractMethod
             'exchangeUrl' => $exchangeUrl,
             'currency' => $currency,
         );
-        $data['address'] = $shippingAddress;
-        $data['invoiceAddress'] = $invoiceAddress;
-
-        $data['enduser'] = $enduser;
+        if(isset($shippingAddress)){
+            $data['address'] = $shippingAddress;
+        }
+        if(isset($invoiceAddress)) {
+            $data['invoiceAddress'] = $invoiceAddress;
+        }
+        if(isset($enduser)){
+            $data['enduser'] = $enduser;
+        }
         $arrProducts = array();
         foreach ($items as $item) {
             $arrItem = $item->toArray();
             if ($arrItem['price_incl_tax'] != null) {
                 // taxamount is not valid, because on discount it returns the taxamount after discount
-                $taxAmount = $arrItem['price_incl_tax']-$arrItem['price'];
+                $taxAmount = $arrItem['price_incl_tax'] - $arrItem['price'];
                 $product = array(
                     'id' => $arrItem['product_id'],
                     'name' => $arrItem['name'],
@@ -149,7 +161,7 @@ abstract class PaymentMethod extends AbstractMethod
                 'name' => $discountDescription,
                 'price' => $discount,
                 'qty' => 1,
-                'tax' => $order->getDiscountTaxCompensationAmount()*-1
+                'tax' => $order->getDiscountTaxCompensationAmount() * -1
             );
         }
 
@@ -163,5 +175,10 @@ abstract class PaymentMethod extends AbstractMethod
         $transaction = \Paynl\Transaction::start($data);
 
         return $transaction->getRedirectUrl();
+    }
+
+    public function getPaymentOptionId()
+    {
+        return $this->getConfigData('payment_option_id');
     }
 }

@@ -142,7 +142,7 @@
                 <active>0</active>
                 <title>Overboeking</title>
                 <payment_option_id>136</payment_option_id>
-                <order_status>pending_payment</order_status>
+                <order_status>holded</order_status>
                 <instructions></instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Overboeking</model>
@@ -192,7 +192,7 @@
                 <active>0</active>
                 <title>Sofortbanking</title>
                 <payment_option_id>559</payment_option_id>
-                <order_status>pending_payment</order_status>
+                <order_status>holded</order_status>
                 <instructions></instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Sofortbanking</model>
