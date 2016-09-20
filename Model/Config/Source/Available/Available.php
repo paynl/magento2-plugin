@@ -40,9 +40,9 @@ abstract class Available implements ArrayInterface
     {
         $arrOptions = $this->toArray();
 
-        $arrResult = array();
+        $arrResult = [];
         foreach ($arrOptions as $value => $label) {
-            $arrResult[] = array('value' => $value, 'label' => $label);
+            $arrResult[] = ['value' => $value, 'label' => $label];
         }
         return $arrResult;
     }

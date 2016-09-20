@@ -35,15 +35,30 @@ class Exchange extends \Magento\Framework\App\Action\Action
      */
     protected $_orderSender;
 
+    /**
+     * @var \Magento\Framework\Controller\Result\Raw
+     */
+    protected $_result;
+
+    /**
+     * Exchange constructor.
+     * @param \Magento\Framework\App\Action\Context $context
+     * @param \Paynl\Payment\Model\Config $config
+     * @param \Magento\Sales\Model\OrderFactory $orderFactory
+     * @param \Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender
+     * @param \Psr\Log\LoggerInterface $logger
+     * @param \Magento\Framework\Controller\Result $result
+     */
     public function __construct(
     \Magento\Framework\App\Action\Context $context,
     \Paynl\Payment\Model\Config $config,
     \Magento\Sales\Model\OrderFactory $orderFactory,
     \Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender,
-    \Psr\Log\LoggerInterface $logger
+    \Psr\Log\LoggerInterface $logger,
+    \Magento\Framework\Controller\Result\Raw $result
     )
     {
-
+        $this->_result       = $result;
         $this->_config       = $config;
         $this->_orderFactory = $orderFactory;
         $this->_orderSender  = $orderSender;
@@ -59,18 +74,18 @@ class Exchange extends \Magento\Framework\App\Action\Action
         $params = $this->getRequest()->getParams();
         if(!isset($params['order_id'])){
             $this->_logger->critical('Exchange: order_id is not set in the request', $params);
-            die('FALSE| order_id is not set in the request');
+            return $this->_result->setContents('FALSE| order_id is not set in the request');
         }
 
         try{
             $transaction = \Paynl\Transaction::get($params['order_id']);
         } catch(\Exception $e){
             $this->_logger->critical($e, $params);
-            die('FALSE| Error fetching transaction. '. $e->getMessage());
+            return $this->_result->setContents('FALSE| Error fetching transaction. '. $e->getMessage());
         }
 
         if($transaction->isPending()){
-            die("TRUE| Ignoring pending");
+            return $this->_result->setContents("TRUE| Ignoring pending");
         }
 
         $orderId     = $transaction->getDescription();
@@ -78,11 +93,11 @@ class Exchange extends \Magento\Framework\App\Action\Action
 
         if(empty($order)){
             $this->_logger->critical('Cannot load order: '.$orderId);
-            die('FALSE| Cannot load order');
+            return $this->_result->setContents('FALSE| Cannot load order');
         }
         if($order->getTotalDue() <= 0){
             $this->_logger->debug('Total due <= 0, so iam not touching the status of the order: '.$orderId);
-            die('TRUE| Total due <= 0, so iam not touching the status of the order');
+            return $this->_result->setContents('TRUE| Total due <= 0, so iam not touching the status of the order');
         }
 
         if ($transaction->isPaid()) {
@@ -112,11 +127,11 @@ class Exchange extends \Magento\Framework\App\Action\Action
                     true
                 )->save();
             }
+            return $this->_result->setContents("TRUE| PAID");
 
-            die("TRUE| PAID");
         } elseif($transaction->isCanceled()){
             $order->cancel()->save();
-            die("TRUE| CANCELED");
+            return $this->_result->setContents("TRUE| CANCELED");
         }
 
     }
