@@ -46,6 +46,7 @@ class Exchange extends \Magento\Framework\App\Action\Action
      * @param \Paynl\Payment\Model\Config $config
      * @param \Magento\Sales\Model\OrderFactory $orderFactory
      * @param \Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender
+     * @param \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender
      * @param \Psr\Log\LoggerInterface $logger
      * @param \Magento\Framework\Controller\Result $result
      */
@@ -54,6 +55,7 @@ class Exchange extends \Magento\Framework\App\Action\Action
     \Paynl\Payment\Model\Config $config,
     \Magento\Sales\Model\OrderFactory $orderFactory,
     \Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender,
+    \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender,
     \Psr\Log\LoggerInterface $logger,
     \Magento\Framework\Controller\Result\Raw $result
     )
@@ -62,6 +64,7 @@ class Exchange extends \Magento\Framework\App\Action\Action
         $this->_config       = $config;
         $this->_orderFactory = $orderFactory;
         $this->_orderSender  = $orderSender;
+        $this->_invoiceSender = $invoiceSender;
         $this->_logger       = $logger;
         parent::__construct($context);
     }
@@ -121,11 +124,21 @@ class Exchange extends \Magento\Framework\App\Action\Action
             if ($invoice && !$order->getEmailSent()) {
                 $this->_orderSender->send($order);
                 $order->addStatusHistoryComment(
+                    __('New order email sent')
+                )->setIsCustomerNotified(
+                    true
+                )->save();
+            }
+            if($invoice && !$invoice->getEmailSent()){
+                $this->_invoiceSender->send($invoice);
+
+                $order->addStatusHistoryComment(
                     __('You notified customer about invoice #%1.',
                         $invoice->getIncrementId())
                 )->setIsCustomerNotified(
                     true
                 )->save();
+
             }
             return $this->_result->setContents("TRUE| PAID");
 

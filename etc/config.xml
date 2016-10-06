@@ -28,6 +28,26 @@
                 <model>Paynl\Payment\Model\Paymentmethod\Billink</model>
                 <group>paynl_payment</group>
             </paynl_payment_billink>
+            <paynl_payment_capayable>
+                <active>0</active>
+                <title>Capayable Achteraf Betalen</title>
+                <payment_option_id>1744</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <instructions></instructions>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Capayable</model>
+                <group>paynl_payment</group>
+            </paynl_payment_capayable>
+            <paynl_payment_capayable_gespreid>
+                <active>0</active>
+                <title>Capayable Gespreid Betalen</title>
+                <payment_option_id>1813</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <instructions></instructions>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\CapayableGespreid</model>
+                <group>paynl_payment</group>
+            </paynl_payment_capayable_gespreid>
             <paynl_payment_cartebleue>
                 <active>0</active>
                 <title>Cartebleue</title>

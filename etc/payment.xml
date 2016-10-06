@@ -18,6 +18,12 @@
         <method name="paynl_payment_billink">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
+        <method name="paynl_payment_capayable">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_capayable_gespreid">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
         <method name="paynl_payment_cartebleue">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
