@@ -18,6 +18,16 @@
                 <model>Paynl\Payment\Model\Paymentmethod\Afterpay</model>
                 <group>paynl_payment</group>
             </paynl_payment_afterpay>
+            <paynl_payment_amex>
+                <active>0</active>
+                <title>American Express</title>
+                <payment_option_id>1705</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <instructions></instructions>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Amex</model>
+                <group>paynl_payment</group>
+            </paynl_payment_amex>
             <paynl_payment_billink>
                 <active>0</active>
                 <title>Billink</title>

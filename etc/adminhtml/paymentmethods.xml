@@ -6,6 +6,7 @@
 -->
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../Config/etc/system_include.xsd">
     <include path="Paynl_Payment::paymentmethods/afterpay.xml" />
+    <include path="Paynl_Payment::paymentmethods/amex.xml" />
     <include path="Paynl_Payment::paymentmethods/billink.xml" />
     <include path="Paynl_Payment::paymentmethods/capayable.xml" />
     <include path="Paynl_Payment::paymentmethods/capayable_gespreid.xml" />
