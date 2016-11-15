@@ -1,22 +1,26 @@
-Discount,Korting
-"Something went wrong, please try again later","Er is iets mis gegaan, probeer het later nog eens"
-"You notified customer about invoice #%1.","Factuur: #%1 gemaakt."
-"We can't add this item to your shopping cart right now.","We kunnen dit product niet aan de winkelmand toevoegen"
-"Payment canceled","Betaling geannuleerd"
-"Enter your API-token and ServiceId first","Voer eerst uw API-token en ServiceId in"
+New order email sent,Nieuwe order email verzonden
+You notified customer about invoice #%1.,Klantemail verzonden over factuur #%1
+"Invalid return, no transactionId specified","Ongeldige return, geen transactieId meegegeven"
+There was an error checking the transaction status,Fout bij het controleren van de transactie status
+Payment canceled,Betaling geannuleerd
+Unable to cancel order,Kan order niet annuleren
+"Something went wrong, please try again later","Er is iet mis gegaan, probeer het later nogmaals"
+Enter your API-token and ServiceId first,Voer eerst je API-token en Service Id in
 No,Nee
 Yes,Ja
-"Not available, you can enable this on admin.pay.nl","Niet beschikbaar, je kunt betaalmethoden inschakelen op admin.pay.nl"
+"Not available, you can enable this on admin.pay.nl","Niet beschikbaar, activeer deze betaalmethode eerst op admin.pay.nl"
+Choose your bank,Kies uw bank
 Enabled,Ingeschakeld
 Title,Titel
-"New Order Status","Nieuwe Order Status"
-"Payment from Applicable Countries","Betalingen toestaan uit alle toegestane landen"
-"Payment from Specific Countries","Betalingen alleen toestaan uit bepaalde landen"
+New Order Status,Nieuwe order status
+Payment from Applicable Countries,Selecteer landen
+Payment from Specific Countries,Alleen geldig in bepaalde landen
 Instructions,Instructies
-"Minimum Order Total","Minimale order waarde"
-"Maximum Order Total","Maximale order waarde"
-"Sort Order","Sortering"
-"Pay.nl Settings","Pay.nl Instellingen"
+Minimum Order Total,Minimum order bedrag
+Maximum Order Total,Maximum order bedrag
+Sort Order,Sorteer volgorde
+Show bankselection,Bankselectie weergeven
+Pay.nl Settings,Pay.nl Instellingen
 API-token,API-token
 ServiceId,ServiceId
 Testmode,Testmode

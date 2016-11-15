@@ -30,7 +30,9 @@ abstract class PaymentMethod extends AbstractMethod
     {
         return trim($this->getConfigData('instructions'));
     }
-
+    public function getBanks(){
+        return [];
+    }
     public function initialize($paymentAction, $stateObject)
     {
         $state = $this->getConfigData('order_status');
@@ -44,7 +46,11 @@ abstract class PaymentMethod extends AbstractMethod
         $config = new Config($this->_scopeConfig);
 
         $config->configureSDK();
-
+        $additionalData = $order->getPayment()->getAdditionalInformation();
+        $bankId = null;
+        if(isset($additionalData['bank_id'])){
+            $bankId = $additionalData['bank_id'];
+        }
         $total = $order->getGrandTotal();
         $items = $order->getAllVisibleItems();
 
@@ -106,6 +112,7 @@ abstract class PaymentMethod extends AbstractMethod
             'amount' => $total,
             'returnUrl' => $returnUrl,
             'paymentMethod' => $paymentOptionId,
+            'bank' => $bankId,
             'description' => $orderId,
             'extra1' => $orderId,
             'extra2' => $quoteId,

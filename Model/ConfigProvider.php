@@ -80,6 +80,7 @@ class ConfigProvider implements ConfigProviderInterface
         foreach ($this->methodCodes as $code) {
             if ($this->methods[$code]->isAvailable()) {
                 $config['payment']['instructions'][$code] = $this->getInstructions($code);
+                $config['payment']['banks'][$code] = $this->getBanks($code);
                 $config['payment']['icon'][$code] = $this->getIcon($code);
             }
         }
@@ -95,6 +96,10 @@ class ConfigProvider implements ConfigProviderInterface
     protected function getInstructions($code)
     {
         return nl2br($this->escaper->escapeHtml($this->methods[$code]->getInstructions()));
+    }
+
+    protected function getBanks($code){
+        return $this->methods[$code]->getBanks();
     }
 
     /**

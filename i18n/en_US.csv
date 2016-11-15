@@ -1,12 +1,15 @@
-Discount,Discount
-"Something went wrong, please try again later","Something went wrong, please try again later"
+"New order email sent","New order email sent"
 "You notified customer about invoice #%1.","You notified customer about invoice #%1."
-"We can't add this item to your shopping cart right now.","We can't add this item to your shopping cart right now."
+"Invalid return, no transactionId specified","Invalid return, no transactionId specified"
+"There was an error checking the transaction status","There was an error checking the transaction status"
 "Payment canceled","Payment canceled"
+"Unable to cancel order","Unable to cancel order"
+"Something went wrong, please try again later","Something went wrong, please try again later"
 "Enter your API-token and ServiceId first","Enter your API-token and ServiceId first"
 No,No
 Yes,Yes
 "Not available, you can enable this on admin.pay.nl","Not available, you can enable this on admin.pay.nl"
+"Choose your bank","Choose your bank"
 Enabled,Enabled
 Title,Title
 "New Order Status","New Order Status"
@@ -16,8 +19,10 @@ Instructions,Instructions
 "Minimum Order Total","Minimum Order Total"
 "Maximum Order Total","Maximum Order Total"
 "Sort Order","Sort Order"
+"Show bankselection","Show bankselection"
 "Pay.nl Settings","Pay.nl Settings"
 API-token,API-token
 ServiceId,ServiceId
 Testmode,Testmode
 Paymentmethods,Paymentmethods
+[32mDictionary successfully processed.[39m

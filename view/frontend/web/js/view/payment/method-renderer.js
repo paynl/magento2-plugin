@@ -10,6 +10,7 @@ define(
         'use strict';
 
         var defaultComponent = 'Paynl_Payment/js/view/payment/method-renderer/default';
+	var idealComponent = 'Paynl_Payment/js/view/payment/method-renderer/ideal';
 
         var methods = [
             {type: 'paynl_payment_afterpay', component: defaultComponent},
@@ -24,7 +25,7 @@ define(
             {type: 'paynl_payment_gezondheidsbon', component: defaultComponent},
             {type: 'paynl_payment_giropay', component: defaultComponent},
             {type: 'paynl_payment_givacard', component: defaultComponent},
-            {type: 'paynl_payment_ideal', component: defaultComponent},
+            {type: 'paynl_payment_ideal', component: idealComponent},
             {type: 'paynl_payment_maestro', component: defaultComponent},
             {type: 'paynl_payment_mistercash', component: defaultComponent},
             {type: 'paynl_payment_mybank', component: defaultComponent},

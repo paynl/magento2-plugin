@@ -58,7 +58,7 @@ class Finish extends \Magento\Framework\App\Action\Action
         \Paynl\Config::setApiToken($this->_config->getApiToken());
         $params = $this->getRequest()->getParams();
         if(!isset($params['orderId'])){
-            $this->messageManager->addNotice(__('Invalid return, no transactionId specified'));
+            $this->messageManager->addNoticeMessage(__('Invalid return, no transactionId specified'));
             $this->_logger->critical('Invalid return, no transactionId specified', $params);
             $resultRedirect->setPath('checkout/cart');
             return $resultRedirect;
@@ -79,7 +79,7 @@ class Finish extends \Magento\Framework\App\Action\Action
             //canceled, re-activate quote
             try {
                 $this->_getCheckoutSession()->restoreQuote();
-                $this->messageManager->addNotice(__('Payment canceled'));
+                $this->messageManager->addNoticeMessage(__('Payment canceled'));
             } catch (\Magento\Framework\Exception\LocalizedException $e) {
                 $this->_logger->error($e);
                 $this->messageManager->addExceptionMessage($e, $e->getMessage());
