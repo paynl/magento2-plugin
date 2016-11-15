@@ -4,7 +4,7 @@
  * Copyright © 2015 Pay.nl All rights reserved.
  */
 -->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../lib/internal/Magento/Framework/ObjectManager/etc/config.xsd">
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <virtualType name="Paynl\Payment\Block\Form\Paymentmethod\Default" type="Magento\Payment\Block\Form" shared="false">
         <arguments>
             <argument name="data" xsi:type="array">
