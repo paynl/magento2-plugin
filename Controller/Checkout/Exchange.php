@@ -5,6 +5,8 @@
 
 namespace Paynl\Payment\Controller\Checkout;
 
+use Magento\Framework\Exception\LocalizedException;
+
 /**
  * Description of Index
  *
@@ -69,6 +71,52 @@ class Exchange extends \Magento\Framework\App\Action\Action
         parent::__construct($context);
     }
 
+    private function uncancel(\Magento\Sales\Model\Order $order){
+        if ($order->isCanceled()) {
+            $state = \Magento\Sales\Model\Order::STATE_PENDING_PAYMENT;
+            $productStockQty = [];
+            foreach ($order->getAllVisibleItems() as $item) {
+                $productStockQty[$item->getProductId()] = $item->getQtyCanceled();
+                foreach ($item->getChildrenItems() as $child) {
+                    $productStockQty[$child->getProductId()] = $item->getQtyCanceled();
+                    $child->setQtyCanceled(0);
+                    $child->setTaxCanceled(0);
+                    $child->setDiscountTaxCompensationCanceled(0);
+                }
+                $item->setQtyCanceled(0);
+                $item->setTaxCanceled(0);
+                $item->setDiscountTaxCompensationCanceled(0);
+                $this->_eventManager->dispatch('sales_order_item_uncancel', ['item' => $item]);
+            }
+            $this->_eventManager->dispatch(
+                'sales_order_uncancel_inventory',
+                [
+                    'order' => $order,
+                    'product_qty' => $productStockQty
+                ]
+            );
+            $order->setSubtotalCanceled(0);
+            $order->setBaseSubtotalCanceled(0);
+            $order->setTaxCanceled(0);
+            $order->setBaseTaxCanceled(0);
+            $order->setShippingCanceled(0);
+            $order->setBaseShippingCanceled(0);
+            $order->setDiscountCanceled(0);
+            $order->setBaseDiscountCanceled(0);
+            $order->setTotalCanceled(0);
+            $order->setBaseTotalCanceled(0);
+            $order->setState($state);
+            $order->setStatus($state);
+
+            $order->addStatusHistoryComment(__('Pay.nl Uncanceled order'), false);
+
+            $this->_eventManager->dispatch('order_uncancel_after', ['order' => $order]);
+        } else {
+            throw new LocalizedException(__('We cannot un-cancel this order.'));
+        }
+        return $order;
+    }
+
     public function execute()
     {
         $skipFraudDetection = false;
@@ -104,6 +152,15 @@ class Exchange extends \Magento\Framework\App\Action\Action
         }
 
         if ($transaction->isPaid()) {
+            $message = "PAID";
+            if($order->isCanceled()){
+                try{
+                    $this->uncancel($order);
+                } catch(LocalizedException $e){
+                    return $this->_result->setContents('FALSE| Cannot un-cancel order: '.$e->getMessage());
+                }
+                $message .= " order was uncanceled";
+            }
             $payment = $order->getPayment();
             $payment->setTransactionId(
                 $transaction->getId()
@@ -140,7 +197,7 @@ class Exchange extends \Magento\Framework\App\Action\Action
                 )->save();
 
             }
-            return $this->_result->setContents("TRUE| PAID");
+            return $this->_result->setContents("TRUE| ".$message);
 
         } elseif($transaction->isCanceled()){
             $order->cancel()->save();
