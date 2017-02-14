@@ -165,9 +165,8 @@ class Exchange extends \Magento\Framework\App\Action\Action
             $payment->setTransactionId(
                 $transaction->getId()
             );
-            $payment->setCurrencyCode(
-                $transaction->getPaidCurrency()
-            );
+
+            $payment->setPreparedMessage('Pay.nl - ');
             $payment->setIsTransactionClosed(
                 0
             );
