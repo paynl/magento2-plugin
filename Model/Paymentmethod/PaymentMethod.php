@@ -19,7 +19,7 @@ abstract class PaymentMethod extends AbstractMethod
 {
     protected $_isInitializeNeeded = true;
 
-    protected $_canRefund = false;
+    protected $_canRefund = true;
 
     /**
      * Get payment instructions text from config
@@ -39,6 +39,18 @@ abstract class PaymentMethod extends AbstractMethod
         $stateObject->setState($state);
         $stateObject->setStatus($state);
         $stateObject->setIsNotified(false);
+    }
+
+    public function refund(\Magento\Payment\Model\InfoInterface $payment, $amount)
+    {
+        $config = new Config($this->_scopeConfig);
+        $config->configureSDK();
+
+        $transactionId = $payment->getParentTransactionId();
+
+        \Paynl\Transaction::refund($transactionId, $amount);
+
+        return true;
     }
 
     public function startTransaction(Order $order, UrlInterface $url)
@@ -141,8 +153,8 @@ abstract class PaymentMethod extends AbstractMethod
                     'qty' => $arrItem['qty_ordered'],
                     'tax' => $taxAmount,
                 );
+                $arrProducts[] = $product;
             }
-            $arrProducts[] = $product;
         }
 
         //shipping
