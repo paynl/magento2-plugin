@@ -15,7 +15,7 @@
                 <field id="serviceid" translate="label" type="text" sortOrder="51" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>ServiceId</label>
                 </field>
-                <field id="testmode" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0">
+                <field id="testmode" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Testmode</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>   
                 </field>
