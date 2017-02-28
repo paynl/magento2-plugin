@@ -52,8 +52,12 @@ abstract class PaymentMethod extends AbstractMethod
 
         return true;
     }
+    public function startTransaction(Order $order, UrlInterface $url, \Magento\Checkout\Model\Session $checkoutSession){
+        $transaction = $this->doStartTransaction($order, $url);
 
-    public function startTransaction(Order $order, UrlInterface $url)
+        return $transaction->getRedirectUrl();
+    }
+    protected function doStartTransaction(Order $order, UrlInterface $url)
     {
         $config = new Config($this->_scopeConfig);
 
@@ -193,7 +197,7 @@ abstract class PaymentMethod extends AbstractMethod
 
         $transaction = \Paynl\Transaction::start($data);
 
-        return $transaction->getRedirectUrl();
+        return $transaction;
     }
 
     public function getPaymentOptionId()

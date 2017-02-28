@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright © 2015 Pay.nl All rights reserved.
+ */
+-->
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <group id="paynl_payment_instore" sortOrder="1050" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Instore (PIN)</label>
+        <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1"
+               showInStore="1">
+            <label>Enabled</label>
+            <source_model>Paynl\Payment\Model\Config\Source\Available\Instore</source_model>
+            <config_path>payment/paynl_payment_instore/active</config_path>
+        </field>
+        <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1"
+               showInStore="1">
+            <label>Title</label>
+            <config_path>payment/paynl_payment_instore/title</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+        <field id="order_status" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1"
+               showInStore="1">
+            <label>New Order Status</label>
+            <source_model>Paynl\Payment\Model\Config\Source\Order\Status\PendingPayment</source_model>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+            <config_path>payment/paynl_payment_instore/order_status</config_path>
+        </field>
+        <field id="allowspecific" translate="label" type="allowspecific" sortOrder="40" showInDefault="1"
+               showInWebsite="1" showInStore="1">
+            <label>Payment from Applicable Countries</label>
+            <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
+            <config_path>payment/paynl_payment_instore/allowspecific</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+        <field id="specificcountry" translate="label" type="multiselect" sortOrder="50" showInDefault="1"
+               showInWebsite="1" showInStore="1">
+            <label>Payment from Specific Countries</label>
+            <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
+            <can_be_empty>1</can_be_empty>
+            <config_path>payment/paynl_payment_instore/specificcountry</config_path>
+            <depends>
+                <field id="allowspecific">1</field>
+                <field id="active">1</field>
+            </depends>
+        </field>
+        <field id="instructions" translate="label" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Instructions</label>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+            <config_path>payment/paynl_payment_instore/instructions</config_path>
+        </field>
+        <field id="min_order_total" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1"
+               showInStore="1">
+            <label>Minimum Order Total</label>
+            <config_path>payment/paynl_payment_instore/min_order_total</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+        <field id="max_order_total" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1"
+               showInStore="1">
+            <label>Maximum Order Total</label>
+            <config_path>payment/paynl_payment_instore/max_order_total</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+
+        <field id="sort_order" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1"
+               showInStore="1">
+            <label>Sort Order</label>
+            <frontend_class>validate-number</frontend_class>
+            <config_path>payment/paynl_payment_instore/sort_order</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+
+    </group>
+</include>
+                
