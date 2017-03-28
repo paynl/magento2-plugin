@@ -71,7 +71,7 @@ class Redirect extends \Magento\Framework\App\Action\Action
             $methodInstance = $this->_paymentHelper->getMethodInstance($method);
             if ($methodInstance instanceof \Paynl\Payment\Model\Paymentmethod\Paymentmethod) {
                 $redirectUrl = $methodInstance->startTransaction($order, $this->_url, $this->_getCheckoutSession());
-                $this->_redirect($redirectUrl);
+                $this->getResponse()->setRedirect($redirectUrl);
             } else {
                 throw new Error('Method is not a paynl payment method');
             }
