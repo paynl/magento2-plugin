@@ -166,13 +166,15 @@ abstract class PaymentMethod extends AbstractMethod
         $shippingTax = $order->getShippingTaxAmount();
         $shippingDescription = $order->getShippingDescription();
 
-        $arrProducts[] = array(
-            'id' => 'shipping',
-            'name' => $shippingDescription,
-            'price' => $shippingCost,
-            'qty' => 1,
-            'tax' => $shippingTax
-        );
+        if($shippingCost != 0) {
+            $arrProducts[] = array(
+                'id' => 'shipping',
+                'name' => $shippingDescription,
+                'price' => $shippingCost,
+                'qty' => 1,
+                'tax' => $shippingTax
+            );
+        }
 
         // kortingen
         $discount = $order->getDiscountAmount();
