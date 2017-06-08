@@ -25,11 +25,13 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_clickandbuy',
         'paynl_payment_fashioncheque',
         'paynl_payment_fashiongiftcard',
+        'paynl_payment_focum',
         'paynl_payment_gezondheidsbon',
         'paynl_payment_giropay',
         'paynl_payment_givacard',
         'paynl_payment_ideal',
         'paynl_payment_instore',
+        'paynl_payment_klarna',
         'paynl_payment_maestro',
         'paynl_payment_mistercash',
         'paynl_payment_mybank',
@@ -44,6 +46,7 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_vvvgiftcard',
         'paynl_payment_webshopgiftcard',
         'paynl_payment_wijncadeau',
+        'paynl_payment_yehhpay',
         'paynl_payment_yourgift'
     ];
 

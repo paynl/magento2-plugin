@@ -98,6 +98,16 @@
                 <model>Paynl\Payment\Model\Paymentmethod\Fashiongiftcard</model>
                 <group>paynl_payment</group>
             </paynl_payment_fashiongiftcard>
+            <paynl_payment_focum>
+                <active>0</active>
+                <title>Focum</title>
+                <payment_option_id>1702</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <instructions></instructions>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Focum</model>
+                <group>paynl_payment</group>
+            </paynl_payment_focum>
             <paynl_payment_gezondheidsbon>
                 <active>0</active>
                 <title>Gezondheidsbon</title>
@@ -148,6 +158,16 @@
                 <model>Paynl\Payment\Model\Paymentmethod\Instore</model>
                 <group>paynl_payment</group>
             </paynl_payment_instore>
+            <paynl_payment_klarna>
+                <active>0</active>
+                <title>Klarna</title>
+                <payment_option_id>1717</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <instructions></instructions>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Klarna</model>
+                <group>paynl_payment</group>
+            </paynl_payment_klarna>
             <paynl_payment_maestro>
                 <active>0</active>
                 <title>Maestro</title>
@@ -288,6 +308,16 @@
                 <model>Paynl\Payment\Model\Paymentmethod\Wijncadeau</model>
                 <group>paynl_payment</group>
             </paynl_payment_wijncadeau>
+            <paynl_payment_yehhpay>
+                <active>0</active>
+                <title>Yehhpay</title>
+                <payment_option_id>1877</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <instructions></instructions>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Yehhpay</model>
+                <group>paynl_payment</group>
+            </paynl_payment_yehhpay>
             <paynl_payment_yourgift>
                 <active>0</active>
                 <title>Yourgift.nl</title>

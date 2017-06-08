@@ -14,11 +14,13 @@
     <include path="Paynl_Payment::paymentmethods/clickandbuy.xml" />
     <include path="Paynl_Payment::paymentmethods/fashioncheque.xml" />
     <include path="Paynl_Payment::paymentmethods/fashiongiftcard.xml" />
+    <include path="Paynl_Payment::paymentmethods/focum.xml" />
     <include path="Paynl_Payment::paymentmethods/gezondheidsbon.xml" />
     <include path="Paynl_Payment::paymentmethods/giropay.xml" />
     <include path="Paynl_Payment::paymentmethods/givacard.xml" />
     <include path="Paynl_Payment::paymentmethods/ideal.xml" />
     <include path="Paynl_Payment::paymentmethods/instore.xml" />
+    <include path="Paynl_Payment::paymentmethods/klarna.xml" />
     <include path="Paynl_Payment::paymentmethods/maestro.xml" />
     <include path="Paynl_Payment::paymentmethods/mistercash.xml" />
     <include path="Paynl_Payment::paymentmethods/mybank.xml" />
@@ -33,5 +35,6 @@
     <include path="Paynl_Payment::paymentmethods/vvvgiftcard.xml" />
     <include path="Paynl_Payment::paymentmethods/webshopgiftcard.xml" />
     <include path="Paynl_Payment::paymentmethods/wijncadeau.xml" />
+    <include path="Paynl_Payment::paymentmethods/yehhpay.xml" />
     <include path="Paynl_Payment::paymentmethods/yourgift.xml" />
 </include>

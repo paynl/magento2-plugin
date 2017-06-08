@@ -22,11 +22,13 @@ define(
             {type: 'paynl_payment_clickandbuy', component: defaultComponent},
             {type: 'paynl_payment_fashioncheque', component: defaultComponent},
             {type: 'paynl_payment_fashiongiftcard', component: defaultComponent},
+            {type: 'paynl_payment_focum', component: defaultComponent},
             {type: 'paynl_payment_gezondheidsbon', component: defaultComponent},
             {type: 'paynl_payment_giropay', component: defaultComponent},
             {type: 'paynl_payment_givacard', component: defaultComponent},
             {type: 'paynl_payment_ideal', component: idealComponent},
             {type: 'paynl_payment_instore', component: idealComponent},
+            {type: 'paynl_payment_klarna', component: idealComponent},
             {type: 'paynl_payment_maestro', component: defaultComponent},
             {type: 'paynl_payment_mistercash', component: defaultComponent},
             {type: 'paynl_payment_mybank', component: defaultComponent},
@@ -41,6 +43,7 @@ define(
             {type: 'paynl_payment_vvvgiftcard', component: defaultComponent},
             {type: 'paynl_payment_webshopgiftcard', component: defaultComponent},
             {type: 'paynl_payment_wijncadeau', component: defaultComponent},
+            {type: 'paynl_payment_yehhpay', component: defaultComponent},
             {type: 'paynl_payment_yourgift', component: defaultComponent}
         ];
         $.each(methods, function (k, method) {

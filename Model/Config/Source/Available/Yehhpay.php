@@ -6,7 +6,7 @@
 namespace Paynl\Payment\Model\Config\Source\Available;
 
 
-class Fashiongiftcard extends Available
+class Yehhpay extends Available
 {
-    protected $_code = 'paynl_payment_fashiongiftcard';
+    protected $_code = 'paynl_payment_yehhpay';
 }
