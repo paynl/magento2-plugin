@@ -199,6 +199,9 @@ class Exchange extends \Magento\Framework\App\Action\Action
             return $this->_result->setContents("TRUE| ".$message);
 
         } elseif($transaction->isCanceled()){
+            if($order->getState() == 'holded'){
+                $order->unhold();
+            }
             $order->cancel()->save();
             return $this->_result->setContents("TRUE| CANCELED");
         }
