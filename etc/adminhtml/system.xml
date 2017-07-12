@@ -9,15 +9,22 @@
         <section id="payment">
             <group id="paynl" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Pay.nl Settings</label>
+
+                <field id="testmode" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Testmode</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
                 <field id="apitoken" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>API-token</label>
                 </field>
                 <field id="serviceid" translate="label" type="text" sortOrder="51" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>ServiceId</label>
                 </field>
-                <field id="testmode" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Testmode</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>   
+
+                <field id="language" translate="label" type="select" sortOrder="52" showInDefault="1" showInStore="1" showInWebsite="1">
+                    <label>Language payment screen</label>
+                    <source_model>Paynl\Payment\Model\Config\Source\Languages</source_model>
                 </field>
                 <group id="paynl_paymentmethods" translate="label"  sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
                     <frontend_model>Paynl\Payment\Block\Adminhtml\System\Config\Fieldset\Expanded</frontend_model>

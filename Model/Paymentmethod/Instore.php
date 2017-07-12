@@ -5,7 +5,6 @@
 
 namespace Paynl\Payment\Model\Paymentmethod;
 
-use Magento\Checkout\Model\Session;
 use Magento\Framework\UrlInterface;
 use Magento\Sales\Model\Order;
 use Paynl\Payment\Model\Config;
@@ -30,8 +29,6 @@ class Instore extends PaymentMethod
         }
         unset($additionalData['bank_id']);
 
-        $order->getPayment()->setAdditionalInformation($additionalData);
-
         $transaction = $this->doStartTransaction($order, $url);
 
         $instorePayment = \Paynl\Instore::payment([
@@ -39,27 +36,12 @@ class Instore extends PaymentMethod
             'terminalId' => $bankId
         ]);
 
-        for ($i = 0; $i < 60; $i++) {
-            $status = \Paynl\Instore::status([
-                'hash' => $instorePayment->getHash()
-            ]);
-            switch ($status->getTransactionState()) {
-                case 'approved':
-                    $info = \Paynl\Transaction::get($transaction->getTransactionId());
-                    $this->registerPayment($order, $info);
-                    return "checkout/onepage/success";
-                    break;
-                case 'cancelled':
-                case 'expired':
-                case 'error':
-                    $session->restoreQuote();
-                    return "checkout";
-                    break;
+        $additionalData['terminal_hash'] = $instorePayment->getHash();
 
-            }
-            sleep(1);
-        }
+        $order->getPayment()->setAdditionalInformation($additionalData);
+        $order->save();
 
+        return $instorePayment->getRedirectUrl();
     }
 
     public function assignData(\Magento\Framework\DataObject $data)

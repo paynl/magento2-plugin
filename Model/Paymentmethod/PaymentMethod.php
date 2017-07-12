@@ -64,7 +64,7 @@ abstract class PaymentMethod extends AbstractMethod
         $config->configureSDK();
         $additionalData = $order->getPayment()->getAdditionalInformation();
         $bankId = null;
-        if(isset($additionalData['bank_id'])){
+        if(isset($additionalData['bank_id']) && is_numeric($additionalData['bank_id'])){
             $bankId = $additionalData['bank_id'];
         }
         $total = $order->getGrandTotal();
@@ -128,10 +128,12 @@ abstract class PaymentMethod extends AbstractMethod
             'amount' => $total,
             'returnUrl' => $returnUrl,
             'paymentMethod' => $paymentOptionId,
+            'language' => $config->getLanguage(),
             'bank' => $bankId,
             'description' => $orderId,
             'extra1' => $orderId,
             'extra2' => $quoteId,
+            'extra3' => $order->getPayment()->getEntityId(),
             'exchangeUrl' => $exchangeUrl,
             'currency' => $currency,
         );

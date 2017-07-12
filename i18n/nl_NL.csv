@@ -1,4 +1,6 @@
-New order email sent,Nieuwe order email verzonden
+Pay.nl Uncanceled order,Pay.nl heeft de annulering ongedaan gemaakt
+We cannot un-cancel this order.,Kan annulering niet ongedaan maken
+New order email sent,Nieuwe order email is verzonden
 You notified customer about invoice #%1.,Klantemail verzonden over factuur #%1
 "Invalid return, no transactionId specified","Ongeldige return, geen transactieId meegegeven"
 There was an error checking the transaction status,Fout bij het controleren van de transactie status
@@ -9,19 +11,27 @@ Enter your API-token and ServiceId first,Voer eerst je API-token en Service Id i
 No,Nee
 Yes,Ja
 "Not available, you can enable this on admin.pay.nl","Niet beschikbaar, activeer deze betaalmethode eerst op admin.pay.nl"
+Dutch,Nederlands
+English,Engels
+German,Duits
+Italian,Italiaans
+French,Frans
+Spanish,Spaans
 Choose your bank,Kies uw bank
+Choose the pin terminal,Kies de pin terminal
 Enabled,Ingeschakeld
 Title,Titel
 New Order Status,Nieuwe order status
 Payment from Applicable Countries,Selecteer landen
 Payment from Specific Countries,Alleen geldig in bepaalde landen
 Instructions,Instructies
-Minimum Order Total,Minimum order bedrag
-Maximum Order Total,Maximum order bedrag
+Minimum Order Total,Minimale order bedrag
+Maximum Order Total,Maximale order bedrag
 Sort Order,Sorteer volgorde
 Show bankselection,Bankselectie weergeven
-Pay.nl Settings,Pay.nl Instellingen
+Pay.nl Settings,Pay.nl instellingen
+Testmode,Testmode
 API-token,API-token
 ServiceId,ServiceId
-Testmode,Testmode
+Language payment screen,Taal betaalscherm
 Paymentmethods,Betaalmethoden

@@ -6,6 +6,8 @@
 namespace Paynl\Payment\Controller\Checkout;
 
 use Magento\Checkout\Model\Session;
+use Magento\Sales\Model\Order;
+use Magento\Sales\Model\OrderRepository;
 
 /**
  * Description of Redirect
@@ -31,6 +33,11 @@ class Finish extends \Magento\Framework\App\Action\Action
     protected $_logger;
 
     /**
+     * @var OrderRepository
+     */
+    protected $orderRepository;
+
+    /**
      * Index constructor.
      * @param \Magento\Framework\App\Action\Context $context
      * @param \Paynl\Payment\Model\Config $config
@@ -41,12 +48,14 @@ class Finish extends \Magento\Framework\App\Action\Action
         \Magento\Framework\App\Action\Context $context,
         \Paynl\Payment\Model\Config $config,
         Session $checkoutSession,
-        \Psr\Log\LoggerInterface $logger
+        \Psr\Log\LoggerInterface $logger,
+        OrderRepository $orderRepository
     )
     {
         $this->_config = $config;
         $this->_checkoutSession = $checkoutSession;
         $this->_logger = $logger;
+        $this->orderRepository = $orderRepository;
 
         parent::__construct($context);
     }
@@ -72,7 +81,22 @@ class Finish extends \Magento\Framework\App\Action\Action
             return $resultRedirect;
         }
 
-        if ($transaction->isPaid() || $transaction->isPending()) {
+        /**
+         * @var Order $order
+         */
+        $order = $this->orderRepository->get($transaction->getExtra3());
+        $payment = $order->getPayment();
+        $information = $payment->getAdditionalInformation();
+        $pinStatus = null;
+        if(isset($information['terminal_hash'])){
+            $hash = $information['terminal_hash'];
+            $status = \Paynl\Instore::status([
+                'hash' => $hash
+            ]);
+            $pinStatus = $status->getTransactionState();
+        }
+
+        if ($transaction->isPaid() || ($transaction->isPending() && $pinStatus == null)) {
             $this->_getCheckoutSession()->start();
             $resultRedirect->setPath('checkout/onepage/success');
         } else {
@@ -88,6 +112,16 @@ class Finish extends \Magento\Framework\App\Action\Action
                 $this->messageManager->addExceptionMessage($e, __('Unable to cancel order'));
             }
             $resultRedirect->setPath('checkout/cart');
+        }
+
+        if(in_array($pinStatus,[
+            'cancelled',
+            'expired',
+            'error'
+        ])){
+            // er komt hier geen cancel voor binnen, dus doen we het hier
+            $order->cancel();
+            $this->orderRepository->save($order);
         }
         return $resultRedirect;
     }

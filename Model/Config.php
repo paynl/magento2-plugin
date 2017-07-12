@@ -19,7 +19,7 @@ class Config
     protected $_scopeConfigInterface;
 
     public function __construct(
-    \Magento\Framework\App\Config\ScopeConfigInterface $configInterface
+    ScopeConfigInterface $configInterface
     )
     {
         $this->_scopeConfigInterface = $configInterface;
@@ -38,6 +38,10 @@ class Config
     public function isTestMode()
     {
        return $this->_scopeConfigInterface->getValue('payment/paynl/testmode', 'store') == 1;
+    }
+    public function getLanguage(){
+        $language = $this->_scopeConfigInterface->getValue('payment/paynl/language', 'store');
+        return $language?$language:'nl'; //default nl
     }
 
     public function getPaymentOptionId($methodCode){
