@@ -133,7 +133,7 @@ abstract class PaymentMethod extends AbstractMethod
             'description' => $orderId,
             'extra1' => $orderId,
             'extra2' => $quoteId,
-            'extra3' => $order->getPayment()->getEntityId(),
+            'extra3' => $order->getEntityId(),
             'exchangeUrl' => $exchangeUrl,
             'currency' => $currency,
         );
