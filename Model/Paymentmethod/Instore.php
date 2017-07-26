@@ -67,24 +67,27 @@ class Instore extends PaymentMethod
 
         $cache = $this->getCache();
         $cacheName = 'paynl_terminals_' . $this->getPaymentOptionId();
-
         $banksJson = $cache->load($cacheName);
         if ($banksJson) {
             $banks = json_decode($banksJson);
         } else {
-
-            $config = new Config($this->_scopeConfig);
-
-            $config->configureSDK();
-
-            $terminals = \Paynl\Instore::getAllTerminals();
-            $terminals = $terminals->getList();
             $banks = [];
-            foreach ($terminals as $terminal) {
-                $terminal['visibleName'] = $terminal['name'];
-                array_push($banks, $terminal);
+            try {
+                $config = new Config($this->_scopeConfig);
+
+                $config->configureSDK();
+
+                $terminals = \Paynl\Instore::getAllTerminals();
+                $terminals = $terminals->getList();
+
+                foreach ($terminals as $terminal) {
+                    $terminal['visibleName'] = $terminal['name'];
+                    array_push($banks, $terminal);
+                }
+                $cache->save(json_encode($banks), $cacheName);
+            } catch (\Paynl\Error\Error $e) {
+                // Probably instore is not activated, no terminals present
             }
-            $cache->save(json_encode($banks), $cacheName);
         }
         array_unshift($banks, array(
             'id' => '',
@@ -104,24 +107,5 @@ class Instore extends PaymentMethod
         /** @var \Magento\Framework\App\CacheInterface $cache */
         $cache = $om->get('Magento\Framework\App\CacheInterface');
         return $cache;
-    }
-
-    private function registerPayment(Order $order, Transaction $transaction)
-    {
-        $skipFraudDetection = false;
-        $payment = $order->getPayment();
-        $payment->setTransactionId(
-            $transaction->getId()
-        );
-
-        $payment->setPreparedMessage('Pay.nl - ');
-        $payment->setIsTransactionClosed(
-            0
-        );
-        $payment->registerCaptureNotification(
-            $transaction->getPaidCurrencyAmount(), $skipFraudDetection
-        );
-        $order->save();
-
     }
 }
