@@ -12,18 +12,18 @@ With this plugin by Pay.nl you can easily add all desired payment methods to you
 
 #####Available payment methods:
 
-Bank Payments  | Creditcards | Gift cards & Vouchers | Others | 
-:-----------: | :-----------: | :-----------: | :-----------: | 
-iDEAL |Visa | YourGift | AfterPay | 
-Bancontact Mister Cash  |  Mastercard | Webshop Giftcard | Billink | 
-Giropay |American Express | FashionCheque |Focum AchterafBetalen | 
-MyBank | Carte Bleue | Podium Cadeaukaart | PayPal |  
-SOFORT Banking | PostePay | Gezondheidsbon |  Pay Fixed Price (phone) | 
-Maestro | | Fashion Giftcard | Paysafecard  |
-Bank Transfer | | Wijncadeau | |
- | | VVV Giftcard | | 
-
-
+Bank Payments  | Creditcards | Gift cards & Vouchers | Pay by invoice | Others | 
+:-----------: | :-----------: | :-----------: | :-----------: | :-----------: |
+iDEAL |Visa | YourGift | AfterPay | PayPal |
+Bancontact |  Mastercard | Webshop Giftcard | Billink | Pay Fixed Price (phone) | 
+Giropay |American Express | FashionCheque |Focum AchterafBetalen.nl | Instore Payments (POS)|
+MyBank | Carte Bleue | Podium Cadeaukaart | Capayable achteraf betalen |  | 
+SOFORT Banking | PostePay | Gezondheidsbon | Capayable Gespreid betalen | |
+Maestro | | Fashion Giftcard |  | | | 
+Bank Transfer | | Wijncadeau | | | 
+|  | | VVV Giftcard | | | 
+| | | Paysafecard |
+| | | Gift in a Box |
 
 ### Quickstart
 
@@ -47,7 +47,7 @@ The plugin is now installed
 2. Go to *Stores* / *Configuration*
 3. Go to *Sales* / *Payment Methods*
 4. Scroll down to find the Pay.nl Settings
-5. Enter the API token and serviceID (these can be found in the Pay.nl Admin Panel --> https://admin.pay.nl
+5. Enter the API token and serviceID (these can be found in the Pay.nl Admin Panel --> https://admin.pay.nl/programs/programs
 6. Save the settings
 7. Enable the desired payment methods and set allowed countries
 8. Save the settings
