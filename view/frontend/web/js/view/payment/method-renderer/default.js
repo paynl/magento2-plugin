@@ -21,7 +21,7 @@ define(
                 return window.checkoutConfig.payment.icon[this.item.method];
             },
             afterPlaceOrder: function () {
-                window.location.replace(url.build('/paynl/checkout/redirect'));
+                window.location.replace(url.build('/paynl/checkout/redirect?nocache='+ (new Date().getTime())));
             },
 
         });
