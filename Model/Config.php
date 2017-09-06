@@ -39,6 +39,10 @@ class Config
     {
        return $this->_scopeConfigInterface->getValue('payment/paynl/testmode', 'store') == 1;
     }
+	public function isNeverCancel()
+	{
+		return $this->_scopeConfigInterface->getValue('payment/paynl/never_cancel', 'store') == 1;
+	}
     public function getLanguage(){
         $language = $this->_scopeConfigInterface->getValue('payment/paynl/language', 'store');
         return $language?$language:'nl'; //default nl

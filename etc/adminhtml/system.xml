@@ -26,6 +26,12 @@
                     <label>Language payment screen</label>
                     <source_model>Paynl\Payment\Model\Config\Source\Languages</source_model>
                 </field>
+                <field id="never_cancel" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Never cancel order</label>
+                    <comment><![CDATA[This setting will disable cancelling the order when the payment is canceled.
+                    This can be used if uncancelling the order in case of a second chance payment produces errors. WARNING! Orders will never be cancelled automaticly]]></comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
                 <group id="paynl_paymentmethods" translate="label"  sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
                     <frontend_model>Paynl\Payment\Block\Adminhtml\System\Config\Fieldset\Expanded</frontend_model>
                     <label>Paymentmethods</label>

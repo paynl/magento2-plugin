@@ -50,7 +50,7 @@ class Exchange extends \Magento\Framework\App\Action\Action
      * @param \Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender
      * @param \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender
      * @param \Psr\Log\LoggerInterface $logger
-     * @param \Magento\Framework\Controller\Result $result
+     * @param \Magento\Framework\Controller\Result\Raw $result
      */
     public function __construct(
     \Magento\Framework\App\Action\Context $context,
@@ -199,6 +199,9 @@ class Exchange extends \Magento\Framework\App\Action\Action
             return $this->_result->setContents("TRUE| ".$message);
 
         } elseif($transaction->isCanceled()){
+			if($this->_config->isNeverCancel()){
+				return $this->_result->setContents("TRUE| Not Canceled because never cancel is enabled");
+			}
             if($order->getState() == 'holded'){
                 $order->unhold();
             }
