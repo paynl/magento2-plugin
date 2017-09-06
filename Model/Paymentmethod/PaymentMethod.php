@@ -20,6 +20,7 @@ abstract class PaymentMethod extends AbstractMethod
     protected $_isInitializeNeeded = true;
 
     protected $_canRefund = true;
+    protected $_canRefundInvoicePartial = true;
 
     /**
      * Get payment instructions text from config
