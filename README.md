@@ -10,7 +10,7 @@
 
 With this plugin by Pay.nl you can easily add all desired payment methods to your Magento 2 webshop. Please refer to https://www.pay.nl (Dutch) for an overview of all features and services. 
 
-#####Available payment methods:
+##### Available payment methods:
 
 Bank Payments  | Creditcards | Gift cards & Vouchers | Others | 
 :-----------: | :-----------: | :-----------: | :-----------: | 
@@ -27,7 +27,7 @@ Bank Transfer | | Wijncadeau | |
 
 ### Quickstart
 
-#####Installing
+##### Installing
 
 In command line, navigate to the installation directory of magento2
 
@@ -41,7 +41,7 @@ php bin/magento cache:clean
 
 The plugin is now installed
 
-#####Setup
+##### Setup
 
 1. Log into the Magento Admin
 2. Go to *Stores* / *Configuration*
