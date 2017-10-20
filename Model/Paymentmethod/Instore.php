@@ -19,7 +19,7 @@ class Instore extends PaymentMethod
 {
     protected $_code = 'paynl_payment_instore';
 
-    public function startTransaction(Order $order, UrlInterface $url, \Magento\Checkout\Model\Session $session)
+    public function startTransaction(Order $order)
     {
 
         $additionalData = $order->getPayment()->getAdditionalInformation();
@@ -29,7 +29,7 @@ class Instore extends PaymentMethod
         }
         unset($additionalData['bank_id']);
 
-        $transaction = $this->doStartTransaction($order, $url);
+        $transaction = $this->doStartTransaction($order);
 
         $instorePayment = \Paynl\Instore::payment([
             'transactionId' => $transaction->getTransactionId(),

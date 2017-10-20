@@ -1,0 +1,40 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+/**
+ * @var $block Paynl\Payment\Block\Form\Paylink
+ */
+$code = $block->escapeHtml( $block->getMethodCode() );
+?>
+<?php $methodCode = $block->escapeHtml( $block->getMethodCode() ); ?>
+<fieldset class="admin__fieldset payment-method" id="payment_form_<?= /* @noEscape */$code ?>"
+          style="display:none;">
+    <div class="admin__field">
+        <strong><?= __('Caution!') ?></strong>
+        <p>
+            <?= __("The paylink is added as an order note, you'll have to send the link to the customer yourself.") ?>
+        </p>
+    </div>
+
+    <div class="admin__field">
+        <label for="<?= /* @noEscape */$code ?>_valid_days" class="admin__field-label"><?= __( 'Valid for' ) ?>:</label>
+
+        <div class="admin__field-control">
+            <select class="admin__control-select" id="<?= /* @noEscape */
+			$code ?>_valid_days" name="payment[valid_days]">
+				<?php for ( $i = 1; $i <= 21; $i ++ ): ?>
+                    <option value="<?= $i ?>" <?= ( $i == 7 ) ? 'selected' : '' ?>><?= $i ?></option>
+				<?php endfor; ?>
+            </select> <?= __( 'days' ) ?>
+        </div>
+    </div>
+</fieldset>
+
+
+
+
+

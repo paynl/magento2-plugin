@@ -6,6 +6,8 @@
 namespace Paynl\Payment\Controller\Checkout;
 
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Sales\Model\Order;
+use Magento\Sales\Model\OrderRepository;
 
 /**
  * Description of Index
@@ -38,9 +40,20 @@ class Exchange extends \Magento\Framework\App\Action\Action
     protected $_orderSender;
 
     /**
+     *
+     * @var \Magento\Sales\Model\Order\Email\Sender\InvoiceSender
+     */
+    protected $_invoiceSender;
+
+    /**
      * @var \Magento\Framework\Controller\Result\Raw
      */
     protected $_result;
+
+	/**
+	 * @var OrderRepository
+	 */
+    protected $_orderRepository;
 
     /**
      * Exchange constructor.
@@ -59,15 +72,17 @@ class Exchange extends \Magento\Framework\App\Action\Action
     \Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender,
     \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender,
     \Psr\Log\LoggerInterface $logger,
-    \Magento\Framework\Controller\Result\Raw $result
+    \Magento\Framework\Controller\Result\Raw $result,
+	OrderRepository $orderRepository
     )
     {
-        $this->_result       = $result;
-        $this->_config       = $config;
-        $this->_orderFactory = $orderFactory;
-        $this->_orderSender  = $orderSender;
-        $this->_invoiceSender = $invoiceSender;
-        $this->_logger       = $logger;
+        $this->_result          = $result;
+        $this->_config          = $config;
+        $this->_orderFactory    = $orderFactory;
+        $this->_orderSender     = $orderSender;
+        $this->_invoiceSender   = $invoiceSender;
+        $this->_logger          = $logger;
+        $this->_orderRepository = $orderRepository;
         parent::__construct($context);
     }
 
@@ -139,15 +154,16 @@ class Exchange extends \Magento\Framework\App\Action\Action
             return $this->_result->setContents("TRUE| Ignoring pending");
         }
 
-        $orderId     = $transaction->getDescription();
-        $order       = $this->_orderFactory->create()->loadByIncrementId($orderId);
+        $orderEntityId = $transaction->getExtra3();
+        /** @var Order $order */
+        $order        = $this->_orderRepository->get($orderEntityId);
 
         if(empty($order)){
-            $this->_logger->critical('Cannot load order: '.$orderId);
+            $this->_logger->critical('Cannot load order: '.$orderEntityId);
             return $this->_result->setContents('FALSE| Cannot load order');
         }
         if($order->getTotalDue() <= 0){
-            $this->_logger->debug('Total due <= 0, so iam not touching the status of the order: '.$orderId);
+            $this->_logger->debug('Total due <= 0, so iam not touching the status of the order: '.$orderEntityId);
             return $this->_result->setContents('TRUE| Total due <= 0, so iam not touching the status of the order');
         }
 
@@ -173,7 +189,7 @@ class Exchange extends \Magento\Framework\App\Action\Action
             $payment->registerCaptureNotification(
                 $transaction->getPaidCurrencyAmount(), $skipFraudDetection
             );
-            $order->save();
+            $this->_orderRepository->save($order);
 
             // notify customer
             $invoice = $payment->getCreatedInvoice();
@@ -205,7 +221,8 @@ class Exchange extends \Magento\Framework\App\Action\Action
             if($order->getState() == 'holded'){
                 $order->unhold();
             }
-            $order->cancel()->save();
+            $order->cancel();
+            $this->_orderRepository->save($order);
             return $this->_result->setContents("TRUE| CANCELED");
         }
 

@@ -22,7 +22,7 @@ abstract class PaymentMethod extends AbstractMethod
     protected $_canRefund = true;
     protected $_canRefundInvoicePartial = true;
 
-    /**
+	/**
      * Get payment instructions text from config
      *
      * @return string
@@ -53,21 +53,25 @@ abstract class PaymentMethod extends AbstractMethod
 
         return true;
     }
-    public function startTransaction(Order $order, UrlInterface $url, \Magento\Checkout\Model\Session $checkoutSession){
-        $transaction = $this->doStartTransaction($order, $url);
-
+    public function startTransaction(Order $order){
+        $transaction = $this->doStartTransaction($order);
         return $transaction->getRedirectUrl();
     }
-    protected function doStartTransaction(Order $order, UrlInterface $url)
+    protected function doStartTransaction(Order $order)
     {
         $config = new Config($this->_scopeConfig);
 
         $config->configureSDK();
         $additionalData = $order->getPayment()->getAdditionalInformation();
         $bankId = null;
+        $expireDate = null;
         if(isset($additionalData['bank_id']) && is_numeric($additionalData['bank_id'])){
             $bankId = $additionalData['bank_id'];
         }
+        if(isset($additionalData['valid_days']) && is_numeric($additionalData['valid_days'])){
+	        $expireDate = new \DateTime('+'.$additionalData['valid_days'].' days');
+        }
+
         $total = $order->getGrandTotal();
         $items = $order->getAllVisibleItems();
 
@@ -76,11 +80,13 @@ abstract class PaymentMethod extends AbstractMethod
 
         $currency = $order->getOrderCurrencyCode();
 
-        $returnUrl = $url->getUrl('paynl/checkout/finish/');
-        $exchangeUrl = $url->getUrl('paynl/checkout/exchange/');
+		$store = $order->getStore();
+		$baseUrl = $store->getBaseUrl();
+		// i want to use the url builder here, but that doenst work from admin, even if the store is supplied
+	    $returnUrl = $baseUrl.'paynl/checkout/finish/';
+	    $exchangeUrl = $baseUrl.'paynl/checkout/exchange/';
 
         $paymentOptionId = $this->getPaymentOptionId();
-
 
         $arrBillingAddress = $order->getBillingAddress();
         if ($arrBillingAddress) {
@@ -147,6 +153,7 @@ abstract class PaymentMethod extends AbstractMethod
             'paymentMethod' => $paymentOptionId,
             'language' => $config->getLanguage(),
             'bank' => $bankId,
+            'expireDate' => $expireDate,
             'description' => $orderId,
             'extra1' => $orderId,
             'extra2' => $quoteId,
