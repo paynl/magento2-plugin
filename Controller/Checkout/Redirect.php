@@ -20,10 +20,6 @@ class Redirect extends \Magento\Framework\App\Action\Action
      */
     protected $_config;
 
-    /**
-     * @var \Magento\Framework\Message\ManagerInterface
-     */
-    protected $messageManager;
 
     /**
      * @var \Magento\Checkout\Model\Session
@@ -71,6 +67,7 @@ class Redirect extends \Magento\Framework\App\Action\Action
             $methodInstance = $this->_paymentHelper->getMethodInstance($method);
             if ($methodInstance instanceof \Paynl\Payment\Model\Paymentmethod\Paymentmethod) {
                 $redirectUrl = $methodInstance->startTransaction($order);
+                $this->_getCheckoutSession()->restoreQuote();
                 $this->getResponse()->setNoCacheHeaders();
                 $this->getResponse()->setRedirect($redirectUrl);
             } else {
@@ -78,8 +75,8 @@ class Redirect extends \Magento\Framework\App\Action\Action
             }
 
         } catch (\Exception $e) {
-            $this->messageManager->addException($e, __('Something went wrong, please try again later'));
-            $this->messageManager->addException($e, $e->getMessage());
+            $this->messageManager->addExceptionMessage($e, __('Something went wrong, please try again later'));
+            $this->messageManager->addExceptionMessage($e, $e->getMessage());
             $this->_logger->critical($e);
             $this->_getCheckoutSession()->restoreQuote();
             $this->_redirect('checkout/cart');
