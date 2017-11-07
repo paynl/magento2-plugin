@@ -221,7 +221,9 @@ class Exchange extends \Magento\Framework\App\Action\Action
             if($order->getState() == 'holded'){
                 $order->unhold();
             }
+
             $order->cancel();
+	        $order->addStatusHistoryComment( __('Pay.nl canceled the order'));
             $this->_orderRepository->save($order);
             return $this->_result->setContents("TRUE| CANCELED");
         }

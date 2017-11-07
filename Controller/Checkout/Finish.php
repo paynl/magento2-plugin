@@ -6,6 +6,7 @@
 namespace Paynl\Payment\Controller\Checkout;
 
 use Magento\Checkout\Model\Session;
+use Magento\Quote\Model\QuoteRepository;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderRepository;
 
@@ -20,22 +21,27 @@ class Finish extends \Magento\Framework\App\Action\Action
      *
      * @var \Paynl\Payment\Model\Config
      */
-    protected $_config;
+    protected $config;
 
     /**
      * @var Session
      */
-    protected $_checkoutSession;
+    protected $checkoutSession;
 
     /**
      * @var \Psr\Log\LoggerInterface
      */
-    protected $_logger;
+    protected $logger;
 
     /**
      * @var OrderRepository
      */
     protected $orderRepository;
+
+	/**
+	 * @var QuoteRepository
+	 */
+	protected $quoteRepository;
 
     /**
      * Index constructor.
@@ -43,19 +49,22 @@ class Finish extends \Magento\Framework\App\Action\Action
      * @param \Paynl\Payment\Model\Config $config
      * @param Session $checkoutSession
      * @param \Psr\Log\LoggerInterface $logger
+     * @param OrderRepository $orderRepository
      */
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
         \Paynl\Payment\Model\Config $config,
         Session $checkoutSession,
         \Psr\Log\LoggerInterface $logger,
-        OrderRepository $orderRepository
+        OrderRepository $orderRepository,
+		QuoteRepository $quoteRepository
     )
     {
-        $this->_config = $config;
-        $this->_checkoutSession = $checkoutSession;
-        $this->_logger = $logger;
-        $this->orderRepository = $orderRepository;
+        $this->config           = $config;
+        $this->checkoutSession  = $checkoutSession;
+        $this->logger           = $logger;
+        $this->orderRepository  = $orderRepository;
+        $this->quoteRepository = $quoteRepository;
 
         parent::__construct($context);
     }
@@ -64,18 +73,18 @@ class Finish extends \Magento\Framework\App\Action\Action
     {
         $resultRedirect = $this->resultRedirectFactory->create();
 
-        \Paynl\Config::setApiToken($this->_config->getApiToken());
+        \Paynl\Config::setApiToken($this->config->getApiToken());
         $params = $this->getRequest()->getParams();
         if(!isset($params['orderId'])){
             $this->messageManager->addNoticeMessage(__('Invalid return, no transactionId specified'));
-            $this->_logger->critical('Invalid return, no transactionId specified', $params);
+            $this->logger->critical('Invalid return, no transactionId specified', $params);
             $resultRedirect->setPath('checkout/cart');
             return $resultRedirect;
         }
         try{
             $transaction = \Paynl\Transaction::get($params['orderId']);
         } catch(\Exception $e){
-            $this->_logger->critical($e, $params);
+            $this->logger->critical($e, $params);
             $this->messageManager->addExceptionMessage($e, __('There was an error checking the transaction status'));
             $resultRedirect->setPath('checkout/cart');
             return $resultRedirect;
@@ -97,42 +106,32 @@ class Finish extends \Magento\Framework\App\Action\Action
         }
 
         if ($transaction->isPaid() || ($transaction->isPending() && $pinStatus == null)) {
-            $this->_getCheckoutSession()->start();
             $resultRedirect->setPath('checkout/onepage/success');
-        } else {
-            //canceled, re-activate quote
-            try {
-                $this->_getCheckoutSession()->restoreQuote();
-                $this->messageManager->addNoticeMessage(__('Payment canceled'));
-            } catch (\Magento\Framework\Exception\LocalizedException $e) {
-                $this->_logger->error($e);
-                $this->messageManager->addExceptionMessage($e, $e->getMessage());
-            } catch (\Exception $e) {
-                $this->_logger->error($e);
-                $this->messageManager->addExceptionMessage($e, __('Unable to cancel order'));
-            }
-            $resultRedirect->setPath('checkout/cart');
+
+            // make the cart inactive
+	        $session = $this->checkoutSession;
+
+	        $quote = $session->getQuote();
+	        $quote->setIsActive(false);
+	        $this->quoteRepository->save($quote);
+
+            return $resultRedirect;
         }
+
+        $this->messageManager->addNoticeMessage(__('Payment canceled'));
+        $resultRedirect->setPath('checkout/cart');
+
 
         if(in_array($pinStatus,[
             'cancelled',
             'expired',
             'error'
         ])){
-            // er komt hier geen cancel voor binnen, dus doen we het hier
+            // Instore does not send a canceled exchange message, so we cancel it here
             $order->cancel();
             $this->orderRepository->save($order);
         }
         return $resultRedirect;
     }
 
-    /**
-     * Return checkout session object
-     *
-     * @return Session
-     */
-    protected function _getCheckoutSession()
-    {
-        return $this->_checkoutSession;
-    }
 }
