@@ -5,7 +5,6 @@
 
 namespace Paynl\Payment\Model\Paymentmethod;
 
-use Magento\Framework\UrlInterface;
 use Magento\Payment\Model\Method\AbstractMethod;
 use Magento\Sales\Model\Order;
 use Paynl\Payment\Model\Config;
@@ -21,6 +20,29 @@ abstract class PaymentMethod extends AbstractMethod
 
     protected $_canRefund = true;
     protected $_canRefundInvoicePartial = true;
+	/**
+	 * @var Config
+	 */
+    protected $paynlConfig;
+
+    public function __construct(
+    	\Magento\Framework\Model\Context $context,
+	    \Magento\Framework\Registry $registry,
+	    \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory,
+	    \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory,
+	    \Magento\Payment\Helper\Data $paymentData,
+	    \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
+	    \Magento\Payment\Model\Method\Logger $logger,
+	    \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
+	    \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
+	    array $data = []
+    ) {
+	    parent::__construct(
+	    	$context, $registry, $extensionFactory, $customAttributeFactory,
+		    $paymentData, $scopeConfig, $logger, $resource, $resourceCollection, $data );
+
+	    $this->paynlConfig = new Config($this->_scopeConfig);
+    }
 
 	/**
      * Get payment instructions text from config
@@ -40,12 +62,20 @@ abstract class PaymentMethod extends AbstractMethod
         $stateObject->setState($state);
         $stateObject->setStatus($state);
         $stateObject->setIsNotified(false);
+
+	    $sendEmail = $this->_scopeConfig->getValue('payment/' . $this->_code . '/send_new_order_email', 'store');
+
+	    if($sendEmail == 'after_payment') {
+	    	//prevent sending the order confirmation
+		    $payment = $this->getInfoInstance();
+		    $order   = $payment->getOrder();
+		    $order->setCanSendNewEmailFlag( false );
+	    }
     }
 
     public function refund(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
-        $config = new Config($this->_scopeConfig);
-        $config->configureSDK();
+        $this->paynlConfig->configureSDK();
 
         $transactionId = $payment->getParentTransactionId();
 
@@ -59,9 +89,7 @@ abstract class PaymentMethod extends AbstractMethod
     }
     protected function doStartTransaction(Order $order)
     {
-        $config = new Config($this->_scopeConfig);
-
-        $config->configureSDK();
+	    $this->paynlConfig->configureSDK();
         $additionalData = $order->getPayment()->getAdditionalInformation();
         $bankId = null;
         $expireDate = null;
@@ -96,7 +124,7 @@ abstract class PaymentMethod extends AbstractMethod
             $strBillingFirstName = substr($arrBillingAddress['firstname'], 0, 1);
 
             // Use full first name for Klarna
-            if($paymentOptionId == $config->getPaymentOptionId('paynl_payment_klarna'))
+            if($paymentOptionId == $this->paynlConfig->getPaymentOptionId('paynl_payment_klarna'))
             {
                 $strBillingFirstName = $arrBillingAddress['firstname'];
             }
@@ -130,7 +158,7 @@ abstract class PaymentMethod extends AbstractMethod
             $strShippingFirstName = substr($arrShippingAddress['firstname'], 0, 1);
 
             // Use full first name for Klarna
-            if($paymentOptionId == $config->getPaymentOptionId('paynl_payment_klarna'))
+            if($paymentOptionId == $this->paynlConfig->getPaymentOptionId('paynl_payment_klarna'))
             {
                 $strShippingFirstName = $arrShippingAddress['firstname'];
             }
@@ -151,7 +179,7 @@ abstract class PaymentMethod extends AbstractMethod
             'amount' => $total,
             'returnUrl' => $returnUrl,
             'paymentMethod' => $paymentOptionId,
-            'language' => $config->getLanguage(),
+            'language' => $this->paynlConfig->getLanguage(),
             'bank' => $bankId,
             'expireDate' => $expireDate,
             'description' => $orderId,
@@ -218,7 +246,7 @@ abstract class PaymentMethod extends AbstractMethod
 
         $data['products'] = $arrProducts;
 
-        if ($config->isTestMode()) {
+        if ($this->paynlConfig->isTestMode()) {
             $data['testmode'] = 1;
         }
         $ipAddress = $order->getRemoteIp();

@@ -18,6 +18,7 @@
                 <model>Paynl\Payment\Model\Paymentmethod\Paylink</model>
                 <group>paynl_payment</group>
                 <paymentInfoKeys>valid_days</paymentInfoKeys>
+                <send_new_order_email>before_payment</send_new_order_email>
             </paynl_payment_paylink>
             <paynl_payment_afterpay>
                 <active>0</active>
@@ -28,6 +29,7 @@
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Afterpay</model>
                 <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_afterpay>
             <paynl_payment_amex>
                 <active>0</active>
@@ -38,6 +40,7 @@
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Amex</model>
                 <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_amex>
             <paynl_payment_billink>
                 <active>0</active>
@@ -48,6 +51,7 @@
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Billink</model>
                 <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_billink>
             <paynl_payment_capayable>
                 <active>0</active>
@@ -58,6 +62,7 @@
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Capayable</model>
                 <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_capayable>
             <paynl_payment_capayable_gespreid>
                 <active>0</active>
@@ -68,6 +73,7 @@
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\CapayableGespreid</model>
                 <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_capayable_gespreid>
             <paynl_payment_cartebleue>
                 <active>0</active>
@@ -78,6 +84,7 @@
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Cartebleue</model>
                 <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_cartebleue>
             <paynl_payment_clickandbuy>
                 <active>0</active>
@@ -88,6 +95,7 @@
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Clickandbuy</model>
                 <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_clickandbuy>
             <paynl_payment_fashioncheque>
                 <active>0</active>
@@ -98,6 +106,7 @@
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Fashioncheque</model>
                 <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_fashioncheque>
             <paynl_payment_fashiongiftcard>
                 <active>0</active>
@@ -108,6 +117,7 @@
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Fashiongiftcard</model>
                 <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_fashiongiftcard>
             <paynl_payment_focum>
                 <active>0</active>
@@ -118,6 +128,7 @@
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Focum</model>
                 <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_focum>
             <paynl_payment_gezondheidsbon>
                 <active>0</active>
@@ -128,6 +139,7 @@
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Gezondheidsbon</model>
                 <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_gezondheidsbon>
             <paynl_payment_giropay>
                 <active>0</active>
@@ -138,6 +150,7 @@
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Giropay</model>
                 <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_giropay>
             <paynl_payment_givacard>
                 <active>0</active>
@@ -148,6 +161,7 @@
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Givacard</model>
                 <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_givacard>
             <paynl_payment_ideal>
                 <active>0</active>
@@ -168,6 +182,7 @@
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Instore</model>
                 <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_instore>
             <paynl_payment_klarna>
                 <active>0</active>
@@ -178,6 +193,7 @@
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Klarna</model>
                 <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_klarna>
             <paynl_payment_maestro>
                 <active>0</active>
@@ -188,6 +204,7 @@
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Maestro</model>
                 <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_maestro>
             <paynl_payment_mistercash>
                 <active>0</active>
@@ -198,6 +215,7 @@
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Mistercash</model>
                 <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_mistercash>
             <paynl_payment_mybank>
                 <active>0</active>
@@ -208,6 +226,7 @@
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Mybank</model>
                 <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_mybank>
             <paynl_payment_overboeking>
                 <active>0</active>
@@ -218,6 +237,7 @@
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Overboeking</model>
                 <group>paynl_payment</group>
+                <send_new_order_email>before_payment</send_new_order_email>
             </paynl_payment_overboeking>
             <paynl_payment_paypal>
                 <active>0</active>
@@ -228,6 +248,7 @@
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Paypal</model>
                 <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_paypal>
             <paynl_payment_paysafecard>
                 <active>0</active>
@@ -238,6 +259,7 @@
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Paysafecard</model>
                 <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_paysafecard>
             <paynl_payment_podiumcadeaukaart>
                 <active>0</active>
@@ -248,6 +270,7 @@
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Podiumcadeaukaart</model>
                 <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_podiumcadeaukaart>
             <paynl_payment_postepay>
                 <active>0</active>
@@ -258,6 +281,7 @@
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Postepay</model>
                 <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_postepay>
             <paynl_payment_sofortbanking>
                 <active>0</active>
@@ -268,6 +292,7 @@
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Sofortbanking</model>
                 <group>paynl_payment</group>
+                <send_new_order_email>before_payment</send_new_order_email>
             </paynl_payment_sofortbanking>
             <paynl_payment_telefonischbetalen>
                 <active>0</active>
@@ -278,6 +303,7 @@
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Telefonischbetalen</model>
                 <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_telefonischbetalen>
             <paynl_payment_visamastercard>
                 <active>0</active>
@@ -288,6 +314,7 @@
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Visamastercard</model>
                 <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_visamastercard>
             <paynl_payment_vvvgiftcard>
                 <active>0</active>
@@ -298,6 +325,7 @@
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Vvvgiftcard</model>
                 <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_vvvgiftcard>
             <paynl_payment_webshopgiftcard>
                 <active>0</active>
@@ -308,6 +336,7 @@
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Webshopgiftcard</model>
                 <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_webshopgiftcard>
             <paynl_payment_wijncadeau>
                 <active>0</active>
@@ -318,6 +347,7 @@
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Wijncadeau</model>
                 <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_wijncadeau>
             <paynl_payment_yehhpay>
                 <active>0</active>
@@ -328,6 +358,7 @@
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Yehhpay</model>
                 <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_yehhpay>
             <paynl_payment_yourgift>
                 <active>0</active>
@@ -338,6 +369,7 @@
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Yourgift</model>
                 <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_yourgift>
         </payment>
     </default>

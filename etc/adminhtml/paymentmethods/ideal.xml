@@ -58,7 +58,8 @@
             </depends>
             <config_path>payment/paynl_payment_ideal/instructions</config_path>
         </field>
-        <field id="bank_selection" translate="label" type="select" sortOrder="65" showInDefault="1" showInWebsite="1" showInStore="1">
+        <field id="bank_selection" translate="label" type="select" sortOrder="65" showInDefault="1" showInWebsite="1"
+               showInStore="1">
             <label>Show bankselection</label>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <depends>
@@ -82,7 +83,6 @@
                 <field id="active">1</field>
             </depends>
         </field>
-
         <field id="sort_order" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1"
                showInStore="1">
             <label>Sort Order</label>
@@ -92,7 +92,16 @@
                 <field id="active">1</field>
             </depends>
         </field>
-
+        <field id="send_new_order_email" translate="label" type="select" sortOrder="100" showInDefault="1"
+               showInWebsite="1"
+               showInStore="1">
+            <label>Send new order email</label>
+            <source_model>Paynl\Payment\Model\Config\Source\SendNewOrderEmail</source_model>
+            <config_path>payment/paynl_payment_ideal/send_new_order_email</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
     </group>
 </include>
                 

@@ -7,6 +7,7 @@ namespace Paynl\Payment\Controller\Checkout;
 
 use Magento\Payment\Helper\Data as PaymentHelper;
 use Magento\Quote\Model\QuoteRepository;
+use Magento\Sales\Model\OrderRepository;
 use Paynl\Error\Error;
 
 /**
@@ -19,28 +20,33 @@ class Redirect extends \Magento\Framework\App\Action\Action
     /**
      * @var \Paynl\Payment\Model\Config
      */
-    protected $_config;
-
+	private $config;
 
     /**
      * @var \Magento\Checkout\Model\Session
      */
-    protected $_checkoutSession;
+	private $checkoutSession;
 
     /**
      * @var \Psr\Log\LoggerInterface
      */
-    protected $_logger;
+	private $_logger;
 
     /**
      * @var PaymentHelper
      */
-    protected $_paymentHelper;
+	private $paymentHelper;
 
 	/**
 	 * @var QuoteRepository
 	 */
-    protected $_quoteRepository;
+	private $quoteRepository;
+
+
+	/**
+	 * @var OrderRepository
+	 */
+	private $orderRepository;
 
     /**
      * @param \Magento\Framework\App\Action\Context $context
@@ -53,14 +59,16 @@ class Redirect extends \Magento\Framework\App\Action\Action
         \Magento\Checkout\Model\Session $checkoutSession,
         \Psr\Log\LoggerInterface $logger,
         PaymentHelper $paymentHelper,
-		QuoteRepository $quoteRepository
+		QuoteRepository $quoteRepository,
+		OrderRepository $orderRepository
     )
     {
-        $this->_config = $config; // Pay.nl config helper
-        $this->_checkoutSession = $checkoutSession;
-        $this->_logger = $logger;
-        $this->_paymentHelper = $paymentHelper;
-		$this->_quoteRepository = $quoteRepository;
+        $this->config          = $config; // Pay.nl config helper
+        $this->checkoutSession = $checkoutSession;
+        $this->_logger         = $logger;
+        $this->paymentHelper   = $paymentHelper;
+		$this->quoteRepository = $quoteRepository;
+		$this->orderRepository = $orderRepository;
 
         parent::__construct($context);
     }
@@ -69,15 +77,14 @@ class Redirect extends \Magento\Framework\App\Action\Action
     {
         try {
             $order = $this->_getCheckoutSession()->getLastRealOrder();
-
             $method = $order->getPayment()->getMethod();
 
             // restore the quote
-            $quote = $this->_quoteRepository->get($order->getQuoteId());
+            $quote = $this->quoteRepository->get($order->getQuoteId());
             $quote->setIsActive(true)->setReservedOrderId(null);
-            $this->_quoteRepository->save($quote);
+            $this->quoteRepository->save($quote);
 
-            $methodInstance = $this->_paymentHelper->getMethodInstance($method);
+            $methodInstance = $this->paymentHelper->getMethodInstance($method);
             if ($methodInstance instanceof \Paynl\Payment\Model\Paymentmethod\Paymentmethod) {
                 $redirectUrl = $methodInstance->startTransaction($order);
                 $this->getResponse()->setNoCacheHeaders();
@@ -102,6 +109,6 @@ class Redirect extends \Magento\Framework\App\Action\Action
      */
     protected function _getCheckoutSession()
     {
-        return $this->_checkoutSession;
+        return $this->checkoutSession;
     }
 }

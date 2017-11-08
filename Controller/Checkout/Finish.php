@@ -21,27 +21,27 @@ class Finish extends \Magento\Framework\App\Action\Action
      *
      * @var \Paynl\Payment\Model\Config
      */
-    protected $config;
+    private $config;
 
     /**
      * @var Session
      */
-    protected $checkoutSession;
+	private $checkoutSession;
 
     /**
      * @var \Psr\Log\LoggerInterface
      */
-    protected $logger;
+	private $logger;
 
     /**
      * @var OrderRepository
      */
-    protected $orderRepository;
+	private $orderRepository;
 
 	/**
 	 * @var QuoteRepository
 	 */
-	protected $quoteRepository;
+	private $quoteRepository;
 
     /**
      * Index constructor.
