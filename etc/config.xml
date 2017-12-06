@@ -12,7 +12,7 @@
                 <active>1</active>
                 <title>Pay.nl betaallink</title>
                 <payment_option_id>961</payment_option_id>
-                <order_status>pending_payment</order_status>
+                <order_status>pending</order_status>
                 <instructions></instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Paylink</model>
@@ -232,12 +232,13 @@
                 <active>0</active>
                 <title>Overboeking</title>
                 <payment_option_id>136</payment_option_id>
-                <order_status>holded</order_status>
+                <order_status>pending</order_status>
                 <instructions></instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Overboeking</model>
                 <group>paynl_payment</group>
                 <send_new_order_email>before_payment</send_new_order_email>
+                <holded>1</holded>
             </paynl_payment_overboeking>
             <paynl_payment_paypal>
                 <active>0</active>
@@ -287,7 +288,8 @@
                 <active>0</active>
                 <title>Sofortbanking</title>
                 <payment_option_id>559</payment_option_id>
-                <order_status>holded</order_status>
+                <order_status>pending_payment</order_status>
+                <holded>1</holded>
                 <instructions></instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Sofortbanking</model>

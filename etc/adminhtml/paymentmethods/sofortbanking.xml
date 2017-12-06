@@ -25,11 +25,21 @@
         <field id="order_status" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1"
                showInStore="1">
             <label>New Order Status</label>
-            <source_model>Paynl\Payment\Model\Config\Source\Order\Status\Holded</source_model>
+            <source_model>Paynl\Payment\Model\Config\Source\Order\Status\PendingPayment</source_model>
             <depends>
                 <field id="active">1</field>
             </depends>
             <config_path>payment/paynl_payment_sofortbanking/order_status</config_path>
+        </field>
+        <field id="holded" translate="label" type="select" sortOrder="35" showInDefault="1"
+               showInWebsite="1"
+               showInStore="1">
+            <label>Set order on-hold</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>payment/paynl_payment_sofortbanking/holded</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
         </field>
         <field id="allowspecific" translate="label" type="allowspecific" sortOrder="40" showInDefault="1"
                showInWebsite="1" showInStore="1">

@@ -76,12 +76,13 @@ class Redirect extends \Magento\Framework\App\Action\Action
     public function execute()
     {
         try {
-            $order = $this->_getCheckoutSession()->getLastRealOrder();
-            $method = $order->getPayment()->getMethod();
+            $order = $this->checkoutSession->getLastRealOrder();
 
+            $payment = $order->getPayment();
+            $method = $payment->getMethod();
             // restore the quote
             $quote = $this->quoteRepository->get($order->getQuoteId());
-            $quote->setIsActive(true)->setReservedOrderId(null);
+            $quote->setIsActive(true);
             $this->quoteRepository->save($quote);
 
             $methodInstance = $this->paymentHelper->getMethodInstance($method);

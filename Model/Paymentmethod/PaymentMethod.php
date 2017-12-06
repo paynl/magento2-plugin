@@ -25,6 +25,15 @@ abstract class PaymentMethod extends AbstractMethod
 	 */
     protected $paynlConfig;
 
+    /**
+     * @var \Magento\Sales\Model\OrderRepository
+     */
+    protected $orderRepository;
+    /**
+     * @var \Magento\Sales\Model\Order\Config
+     */
+    protected $orderConfig;
+
     public function __construct(
     	\Magento\Framework\Model\Context $context,
 	    \Magento\Framework\Registry $registry,
@@ -33,6 +42,8 @@ abstract class PaymentMethod extends AbstractMethod
 	    \Magento\Payment\Helper\Data $paymentData,
 	    \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
 	    \Magento\Payment\Model\Method\Logger $logger,
+        \Magento\Sales\Model\Order\Config $orderConfig,
+        \Magento\Sales\Model\OrderRepository $orderRepository,
 	    \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
 	    \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
 	    array $data = []
@@ -41,7 +52,23 @@ abstract class PaymentMethod extends AbstractMethod
 	    	$context, $registry, $extensionFactory, $customAttributeFactory,
 		    $paymentData, $scopeConfig, $logger, $resource, $resourceCollection, $data );
 
+	    $this->orderRepository = $orderRepository;
+	    $this->orderConfig = $orderConfig;
 	    $this->paynlConfig = new Config($this->_scopeConfig);
+    }
+
+    protected function getState($status){
+        $validStates = [
+            Order::STATE_NEW,
+            Order::STATE_PENDING_PAYMENT,
+            Order::STATE_HOLDED
+        ];
+
+        foreach($validStates as $state){
+            $statusses = $this->orderConfig->getStateStatuses($state, false);
+            if(in_array($status, $statusses)) return $state;
+        }
+        return false;
     }
 
 	/**
@@ -58,19 +85,26 @@ abstract class PaymentMethod extends AbstractMethod
     }
     public function initialize($paymentAction, $stateObject)
     {
-        $state = $this->getConfigData('order_status');
-        $stateObject->setState($state);
-        $stateObject->setStatus($state);
+        $status = $this->getConfigData('order_status');
+
+        $stateObject->setState($this->getState($status));
+        $stateObject->setStatus($status);
         $stateObject->setIsNotified(false);
 
 	    $sendEmail = $this->_scopeConfig->getValue('payment/' . $this->_code . '/send_new_order_email', 'store');
 
+        $payment = $this->getInfoInstance();
+        /** @var Order $order */
+        $order   = $payment->getOrder();
+
 	    if($sendEmail == 'after_payment') {
 	    	//prevent sending the order confirmation
-		    $payment = $this->getInfoInstance();
-		    $order   = $payment->getOrder();
 		    $order->setCanSendNewEmailFlag( false );
 	    }
+
+        $this->orderRepository->save($order);
+
+	    return parent::initialize($paymentAction, $stateObject);
     }
 
     public function refund(\Magento\Payment\Model\InfoInterface $payment, $amount)
@@ -85,6 +119,13 @@ abstract class PaymentMethod extends AbstractMethod
     }
     public function startTransaction(Order $order){
         $transaction = $this->doStartTransaction($order);
+
+        $holded = $this->_scopeConfig->getValue('payment/' . $this->_code . '/holded', 'store');
+        if($holded){
+            $order->hold();
+        }
+        $this->orderRepository->save($order);
+
         return $transaction->getRedirectUrl();
     }
     protected function doStartTransaction(Order $order)
