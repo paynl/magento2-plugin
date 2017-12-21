@@ -82,7 +82,7 @@ class Redirect extends \Magento\Framework\App\Action\Action
             $method = $payment->getMethod();
             // restore the quote
             $quote = $this->quoteRepository->get($order->getQuoteId());
-            $quote->setIsActive(true);
+            $quote->setIsActive(true)->setReservedOrderId(null);
             $this->checkoutSession->replaceQuote($quote);
             $this->quoteRepository->save($quote);
 
