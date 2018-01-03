@@ -75,6 +75,17 @@
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_capayable_gespreid>
+            <paynl_payment_cartasi>
+                <active>0</active>
+                <title>CartaSi</title>
+                <payment_option_id>1945</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <instructions></instructions>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Cartasi</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_cartasi>
             <paynl_payment_cartebleue>
                 <active>0</active>
                 <title>Cartebleue</title>
@@ -97,6 +108,17 @@
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_clickandbuy>
+            <paynl_payment_dankort>
+                <active>0</active>
+                <title>Dankort</title>
+                <payment_option_id>1939</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <instructions></instructions>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Dankort</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_dankort>
             <paynl_payment_fashioncheque>
                 <active>0</active>
                 <title>Fashioncheque</title>

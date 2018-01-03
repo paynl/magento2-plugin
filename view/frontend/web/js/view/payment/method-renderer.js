@@ -10,7 +10,7 @@ define(
         'use strict';
 
         var defaultComponent = 'Paynl_Payment/js/view/payment/method-renderer/default';
-	var idealComponent = 'Paynl_Payment/js/view/payment/method-renderer/ideal';
+        var idealComponent = 'Paynl_Payment/js/view/payment/method-renderer/ideal';
 
         var methods = [
             {type: 'paynl_payment_afterpay', component: defaultComponent},
@@ -18,8 +18,10 @@ define(
             {type: 'paynl_payment_billink', component: defaultComponent},
             {type: 'paynl_payment_capayable', component: defaultComponent},
             {type: 'paynl_payment_capayable_gespreid', component: defaultComponent},
+            {type: 'paynl_payment_cartasi', component: defaultComponent},
             {type: 'paynl_payment_cartebleue', component: defaultComponent},
             {type: 'paynl_payment_clickandbuy', component: defaultComponent},
+            {type: 'paynl_payment_dankort', component: defaultComponent},
             {type: 'paynl_payment_fashioncheque', component: defaultComponent},
             {type: 'paynl_payment_fashiongiftcard', component: defaultComponent},
             {type: 'paynl_payment_focum', component: defaultComponent},
