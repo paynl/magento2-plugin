@@ -93,6 +93,16 @@
                 <field id="active">1</field>
             </depends>
         </field>
+        <group id="advanced" translate="label" sortOrder="200" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Advanced</label>
+            <field id="payment_option_id" translate="label comment" type="text" sortOrder="10" showInDefault="1"
+                   showInWebsite="1"
+                   showInStore="1">
+                <label>Payment option id</label>
+                <comment>The id of the payment method, only change this if you are told to do so</comment>
+                <config_path>payment/paynl_payment_instore/payment_option_id</config_path>
+            </field>
+        </group>
     </group>
 </include>
                 

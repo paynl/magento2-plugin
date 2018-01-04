@@ -35,7 +35,11 @@ Instructions,Instructions
 "Maximum Order Total","Maximum Order Total"
 "Sort Order","Sort Order"
 "Send new order email","Send new order email"
+Advanced,Advanced
+"Payment option id","Payment option id"
+"The id of the payment method, only change this if you are told to do so","The id of the payment method, only change this if you are told to do so"
 "Show bankselection","Show bankselection"
+"Set order on-hold","Set order on-hold"
 "Pay.nl Settings","Pay.nl Settings"
 Testmode,Testmode
 API-token,API-token
