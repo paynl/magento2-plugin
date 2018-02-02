@@ -44,10 +44,7 @@ class Ideal extends PaymentMethod
         if ($banksJson) {
             $banks = json_decode($banksJson);
         } else {
-
-            $config = new Config($this->_scopeConfig);
-
-            $config->configureSDK();
+            $this->paynlConfig->configureSDK();
 
             $banks = \Paynl\Paymentmethods::getBanks($this->getPaymentOptionId());
             $cache->save(json_encode($banks), $cacheName);

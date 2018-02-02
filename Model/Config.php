@@ -6,6 +6,7 @@
 namespace Paynl\Payment\Model;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Api\Data\StoreInterface;
+use Magento\Store\Model\Store;
 
 /**
  * Description of Config
@@ -14,47 +15,55 @@ use Magento\Store\Api\Data\StoreInterface;
  */
 class Config
 {
-    /**
-     * @var \Magento\Framework\App\Config\ScopeConfigInterface
-     */
-    protected $_scopeConfigInterface;
+
+    /** @var  Store */
+    private $store;
 
     public function __construct(
-    ScopeConfigInterface $configInterface
+        Store $store
     )
     {
-        $this->_scopeConfigInterface = $configInterface;
+        $this->store = $store;
     }
+
+    /**
+     * @param Store $store
+     */
+    public function setStore($store)
+    {
+        $this->store = $store;
+    }
+
     public function getApiToken()
     {
-        return $this->_scopeConfigInterface->getValue('payment/paynl/apitoken', 'store');
+        return $this->store->getConfig('payment/paynl/apitoken');
     }
 
     public function getServiceId()
     {
-        return $this->_scopeConfigInterface->getValue('payment/paynl/serviceid', 'store');
+        return $this->store->getConfig('payment/paynl/serviceid');
     }
 
     public function isTestMode()
     {
-       return $this->_scopeConfigInterface->getValue('payment/paynl/testmode', 'store') == 1;
+       return $this->store->getConfig('payment/paynl/testmode') == 1;
     }
 	public function isNeverCancel()
 	{
-		return $this->_scopeConfigInterface->getValue('payment/paynl/never_cancel', 'store') == 1;
+		return $this->store->getConfig('payment/paynl/never_cancel') == 1;
 	}
 
 	public function isAlwaysBaseCurrency(){
-        return $this->_scopeConfigInterface->getValue('payment/paynl/always_base_currency', 'store') == 1;
+        return $this->store->getConfig('payment/paynl/always_base_currency') == 1;
     }
 
     public function getLanguage(){
-        $language = $this->_scopeConfigInterface->getValue('payment/paynl/language', 'store');
+        $language = $this->store->getConfig('payment/paynl/language');
         return $language?$language:'nl'; //default nl
     }
 
     public function getPaymentOptionId($methodCode){
-        return $this->_scopeConfigInterface->getValue('payment/'.$methodCode.'/payment_option_id', 'store');
+        return $this->store->getConfig('payment/'.$methodCode.'/payment_option_id');
     }
 
     /**

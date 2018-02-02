@@ -44,6 +44,7 @@ abstract class PaymentMethod extends AbstractMethod
 	    \Magento\Payment\Model\Method\Logger $logger,
         \Magento\Sales\Model\Order\Config $orderConfig,
         \Magento\Sales\Model\OrderRepository $orderRepository,
+	    Config $paynlConfig,
 	    \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
 	    \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
 	    array $data = []
@@ -52,9 +53,9 @@ abstract class PaymentMethod extends AbstractMethod
 	    	$context, $registry, $extensionFactory, $customAttributeFactory,
 		    $paymentData, $scopeConfig, $logger, $resource, $resourceCollection, $data );
 
+	    $this->paynlConfig = $paynlConfig;
 	    $this->orderRepository = $orderRepository;
 	    $this->orderConfig = $orderConfig;
-	    $this->paynlConfig = new Config($this->_scopeConfig);
     }
 
     protected function getState($status){
@@ -119,6 +120,7 @@ abstract class PaymentMethod extends AbstractMethod
     }
     public function startTransaction(Order $order){
         $transaction = $this->doStartTransaction($order);
+        $this->paynlConfig->setStore($order->getStore());
 
         $holded = $this->_scopeConfig->getValue('payment/' . $this->_code . '/holded', 'store');
         if($holded){
@@ -130,6 +132,7 @@ abstract class PaymentMethod extends AbstractMethod
     }
     protected function doStartTransaction(Order $order)
     {
+        $this->paynlConfig->setStore($order->getStore());
 	    $this->paynlConfig->configureSDK();
         $additionalData = $order->getPayment()->getAdditionalInformation();
         $bankId = null;
