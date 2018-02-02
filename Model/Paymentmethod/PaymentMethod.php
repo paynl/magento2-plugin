@@ -141,13 +141,20 @@ abstract class PaymentMethod extends AbstractMethod
 	        $expireDate = new \DateTime('+'.$additionalData['valid_days'].' days');
         }
 
-        $total = $order->getGrandTotal();
+        if($this->paynlConfig->isAlwaysBaseCurrency()){
+            $total = $order->getBaseGrandTotal();
+            $currency = $order->getBaseCurrencyCode();
+        } else{
+            $total = $order->getGrandTotal();
+            $currency = $order->getOrderCurrencyCode();
+        }
+
         $items = $order->getAllVisibleItems();
 
         $orderId = $order->getIncrementId();
         $quoteId = $order->getQuoteId();
 
-        $currency = $order->getOrderCurrencyCode();
+
 
 		$store = $order->getStore();
 		$baseUrl = $store->getBaseUrl();
@@ -245,10 +252,16 @@ abstract class PaymentMethod extends AbstractMethod
             if ($arrItem['price_incl_tax'] != null) {
                 // taxamount is not valid, because on discount it returns the taxamount after discount
                 $taxAmount = $arrItem['price_incl_tax'] - $arrItem['price'];
+                $price = $arrItem['price_incl_tax'];
+
+                if($this->paynlConfig->isAlwaysBaseCurrency()){
+                    $taxAmount = $arrItem['base_price_incl_tax'] - $arrItem['base_price'];
+                    $price = $arrItem['base_price_incl_tax'];
+                }
                 $product = array(
                     'id' => $arrItem['product_id'],
                     'name' => $arrItem['name'],
-                    'price' => $arrItem['price_incl_tax'],
+                    'price' => $price,
                     'qty' => $arrItem['qty_ordered'],
                     'tax' => $taxAmount,
                 );
@@ -259,6 +272,12 @@ abstract class PaymentMethod extends AbstractMethod
         //shipping
         $shippingCost = $order->getShippingInclTax();
         $shippingTax = $order->getShippingTaxAmount();
+
+        if($this->paynlConfig->isAlwaysBaseCurrency()){
+            $shippingCost = $order->getBaseShippingInclTax();
+            $shippingTax = $order->getBaseShippingTaxAmount();
+        }
+
         $shippingDescription = $order->getShippingDescription();
 
         if($shippingCost != 0) {
@@ -273,6 +292,13 @@ abstract class PaymentMethod extends AbstractMethod
 
         // kortingen
         $discount = $order->getDiscountAmount();
+        $discountTax = $order->getDiscountTaxCompensationAmount() * -1;
+
+        if($this->paynlConfig->isAlwaysBaseCurrency()){
+            $discount = $order->getBaseDiscountAmount();
+            $discountTax = $order->getBaseDiscountTaxCompensationAmount() * -1;
+        }
+
         $discountDescription = $order->getDiscountDescription();
 
         if ($discount != 0) {
@@ -281,7 +307,7 @@ abstract class PaymentMethod extends AbstractMethod
                 'name' => $discountDescription,
                 'price' => $discount,
                 'qty' => 1,
-                'tax' => $order->getDiscountTaxCompensationAmount() * -1
+                'tax' => $discountTax
             );
         }
 

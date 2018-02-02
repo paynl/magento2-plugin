@@ -5,6 +5,7 @@
 
 namespace Paynl\Payment\Model;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Store\Api\Data\StoreInterface;
 
 /**
  * Description of Config
@@ -24,7 +25,6 @@ class Config
     {
         $this->_scopeConfigInterface = $configInterface;
     }
-
     public function getApiToken()
     {
         return $this->_scopeConfigInterface->getValue('payment/paynl/apitoken', 'store');
@@ -43,6 +43,11 @@ class Config
 	{
 		return $this->_scopeConfigInterface->getValue('payment/paynl/never_cancel', 'store') == 1;
 	}
+
+	public function isAlwaysBaseCurrency(){
+        return $this->_scopeConfigInterface->getValue('payment/paynl/always_base_currency', 'store') == 1;
+    }
+
     public function getLanguage(){
         $language = $this->_scopeConfigInterface->getValue('payment/paynl/language', 'store');
         return $language?$language:'nl'; //default nl

@@ -54,6 +54,8 @@ class Exchange extends \Magento\Framework\App\Action\Action {
 	 */
 	private $orderRepository;
 
+	private $paynlConfig;
+
 	/**
 	 * Exchange constructor.
 	 *
@@ -73,7 +75,8 @@ class Exchange extends \Magento\Framework\App\Action\Action {
 		\Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender,
 		\Psr\Log\LoggerInterface $logger,
 		\Magento\Framework\Controller\Result\Raw $result,
-		OrderRepository $orderRepository
+		OrderRepository $orderRepository,
+        \Paynl\Payment\Model\Config $paynlConfig
 	) {
 		$this->result          = $result;
 		$this->config          = $config;
@@ -82,6 +85,7 @@ class Exchange extends \Magento\Framework\App\Action\Action {
 		$this->invoiceSender   = $invoiceSender;
 		$this->logger          = $logger;
 		$this->orderRepository = $orderRepository;
+		$this->paynlConfig     = $paynlConfig;
 
 		parent::__construct( $context );
 	}
@@ -134,6 +138,7 @@ class Exchange extends \Magento\Framework\App\Action\Action {
 				}
 				$message .= " order was uncanceled";
 			}
+			/** @var \Magento\Sales\Model\Order\Payment\Interceptor $payment */
 			$payment = $order->getPayment();
 			$payment->setTransactionId(
 				$transaction->getId()
@@ -143,9 +148,19 @@ class Exchange extends \Magento\Framework\App\Action\Action {
 			$payment->setIsTransactionClosed(
 				0
 			);
+            $paidAmount = $transaction->getPaidCurrencyAmount();
+
+            if(!$this->paynlConfig->isAlwaysBaseCurrency()){
+                if($order->getBaseCurrencyCode() != $order->getOrderCurrencyCode()){
+                    // we can only register the payment in the base currency
+                    $paidAmount = $order->getBaseGrandTotal();
+                }
+            }
+
 			$payment->registerCaptureNotification(
-				$transaction->getPaidCurrencyAmount(), $skipFraudDetection
+                $paidAmount, $skipFraudDetection
 			);
+
 			$this->orderRepository->save( $order );
 
 			// notify customer
