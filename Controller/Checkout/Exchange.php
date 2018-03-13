@@ -91,7 +91,7 @@ class Exchange extends \Magento\Framework\App\Action\Action {
 	}
 
 	public function execute() {
-		$skipFraudDetection = false;
+		$skipFraudDetection = true;
 		\Paynl\Config::setApiToken( $this->config->getApiToken() );
 
 		$params = $this->getRequest()->getParams();
