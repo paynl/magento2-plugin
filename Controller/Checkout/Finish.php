@@ -106,7 +106,7 @@ class Finish extends \Magento\Framework\App\Action\Action
         }
 
         if ($transaction->isPaid() || ($transaction->isPending() && $pinStatus == null)) {
-            $resultRedirect->setPath('checkout/onepage/success');
+	    $resultRedirect->setPath('checkout/onepage/success', ['_query' => ['utm_nooverride' => '1']]);
 
             // make the cart inactive
 	        $session = $this->checkoutSession;
