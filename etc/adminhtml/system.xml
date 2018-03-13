@@ -42,6 +42,12 @@
                     <comment><![CDATA[Set this to yes if you always want to process payments in the base currency of this store. Magento acts strange when trying to register a payment in another currency than the base currency. The base currency MUST be EUR]]></comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
+                <field id="skip_fraud_detection" translate="label,comment" type="select" sortOrder="80" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Skip fraud detection</label>
+                    <comment><![CDATA[Sometimes magento incorrectly marks an order as fraudulent. this happens more often when using different currencies. Set this to yes to skip fraud detection.]]></comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
                 <group id="paynl_paymentmethods" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1"
                        showInStore="1">
                     <frontend_model>Paynl\Payment\Block\Adminhtml\System\Config\Fieldset\Expanded</frontend_model>
