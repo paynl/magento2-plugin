@@ -302,7 +302,7 @@ abstract class PaymentMethod extends AbstractMethod
             $discountTax = $order->getBaseDiscountTaxCompensationAmount() * -1;
         }
 
-        $discountDescription = $order->getDiscountDescription();
+        $discountDescription = __('Discount');
 
         if ($discount != 0) {
             $arrProducts[] = array(
