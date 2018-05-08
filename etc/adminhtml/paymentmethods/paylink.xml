@@ -93,6 +93,15 @@
                 <field id="active">1</field>
             </depends>
         </field>
+        <field id="custom_success_page" translate="label" type="text" sortOrder="110" showInDefault="1"
+               showInWebsite="1"
+               showInStore="1">
+            <label>Custom success page</label>
+            <config_path>payment/paynl_payment_paylink/custom_success_page</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
     </group>
 </include>
                 

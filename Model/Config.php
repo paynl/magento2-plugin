@@ -65,6 +65,17 @@ class Config
     }
 
     /**
+     * @param $methodCode string
+     * @return string
+     */
+    public function getSuccessPage($methodCode){
+        $success_page = $this->store->getConfig('payment/' . $methodCode . '/custom_success_page');
+        if(empty($success_page)) $success_page = 'checkout/onepage/success';
+
+        return $success_page;
+    }
+
+    /**
      * Configures the sdk with the API token and serviceId
      *
      * @return bool TRUE when config loaded, FALSE when the apitoken or serviceId are empty
