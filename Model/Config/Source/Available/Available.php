@@ -5,7 +5,10 @@
 
 namespace Paynl\Payment\Model\Config\Source\Available;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\RequestInterface;
 use \Magento\Framework\Option\ArrayInterface;
+use Magento\Store\Model\ScopeInterface;
 use\Paynl\Payment\Model\Config;
 use \Paynl\Paymentmethods;
 
@@ -17,6 +20,14 @@ abstract class Available implements ArrayInterface
      * @var string
      */
     protected $_code;
+    /**
+     * @var RequestInterface
+     */
+    protected $_request;
+    /**
+     * @var ScopeConfigInterface
+     */
+    protected $_scopeConfig;
 
     /**
      * @var Config
@@ -24,10 +35,14 @@ abstract class Available implements ArrayInterface
     protected $_config;
 
     public function __construct(
-        Config $config
+        Config $config,
+        RequestInterface $request,
+        ScopeConfigInterface $scopeConfig
     )
     {
         $this->_config = $config;
+        $this->_request = $request;
+        $this->_scopeConfig = $scopeConfig;
     }
 
 
@@ -54,7 +69,7 @@ abstract class Available implements ArrayInterface
      */
     public function toArray()
     {
-        $configured = $this->_config->configureSDK();
+        $configured = $this->configureSDK();
         if (!$configured) {
             return [0 => __('Enter your API-token and ServiceId first')];
         }
@@ -64,17 +79,56 @@ abstract class Available implements ArrayInterface
             } else {
                 return [0 => __('Not available, you can enable this on admin.pay.nl')];
             }
-        } catch(\Exception $e){
-            return [0 => 'Error: '.$e->getMessage()];
+        } catch (\Exception $e) {
+            return [0 => 'Error: ' . $e->getMessage()];
         }
 
     }
 
+    protected function configureSDK()
+    {
+        $apiToken = $this->getConfigValue('payment/paynl/apitoken');
+        $serviceId = $this->getConfigValue('payment/paynl/serviceid');
+        if (!empty($apiToken) && !empty($serviceId)) {
+            \Paynl\Config::setApiToken($apiToken);
+            \Paynl\Config::setServiceId($serviceId);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    protected function getPaymentOptionId()
+    {
+        return $this->getConfigValue('payment/' . $this->_code . '/payment_option_id');
+    }
+
+
+    protected function getConfigValue($path)
+    {
+        $scopeType = ScopeConfigInterface::SCOPE_TYPE_DEFAULT;
+        $scopeValue = null;
+
+        $store = $this->_request->getParam('store');
+        $website = $this->_request->getParam('website');
+        if ($store) {
+            $scopeValue = $store;
+            $scopeType = ScopeInterface::SCOPE_STORE;
+        } elseif ($website) {
+            $scopeValue = $website;
+            $scopeType = ScopeInterface::SCOPE_WEBSITE;
+        }
+
+
+        return $this->_scopeConfig->getValue($path, $scopeType, $scopeValue);
+    }
+
     protected function _isAvailable()
     {
-        $configured = $this->_config->configureSDK();
+        $configured = $this->configureSDK();
         if ($configured) {
-            $paymentOptionId = $this->_config->getPaymentOptionId($this->_code);
+            $paymentOptionId = $this->getPaymentOptionId();
 
             $list = Paymentmethods::getList();
 
