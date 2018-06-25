@@ -87,8 +87,14 @@ abstract class Available implements ArrayInterface
 
     protected function configureSDK()
     {
-        $apiToken = $this->getConfigValue('payment/paynl/apitoken');
-        $serviceId = $this->getConfigValue('payment/paynl/serviceid');
+        $apiToken = trim($this->getConfigValue('payment/paynl/apitoken'));
+        $serviceId = trim($this->getConfigValue('payment/paynl/serviceid'));
+        $tokencode = trim($this->getConfigValue('payment/paynl/tokencode'));
+
+        if(! empty($tokencode)) {
+            \Paynl\Config::setTokenCode($tokencode);
+        }
+
         if (!empty($apiToken) && !empty($serviceId)) {
             \Paynl\Config::setApiToken($apiToken);
             \Paynl\Config::setServiceId($serviceId);

@@ -84,6 +84,11 @@ class Config
     {
         $apiToken  = $this->getApiToken();
         $serviceId = $this->getServiceId();
+        $tokencode = $this->getTokencode();
+
+        if(! empty($tokencode)) {
+            \Paynl\Config::setTokenCode($tokencode);
+        }
 
         if ( ! empty($apiToken) && ! empty($serviceId)) {
             \Paynl\Config::setApiToken($apiToken);
@@ -97,11 +102,16 @@ class Config
 
     public function getApiToken()
     {
-        return $this->store->getConfig('payment/paynl/apitoken');
+        return trim($this->store->getConfig('payment/paynl/apitoken'));
+    }
+
+    public function getTokencode()
+    {
+        return trim($this->store->getConfig('payment/paynl/tokencode'));
     }
 
     public function getServiceId()
     {
-        return $this->store->getConfig('payment/paynl/serviceid');
+        return trim($this->store->getConfig('payment/paynl/serviceid'));
     }
 }

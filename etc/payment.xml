@@ -30,6 +30,9 @@
         <method name="paynl_payment_cartebleue">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
+        <method name="paynl_payment_cashly">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
         <method name="paynl_payment_clickandbuy">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
@@ -81,6 +84,9 @@
         <method name="paynl_payment_sofortbanking">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
+        <method name="paynl_payment_spraypay">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
         <method name="paynl_payment_telefonischbetalen">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
@@ -91,6 +97,9 @@
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_webshopgiftcard">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_wechatpay">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_wijncadeau">

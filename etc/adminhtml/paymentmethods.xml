@@ -13,6 +13,7 @@
     <include path="Paynl_Payment::paymentmethods/capayable_gespreid.xml" />
     <include path="Paynl_Payment::paymentmethods/cartasi.xml" />
     <include path="Paynl_Payment::paymentmethods/cartebleue.xml" />
+    <include path="Paynl_Payment::paymentmethods/cashly.xml" />
     <include path="Paynl_Payment::paymentmethods/clickandbuy.xml" />
     <include path="Paynl_Payment::paymentmethods/dankort.xml" />
     <include path="Paynl_Payment::paymentmethods/fashioncheque.xml" />
@@ -33,10 +34,12 @@
     <include path="Paynl_Payment::paymentmethods/podiumcadeaukaart.xml" />
     <include path="Paynl_Payment::paymentmethods/postepay.xml" />
     <include path="Paynl_Payment::paymentmethods/sofortbanking.xml" />
+    <include path="Paynl_Payment::paymentmethods/spraypay.xml" />
     <include path="Paynl_Payment::paymentmethods/telefonischbetalen.xml" />
     <include path="Paynl_Payment::paymentmethods/visamastercard.xml" />
     <include path="Paynl_Payment::paymentmethods/vvvgiftcard.xml" />
     <include path="Paynl_Payment::paymentmethods/webshopgiftcard.xml" />
+    <include path="Paynl_Payment::paymentmethods/wechatpay.xml" />
     <include path="Paynl_Payment::paymentmethods/wijncadeau.xml" />
     <include path="Paynl_Payment::paymentmethods/yehhpay.xml" />
     <include path="Paynl_Payment::paymentmethods/yourgift.xml" />

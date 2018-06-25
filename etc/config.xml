@@ -97,6 +97,17 @@
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_cartebleue>
+            <paynl_payment_cashly>
+                <active>0</active>
+                <title>Cashly</title>
+                <payment_option_id>1981</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <instructions></instructions>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Cashly</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_cashly>
             <paynl_payment_clickandbuy>
                 <active>0</active>
                 <title>Clickandbuy</title>
@@ -318,6 +329,17 @@
                 <group>paynl_payment</group>
                 <send_new_order_email>before_payment</send_new_order_email>
             </paynl_payment_sofortbanking>
+            <paynl_payment_spraypay>
+                <active>0</active>
+                <title>SprayPay</title>
+                <payment_option_id>1987</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <instructions></instructions>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Spraypay</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_spraypay>
             <paynl_payment_telefonischbetalen>
                 <active>0</active>
                 <title>Telefonisch Betalen (PFP)</title>
@@ -362,6 +384,17 @@
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_webshopgiftcard>
+            <paynl_payment_wechatpay>
+                <active>0</active>
+                <title>Wechat Pay</title>
+                <payment_option_id>1978</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <instructions></instructions>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Wechatpay</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_wechatpay>
             <paynl_payment_wijncadeau>
                 <active>0</active>
                 <title>Wijncadeau</title>
