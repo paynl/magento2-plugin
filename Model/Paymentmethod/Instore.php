@@ -5,11 +5,7 @@
 
 namespace Paynl\Payment\Model\Paymentmethod;
 
-use Magento\Framework\UrlInterface;
 use Magento\Sales\Model\Order;
-use Paynl\Payment\Model\Config;
-use Paynl\Result\Transaction\Transaction;
-
 /**
  * Description of Instore
  *
@@ -62,9 +58,6 @@ class Instore extends PaymentMethod
 
     public function getBanks()
     {
-//        $show_banks = $this->_scopeConfig->getValue('payment/' . $this->_code . '/bank_selection', 'store');
-//        if (!$show_banks) return [];
-
         $cache = $this->getCache();
         $cacheName = 'paynl_terminals_' . $this->getPaymentOptionId();
         $banksJson = $cache->load($cacheName);
@@ -73,9 +66,7 @@ class Instore extends PaymentMethod
         } else {
             $banks = [];
             try {
-                $config = new Config($this->_scopeConfig);
-
-                $config->configureSDK();
+                $this->paynlConfig->configureSDK();
 
                 $terminals = \Paynl\Instore::getAllTerminals();
                 $terminals = $terminals->getList();
