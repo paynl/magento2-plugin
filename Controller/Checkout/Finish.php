@@ -75,13 +75,15 @@ class Finish extends \Magento\Framework\App\Action\Action
 
         \Paynl\Config::setApiToken($this->config->getApiToken());
         $params = $this->getRequest()->getParams();
-        if(!isset($params['orderId'])){
+        if(!isset($params['orderId']) && !isset($params['orderid'])){
             $this->messageManager->addNoticeMessage(__('Invalid return, no transactionId specified'));
             $this->logger->critical('Invalid return, no transactionId specified', $params);
             $resultRedirect->setPath('checkout/cart');
             return $resultRedirect;
         }
         try{
+            if (empty($params['orderId']))
+                $params['orderId'] = $params['orderid'];
             $transaction = \Paynl\Transaction::get($params['orderId']);
         } catch(\Exception $e){
             $this->logger->critical($e, $params);
