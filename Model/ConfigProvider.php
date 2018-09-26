@@ -67,13 +67,20 @@ class ConfigProvider implements ConfigProviderInterface
     protected $escaper;
 
     /**
+     * @var Config
+     */
+    protected $paynlConfig;
+
+    /**
      * @param PaymentHelper $paymentHelper
      * @param Escaper $escaper
      */
     public function __construct(
         PaymentHelper $paymentHelper,
-        Escaper $escaper
+        Escaper $escaper,
+        Config $paynlConfig
     ) {
+        $this->paynlConfig = $paynlConfig;
         $this->escaper = $escaper;
         foreach ($this->methodCodes as $code) {
             $this->methods[$code] = $paymentHelper->getMethodInstance($code);
@@ -89,10 +96,12 @@ class ConfigProvider implements ConfigProviderInterface
         foreach ($this->methodCodes as $code) {
             if ($this->methods[$code]->isAvailable()) {
                 $config['payment']['instructions'][$code] = $this->getInstructions($code);
-                $config['payment']['banks'][$code] = $this->getBanks($code);
-                $config['payment']['icon'][$code] = $this->getIcon($code);
+                $config['payment']['banks'][$code]        = $this->getBanks($code);
+                $config['payment']['icon'][$code]         = $this->getIcon($code);
+
             }
         }
+
         return $config;
     }
 
@@ -100,6 +109,7 @@ class ConfigProvider implements ConfigProviderInterface
      * Get instructions text from config
      *
      * @param string $code
+     *
      * @return string
      */
     protected function getInstructions($code)
@@ -107,7 +117,8 @@ class ConfigProvider implements ConfigProviderInterface
         return nl2br($this->escaper->escapeHtml($this->methods[$code]->getInstructions()));
     }
 
-    protected function getBanks($code){
+    protected function getBanks($code)
+    {
         return $this->methods[$code]->getBanks();
     }
 
@@ -115,10 +126,12 @@ class ConfigProvider implements ConfigProviderInterface
      * Get payment method icon
      *
      * @param string $code
+     *
      * @return string
      */
     protected function getIcon($code)
     {
-        return 'https://www.pay.nl/images/payment_profiles/50x32/'.$this->methods[$code]->getPaymentOptionId().'.png';
+        $url = $this->paynlConfig->getIconUrl();
+        return str_replace('#paymentOptionId#', $this->methods[$code]->getPaymentOptionId(), $url);
     }
 }

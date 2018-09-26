@@ -50,3 +50,4 @@ ServiceId,ServiceId
                     This can be used if uncancelling the order in case of a second chance payment produces errors. WARNING! Orders will never be cancelled automaticly","This setting will disable cancelling the order when the payment is canceled.
                     This can be used if uncancelling the order in case of a second chance payment produces errors. WARNING! Orders will never be cancelled automaticly"
 Paymentmethods,Paymentmethods
+"URL of the payment option icons. Default URL: https://www.pay.nl/images/payment_profiles/50x32/#paymentOptionId#.png","URL of the payment option icons. Default URL: https://www.pay.nl/images/payment_profiles/50x32/#paymentOptionId#.png"
