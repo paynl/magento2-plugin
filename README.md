@@ -8,22 +8,22 @@
 ---
 ### Summary
 
-With this plugin by Pay.nl you can easily add all desired payment methods to your Magento 2 webshop. Please refer to https://www.pay.nl (Dutch) for an overview of all features and services. 
+With this plug-in by Pay.nl you can easily add all desired payment methods to your Magento 2 webshop. Please refer to https://www.pay.nl (Dutch) for an overview of all features and services. 
 
 ##### Available payment methods:
 
 Bank Payments  | Creditcards | Gift cards & Vouchers | Pay by invoice | Others | 
 :-----------: | :-----------: | :-----------: | :-----------: | :-----------: |
-iDEAL |Visa | YourGift | AfterPay | PayPal |
-Bancontact |  Mastercard | Webshop Giftcard | Billink | Pay Fixed Price (phone) | 
-Giropay |American Express | FashionCheque |Focum AchterafBetalen.nl | Instore Payments (POS)|
-MyBank | Carte Bleue | Podium Cadeaukaart | Capayable achteraf betalen |  | 
-SOFORT Banking | PostePay | Gezondheidsbon | Capayable Gespreid betalen | |
-Maestro | | Fashion Giftcard |  | | | 
-Bank Transfer | | Wijncadeau | | | 
-|  | | VVV Giftcard | | | 
+iDEAL + QR |Visa | VVV Cadeaukaart | AfterPay | PayPal |
+Bancontact + QR |  Mastercard | Webshop Giftcard | Billink | WeChatPay | 
+Giropay |American Express | FashionCheque |Focum AchterafBetalen.nl | AmazonPay |
+MyBank | Carte Bancaire | Podium Cadeaukaart | Capayable Achteraf Betalen | Cashly | 
+SOFORT | PostePay | Gezondheidsbon | Capayable Gespreid betalen | Pay Fixed Price (phone) |
+Maestro | Dankort | Fashion Giftcard | Klarna | Instore Payments (POS) |
+Bank Transfer | Cartasi | GivaCard | SprayPay | | 
+| | | YourGift | | | 
 | | | Paysafecard |
-| | | Gift in a Box |
+
 
 ### Quickstart
 
