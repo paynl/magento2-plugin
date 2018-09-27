@@ -114,4 +114,11 @@ class Config
     {
         return trim($this->store->getConfig('payment/paynl/serviceid'));
     }
+
+    public function getIconUrl() {
+        $url = 'https://www.pay.nl/images/payment_profiles/50x32/#paymentOptionId#.png';
+        $iconUrl = trim($this->store->getConfig('payment/paynl/iconurl'));
+
+        return empty($iconUrl)?$url:$iconUrl;
+    }
 }
