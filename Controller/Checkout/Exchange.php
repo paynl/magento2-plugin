@@ -161,6 +161,10 @@ class Exchange extends \Magento\Framework\App\Action\Action {
                 $paidAmount, $skipFraudDetection
 			);
 
+            // Force order state/status to processing
+            $order->setState(Order::STATE_PROCESSING);
+            $order->setStatus(Order::STATE_PROCESSING);
+
 			$this->orderRepository->save( $order );
 
 			// notify customer
