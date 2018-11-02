@@ -41,7 +41,9 @@ class Config
     {
         return $this->store->getConfig('payment/paynl/testmode') == 1;
     }
-
+    public function isSendDiscountTax(){
+        return $this->store->getConfig('payment/paynl/discount_tax') == 1;
+    }
     public function isNeverCancel()
     {
         return $this->store->getConfig('payment/paynl/never_cancel') == 1;

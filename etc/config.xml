@@ -8,6 +8,10 @@
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
     <default>
         <payment>
+            <paynl>
+                <model>Paynl\Payment\Model\Paymentmethod\Paylink</model>
+                <discount_tax>1</discount_tax>
+            </paynl>
             <paynl_payment_paylink>
                 <active>1</active>
                 <title>Pay.nl betaallink</title>
@@ -66,7 +70,7 @@
             </paynl_payment_capayable>
             <paynl_payment_capayable_gespreid>
                 <active>0</active>
-                <title>Capayable Gespreid Betalen</title>
+                <title>In3 gespreid betalen</title>
                 <payment_option_id>1813</payment_option_id>
                 <order_status>pending_payment</order_status>
                 <instructions></instructions>
@@ -130,6 +134,17 @@
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_dankort>
+            <paynl_payment_eps>
+                <active>0</active>
+                <title>EPS Überweisung</title>
+                <payment_option_id>2062</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <instructions></instructions>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Eps</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_eps>
             <paynl_payment_fashioncheque>
                 <active>0</active>
                 <title>Fashioncheque</title>

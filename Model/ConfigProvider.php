@@ -26,6 +26,7 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_cashly',
         'paynl_payment_clickandbuy',
         'paynl_payment_dankort',
+        'paynl_payment_eps',
         'paynl_payment_fashioncheque',
         'paynl_payment_fashiongiftcard',
         'paynl_payment_focum',

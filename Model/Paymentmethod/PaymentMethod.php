@@ -302,6 +302,10 @@ abstract class PaymentMethod extends AbstractMethod
             $discountTax = $order->getBaseDiscountTaxCompensationAmount() * -1;
         }
 
+        if($this->paynlConfig->isSendDiscountTax() == 0){
+            $discountTax = 0;
+        }
+
         $discountDescription = __('Discount');
 
         if ($discount != 0) {

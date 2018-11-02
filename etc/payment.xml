@@ -36,6 +36,12 @@
         <method name="paynl_payment_clickandbuy">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
+        <method name="paynl_payment_dankort">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_eps">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
         <method name="paynl_payment_fashioncheque">
             <allow_multiple_address>0</allow_multiple_address>
         </method>

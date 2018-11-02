@@ -60,6 +60,12 @@
                     <label>Icon URL</label>
                     <comment><![CDATA[URL of the payment option icons. Default URL: https://www.pay.nl/images/payment_profiles/50x32/#paymentOptionId#.png]]></comment>
                 </field>
+                <field id="discount_tax" translate="label,comment" type="select" sortOrder="90" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Send discount tax</label>
+                    <comment><![CDATA[Set this to NO if you have a mix of low and high vatrate products. Some pay later methods have issues when the discount has a tax amount other than the default vat categories]]></comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
                 <group id="paynl_paymentmethods" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1"
                        showInStore="1">
                     <frontend_model>Paynl\Payment\Block\Adminhtml\System\Config\Fieldset\Expanded</frontend_model>

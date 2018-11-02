@@ -23,6 +23,7 @@ define(
             {type: 'paynl_payment_cashly', component: defaultComponent},
             {type: 'paynl_payment_clickandbuy', component: defaultComponent},
             {type: 'paynl_payment_dankort', component: defaultComponent},
+            {type: 'paynl_payment_eps', component: defaultComponent},
             {type: 'paynl_payment_fashioncheque', component: defaultComponent},
             {type: 'paynl_payment_fashiongiftcard', component: defaultComponent},
             {type: 'paynl_payment_focum', component: defaultComponent},
