@@ -16,10 +16,13 @@ use Paynl\Payment\Model\Config;
  */
 abstract class PaymentMethod extends AbstractMethod
 {
+    protected $_code = 'paynl_payment_base';
+
     protected $_isInitializeNeeded = true;
 
     protected $_canRefund = true;
     protected $_canRefundInvoicePartial = true;
+
 	/**
 	 * @var Config
 	 */

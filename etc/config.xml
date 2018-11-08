@@ -9,7 +9,7 @@
     <default>
         <payment>
             <paynl>
-                <model>Paynl\Payment\Model\Paymentmethod\Paylink</model>
+                <model>Paynl\Payment\Model\Paymentmethod\PaymentMethod</model>
                 <discount_tax>1</discount_tax>
             </paynl>
             <paynl_payment_paylink>
