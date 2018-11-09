@@ -9,7 +9,7 @@
     <default>
         <payment>
             <paynl>
-                <model>Paynl\Payment\Model\Paymentmethod\PaymentMethod</model>
+                <model>Paynl\Payment\Model\Paymentmethod\Invisible</model>
                 <discount_tax>1</discount_tax>
             </paynl>
             <paynl_payment_paylink>
