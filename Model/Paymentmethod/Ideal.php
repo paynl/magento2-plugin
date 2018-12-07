@@ -16,6 +16,11 @@ class Ideal extends PaymentMethod
 {
     protected $_code = 'paynl_payment_ideal';
 
+    protected function getDefaultPaymentOptionId()
+    {
+        return 10;
+    }
+
     public function assignData(\Magento\Framework\DataObject $data)
     {
         parent::assignData($data);

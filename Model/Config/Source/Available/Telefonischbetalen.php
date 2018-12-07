@@ -8,5 +8,5 @@ namespace Paynl\Payment\Model\Config\Source\Available;
 
 class Telefonischbetalen extends Available
 {
-    protected $_code = 'paynl_payment_telefonischbetalen';
+    protected $_class = \Paynl\Payment\Model\Paymentmethod\Telefonischbetalen::class;
 }

@@ -8,5 +8,5 @@ namespace Paynl\Payment\Model\Config\Source\Available;
 
 class Spraypay extends Available
 {
-    protected $_code = 'paynl_payment_spraypay';
+    protected $_class = \Paynl\Payment\Model\Paymentmethod\Spraypay::class;
 }

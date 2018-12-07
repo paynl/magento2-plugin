@@ -12,6 +12,11 @@ class Paylink extends PaymentMethod
 {
     protected $_code = 'paynl_payment_paylink';
 
+    protected function getDefaultPaymentOptionId()
+    {
+        return 961;
+    }
+
     /**
      * Paylink payment block paths
      *

@@ -13,4 +13,8 @@ class Invisible extends PaymentMethod
     protected $_canUseInternal = false;
     protected $_code = 'paynl_payment_invisible';
 
+    protected function getDefaultPaymentOptionId()
+    {
+        return 0;
+    }
 }

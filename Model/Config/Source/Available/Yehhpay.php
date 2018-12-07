@@ -8,5 +8,5 @@ namespace Paynl\Payment\Model\Config\Source\Available;
 
 class Yehhpay extends Available
 {
-    protected $_code = 'paynl_payment_yehhpay';
+    protected $_class = \Paynl\Payment\Model\Paymentmethod\Yehhpay::class;
 }

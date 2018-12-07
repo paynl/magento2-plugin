@@ -8,5 +8,5 @@ namespace Paynl\Payment\Model\Config\Source\Available;
 
 class Amex extends Available
 {
-    protected $_code = 'paynl_payment_amex';
+    protected $_class = \Paynl\Payment\Model\Paymentmethod\Amex::class;
 }

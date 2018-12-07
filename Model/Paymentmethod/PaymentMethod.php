@@ -18,6 +18,7 @@ abstract class PaymentMethod extends AbstractMethod
 {
     protected $_code = 'paynl_payment_base';
 
+
     protected $_isInitializeNeeded = true;
 
     protected $_canRefund = true;
@@ -340,6 +341,15 @@ abstract class PaymentMethod extends AbstractMethod
 
     public function getPaymentOptionId()
     {
-        return $this->getConfigData('payment_option_id');
+        $paymentOptionId =  $this->getConfigData('payment_option_id');
+
+        if(empty($paymentOptionId)) $paymentOptionId = $this->getDefaultPaymentOptionId();
+
+        return $paymentOptionId;
     }
+
+    /**
+     * @return int the default payment option id
+     */
+    abstract protected function getDefaultPaymentOptionId();
 }

@@ -8,5 +8,5 @@ namespace Paynl\Payment\Model\Config\Source\Available;
 
 class Wechatpay extends Available
 {
-    protected $_code = 'paynl_payment_wechatpay';
+    protected $_class = \Paynl\Payment\Model\Paymentmethod\Wechatpay::class;
 }

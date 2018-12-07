@@ -8,5 +8,5 @@ namespace Paynl\Payment\Model\Config\Source\Available;
 
 class Wijncadeau extends Available
 {
-    protected $_code = 'paynl_payment_wijncadeau';
+    protected $_class = \Paynl\Payment\Model\Paymentmethod\Wijncadeau::class;
 }

@@ -8,5 +8,5 @@ namespace Paynl\Payment\Model\Config\Source\Available;
 
 class CapayableGespreid extends Available
 {
-    protected $_code = 'paynl_payment_capayable_gespreid';
+    protected $_class = \Paynl\Payment\Model\Paymentmethod\CapayableGespreid::class;
 }

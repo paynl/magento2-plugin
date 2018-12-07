@@ -8,5 +8,5 @@ namespace Paynl\Payment\Model\Config\Source\Available;
 
 class Cartebleue extends Available
 {
-    protected $_code = 'paynl_payment_cartebleue';
+    protected $_class = \Paynl\Payment\Model\Paymentmethod\Cartebleue::class;
 }

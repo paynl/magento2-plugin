@@ -8,5 +8,5 @@ namespace Paynl\Payment\Model\Config\Source\Available;
 
 class Webshopgiftcard extends Available
 {
-    protected $_code = 'paynl_payment_webshopgiftcard';
+    protected $_class = \Paynl\Payment\Model\Paymentmethod\Webshopgiftcard::class;
 }

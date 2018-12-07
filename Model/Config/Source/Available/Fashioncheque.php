@@ -8,5 +8,5 @@ namespace Paynl\Payment\Model\Config\Source\Available;
 
 class Fashioncheque extends Available
 {
-    protected $_code = 'paynl_payment_fashioncheque';
+    protected $_class = \Paynl\Payment\Model\Paymentmethod\Fashioncheque::class;
 }

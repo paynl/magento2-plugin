@@ -5,4 +5,8 @@ class Focum extends PaymentMethod
 {
     protected $_code = 'paynl_payment_focum';
 
+    protected function getDefaultPaymentOptionId()
+    {
+        return 1702;
+    }
 }

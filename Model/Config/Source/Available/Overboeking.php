@@ -8,5 +8,5 @@ namespace Paynl\Payment\Model\Config\Source\Available;
 
 class Overboeking extends Available
 {
-    protected $_code = 'paynl_payment_overboeking';
+    protected $_class = \Paynl\Payment\Model\Paymentmethod\Overboeking::class;
 }

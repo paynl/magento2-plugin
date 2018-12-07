@@ -9,4 +9,8 @@ class Dankort extends PaymentMethod
 {
     protected $_code = 'paynl_payment_dankort';
 
+    protected function getDefaultPaymentOptionId()
+    {
+        return 1939;
+    }
 }

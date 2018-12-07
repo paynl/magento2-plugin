@@ -8,18 +8,19 @@ namespace Paynl\Payment\Model\Config\Source\Available;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\RequestInterface;
 use \Magento\Framework\Option\ArrayInterface;
+use Magento\Payment\Model\Method\Factory as PaymentMethodFactory;
 use Magento\Store\Model\ScopeInterface;
-use\Paynl\Payment\Model\Config;
+use \Paynl\Payment\Model\Config;
+use Paynl\Payment\Model\Paymentmethod\PaymentMethod;
 use \Paynl\Paymentmethods;
 
 abstract class Available implements ArrayInterface
 {
     /**
-     * The payment method code, should be the same as the code in the payment method model
-     *
-     * @var string
+     * @var string The name of the class for this method
      */
-    protected $_code;
+    protected $_class;
+
     /**
      * @var RequestInterface
      */
@@ -30,6 +31,11 @@ abstract class Available implements ArrayInterface
     protected $_scopeConfig;
 
     /**
+     * @var PaymentMethodFactory
+     */
+    protected $_paymentmethodFactory;
+
+    /**
      * @var Config
      */
     protected $_config;
@@ -37,12 +43,14 @@ abstract class Available implements ArrayInterface
     public function __construct(
         Config $config,
         RequestInterface $request,
-        ScopeConfigInterface $scopeConfig
+        ScopeConfigInterface $scopeConfig,
+        PaymentMethodFactory $paymentMethodFactory
     )
     {
         $this->_config = $config;
         $this->_request = $request;
         $this->_scopeConfig = $scopeConfig;
+        $this->_paymentmethodFactory = $paymentMethodFactory;
     }
 
 
@@ -107,7 +115,11 @@ abstract class Available implements ArrayInterface
 
     protected function getPaymentOptionId()
     {
-        return $this->getConfigValue('payment/' . $this->_code . '/payment_option_id');
+        $method = $this->_paymentmethodFactory->create($this->_class);
+        if($method instanceof PaymentMethod){
+            return $method->getPaymentOptionId();
+        }
+        return null;
     }
 
 

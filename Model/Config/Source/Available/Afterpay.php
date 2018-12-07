@@ -8,5 +8,5 @@ namespace Paynl\Payment\Model\Config\Source\Available;
 
 class Afterpay extends Available
 {
-    protected $_code = 'paynl_payment_afterpay';
+    protected $_class = \Paynl\Payment\Model\Paymentmethod\Afterpay::class;
 }

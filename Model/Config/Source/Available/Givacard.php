@@ -8,5 +8,5 @@ namespace Paynl\Payment\Model\Config\Source\Available;
 
 class Givacard extends Available
 {
-    protected $_code = 'paynl_payment_givacard';
+    protected $_class = \Paynl\Payment\Model\Paymentmethod\Givacard::class;
 }

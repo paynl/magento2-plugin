@@ -14,4 +14,8 @@ class Billink extends PaymentMethod
 {
     protected $_code = 'paynl_payment_billink';
 
+    protected function getDefaultPaymentOptionId()
+    {
+        return 1672;
+    }
 }

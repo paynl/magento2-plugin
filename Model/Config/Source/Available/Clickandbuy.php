@@ -8,5 +8,5 @@ namespace Paynl\Payment\Model\Config\Source\Available;
 
 class Clickandbuy extends Available
 {
-    protected $_code = 'paynl_payment_clickandbuy';
+    protected $_class = \Paynl\Payment\Model\Paymentmethod\Clickandbuy::class;
 }

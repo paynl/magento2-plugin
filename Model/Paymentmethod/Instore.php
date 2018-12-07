@@ -15,6 +15,11 @@ class Instore extends PaymentMethod
 {
     protected $_code = 'paynl_payment_instore';
 
+    protected function getDefaultPaymentOptionId()
+    {
+        return 1729;
+    }
+
     public function startTransaction(Order $order)
     {
 
