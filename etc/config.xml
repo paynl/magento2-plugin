@@ -35,6 +35,17 @@
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_afterpay>
+            <paynl_payment_alipay>
+                <active>0</active>
+                <title>Alipay</title>
+                <payment_option_id>2080</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <instructions></instructions>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Alipay</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_alipay>
             <paynl_payment_amex>
                 <active>0</active>
                 <title>American Express</title>
