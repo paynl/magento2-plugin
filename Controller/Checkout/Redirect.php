@@ -78,7 +78,15 @@ class Redirect extends \Magento\Framework\App\Action\Action
         try {
             $order = $this->checkoutSession->getLastRealOrder();
 
+            if(empty($order)){
+                throw new Error('No order found in session, please try again');
+            }
             $payment = $order->getPayment();
+
+            if(empty($payment)){
+                throw new Error('No payment linked to order, please select a payment method');
+            }
+
             $method = $payment->getMethod();
             // restore the quote
             $quote = $this->quoteRepository->get($order->getQuoteId());
@@ -96,10 +104,11 @@ class Redirect extends \Magento\Framework\App\Action\Action
             }
 
         } catch (\Exception $e) {
+            $this->_getCheckoutSession()->restoreQuote();
             $this->messageManager->addExceptionMessage($e, __('Something went wrong, please try again later'));
             $this->messageManager->addExceptionMessage($e, $e->getMessage());
             $this->_logger->critical($e);
-            $this->_getCheckoutSession()->restoreQuote();
+
             $this->_redirect('checkout/cart');
         }
     }
