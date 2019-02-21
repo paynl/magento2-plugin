@@ -31,6 +31,15 @@
             </depends>
             <config_path>payment/paynl_payment_paysafecard/order_status</config_path>
         </field>
+        <field id="order_status_processing" translate="label" type="select" sortOrder="35" showInDefault="1" showInWebsite="1"
+               showInStore="1">
+            <label>Paid Order Status</label>
+            <source_model>Paynl\Payment\Model\Config\Source\Order\Status\Processing</source_model>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+            <config_path>payment/paynl_payment_paysafecard/order_status_processing</config_path>
+        </field>
         <field id="allowspecific" translate="label" type="allowspecific" sortOrder="40" showInDefault="1"
                showInWebsite="1" showInStore="1">
             <label>Payment from Applicable Countries</label>
