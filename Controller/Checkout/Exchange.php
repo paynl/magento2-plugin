@@ -163,7 +163,9 @@ class Exchange extends \Magento\Framework\App\Action\Action {
 
             // Force order state/status to processing
             $order->setState(Order::STATE_PROCESSING);
-            $order->setStatus(Order::STATE_PROCESSING);
+
+            $statusProcessing = $this->config->getPaidStatus($order->getPayment()->getMethod());
+            $order->setStatus(!empty($statusProcessing)?$statusProcessing:Order::STATE_PROCESSING);
 
 			$this->orderRepository->save( $order );
 

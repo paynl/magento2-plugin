@@ -66,6 +66,14 @@ class Config
         return $this->store->getConfig('payment/' . $methodCode . '/payment_option_id');
     }
 
+    public function getPendingStatus($methodCode){
+        return $this->store->getConfig('payment/' . $methodCode . '/order_status');
+    }
+
+    public function getPaidStatus($methodCode){
+        return $this->store->getConfig('payment/' . $methodCode . '/order_status_processing');
+    }
+
     /**
      * @param $methodCode string
      * @return string
