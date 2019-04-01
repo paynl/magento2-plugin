@@ -69,6 +69,9 @@ class Config
     public function getPendingStatus($methodCode){
         return $this->store->getConfig('payment/' . $methodCode . '/order_status');
     }
+    public function getAuthorizedStatus($methodCode){
+        return $this->store->getConfig('payment/' . $methodCode . '/order_status_authorized');
+    }
 
     public function getPaidStatus($methodCode){
         return $this->store->getConfig('payment/' . $methodCode . '/order_status_processing');

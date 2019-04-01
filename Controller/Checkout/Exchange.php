@@ -7,7 +7,9 @@ namespace Paynl\Payment\Controller\Checkout;
 
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Payment\Interceptor;
 use Magento\Sales\Model\OrderRepository;
+use Paynl\Result\Transaction\Transaction;
 
 /**
  * Description of Index
@@ -94,7 +96,6 @@ class Exchange extends \Magento\Framework\App\Action\Action
 
     public function execute()
     {
-        $skipFraudDetection = $this->config->isSkipFraudDetection();
         \Paynl\Config::setApiToken($this->config->getApiToken());
 
         $params = $this->getRequest()->getParams();
@@ -131,92 +132,35 @@ class Exchange extends \Magento\Framework\App\Action\Action
             return $this->result->setContents('TRUE| Total due <= 0, so iam not touching the status of the order');
         }
 
-        if ($transaction->isPaid()) {
-            $message = "PAID";
-            if ($order->isCanceled()) {
-                try {
-                    $this->uncancel($order);
-                } catch (LocalizedException $e) {
-                    return $this->result->setContents('FALSE| Cannot un-cancel order: ' . $e->getMessage());
-                }
-                $message .= " order was uncanceled";
-            }
-            /** @var \Magento\Sales\Model\Order\Payment\Interceptor $payment */
-            $payment = $order->getPayment();
-            $payment->setTransactionId(
-                $transaction->getId()
-            );
-
-            $payment->setPreparedMessage('Pay.nl - ');
-            $payment->setIsTransactionClosed(
-                0
-            );
-            $paidAmount = $transaction->getPaidCurrencyAmount();
-
-            if (!$this->paynlConfig->isAlwaysBaseCurrency()) {
-                if ($order->getBaseCurrencyCode() != $order->getOrderCurrencyCode()) {
-                    // we can only register the payment in the base currency
-                    $paidAmount = $order->getBaseGrandTotal();
-                }
-            }
-
-            $payment->registerCaptureNotification(
-                $paidAmount, $skipFraudDetection
-            );
-
-            // Force order state/status to processing
-            $order->setState(Order::STATE_PROCESSING);
-
-            $statusProcessing = $this->config->getPaidStatus($order->getPayment()->getMethod());
-            $order->setStatus(!empty($statusProcessing) ? $statusProcessing : Order::STATE_PROCESSING);
-
-            $this->orderRepository->save($order);
-
-            // notify customer
-            $invoice = $payment->getCreatedInvoice();
-            if ($invoice && !$order->getEmailSent()) {
-                $this->orderSender->send($order);
-                $order->addStatusHistoryComment(
-                    __('New order email sent')
-                )->setIsCustomerNotified(
-                    true
-                )->save();
-            }
-            if ($invoice && !$invoice->getEmailSent()) {
-                $this->invoiceSender->send($invoice);
-
-                $order->addStatusHistoryComment(
-                    __('You notified customer about invoice #%1.',
-                        $invoice->getIncrementId())
-                )->setIsCustomerNotified(
-                    true
-                )->save();
-
-            }
-
-            return $this->result->setContents("TRUE| " . $message);
+        if ($transaction->isPaid() || $transaction->isAuthorized()) {
+            return $this->processPaidOrder($transaction, $order);
 
         } elseif ($transaction->isCanceled()) {
-            if ($this->config->isNeverCancel()) {
-                return $this->result->setContents("TRUE| Not Canceled because never cancel is enabled");
-            }
-            if ($order->getState() == 'holded') {
-                $order->unhold();
-            }
-
-            $order->cancel();
-            $order->addStatusHistoryComment(__('Pay.nl canceled the order'));
-            $this->orderRepository->save($order);
-
-            return $this->result->setContents("TRUE| CANCELED");
+            return $this->cancelOrder($order);
         }
 
     }
 
-    private function uncancel(\Magento\Sales\Model\Order $order)
+    private function cancelOrder(Order $order)
+    {
+        if ($this->config->isNeverCancel()) {
+            return $this->result->setContents("TRUE| Not Canceled because never cancel is enabled");
+        }
+        if ($order->getState() == 'holded') {
+            $order->unhold();
+        }
+
+        $order->cancel();
+        $order->addStatusHistoryComment(__('Pay.nl canceled the order'));
+        $this->orderRepository->save($order);
+
+        return $this->result->setContents("TRUE| CANCELED");
+    }
+
+    private function uncancelOrder(Order $order)
     {
         if ($order->isCanceled()) {
-            $state = \Magento\Sales\Model\Order::STATE_PENDING_PAYMENT;
+            $state = Order::STATE_PENDING_PAYMENT;
             $productStockQty = [];
             foreach ($order->getAllVisibleItems() as $item) {
                 $productStockQty[$item->getProductId()] = $item->getQtyCanceled();
@@ -259,5 +203,97 @@ class Exchange extends \Magento\Framework\App\Action\Action
         }
 
         return $order;
+    }
+
+    /**
+     * @param Transaction $transaction
+     * @param Order $order
+     * @return \Magento\Framework\Controller\Result\Raw
+     */
+    private function processPaidOrder(Transaction $transaction, Order $order)
+    {
+        if ($transaction->isPaid()) {
+            $message = "PAID";
+        } else {
+            $message = "AUTHORIZED";
+        }
+
+        if ($order->isCanceled()) {
+            try {
+                $this->uncancelOrder($order);
+            } catch (LocalizedException $e) {
+                return $this->result->setContents('FALSE| Cannot un-cancel order: ' . $e->getMessage());
+            }
+            $message .= " order was uncanceled";
+        }
+        /** @var Interceptor $payment */
+        $payment = $order->getPayment();
+        $payment->setTransactionId(
+            $transaction->getId()
+        );
+
+        $payment->setPreparedMessage('Pay.nl - ');
+        $payment->setIsTransactionClosed(
+            0
+        );
+
+        $paidAmount = $transaction->getPaidCurrencyAmount();
+
+        if (!$this->paynlConfig->isAlwaysBaseCurrency()) {
+            if ($order->getBaseCurrencyCode() != $order->getOrderCurrencyCode()) {
+                // we can only register the payment in the base currency
+                $paidAmount = $order->getBaseGrandTotal();
+            }
+        }
+
+        if ($transaction->isAuthorized()) {
+            $paidAmount = $transaction->getCurrencyAmount();
+            $payment->registerAuthorizationNotification($paidAmount);
+        } else {
+            $payment->registerCaptureNotification(
+                $paidAmount, $this->config->isSkipFraudDetection()
+            );
+        }
+
+        // Force order state/status to processing
+        $order->setState(Order::STATE_PROCESSING);
+
+        $statusPaid = $this->config->getPaidStatus($order->getPayment()->getMethod());
+        $statusAuthorized= $this->config->getAuthorizedStatus($order->getPayment()->getMethod());
+        $statusPaid = !empty($statusPaid) ? $statusPaid : Order::STATE_PROCESSING;
+        $statusAuthorized = !empty($statusAuthorized) ? $statusAuthorized : Order::STATE_PROCESSING;
+
+        if($transaction->isAuthorized()){
+            $order->setStatus($statusAuthorized);
+        } else {
+            $order->setStatus($statusPaid);
+        }
+
+        $this->orderRepository->save($order);
+
+        // notify customer
+        if ($order && !$order->getEmailSent()) {
+            $this->orderSender->send($order);
+            $order->addStatusHistoryComment(
+                __('New order email sent')
+            )->setIsCustomerNotified(
+                true
+            )->save();
+        }
+
+        $invoice = $payment->getCreatedInvoice();
+        if ($invoice && !$invoice->getEmailSent()) {
+            $this->invoiceSender->send($invoice);
+
+            $order->addStatusHistoryComment(
+                __('You notified customer about invoice #%1.',
+                    $invoice->getIncrementId())
+            )->setIsCustomerNotified(
+                true
+            )->save();
+
+        }
+
+        return $this->result->setContents("TRUE| " . $message);
     }
 }

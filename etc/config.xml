@@ -17,8 +17,8 @@
                 <title>Pay.nl betaallink</title>
                 <payment_option_id>961</payment_option_id>
                 <order_status>pending</order_status>
+                <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
-                <instructions></instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Paylink</model>
                 <group>paynl_payment</group>
@@ -30,8 +30,8 @@
                 <title>Afterpay</title>
                 <payment_option_id>739</payment_option_id>
                 <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
-                <instructions></instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Afterpay</model>
                 <group>paynl_payment</group>
@@ -42,8 +42,8 @@
                 <title>Alipay</title>
                 <payment_option_id>2080</payment_option_id>
                 <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
-                <instructions></instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Alipay</model>
                 <group>paynl_payment</group>
@@ -54,8 +54,8 @@
                 <title>American Express</title>
                 <payment_option_id>1705</payment_option_id>
                 <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
-                <instructions></instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Amex</model>
                 <group>paynl_payment</group>
@@ -66,8 +66,8 @@
                 <title>Billink</title>
                 <payment_option_id>1672</payment_option_id>
                 <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
-                <instructions></instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Billink</model>
                 <group>paynl_payment</group>
@@ -78,8 +78,8 @@
                 <title>Capayable Achteraf Betalen</title>
                 <payment_option_id>1744</payment_option_id>
                 <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
-                <instructions></instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Capayable</model>
                 <group>paynl_payment</group>
@@ -90,8 +90,8 @@
                 <title>In3 gespreid betalen</title>
                 <payment_option_id>1813</payment_option_id>
                 <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
-                <instructions></instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\CapayableGespreid</model>
                 <group>paynl_payment</group>
@@ -102,8 +102,8 @@
                 <title>CartaSi</title>
                 <payment_option_id>1945</payment_option_id>
                 <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
-                <instructions></instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Cartasi</model>
                 <group>paynl_payment</group>
@@ -114,8 +114,8 @@
                 <title>Cartebleue</title>
                 <payment_option_id>710</payment_option_id>
                 <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
-                <instructions></instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Cartebleue</model>
                 <group>paynl_payment</group>
@@ -126,8 +126,8 @@
                 <title>Cashly</title>
                 <payment_option_id>1981</payment_option_id>
                 <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
-                <instructions></instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Cashly</model>
                 <group>paynl_payment</group>
@@ -138,8 +138,8 @@
                 <title>Clickandbuy</title>
                 <payment_option_id>139</payment_option_id>
                 <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
-                <instructions></instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Clickandbuy</model>
                 <group>paynl_payment</group>
@@ -150,8 +150,8 @@
                 <title>Dankort</title>
                 <payment_option_id>1939</payment_option_id>
                 <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
-                <instructions></instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Dankort</model>
                 <group>paynl_payment</group>
@@ -162,8 +162,8 @@
                 <title>EPS Überweisung</title>
                 <payment_option_id>2062</payment_option_id>
                 <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
-                <instructions></instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Eps</model>
                 <group>paynl_payment</group>
@@ -174,8 +174,8 @@
                 <title>Fashioncheque</title>
                 <payment_option_id>815</payment_option_id>
                 <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
-                <instructions></instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Fashioncheque</model>
                 <group>paynl_payment</group>
@@ -186,8 +186,8 @@
                 <title>Fashiongiftcard</title>
                 <payment_option_id>1699</payment_option_id>
                 <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
-                <instructions></instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Fashiongiftcard</model>
                 <group>paynl_payment</group>
@@ -198,8 +198,8 @@
                 <title>Focum</title>
                 <payment_option_id>1702</payment_option_id>
                 <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
-                <instructions></instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Focum</model>
                 <group>paynl_payment</group>
@@ -210,8 +210,8 @@
                 <title>Gezondheidsbon</title>
                 <payment_option_id>812</payment_option_id>
                 <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
-                <instructions></instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Gezondheidsbon</model>
                 <group>paynl_payment</group>
@@ -222,8 +222,8 @@
                 <title>Giropay</title>
                 <payment_option_id>694</payment_option_id>
                 <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
-                <instructions></instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Giropay</model>
                 <group>paynl_payment</group>
@@ -234,8 +234,8 @@
                 <title>Givacard</title>
                 <payment_option_id>1657</payment_option_id>
                 <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
-                <instructions></instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Givacard</model>
                 <group>paynl_payment</group>
@@ -246,6 +246,7 @@
                 <title>iDEAL</title>
                 <payment_option_id>10</payment_option_id>
                 <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
                 <instructions>Veilig betalen via uw eigen bank</instructions>
                 <payment_action>order</payment_action>
@@ -257,6 +258,7 @@
                 <title>Pinnen</title>
                 <payment_option_id>1729</payment_option_id>
                 <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
                 <instructions>Betaal in de winkel met uw pinpas</instructions>
                 <payment_action>order</payment_action>
@@ -269,8 +271,8 @@
                 <title>Klarna</title>
                 <payment_option_id>1717</payment_option_id>
                 <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
-                <instructions></instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Klarna</model>
                 <group>paynl_payment</group>
@@ -281,8 +283,8 @@
                 <title>Maestro</title>
                 <payment_option_id>712</payment_option_id>
                 <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
-                <instructions></instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Maestro</model>
                 <group>paynl_payment</group>
@@ -293,8 +295,8 @@
                 <title>Bancontact / Mister Cash</title>
                 <payment_option_id>436</payment_option_id>
                 <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
-                <instructions></instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Mistercash</model>
                 <group>paynl_payment</group>
@@ -305,8 +307,8 @@
                 <title>Mybank</title>
                 <payment_option_id>1588</payment_option_id>
                 <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
-                <instructions></instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Mybank</model>
                 <group>paynl_payment</group>
@@ -317,8 +319,8 @@
                 <title>Overboeking</title>
                 <payment_option_id>136</payment_option_id>
                 <order_status>pending</order_status>
+                <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
-                <instructions></instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Overboeking</model>
                 <group>paynl_payment</group>
@@ -330,8 +332,8 @@
                 <title>Paypal</title>
                 <payment_option_id>138</payment_option_id>
                 <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
-                <instructions></instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Paypal</model>
                 <group>paynl_payment</group>
@@ -342,8 +344,8 @@
                 <title>Paysafecard</title>
                 <payment_option_id>553</payment_option_id>
                 <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
-                <instructions></instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Paysafecard</model>
                 <group>paynl_payment</group>
@@ -354,8 +356,8 @@
                 <title>Podiumcadeaukaart</title>
                 <payment_option_id>816</payment_option_id>
                 <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
-                <instructions></instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Podiumcadeaukaart</model>
                 <group>paynl_payment</group>
@@ -366,8 +368,8 @@
                 <title>Postepay</title>
                 <payment_option_id>707</payment_option_id>
                 <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
-                <instructions></instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Postepay</model>
                 <group>paynl_payment</group>
@@ -378,9 +380,9 @@
                 <title>Sofortbanking</title>
                 <payment_option_id>559</payment_option_id>
                 <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
                 <holded>1</holded>
-                <instructions></instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Sofortbanking</model>
                 <group>paynl_payment</group>
@@ -391,8 +393,8 @@
                 <title>SprayPay</title>
                 <payment_option_id>1987</payment_option_id>
                 <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
-                <instructions></instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Spraypay</model>
                 <group>paynl_payment</group>
@@ -403,8 +405,8 @@
                 <title>Telefonisch Betalen (PFP)</title>
                 <payment_option_id>1600</payment_option_id>
                 <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
-                <instructions></instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Telefonischbetalen</model>
                 <group>paynl_payment</group>
@@ -415,8 +417,8 @@
                 <title>Visa / Mastercard</title>
                 <payment_option_id>706</payment_option_id>
                 <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
-                <instructions></instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Visamastercard</model>
                 <group>paynl_payment</group>
@@ -427,8 +429,8 @@
                 <title>VVV Giftcard</title>
                 <payment_option_id>1714</payment_option_id>
                 <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
-                <instructions></instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Vvvgiftcard</model>
                 <group>paynl_payment</group>
@@ -439,8 +441,8 @@
                 <title>Webshopgiftcard</title>
                 <payment_option_id>811</payment_option_id>
                 <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
-                <instructions></instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Webshopgiftcard</model>
                 <group>paynl_payment</group>
@@ -451,8 +453,8 @@
                 <title>Wechat Pay</title>
                 <payment_option_id>1978</payment_option_id>
                 <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
-                <instructions></instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Wechatpay</model>
                 <group>paynl_payment</group>
@@ -463,8 +465,8 @@
                 <title>Wijncadeau</title>
                 <payment_option_id>1666</payment_option_id>
                 <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
-                <instructions></instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Wijncadeau</model>
                 <group>paynl_payment</group>
@@ -475,8 +477,8 @@
                 <title>Yehhpay</title>
                 <payment_option_id>1877</payment_option_id>
                 <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
-                <instructions></instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Yehhpay</model>
                 <group>paynl_payment</group>
@@ -487,8 +489,8 @@
                 <title>Yourgift.nl</title>
                 <payment_option_id>1645</payment_option_id>
                 <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
-                <instructions></instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Yourgift</model>
                 <group>paynl_payment</group>

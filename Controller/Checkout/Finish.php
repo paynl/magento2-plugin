@@ -6,20 +6,24 @@
 namespace Paynl\Payment\Controller\Checkout;
 
 use Magento\Checkout\Model\Session;
+use Magento\Framework\App\Action\Action;
+use Magento\Framework\App\Action\Context;
 use Magento\Quote\Model\QuoteRepository;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderRepository;
+use Paynl\Payment\Model\Config;
+use Psr\Log\LoggerInterface;
 
 /**
  * Description of Redirect
  *
  * @author Andy Pieters <andy@pay.nl>
  */
-class Finish extends \Magento\Framework\App\Action\Action
+class Finish extends Action
 {
     /**
      *
-     * @var \Paynl\Payment\Model\Config
+     * @var Config
      */
     private $config;
 
@@ -29,7 +33,7 @@ class Finish extends \Magento\Framework\App\Action\Action
 	private $checkoutSession;
 
     /**
-     * @var \Psr\Log\LoggerInterface
+     * @var LoggerInterface
      */
 	private $logger;
 
@@ -45,17 +49,17 @@ class Finish extends \Magento\Framework\App\Action\Action
 
     /**
      * Index constructor.
-     * @param \Magento\Framework\App\Action\Context $context
-     * @param \Paynl\Payment\Model\Config $config
+     * @param Context $context
+     * @param Config $config
      * @param Session $checkoutSession
-     * @param \Psr\Log\LoggerInterface $logger
+     * @param LoggerInterface $logger
      * @param OrderRepository $orderRepository
      */
     public function __construct(
-        \Magento\Framework\App\Action\Context $context,
-        \Paynl\Payment\Model\Config $config,
+        Context $context,
+        Config $config,
         Session $checkoutSession,
-        \Psr\Log\LoggerInterface $logger,
+        LoggerInterface $logger,
         OrderRepository $orderRepository,
 		QuoteRepository $quoteRepository
     )
@@ -107,7 +111,7 @@ class Finish extends \Magento\Framework\App\Action\Action
             $pinStatus = $status->getTransactionState();
         }
 
-        if ($transaction->isPaid() || ($transaction->isPending() && $pinStatus == null)) {
+        if ($transaction->isPaid() || $transaction->isAuthorized() || ($transaction->isPending() && $pinStatus == null)) {
             $successUrl = $this->config->getSuccessPage($payment->getMethod());
 	        $resultRedirect->setPath($successUrl, ['_query' => ['utm_nooverride' => '1']]);
 

@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-/**
- * Copyright © 2015 Pay.nl All rights reserved.
- */
--->
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
     <group id="paynl_payment_fashiongiftcard" sortOrder="600" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -30,6 +25,15 @@
                 <field id="active">1</field>
             </depends>
             <config_path>payment/paynl_payment_fashiongiftcard/order_status</config_path>
+        </field>
+        <field id="order_status_authorized" translate="label" type="select" sortOrder="32" showInDefault="1" showInWebsite="1"
+               showInStore="1">
+            <label>Authorized Order Status</label>
+            <source_model>Paynl\Payment\Model\Config\Source\Order\Status\Processing</source_model>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+            <config_path>payment/paynl_payment_fashiongiftcard/order_status_authorized</config_path>
         </field>
         <field id="order_status_processing" translate="label" type="select" sortOrder="35" showInDefault="1" showInWebsite="1"
                showInStore="1">
