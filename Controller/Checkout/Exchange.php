@@ -5,18 +5,24 @@
 
 namespace Paynl\Payment\Controller\Checkout;
 
+use Magento\Framework\App\Request\InvalidRequestException;
+use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment\Interceptor;
 use Magento\Sales\Model\OrderRepository;
+use Paynl\Payment\Controller\CsrfAwareActionInterface;
 use Paynl\Result\Transaction\Transaction;
+
+
 
 /**
  * Description of Index
  *
  * @author Andy Pieters <andy@pay.nl>
  */
-class Exchange extends \Magento\Framework\App\Action\Action
+class Exchange extends \Magento\Framework\App\Action\Action implements CsrfAwareActionInterface
+//    implements CsrfAwareActionInterface
 {
     /**
      *
@@ -58,6 +64,16 @@ class Exchange extends \Magento\Framework\App\Action\Action
     private $orderRepository;
 
     private $paynlConfig;
+
+    public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
+    {
+        return null;
+    }
+
+    public function validateForCsrf(RequestInterface $request): bool
+    {
+        return true;
+    }
 
     /**
      * Exchange constructor.
