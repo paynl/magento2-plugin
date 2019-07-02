@@ -20,8 +20,8 @@ Giropay |American Express | FashionCheque |Focum AchterafBetalen.nl | AmazonPay 
 MyBank | Carte Bancaire | Podium Cadeaukaart | Capayable Achteraf Betalen | Cashly | 
 SOFORT | PostePay | Gezondheidsbon | Capayable Gespreid betalen | Pay Fixed Price (phone) |
 Maestro | Dankort | Fashion Giftcard | Klarna | Instore Payments (POS) |
-Bank Transfer | Cartasi | GivaCard | SprayPay | | 
-| | | YourGift | | | 
+Bank Transfer | Cartasi | GivaCard | SprayPay | Przelewy24 | 
+| Tikkie | | YourGift | Creditclick | | 
 | | | Paysafecard |
 
 
