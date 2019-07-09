@@ -145,6 +145,18 @@
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_clickandbuy>
+            <paynl_payment_creditclick>
+                <active>0</active>
+                <title>Creditclick</title>
+                <payment_option_id>2107</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Creditclick</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_creditclick>
             <paynl_payment_dankort>
                 <active>0</active>
                 <title>Dankort</title>
@@ -375,6 +387,18 @@
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_postepay>
+            <paynl_payment_przelewy24>
+                <active>0</active>
+                <title>Przelewy24</title>
+                <payment_option_id>2151</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Przelewy24</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_przelewy24>
             <paynl_payment_sofortbanking>
                 <active>0</active>
                 <title>Sofortbanking</title>
@@ -412,6 +436,18 @@
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_telefonischbetalen>
+            <paynl_payment_tikkie>
+                <active>0</active>
+                <title>Tikkie</title>
+                <payment_option_id>2104</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Tikkie</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_tikkie>
             <paynl_payment_visamastercard>
                 <active>0</active>
                 <title>Visa / Mastercard</title>

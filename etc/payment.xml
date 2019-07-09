@@ -39,6 +39,9 @@
         <method name="paynl_payment_clickandbuy">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
+        <method name="paynl_payment_creditclick">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
         <method name="paynl_payment_dankort">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
@@ -90,6 +93,9 @@
         <method name="paynl_payment_postepay">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
+        <method name="paynl_payment_przelewy24">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
         <method name="paynl_payment_sofortbanking">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
@@ -97,6 +103,9 @@
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_telefonischbetalen">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_tikkie">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_visamastercard">

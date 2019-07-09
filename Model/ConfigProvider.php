@@ -26,6 +26,7 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_cartebleue',
         'paynl_payment_cashly',
         'paynl_payment_clickandbuy',
+        'paynl_payment_creditclick',
         'paynl_payment_dankort',
         'paynl_payment_eps',
         'paynl_payment_fashioncheque',
@@ -45,9 +46,11 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_paysafecard',
         'paynl_payment_podiumcadeaukaart',
         'paynl_payment_postepay',
+        'paynl_payment_przelewy24',
         'paynl_payment_sofortbanking',
         'paynl_payment_spraypay',
         'paynl_payment_telefonischbetalen',
+        'paynl_payment_tikkie',
         'paynl_payment_visamastercard',
         'paynl_payment_vvvgiftcard',
         'paynl_payment_webshopgiftcard',
@@ -74,8 +77,11 @@ class ConfigProvider implements ConfigProviderInterface
     protected $paynlConfig;
 
     /**
+     * ConfigProvider constructor.
      * @param PaymentHelper $paymentHelper
      * @param Escaper $escaper
+     * @param Config $paynlConfig
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function __construct(
         PaymentHelper $paymentHelper,
