@@ -1,5 +1,5 @@
 {
-  "name": "paynl/magento2-plugin",
+  "name": "max-geraci/magento2-plugin",
   "description": "Pay.nl Magento2 Payment methods",
   "type": "magento2-module",
   "version": "1.5.2",
