@@ -61,6 +61,18 @@
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_amex>
+            <paynl_payment_applepay>
+                <active>0</active>
+                <title>Apple Pay</title>
+                <payment_option_id>2277</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Applepay</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_applepay>
             <paynl_payment_billink>
                 <active>0</active>
                 <title>Billink</title>
