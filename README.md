@@ -21,7 +21,7 @@ MyBank | Carte Bancaire | Podium Cadeaukaart | Capayable Achteraf Betalen | Cash
 SOFORT | PostePay | Gezondheidsbon | Capayable Gespreid betalen | Pay Fixed Price (phone) |
 Maestro | Dankort | Fashion Giftcard | Klarna | Instore Payments (POS) |
 Bank Transfer | Cartasi | GivaCard | SprayPay | Przelewy24 | 
-| Tikkie | | YourGift | Creditclick | | 
+| Tikkie | | YourGift | Creditclick | Apple Pay | 
 | | | Paysafecard |
 
 

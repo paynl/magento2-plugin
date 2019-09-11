@@ -2,12 +2,12 @@
   "name": "paynl/magento2-plugin",
   "description": "Pay.nl Magento2 Payment methods",
   "type": "magento2-module",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "require": {
     "magento/module-sales": "100 - 103",
     "magento/module-payment": "100 - 103",
     "magento/module-quote": "100 - 103",
-    "paynl/sdk": "^1.3.2"
+    "paynl/sdk": "^1.5.11"
   },
   "authors": [
     {
