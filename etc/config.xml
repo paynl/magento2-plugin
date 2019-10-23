@@ -302,6 +302,18 @@
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_klarna>
+            <paynl_payment_klarnakp>
+                <active>0</active>
+                <title>KlarnaKP</title>
+                <payment_option_id>2265</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Klarnakp</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_klarnakp>
             <paynl_payment_maestro>
                 <active>0</active>
                 <title>Maestro</title>
