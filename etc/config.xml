@@ -75,7 +75,7 @@
             </paynl_payment_applepay>
             <paynl_payment_billink>
                 <active>0</active>
-                <title>Billink</title>
+                <title>Achteraf betalen via Billink</title>
                 <payment_option_id>1672</payment_option_id>
                 <order_status>pending_payment</order_status>
                 <order_status_authorized>processing</order_status_authorized>
@@ -99,7 +99,7 @@
             </paynl_payment_capayable>
             <paynl_payment_capayable_gespreid>
                 <active>0</active>
-                <title>In3 gespreid betalen</title>
+                <title>in3 keer betalen, 0% rente</title>
                 <payment_option_id>1813</payment_option_id>
                 <order_status>pending_payment</order_status>
                 <order_status_authorized>processing</order_status_authorized>
