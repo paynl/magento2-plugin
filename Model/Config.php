@@ -129,7 +129,7 @@ class Config
     }
 
     public function getIconUrl() {
-        $url = 'https://www.pay.nl/images/payment_profiles/50x32/#paymentOptionId#.png';
+        $url = 'https://static.pay.nl/payment_profiles/50x32/#paymentOptionId#.png';
         $iconUrl = trim($this->store->getConfig('payment/paynl/iconurl'));
 
         return empty($iconUrl)?$url:$iconUrl;

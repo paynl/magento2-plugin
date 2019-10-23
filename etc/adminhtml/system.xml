@@ -58,7 +58,7 @@
                 <field id="iconurl" translate="label,comment" type="text" sortOrder="85" showInDefault="1"
                        showInWebsite="1" showInStore="1">
                     <label>Icon URL</label>
-                    <comment><![CDATA[URL of the payment option icons. Default URL: https://www.pay.nl/images/payment_profiles/50x32/#paymentOptionId#.png]]></comment>
+                    <comment><![CDATA[URL of the payment option icons. Default URL: https://static.pay.nl/payment_profiles/50x32/#paymentOptionId#.png]]></comment>
                 </field>
                 <field id="discount_tax" translate="label,comment" type="select" sortOrder="90" showInDefault="1"
                        showInWebsite="1" showInStore="1">
