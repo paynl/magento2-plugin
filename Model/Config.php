@@ -134,4 +134,10 @@ class Config
 
         return empty($iconUrl)?$url:$iconUrl;
     }
+    
+    public function getCancelURL() {
+        $cancelURL = $this->store->getConfig('payment/paynl/cancelurl');
+
+        return $cancelURL ? $cancelURL : 'checkout/cart'; //default checkout/cart
+    }
 }

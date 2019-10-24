@@ -66,6 +66,12 @@
                     <comment><![CDATA[Set this to NO if you have a mix of low and high vatrate products. Some pay later methods have issues when the discount has a tax amount other than the default vat categories]]></comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
+                <field id="cancelurl" translate="label,comment" type="select" sortOrder="95" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Cancel URL</label>
+                    <comment><![CDATA[URL the customer gets send to after cancelling payment. Default URL: checkout/cart]]></comment>
+                    <source_model>Paynl\Payment\Model\Config\Source\CancelURL</source_model>
+                </field>
                 <group id="paynl_paymentmethods" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1"
                        showInStore="1">
                     <frontend_model>Paynl\Payment\Block\Adminhtml\System\Config\Fieldset\Expanded</frontend_model>
