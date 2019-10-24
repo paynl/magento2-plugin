@@ -136,8 +136,6 @@ class Config
     }
     
     public function getCancelURL() {
-        $cancelURL = $this->store->getConfig('payment/paynl/cancelurl');
-
-        return $cancelURL ? $cancelURL : 'checkout/cart'; //default checkout/cart
+        return $this->store->getConfig('payment/paynl/cancelurl');
     }
 }
