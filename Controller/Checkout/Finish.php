@@ -126,7 +126,8 @@ class Finish extends Action
         }
 
         $this->messageManager->addNoticeMessage(__('Payment canceled'));
-        $resultRedirect->setPath('checkout/cart');
+        $cancelURL = $this->config->getCancelURL();
+        $resultRedirect->setPath($cancelURL);
 
 
         if(in_array($pinStatus,[

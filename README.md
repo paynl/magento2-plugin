@@ -15,10 +15,10 @@ With this plug-in by Pay.nl you can easily add all desired payment methods to yo
 Bank Payments  | Creditcards | Gift cards & Vouchers | Pay by invoice | Others | 
 :-----------: | :-----------: | :-----------: | :-----------: | :-----------: |
 iDEAL + QR |Visa | VVV Cadeaukaart | AfterPay | PayPal |
-Bancontact + QR |  Mastercard | Webshop Giftcard | Billink | WeChatPay | 
-Giropay |American Express | FashionCheque |Focum AchterafBetalen.nl | AmazonPay |
+Bancontact + QR |  Mastercard | Webshop Giftcard | Achteraf betalen via Billink | WeChatPay | 
+Giropay |American Express | FashionCheque | Focum AchterafBetalen.nl | AmazonPay |
 MyBank | Carte Bancaire | Podium Cadeaukaart | Capayable Achteraf Betalen | Cashly | 
-SOFORT | PostePay | Gezondheidsbon | Capayable Gespreid betalen | Pay Fixed Price (phone) |
+SOFORT | PostePay | Gezondheidsbon | in3 keer betalen, 0% rente | Pay Fixed Price (phone) |
 Maestro | Dankort | Fashion Giftcard | Klarna | Instore Payments (POS) |
 Bank Transfer | Cartasi | GivaCard | SprayPay | Przelewy24 | 
 | Tikkie | | YourGift | Creditclick | Apple Pay | 
