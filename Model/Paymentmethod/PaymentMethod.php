@@ -5,6 +5,7 @@
 
 namespace Paynl\Payment\Model\Paymentmethod;
 
+use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Magento\Framework\Api\AttributeValueFactory;
 use Magento\Framework\Api\ExtensionAttributesFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
@@ -309,6 +310,7 @@ abstract class PaymentMethod extends AbstractMethod
                     $taxAmount = $arrItem['base_price_incl_tax'] - $arrItem['base_price'];
                     $price = $arrItem['base_price_incl_tax'];
                 }
+
                 $product = array(
                     'id' => $arrItem['product_id'],
                     'name' => $arrItem['name'],
@@ -316,6 +318,18 @@ abstract class PaymentMethod extends AbstractMethod
                     'qty' => $arrItem['qty_ordered'],
                     'tax' => $taxAmount,
                 );
+
+                # Product id's must be unique. Combinations of a "Configurable products" share the same product id.
+                # Each combination of a "configurable product" can be represented by a "simple product".
+                # The first and only child of the "configurable product" is the "simple product", or combination, chosen by the customer.
+                # Grab it and replace the product id to guarantee product id uniqueness.
+                if (isset($arrItem['product_type']) && $arrItem['product_type'] === Configurable::TYPE_CODE) {
+                    $children = $item->getChildrenItems();
+                    $child = array_shift($children);
+
+                    $product['id'] = $child->getProductId();
+                }
+
                 $arrProducts[] = $product;
             }
         }
