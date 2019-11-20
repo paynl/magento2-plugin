@@ -16,7 +16,6 @@ define(
             {type: 'paynl_payment_afterpay', component: defaultComponent},
             {type: 'paynl_payment_alipay', component: defaultComponent},
             {type: 'paynl_payment_amex', component: defaultComponent},
-            {type: 'paynl_payment_applepay', component: defaultComponent},
             {type: 'paynl_payment_billink', component: defaultComponent},
             {type: 'paynl_payment_capayable', component: defaultComponent},
             {type: 'paynl_payment_capayable_gespreid', component: defaultComponent},
@@ -58,6 +57,24 @@ define(
             {type: 'paynl_payment_yehhpay', component: defaultComponent},
             {type: 'paynl_payment_yourgift', component: defaultComponent}
         ];
+
+        function isApplePayAvailable()
+        {
+            try {
+                return window.ApplePaySession;
+            } catch (e) {
+                console.warn(e);
+                return false;
+            }
+        }
+
+        if (isApplePayAvailable()) {
+            methods.push({
+                type: 'paynl_payment_applepay',
+                component: defaultComponent
+            });
+        }
+
         $.each(methods, function (k, method) {
             rendererList.push(method);
         });
