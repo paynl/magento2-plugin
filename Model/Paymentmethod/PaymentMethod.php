@@ -282,6 +282,7 @@ abstract class PaymentMethod extends AbstractMethod
             'language' => $this->paynlConfig->getLanguage(),
             'bank' => $bankId,
             'expireDate' => $expireDate,
+            'orderNumber' => $orderId,
             'description' => $orderId,
             'extra1' => $orderId,
             'extra2' => $quoteId,
