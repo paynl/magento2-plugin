@@ -12,4 +12,11 @@
             </argument>
         </arguments>
     </type>
+    <type name="Magento\Checkout\Block\Onepage">
+        <arguments>
+            <argument name="layoutProcessors" xsi:type="array">
+                <item name="field" xsi:type="object">Paynl\Payment\Block\Checkout\CustomFieldProcessor</item>
+            </argument>
+        </arguments>
+    </type>
 </config>

@@ -218,9 +218,9 @@ abstract class PaymentMethod extends AbstractMethod
 
         $paymentOptionId = $this->getPaymentOptionId();
 
-        $arrBillingAddress = $order->getBillingAddress();
-        if ($arrBillingAddress) {
-            $arrBillingAddress = $arrBillingAddress->toArray();
+        $objBillingAddress = $order->getBillingAddress();
+        if ($objBillingAddress) {
+            $arrBillingAddress = $objBillingAddress->toArray();
 
             // Use default initials
             $strBillingFirstName = substr($arrBillingAddress['firstname'], 0, 1);
@@ -237,7 +237,20 @@ abstract class PaymentMethod extends AbstractMethod
                 'emailAddress' => $arrBillingAddress['email'],
             );
 
-            $invoiceAddress = array(
+          if (isset($arrBillingAddress['company']) && !empty($arrBillingAddress['company'])) {
+            $enduser['company']['name'] = $arrBillingAddress['company'];
+            $enduser['company']['countryCode'] =  $arrBillingAddress['country_id'];
+          }
+
+          if (isset($arrBillingAddress['paynl_cocnumber']) && !empty($arrBillingAddress['paynl_cocnumber'])) {
+            $enduser['company']['cocNumber'] = $arrBillingAddress['paynl_cocnumber'];
+          }
+
+          if (isset($arrBillingAddress['paynl_vatnumber']) && !empty($arrBillingAddress['paynl_vatnumber'])) {
+            $enduser['company']['vatNumber'] = $arrBillingAddress['paynl_vatnumber'];
+          }
+
+          $invoiceAddress = array(
                 'initials' => $strBillingFirstName,
                 'lastName' => $arrBillingAddress['lastname']
             );
@@ -250,10 +263,10 @@ abstract class PaymentMethod extends AbstractMethod
             $invoiceAddress['country'] = $arrBillingAddress['country_id'];
 
         }
-
-        $arrShippingAddress = $order->getShippingAddress();
-        if ($arrShippingAddress) {
-            $arrShippingAddress = $arrShippingAddress->toArray();
+ 
+        $objShippingAddress = $order->getShippingAddress();
+        if ($objShippingAddress) {
+            $arrShippingAddress = $objShippingAddress->toArray();
 
             // Use default initials
             $strShippingFirstName = substr($arrShippingAddress['firstname'], 0, 1);
@@ -273,8 +286,8 @@ abstract class PaymentMethod extends AbstractMethod
             $shippingAddress['zipCode'] = $arrShippingAddress['postcode'];
             $shippingAddress['city'] = $arrShippingAddress['city'];
             $shippingAddress['country'] = $arrShippingAddress['country_id'];
-
         }
+ 
         $data = array(
             'amount' => $total,
             'returnUrl' => $returnUrl,

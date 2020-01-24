@@ -49,6 +49,11 @@ class Config
         return $this->store->getConfig('payment/paynl/never_cancel') == 1;
     }
 
+   public function showCompanyFields()
+   {
+    return $this->store->getConfig('payment/paynl/show_company_fields') == 1;
+   }
+
     public function isAlwaysBaseCurrency()
     {
         return $this->store->getConfig('payment/paynl/always_base_currency') == 1;

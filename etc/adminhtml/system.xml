@@ -60,7 +60,12 @@
                     <label>Icon URL</label>
                     <comment><![CDATA[URL of the payment option icons. Default URL: https://static.pay.nl/payment_profiles/50x32/#paymentOptionId#.png]]></comment>
                 </field>
-                <field id="discount_tax" translate="label,comment" type="select" sortOrder="90" showInDefault="1"
+                <field id="show_company_fields" translate="label,comment" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show company fields</label>
+                    <comment><![CDATA[Enable if you want vatnumber and cocnumber to show in the checkout.]]></comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="discount_tax" translate="label,comment" type="select" sortOrder="93" showInDefault="1"
                        showInWebsite="1" showInStore="1">
                     <label>Send discount tax</label>
                     <comment><![CDATA[Set this to NO if you have a mix of low and high vatrate products. Some pay later methods have issues when the discount has a tax amount other than the default vat categories]]></comment>

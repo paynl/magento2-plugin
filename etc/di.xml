@@ -12,4 +12,12 @@
             </argument>
         </arguments>
     </virtualType>
+    <type name="Magento\Quote\Model\BillingAddressManagement">
+        <plugin disabled="false" name="Paynl_Payment_Plugin_Magento_Quote_Model_BillingAddressManagement" sortOrder="10" type="Paynl\Payment\Plugin\Magento\Quote\Model\BillingAddressManagement"/>
+    </type>
+    <type name="Magento\Quote\Model\ShippingAddressManagement">
+        <plugin disabled="false" name="Paynl_Payment_Plugin_Magento_Quote_Model_ShippingAddressManagement" sortOrder="10" type="Paynl\Payment\Plugin\Magento\Quote\Model\ShippingAddressManagement"/>
+    </type>
 </config>
+
+
