@@ -96,9 +96,9 @@ class Redirect extends \Magento\Framework\App\Action\Action
 
             $methodInstance = $this->paymentHelper->getMethodInstance($method);
             if ($methodInstance instanceof \Paynl\Payment\Model\Paymentmethod\Paymentmethod) {
-
-              $this->_logger->notice('PAY.: Start new payment for order ' . $order->getId);
-              $this->_logger->critical('PAY.: Start new payment for order ' . $order->getId);
+              
+              $this->_logger->notice('PAY.: Start new payment for order ' . $order->getId());
+              $this->_logger->critical('PAY.: Start new payment for order ' . $order->getId());
 
               $billingAddress = $order->getBillingAddress();
               $billingAddress->setPaynlCocnumber($quote->getShippingAddress()->getPaynlCocnumber());
