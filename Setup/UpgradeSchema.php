@@ -36,20 +36,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
         'comment' => 'paynl_vatnumber',
       ]
     );
-    /*
-        echo ' ADING';
-        $installer->getConnection()->addColumn(
-          $installer->getTable('sales_order_address'),
-          'example',
-          [
-            'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
-            'length' => '255',
-            'nullable' => false,
-            'default' => null,
-            'comment' => 'Custom Attribute',
-          ]
-        );
-    */
+
     $installer->endSetup();
 
   }

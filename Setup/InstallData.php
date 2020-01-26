@@ -33,57 +33,31 @@ class InstallData implements InstallDataInterface
     ModuleContextInterface $context
   ) {
     $installer = $setup;
-    mail('wouter@pay.nl','test install', 'magento2 instasll');
-    $customerSetup = $this->customerSetupFactory->create(['setup' => $setup]);
-
-    $customerSetup->addAttribute('customer_address', 'rexample', [
-      'label' => 'examplev',
-      'input' => 'text',
-      'type' => 'varchar',
-      'source' => '',
-      'required' => false,
-      'position' => 333,
-      'visible' => true,
-      'system' => false,
-      'is_used_in_grid' => false,
-      'is_visible_in_grid' => false,
-      'is_filterable_in_grid' => false,
-      'is_searchable_in_grid' => false,
-      'backend' => ''
-    ]);
-
-
-    $attribute = $customerSetup->getEavConfig()->getAttribute('customer_address', 'exampleu')
-      ->addData(['used_in_forms' => [
-        'customer_address_edit',
-        'customer_register_address'
-      ]]);
-    $attribute->save();
 
     $installer->getConnection()->addColumn(
       $installer->getTable('quote_address'),
-      'example',
-      [
-        'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
-                'length' => '255',
-                'nullable' => false,
-                'default' => null,
-                'comment' => 'Custom Attribute',
-
-      ]
-    );
-
-    $installer->getConnection()->addColumn(
-      $installer->getTable('sales_order_address'),
-      'example',
+      'paynl_cocnumber',
       [
         'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
         'length' => '255',
         'nullable' => false,
         'default' => null,
-        'comment' => 'Custom Attribute',
+        'comment' => 'paynl_cocnumber',
       ]
     );
+
+    $installer->getConnection()->addColumn(
+      $installer->getTable('quote_address'),
+      'paynl_vatnumber',
+      [
+        'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+        'length' => '255',
+        'nullable' => false,
+        'default' => null,
+        'comment' => 'paynl_vatnumber',
+      ]
+    );
+
   }
 
 
