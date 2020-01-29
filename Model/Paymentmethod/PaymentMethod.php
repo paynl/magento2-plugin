@@ -310,7 +310,7 @@ abstract class PaymentMethod extends AbstractMethod
             'extra3' => $order->getEntityId(),
             'exchangeUrl' => $exchangeUrl,
             'currency' => $currency,
-          @  'object' => 'magento2 ' . $this->paynlConfig->getVersion(),
+            'object' => 'magento2 ' . $this->paynlConfig->getVersion(),
         );
         if (isset($shippingAddress)) {
             $data['address'] = $shippingAddress;
