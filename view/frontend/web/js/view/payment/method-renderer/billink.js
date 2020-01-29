@@ -49,7 +49,7 @@ define(
                         alert('U dient eerst akkoord te gaan met de betalingsvoorwaarden van Billink.');
                         return false;
                     }
-                    if (this.kvknummer.length < 8) {
+                    if (this.kvknummer == null || this.kvknummer.length < 8) {
                         alert('Voer een geldig KVK nummer in.');
                         return false;
                     }
