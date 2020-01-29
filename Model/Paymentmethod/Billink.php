@@ -5,8 +5,10 @@
 
 namespace Paynl\Payment\Model\Paymentmethod;
 
+use Paynl\Payment\Model\Config;
+
 /**
- * Description of Ideal
+ * Description of Billink
  *
  * @author Andy Pieters <andy@pay.nl>
  */
@@ -18,4 +20,47 @@ class Billink extends PaymentMethod
     {
         return 1672;
     }
+
+  public function getKVK()
+  {
+    return $this->_scopeConfig->getValue('payment/paynl_payment_billink/showkvk', 'store');
+  }
+
+  public function assignData(\Magento\Framework\DataObject $data)
+  {
+    parent::assignData($data);
+
+    if (is_array($data))
+    {
+      $this->getInfoInstance()->setAdditionalInformation('kvknummer', $data['kvknummer']);
+    } elseif ($data instanceof \Magento\Framework\DataObject)
+    {
+
+      $additional_data = $data->getAdditionalData();
+
+      if (isset($additional_data['kvknummer'])) {
+        $this->getInfoInstance()->setAdditionalInformation('kvknummer', $additional_data['kvknummer']);
+      }
+
+      if (isset($additional_data['billink_agree'])) {
+        $this->getInfoInstance()->setAdditionalInformation('billink_agree', $additional_data['billink_agree']);
+      }
+
+    }
+    return $this;
+  }
+
+
+  /**
+   * @return \Magento\Framework\App\CacheInterface
+   */
+  private function getCache()
+  {
+    /** @var \Magento\Framework\ObjectManagerInterface $om */
+    $om = \Magento\Framework\App\ObjectManager::getInstance();
+    /** @var \Magento\Framework\App\CacheInterface $cache */
+    $cache = $om->get('Magento\Framework\App\CacheInterface');
+    return $cache;
+  }
+
 }

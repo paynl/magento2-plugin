@@ -111,6 +111,11 @@ abstract class PaymentMethod extends AbstractMethod
         return [];
     }
 
+    public function getKVK()
+    {
+      return [];
+    }
+
     public function initialize($paymentAction, $stateObject)
     {
         $status = $this->getConfigData('order_status');
@@ -189,6 +194,9 @@ abstract class PaymentMethod extends AbstractMethod
         $additionalData = $order->getPayment()->getAdditionalInformation();
         $bankId = null;
         $expireDate = null;
+        if (isset($additionalData['kvknummer']) && is_numeric($additionalData['kvknummer'])) {
+            $kvknummer = $additionalData['kvknummer'];
+        }
         if (isset($additionalData['bank_id']) && is_numeric($additionalData['bank_id'])) {
             $bankId = $additionalData['bank_id'];
         }
