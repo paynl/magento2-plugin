@@ -245,6 +245,19 @@ abstract class PaymentMethod extends AbstractMethod
                 'emailAddress' => $arrBillingAddress['email'],
             );
 
+            if (isset($arrBillingAddress['company']) && !empty($arrBillingAddress['company'])) {
+              $enduser['company']['name'] = $arrBillingAddress['company'];
+              $enduser['company']['countryCode'] =  $arrBillingAddress['country_id'];
+            }
+
+            if (isset($kvknummer) && !empty($kvknummer)) {
+              $enduser['company']['cocNumber'] = $kvknummer;
+            }
+
+            if (isset($arrBillingAddress['vat_id']) && !empty($arrBillingAddress['vat_id'])) {
+              $enduser['company']['vatNumber'] = $arrBillingAddress['vat_id'];
+            }
+
             $invoiceAddress = array(
                 'initials' => $strBillingFirstName,
                 'lastName' => $arrBillingAddress['lastname']
@@ -297,7 +310,7 @@ abstract class PaymentMethod extends AbstractMethod
             'extra3' => $order->getEntityId(),
             'exchangeUrl' => $exchangeUrl,
             'currency' => $currency,
-            'object' => 'magento2 1.5.5',
+          @  'object' => 'magento2 ' . $this->paynlConfig->getVersion(),
         );
         if (isset($shippingAddress)) {
             $data['address'] = $shippingAddress;

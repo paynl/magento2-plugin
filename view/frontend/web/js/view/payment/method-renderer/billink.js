@@ -46,11 +46,11 @@ define(
 
                 if (showingKVK) {
                     if (this.billink_agree != true) {
-                        alert('Ga eens met de voorwaarden!');
+                        alert('U dient eerst akkoord te gaan met de betalingsvoorwaarden van Billink.');
                         return false;
                     }
                     if (this.kvknummer.length < 8) {
-                        alert('Vul een geldig kvk nummer');
+                        alert('Voer een geldig KVK nummer in.');
                         return false;
                     }
                 }

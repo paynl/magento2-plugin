@@ -24,6 +24,11 @@ class Config
         $this->store = $store;
     }
 
+    public function getVersion()
+    {
+      return '1.5.6';
+    }
+
     /**
      * @param Store $store
      */

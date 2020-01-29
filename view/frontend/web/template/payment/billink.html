@@ -22,12 +22,12 @@
         </div>
         <p data-bind="html: getInstructions();"></p>
         <div data-bind="visible: showKVK()" class="field-select-billing">
-            <label for="kvknummer"> KVK nummer</label>
+            <label for="kvknummer">KVK nummer</label>
             <input data-bind="optionsValue: 'id', name: 'kvknummer', value: kvknummer" name="kvknummer"/>
 
             <div style="padding-top:10px">
                 <input type="checkbox" data-bind="checked: billink_agree"/>
-                <label for="billink_agree">Ik ga akkoord met de</label> <a target="_blank" href="http://billink.nl/voorwaarden/gebruikersvoorwaarden.pdf">betalingsvoorwaarden</a>
+                <label for="billink_agree">U dient akkoord te gaan met de</label> <a target="_blank" href="http://billink.nl/voorwaarden/gebruikersvoorwaarden.pdf">betalingsvoorwaarden</a>
             </div>
         </div>
         <div class="actions-toolbar">
