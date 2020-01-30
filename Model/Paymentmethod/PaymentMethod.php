@@ -270,6 +270,9 @@ abstract class PaymentMethod extends AbstractMethod
             $invoiceAddress['city'] = $arrBillingAddress['city'];
             $invoiceAddress['country'] = $arrBillingAddress['country_id'];
 
+            if (isset($arrShippingAddress['vat_id']) && !empty($arrShippingAddress['vat_id'])) {
+              $enduser['company']['vatNumber'] = $arrShippingAddress['vat_id'];
+            }
         }
 
         $arrShippingAddress = $order->getShippingAddress();
