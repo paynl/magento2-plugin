@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2015 Pay.nl All rights reserved.
+ * Copyright © 2020 Pay.nl All rights reserved.
  */
 
 namespace Paynl\Payment\Model\Config\Source;
@@ -35,7 +35,7 @@ class showKvkOptions implements ArrayInterface
   {
     return [
       '0' => __('No'),
-      '1' => __('Yes, but as optional'),
+      '1' => __('Yes, as optional'),
       '2' => __('Yes, as required'),
     ];
   }
