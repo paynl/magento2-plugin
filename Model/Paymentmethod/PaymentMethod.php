@@ -111,6 +111,11 @@ abstract class PaymentMethod extends AbstractMethod
         return [];
     }
 
+    public function getKVK()
+    {
+      return [];
+    }
+
     public function initialize($paymentAction, $stateObject)
     {
         $status = $this->getConfigData('order_status');
@@ -189,6 +194,9 @@ abstract class PaymentMethod extends AbstractMethod
         $additionalData = $order->getPayment()->getAdditionalInformation();
         $bankId = null;
         $expireDate = null;
+        if (isset($additionalData['kvknummer']) && is_numeric($additionalData['kvknummer'])) {
+            $kvknummer = $additionalData['kvknummer'];
+        }
         if (isset($additionalData['bank_id']) && is_numeric($additionalData['bank_id'])) {
             $bankId = $additionalData['bank_id'];
         }
@@ -237,6 +245,19 @@ abstract class PaymentMethod extends AbstractMethod
                 'emailAddress' => $arrBillingAddress['email'],
             );
 
+            if (isset($arrBillingAddress['company']) && !empty($arrBillingAddress['company'])) {
+              $enduser['company']['name'] = $arrBillingAddress['company'];
+              $enduser['company']['countryCode'] =  $arrBillingAddress['country_id'];
+            }
+
+            if (isset($kvknummer) && !empty($kvknummer)) {
+              $enduser['company']['cocNumber'] = $kvknummer;
+            }
+
+            if (isset($arrBillingAddress['vat_id']) && !empty($arrBillingAddress['vat_id'])) {
+              $enduser['company']['vatNumber'] = $arrBillingAddress['vat_id'];
+            }
+
             $invoiceAddress = array(
                 'initials' => $strBillingFirstName,
                 'lastName' => $arrBillingAddress['lastname']
@@ -249,6 +270,9 @@ abstract class PaymentMethod extends AbstractMethod
             $invoiceAddress['city'] = $arrBillingAddress['city'];
             $invoiceAddress['country'] = $arrBillingAddress['country_id'];
 
+            if (isset($arrShippingAddress['vat_id']) && !empty($arrShippingAddress['vat_id'])) {
+              $enduser['company']['vatNumber'] = $arrShippingAddress['vat_id'];
+            }
         }
 
         $arrShippingAddress = $order->getShippingAddress();
@@ -289,7 +313,7 @@ abstract class PaymentMethod extends AbstractMethod
             'extra3' => $order->getEntityId(),
             'exchangeUrl' => $exchangeUrl,
             'currency' => $currency,
-            'object' => 'magento2 1.5.5',
+            'object' => 'magento2 ' . $this->paynlConfig->getVersion(),
         );
         if (isset($shippingAddress)) {
             $data['address'] = $shippingAddress;

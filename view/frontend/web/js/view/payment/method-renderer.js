@@ -11,12 +11,13 @@ define(
 
         var defaultComponent = 'Paynl_Payment/js/view/payment/method-renderer/default';
         var idealComponent = 'Paynl_Payment/js/view/payment/method-renderer/ideal';
+        var billinkComponent = 'Paynl_Payment/js/view/payment/method-renderer/billink';
 
         var methods = [
             {type: 'paynl_payment_afterpay', component: defaultComponent},
             {type: 'paynl_payment_alipay', component: defaultComponent},
             {type: 'paynl_payment_amex', component: defaultComponent},
-            {type: 'paynl_payment_billink', component: defaultComponent},
+            {type: 'paynl_payment_billink', component: billinkComponent},
             {type: 'paynl_payment_capayable', component: defaultComponent},
             {type: 'paynl_payment_capayable_gespreid', component: defaultComponent},
             {type: 'paynl_payment_cartasi', component: defaultComponent},

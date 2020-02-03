@@ -108,7 +108,7 @@ class ConfigProvider implements ConfigProviderInterface
                 $config['payment']['instructions'][$code] = $this->getInstructions($code);
                 $config['payment']['banks'][$code]        = $this->getBanks($code);
                 $config['payment']['icon'][$code]         = $this->getIcon($code);
-
+                $config['payment']['showkvk'][$code]      = $this->getKVK($code);
             }
         }
 
@@ -130,6 +130,11 @@ class ConfigProvider implements ConfigProviderInterface
     protected function getBanks($code)
     {
         return $this->methods[$code]->getBanks();
+    }
+
+    protected function getKVK($code)
+    {
+        return $this->methods[$code]->getKVK();
     }
 
     /**
