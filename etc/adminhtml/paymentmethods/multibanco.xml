@@ -42,7 +42,7 @@
             <depends>
                 <field id="active">1</field>
             </depends>
-            <config_path>payment/paynl_payment_nakp/order_status_processing</config_path>
+            <config_path>payment/paynl_payment_multibanco/order_status_processing</config_path>
         </field>
         <field id="allowspecific" translate="label" type="allowspecific" sortOrder="40" showInDefault="1"
                showInWebsite="1" showInStore="1">
