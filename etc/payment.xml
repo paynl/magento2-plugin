@@ -81,10 +81,16 @@
         <method name="paynl_payment_mistercash">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
+        <method name="paynl_payment_multibanco">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
         <method name="paynl_payment_mybank">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_overboeking">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_payconiq">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_paypal">
