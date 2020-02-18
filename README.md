@@ -22,7 +22,7 @@ SOFORT | PostePay | Gezondheidsbon | in3 keer betalen, 0% rente | Pay Fixed Pric
 Maestro | Dankort | Fashion Giftcard | Klarna | Instore Payments (POS) |
 Bank Transfer | Cartasi | GivaCard | SprayPay | Przelewy24 | 
 | Tikkie | | YourGift | Creditclick | Apple Pay | 
-| | | Paysafecard |
+| Multibanco | | Paysafecard | | Payconiq
 
 
 ### Quickstart
