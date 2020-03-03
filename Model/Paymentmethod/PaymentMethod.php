@@ -377,7 +377,8 @@ abstract class PaymentMethod extends AbstractMethod
                 'name' => $shippingDescription,
                 'price' => $shippingCost,
                 'qty' => 1,
-                'tax' => $shippingTax
+                'tax' => $shippingTax,
+                'type' => \Paynl\Transaction::PRODUCT_TYPE_SHIPPING
             );
         }
 
