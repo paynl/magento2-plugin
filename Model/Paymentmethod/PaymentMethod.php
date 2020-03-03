@@ -403,7 +403,8 @@ abstract class PaymentMethod extends AbstractMethod
                 'name' => $discountDescription,
                 'price' => $discount,
                 'qty' => 1,
-                'tax' => $discountTax
+                'tax' => $discountTax,
+                'type' => \Paynl\Transaction::PRODUCT_TYPE_DISCOUNT
             );
         }
 
