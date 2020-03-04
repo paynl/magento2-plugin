@@ -343,6 +343,7 @@ abstract class PaymentMethod extends AbstractMethod
                     'price' => $price,
                     'qty' => $arrItem['qty_ordered'],
                     'tax' => $taxAmount,
+                    'type' => \Paynl\Transaction::PRODUCT_TYPE_ARTICLE
                 );
 
                 # Product id's must be unique. Combinations of a "Configurable products" share the same product id.
@@ -403,7 +404,8 @@ abstract class PaymentMethod extends AbstractMethod
                 'name' => $discountDescription,
                 'price' => $discount,
                 'qty' => 1,
-                'tax' => $discountTax
+                'tax' => $discountTax,
+                'type' => \Paynl\Transaction::PRODUCT_TYPE_DISCOUNT
             );
         }
 
