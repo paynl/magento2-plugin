@@ -1,7 +1,7 @@
 "New order email sent","New order email sent"
 "You notified customer about invoice #%1.","You notified customer about invoice #%1."
-"Pay.nl canceled the order","Pay.nl canceled the order"
-"Pay.nl Uncanceled order","Pay.nl Uncanceled order"
+"PAY. canceled the order","PAY. canceled the order"
+"PAY. Uncanceled order","PAY. Uncanceled order"
 "We cannot un-cancel this order.","We cannot un-cancel this order."
 "Invalid return, no transactionId specified","Invalid return, no transactionId specified"
 "There was an error checking the transaction status","There was an error checking the transaction status"
@@ -40,14 +40,14 @@ Advanced,Advanced
 "The id of the payment method, only change this if you are told to do so","The id of the payment method, only change this if you are told to do so"
 "Show bankselection","Show bankselection"
 "Set order on-hold","Set order on-hold"
-"Pay.nl Settings","Pay.nl Settings"
+"PAY. Settings","PAY. Settings"
 Testmode,Testmode
 API-token,API-token
 ServiceId,ServiceId
 "Language payment screen","Language payment screen"
 "Never cancel order","Never cancel order"
 "This setting will disable cancelling the order when the payment is canceled.
-                    This can be used if uncancelling the order in case of a second chance payment produces errors. WARNING! Orders will never be cancelled automaticly","This setting will disable cancelling the order when the payment is canceled.
-                    This can be used if uncancelling the order in case of a second chance payment produces errors. WARNING! Orders will never be cancelled automaticly"
+                    This can be used if uncancelling the order in case of a second chance payment produces errors. WARNING! Orders will never be cancelled automatically","This setting will disable cancelling the order when the payment is canceled.
+                    This can be used if uncancelling the order in case of a second chance payment produces errors. WARNING! Orders will never be cancelled automatically"
 Paymentmethods,Paymentmethods
-"URL of the payment option icons. Default URL: https://www.pay.nl/images/payment_profiles/50x32/#paymentOptionId#.png","URL of the payment option icons. Default URL: https://www.pay.nl/images/payment_profiles/50x32/#paymentOptionId#.png"
+"URL of the payment option icons. Default URL: https://static.pay.nl/payment_profiles/50x32/#paymentOptionId#.png","URL of the payment option icons. Default URL: https://static.pay.nl/payment_profiles/50x32/#paymentOptionId#.png"

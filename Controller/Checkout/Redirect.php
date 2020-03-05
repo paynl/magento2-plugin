@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2015 Pay.nl All rights reserved.
+ * Copyright © 2020 PAY. All rights reserved.
  */
 
 namespace Paynl\Payment\Controller\Checkout;
@@ -63,7 +63,7 @@ class Redirect extends \Magento\Framework\App\Action\Action
 		OrderRepository $orderRepository
     )
     {
-        $this->config          = $config; // Pay.nl config helper
+        $this->config          = $config; // PAY. config helper
         $this->checkoutSession = $checkoutSession;
         $this->_logger         = $logger;
         $this->paymentHelper   = $paymentHelper;

@@ -4,7 +4,7 @@ namespace Paynl\Payment\Model\Paymentmethod;
 
 /**
  * Invisible payment method.
- * Needs to be set as a model for the pay.nl basic settings, because a model is required
+ * Needs to be set as a model for the PAY. basic settings, because a model is required
  * Doesn't do anything
  */
 class Invisible extends PaymentMethod

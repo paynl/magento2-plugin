@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2015 Pay.nl All rights reserved.
+ * Copyright © 2020 PAY. All rights reserved.
  */
 
 namespace Paynl\Payment\Controller\Checkout;
@@ -167,7 +167,7 @@ class Exchange extends \Magento\Framework\App\Action\Action implements CsrfAware
         }
 
         $order->cancel();
-        $order->addStatusHistoryComment(__('Pay.nl canceled the order'));
+        $order->addStatusHistoryComment(__('PAY. canceled the order'));
         $this->orderRepository->save($order);
 
         return $this->result->setContents("TRUE| CANCELED");
@@ -211,7 +211,7 @@ class Exchange extends \Magento\Framework\App\Action\Action implements CsrfAware
             $order->setState($state);
             $order->setStatus($state);
 
-            $order->addStatusHistoryComment(__('Pay.nl Uncanceled order'), false);
+            $order->addStatusHistoryComment(__('PAY. Uncanceled order'), false);
 
             $this->_eventManager->dispatch('order_uncancel_after', ['order' => $order]);
         } else {
@@ -248,7 +248,7 @@ class Exchange extends \Magento\Framework\App\Action\Action implements CsrfAware
             $transaction->getId()
         );
 
-        $payment->setPreparedMessage('Pay.nl - ');
+        $payment->setPreparedMessage('PAY. - ');
         $payment->setIsTransactionClosed(
             0
         );

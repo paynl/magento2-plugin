@@ -1,4 +1,4 @@
-# Pay.nl Magento2 plugin
+# PAY. Magento2 plugin
 
 ---
 - [Summary](#summary)
@@ -8,7 +8,7 @@
 ---
 ### Summary
 
-With this plug-in by Pay.nl you can easily add all desired payment methods to your Magento 2 webshop. Please refer to https://www.pay.nl (Dutch) for an overview of all features and services. 
+With this plug-in by PAY. you can easily add all desired payment methods to your Magento 2 webshop. Please refer to https://www.pay.nl (Dutch) for an overview of all features and services. 
 
 ##### Available payment methods:
 
@@ -46,10 +46,10 @@ The plugin is now installed
 1. Log into the Magento Admin
 2. Go to *Stores* / *Configuration*
 3. Go to *Sales* / *Payment Methods*
-4. Scroll down to find the Pay.nl Settings
-5. Enter the API token and serviceID (these can be found in the Pay.nl Admin Panel --> https://admin.pay.nl/programs/programs
+4. Scroll down to find the PAY. Settings
+5. Enter the API token and serviceID (these can be found in the PAY. Admin Panel --> https://admin.pay.nl/programs/programs
 6. Save the settings
 7. Enable the desired payment methods and set allowed countries
 8. Save the settings
 
-Go to the *Manage* / *Services* tab in the Pay.nl Admin Panel to enable extra payment methods. 
+Go to the *Manage* / *Services* tab in the PAY. Admin Panel to enable extra payment methods. 
