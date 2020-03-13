@@ -12,6 +12,7 @@ use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment\Interceptor;
 use Magento\Sales\Model\OrderRepository;
 use Paynl\Payment\Controller\CsrfAwareActionInterface;
+use Paynl\Payment\Controller\PayAction;
 use Paynl\Result\Transaction\Transaction;
 
 
@@ -21,7 +22,7 @@ use Paynl\Result\Transaction\Transaction;
  *
  * @author Andy Pieters <andy@pay.nl>
  */
-class Exchange extends \Magento\Framework\App\Action\Action implements CsrfAwareActionInterface
+class Exchange extends PayAction implements CsrfAwareActionInterface
 //    implements CsrfAwareActionInterface
 {
     /**
