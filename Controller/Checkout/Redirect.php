@@ -9,13 +9,14 @@ use Magento\Payment\Helper\Data as PaymentHelper;
 use Magento\Quote\Model\QuoteRepository;
 use Magento\Sales\Model\OrderRepository;
 use Paynl\Error\Error;
+use Paynl\Payment\Controller\PayAction;
 
 /**
  * Description of Redirect
  *
  * @author Andy Pieters <andy@pay.nl>
  */
-class Redirect extends \Magento\Framework\App\Action\Action
+class Redirect extends PayAction
 {
     /**
      * @var \Paynl\Payment\Model\Config
