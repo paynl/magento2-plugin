@@ -20,7 +20,7 @@ abstract class PayAction extends \Magento\Framework\App\Action\Action
         if ($request->isPost() && count($request->getParams()) <= 0) {
             $jsonRequest = json_decode($request->getContent(), true);
 
-            if (count($jsonRequest) > 0) {
+            if (is_array($jsonRequest)) {
                 $request->setParams($jsonRequest);
             }
         }
