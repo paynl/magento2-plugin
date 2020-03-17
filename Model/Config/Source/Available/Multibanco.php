@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2020 Pay.nl All rights reserved.
+ * Copyright © 2020 PAY. All rights reserved.
  */
 
 namespace Paynl\Payment\Model\Config\Source\Available;
