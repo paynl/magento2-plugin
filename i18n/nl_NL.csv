@@ -1,7 +1,7 @@
 "New order email sent","Nieuwe order email is verzonden"
 "You notified customer about invoice #%1.","Klantemail verzonden over factuur #%1"
-"Pay.nl canceled the order","Pay.nl - Order geannuleerd"
-"Pay.nl Uncanceled order","Pay.nl - Annulering ongedaan gemaakt"
+"PAY. canceled the order","PAY. - Order geannuleerd"
+"PAY. Uncanceled order","PAY. - Annulering ongedaan gemaakt"
 "We cannot un-cancel this order.","Kan annulering niet ongedaan maken"
 "Invalid return, no transactionId specified","Ongeldige return, geen transactieId meegegeven"
 "There was an error checking the transaction status","Fout bij het controleren van de transactie status"
@@ -38,7 +38,7 @@
 "Advanced","Geavanceerd"
 "Payment option id","Payment option id"
 "Show bankselection","Bankselectie tonen"
-"Pay.nl Settings","Pay.nl Instellingen"
+"PAY. Settings","PAY. Instellingen"
 "The id of the payment method, only change this if you are told to do so","Het id van de betaalmethode, Wijzig dit alleen als je hiervoor instructies hebt gekregen"
 "Testmode","Testmodus"
 "Show bankselection","Bankselectie tonen"
@@ -49,7 +49,7 @@
 "Never cancel order","Order nooit annuleren"
 "Paymentmethods","Betaalmethoden"
 "This setting will disable cancelling the order when the payment is canceled.
-                    This can be used if uncancelling the order in case of a second chance payment produces errors. WARNING! Orders will never be cancelled automaticly","Deze instelling zorgt er voor dat orders niet meer geannuleerd worden.
+                    This can be used if uncancelling the order in case of a second chance payment produces errors. WARNING! Orders will never be cancelled automatically","Deze instelling zorgt er voor dat orders niet meer geannuleerd worden.
                     Dit kan je gebruiken als het uncancellen van orders problemen geeft, bijvoorbeeld als je second chance gebruikt. WAARSCHUWING! Orders worden nooit meer automatisch geannuleerd"
 "Always use base currency","Altijd de standaard valuta gebruiken"
 "Set this to yes if you always want to process payments in the base currency of this store. Magento acts strange when trying to register a payment in another currency than the base currency. The base currency MUST be EUR","Zet dit op ja om alle transacties altijd in de standaardvaluta te verwerken. Magento doet soms raar als je transacties verwerkt in een andere valuta. De standaardvaluta moet EUR zijn"
@@ -58,6 +58,7 @@
 "The AT-code of your token, you can find your tokens <a target='_blank' href='https://admin.pay.nl/company/tokens'>here</a>", "De AT-code die bij het token hoort, je kunt je tokens <a target='_blank' href='https://admin.pay.nl/company/tokens'>hier</a> vinden"
 "Your API-token, you can find your tokens <a target='_blank' href='https://admin.pay.nl/company/tokens'>here</a>", "Jouw API-token, je kunt je tokens <a target='_blank' href='https://admin.pay.nl/company/tokens'>hier</a> vinden"
 "The SL-code of your service, you can find your services <a target='_blank' href='https://admin.pay.nl/programs/programs'>here</a>", "De SL-code die bij je dienst hoort, je kunt je diensten <a target='_blank' href='https://admin.pay.nl/programs/programs'>hier</a> vinden",
-"URL of the payment option icons. Default URL: https://www.pay.nl/images/payment_profiles/50x32/#paymentOptionId#.png","De URL van de payment option icoontjes. Standaard URL: https://www.pay.nl/images/payment_profiles/50x32/#paymentOptionId#.png"
+"URL of the payment option icons. Default URL: https://static.pay.nl/payment_profiles/50x32/#paymentOptionId#.png","De URL van de payment option icoontjes. Standaard URL: https://static.pay.nl/payment_profiles/50x32/#paymentOptionId#.png"
 "Send discount tax","Korting btw versturen"
 "Set this to NO if you have a mix of low and high vatrate products. Some pay later methods have issues when the discount has a tax amount other than the default vat categories","Zet dit op NEE als je hoog en laag btw producten verkoopt. Achteraf betaaloplossingen kunnen niet omgaan met een kortingsregel van samengestelde btw"
+"Paylink is only available with custom orders and won't appear in the checkout","Paylink is alleen beschikbaar bij custom orders en komt niet tevoorschijn in de checkout"

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 /**
- * Copyright © 2015 Pay.nl All rights reserved.
+ * Copyright © 2020 PAY. All rights reserved.
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -14,7 +14,7 @@
             </paynl>
             <paynl_payment_paylink>
                 <active>1</active>
-                <title>Pay.nl betaallink</title>
+                <title>PAY. betaallink</title>
                 <payment_option_id>961</payment_option_id>
                 <order_status>pending</order_status>
                 <order_status_authorized>processing</order_status_authorized>
@@ -328,7 +328,7 @@
             </paynl_payment_maestro>
             <paynl_payment_mistercash>
                 <active>0</active>
-                <title>Bancontact / Mister Cash</title>
+                <title>Bancontact</title>
                 <payment_option_id>436</payment_option_id>
                 <order_status>pending_payment</order_status>
                 <order_status_authorized>processing</order_status_authorized>

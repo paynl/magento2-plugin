@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <!--
 /**
- * Copyright © 2015 Pay.nl All rights reserved.
+ * Copyright © 2020 PAY. All rights reserved.
  */
 -->
 <payment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Payment:etc/payment.xsd">
     <groups>
         <group id="paynl_payment">
-            <label>Pay.nl</label>
+            <label>PAY.</label>
         </group>
     </groups>
     <methods>
