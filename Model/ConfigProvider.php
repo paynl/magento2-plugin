@@ -111,7 +111,7 @@ class ConfigProvider implements ConfigProviderInterface
                 $config['payment']['banks'][$code]        = $this->getBanks($code);
                 $config['payment']['icon'][$code]         = $this->getIcon($code);
                 $config['payment']['showkvk'][$code]      = $this->getKVK($code);
-                $config['payment']['dob'][$code]      = $this->getDOB($code);
+                $config['payment']['showdob'][$code]      = $this->getDOB($code);
             }
         }
 

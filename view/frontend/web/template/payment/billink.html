@@ -23,7 +23,7 @@
         <p data-bind="html: getInstructions();"></p>
         <div data-bind="visible: showDOB()" class="field-select-billing">   
             <label for="dob">Geboortedatum</label>
-            <input data-bind="optionsValue: 'id', name: 'dateofbirth', value: dateofbirth" name="dateofbirth"/>        
+            <input type="date" data-bind="optionsValue: 'id', name: 'dateofbirth', value: dateofbirth" name="dateofbirth"/>        
         </div>
         <div data-bind="visible: showKVKDOB()" class="field-select-billing">
             <br/>
