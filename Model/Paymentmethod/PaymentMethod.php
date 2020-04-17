@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2020 PAY. All rights reserved.
+ * Copyright © 2015 Pay.nl All rights reserved.
  */
 
 namespace Paynl\Payment\Model\Paymentmethod;
@@ -112,6 +112,11 @@ abstract class PaymentMethod extends AbstractMethod
     }
 
     public function getKVK()
+    {
+      return [];
+    }
+
+    public function getDOB()
     {
       return [];
     }

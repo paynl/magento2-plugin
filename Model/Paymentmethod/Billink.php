@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2020 PAY. All rights reserved.
+ * Copyright © 2020 Pay.nl All rights reserved.
  */
 
 namespace Paynl\Payment\Model\Paymentmethod;
@@ -26,6 +26,11 @@ class Billink extends PaymentMethod
     return $this->_scopeConfig->getValue('payment/paynl_payment_billink/showkvk', 'store');
   }
 
+  public function getDOB()
+  {
+    return $this->_scopeConfig->getValue('payment/paynl_payment_billink/showdob', 'store');
+  }
+
   public function assignData(\Magento\Framework\DataObject $data)
   {
     parent::assignData($data);
@@ -33,6 +38,7 @@ class Billink extends PaymentMethod
     if (is_array($data))
     {
       $this->getInfoInstance()->setAdditionalInformation('kvknummer', $data['kvknummer']);
+      $this->getInfoInstance()->setAdditionalInformation('dob', $data['dob']);
     } elseif ($data instanceof \Magento\Framework\DataObject)
     {
 
@@ -44,6 +50,10 @@ class Billink extends PaymentMethod
 
       if (isset($additional_data['billink_agree'])) {
         $this->getInfoInstance()->setAdditionalInformation('billink_agree', $additional_data['billink_agree']);
+      }
+
+      if (isset($additional_data['dob'])) {
+        $this->getInfoInstance()->setAdditionalInformation('dob', $additional_data['dob']);
       }
 
     }
