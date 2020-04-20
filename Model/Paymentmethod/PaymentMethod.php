@@ -199,6 +199,7 @@ abstract class PaymentMethod extends AbstractMethod
         $additionalData = $order->getPayment()->getAdditionalInformation();
         $bankId = null;
         $expireDate = null;
+        
         if (isset($additionalData['kvknummer']) && is_numeric($additionalData['kvknummer'])) {
             $kvknummer = $additionalData['kvknummer'];
         }
@@ -249,6 +250,9 @@ abstract class PaymentMethod extends AbstractMethod
                 'phoneNumber' => $arrBillingAddress['telephone'],
                 'emailAddress' => $arrBillingAddress['email'],
             );
+            if (isset($additionalData['dob'])) {
+                $enduser['dob'] = $additionalData['dob'];
+            }
 
             if (isset($arrBillingAddress['company']) && !empty($arrBillingAddress['company'])) {
               $enduser['company']['name'] = $arrBillingAddress['company'];
@@ -425,6 +429,8 @@ abstract class PaymentMethod extends AbstractMethod
             $ipAddress = \Paynl\Helper::getIp();
         }
         $data['ipaddress'] = $ipAddress;
+
+       
 
         $transaction = \Paynl\Transaction::start($data);
 

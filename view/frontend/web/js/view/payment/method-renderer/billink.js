@@ -38,12 +38,27 @@ define(
              * Get payment method data
              */
             getData: function () {
+
+                var dob = new Date(this.dateofbirth);
+
+                var dd = dob.getDate(); 
+                var mm = dob.getMonth() + 1; 
+        
+                var yyyy = dob.getFullYear(); 
+                if (dd < 10) { 
+                    dd = '0' + dd; 
+                } 
+                if (mm < 10) { 
+                    mm = '0' + mm; 
+                } 
+                var dob_format = dd + '-' + mm + '-' + yyyy; 
+
                 return {
                     'method': this.item.method,
                     'po_number': null,
                     'additional_data': {
                         "kvknummer": this.kvknummer,
-                        "dob": this.dob,
+                        "dob": dob_format,
                         "billink_agree": this.billink_agree
                     }
                 };
@@ -68,8 +83,8 @@ define(
                         return false;
                     }
                 }
-                if (showingDOB) {                    
-                    if (this.dob == null || this.dob.length < 8) {
+                if (showingDOB) {                                        
+                    if (this.dateofbirth == null || this.dateofbirth.length < 1) {
                         alert('Voer een geldig geboortedatum in.');
                         return false;
                     }
