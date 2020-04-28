@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2020 PAY. All rights reserved.
+ * Copyright © 2015 Pay.nl All rights reserved.
  */
 
 namespace Paynl\Payment\Model;
@@ -111,6 +111,7 @@ class ConfigProvider implements ConfigProviderInterface
                 $config['payment']['banks'][$code]        = $this->getBanks($code);
                 $config['payment']['icon'][$code]         = $this->getIcon($code);
                 $config['payment']['showkvk'][$code]      = $this->getKVK($code);
+                $config['payment']['showdob'][$code]      = $this->getDOB($code);
             }
         }
 
@@ -137,6 +138,11 @@ class ConfigProvider implements ConfigProviderInterface
     protected function getKVK($code)
     {
         return $this->methods[$code]->getKVK();
+    }
+
+    protected function getDOB($code)
+    {
+        return $this->methods[$code]->getDOB();
     }
 
     /**

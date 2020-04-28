@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2020 PAY. All rights reserved.
+ * Copyright © 2015 Pay.nl All rights reserved.
  */
 
 namespace Paynl\Payment\Model\Paymentmethod;
@@ -116,6 +116,11 @@ abstract class PaymentMethod extends AbstractMethod
       return [];
     }
 
+    public function getDOB()
+    {
+      return [];
+    }
+
     public function initialize($paymentAction, $stateObject)
     {
         $status = $this->getConfigData('order_status');
@@ -194,6 +199,7 @@ abstract class PaymentMethod extends AbstractMethod
         $additionalData = $order->getPayment()->getAdditionalInformation();
         $bankId = null;
         $expireDate = null;
+        
         if (isset($additionalData['kvknummer']) && is_numeric($additionalData['kvknummer'])) {
             $kvknummer = $additionalData['kvknummer'];
         }
@@ -244,6 +250,9 @@ abstract class PaymentMethod extends AbstractMethod
                 'phoneNumber' => $arrBillingAddress['telephone'],
                 'emailAddress' => $arrBillingAddress['email'],
             );
+            if (isset($additionalData['dob'])) {
+                $enduser['dob'] = $additionalData['dob'];
+            }
 
             if (isset($arrBillingAddress['company']) && !empty($arrBillingAddress['company'])) {
               $enduser['company']['name'] = $arrBillingAddress['company'];
@@ -422,6 +431,8 @@ abstract class PaymentMethod extends AbstractMethod
             $ipAddress = \Paynl\Helper::getIp();
         }
         $data['ipaddress'] = $ipAddress;
+
+       
 
         $transaction = \Paynl\Transaction::start($data);
 
