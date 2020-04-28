@@ -354,7 +354,9 @@ abstract class PaymentMethod extends AbstractMethod
                     $children = $item->getChildrenItems();
                     $child = array_shift($children);
 
+                  if (!empty($child) && $child instanceof \Magento\Sales\Model\Order\Item && method_exists($child, 'getProductId')) {
                     $product['id'] = $child->getProductId();
+                  }
                 }
 
                 $arrProducts[] = $product;
