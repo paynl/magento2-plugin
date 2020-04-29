@@ -81,20 +81,21 @@ class Redirect extends \Magento\Framework\App\Action\Action
             if(empty($order)){
                 throw new Error('No order found in session, please try again');
             }
-            $payment = $order->getPayment();
 
-            if(empty($payment)){
-                throw new Error('No payment linked to order, please select a payment method');
-            }
+          # Restore the quote
+          $quote = $this->quoteRepository->get($order->getQuoteId());
+          $quote->setIsActive(true)->setReservedOrderId(null);
+          $this->checkoutSession->replaceQuote($quote);
+          $this->quoteRepository->save($quote);
 
-            $method = $payment->getMethod();
-            // restore the quote
-            $quote = $this->quoteRepository->get($order->getQuoteId());
-            $quote->setIsActive(true)->setReservedOrderId(null);
-            $this->checkoutSession->replaceQuote($quote);
-            $this->quoteRepository->save($quote);
+          $payment = $order->getPayment();
 
-            $methodInstance = $this->paymentHelper->getMethodInstance($method);
+          if (empty($payment)) {
+            $this->_redirect('checkout/cart');
+            return;
+          }
+
+            $methodInstance = $this->paymentHelper->getMethodInstance($payment->getMethod());
             if ($methodInstance instanceof \Paynl\Payment\Model\Paymentmethod\Paymentmethod) {
                 $this->_logger->notice('PAY.: Start new payment for order ' . $order->getId());
                 $redirectUrl = $methodInstance->startTransaction($order);
