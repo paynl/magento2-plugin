@@ -53,7 +53,7 @@
             <depends>
                 <field id="active">1</field>
             </depends>
-            <comment><![CDATA[Set the orderstatus to on-hold when payment begins.]]></comment>
+            <comment><![CDATA[Set the orderstatus to on-hold when payment begins (to hold stock).]]></comment>
         </field>
         <field id="allowspecific" translate="label" type="allowspecific" sortOrder="40" showInDefault="1"
                showInWebsite="1" showInStore="1">
