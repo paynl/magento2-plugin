@@ -265,6 +265,18 @@
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_givacard>
+            <paynl_payment_huisentuincadeau>
+                <active>0</active>
+                <title>Huis & Tuin Cadeau</title>
+                <payment_option_id>2271</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Huisentuincadeau</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_huisentuincadeau>
             <paynl_payment_ideal>
                 <active>0</active>
                 <title>iDEAL</title>
