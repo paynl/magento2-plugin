@@ -79,7 +79,7 @@
                 </field>
                 <field id="testipaddress" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1"
                        showInStore="1">
-                    <label>Test Ipadress</label>
+                    <label>Test IP Address</label>
                     <comment><![CDATA[Forces testmode on these Ip addresses, separate ip's by comma's for multiple ip's]]></comment>
                 </field>
                 <group id="paynl_paymentmethods" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1"
