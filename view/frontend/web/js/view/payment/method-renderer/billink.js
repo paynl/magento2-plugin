@@ -16,19 +16,19 @@ define(
             kvknummer: null,
             dateofbirth: null,
             billink_agree: null,
-            showKVK: function () {             
+            showKVK: function () {
                 return this.getKVK() > 0;
             },
             getKVK: function () {
                 return window.checkoutConfig.payment.showkvk[this.item.method];
             },
-            showDOB: function () {               
+            showDOB: function () {
                 return this.getDOB() > 0;
             },
             getDOB: function () {
                 return window.checkoutConfig.payment.showdob[this.item.method];
             },
-            showKVKDOB: function () {               
+            showKVKDOB: function () {
                 return this.getDOB() > 0;
             },
             getKVKDOB: function () {
@@ -41,17 +41,17 @@ define(
 
                 var dob = new Date(this.dateofbirth);
 
-                var dd = dob.getDate(); 
-                var mm = dob.getMonth() + 1; 
-        
-                var yyyy = dob.getFullYear(); 
-                if (dd < 10) { 
-                    dd = '0' + dd; 
-                } 
-                if (mm < 10) { 
-                    mm = '0' + mm; 
-                } 
-                var dob_format = dd + '-' + mm + '-' + yyyy; 
+                var dd = dob.getDate();
+                var mm = dob.getMonth() + 1;
+
+                var yyyy = dob.getFullYear();
+                if (dd < 10) {
+                    dd = '0' + dd;
+                }
+                if (mm < 10) {
+                    mm = '0' + mm;
+                }
+                var dob_format = dd + '-' + mm + '-' + yyyy;
 
                 return {
                     'method': this.item.method,
@@ -83,7 +83,7 @@ define(
                         return false;
                     }
                 }
-                if (showingDOB) {                                        
+                if (showingDOB) {
                     if (this.dateofbirth == null || this.dateofbirth.length < 1) {
                         alert('Voer een geldig geboortedatum in.');
                         return false;
@@ -93,6 +93,8 @@ define(
                 if (event) {
                     event.preventDefault();
                 }
+
+                $('#billink-button').html('Processing').attr('disabled','disabled');
 
                 this.isPlaceOrderActionAllowed(false);
                 placeOrder = placeOrderAction(this.getData(), this.redirectAfterPlaceOrder);
