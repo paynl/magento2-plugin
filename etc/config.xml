@@ -267,7 +267,7 @@
             </paynl_payment_givacard>
             <paynl_payment_huisentuincadeau>
                 <active>0</active>
-                <title>Huis & Tuin Cadeau</title>
+                <title>Huis en Tuin Cadeau</title>
                 <payment_option_id>2283</payment_option_id>
                 <order_status>pending_payment</order_status>
                 <order_status_authorized>processing</order_status_authorized>

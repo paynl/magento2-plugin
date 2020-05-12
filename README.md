@@ -23,7 +23,7 @@ Maestro | Dankort | Fashion Giftcard | Klarna | Instore Payments (POS) |
 Bank Transfer | Cartasi | GivaCard | SprayPay | Przelewy24 | 
 | Tikkie | | YourGift | Creditclick | Apple Pay | 
 | Multibanco | | Paysafecard | | Payconiq
-| | | Huis & Tuin Cadeau
+| | | Huis en Tuin Cadeau
 
 
 ### Quickstart
