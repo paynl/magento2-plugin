@@ -236,16 +236,8 @@ abstract class PaymentMethod extends AbstractMethod
         if ($arrBillingAddress) {
             $arrBillingAddress = $arrBillingAddress->toArray();
 
-            // Use default initials
-            $strBillingFirstName = substr($arrBillingAddress['firstname'], 0, 1);
-
-            // Use full first name for Klarna
-            if ($paymentOptionId == $this->paynlConfig->getPaymentOptionId('paynl_payment_klarna')) {
-                $strBillingFirstName = $arrBillingAddress['firstname'];
-            }
-
             $enduser = array(
-                'initials' => $strBillingFirstName,
+                'initials' => $arrBillingAddress['firstname'],
                 'lastName' => $arrBillingAddress['lastname'],
                 'phoneNumber' => $arrBillingAddress['telephone'],
                 'emailAddress' => $arrBillingAddress['email'],
@@ -288,16 +280,8 @@ abstract class PaymentMethod extends AbstractMethod
         if ($arrShippingAddress) {
             $arrShippingAddress = $arrShippingAddress->toArray();
 
-            // Use default initials
-            $strShippingFirstName = substr($arrShippingAddress['firstname'], 0, 1);
-
-            // Use full first name for Klarna
-            if ($paymentOptionId == $this->paynlConfig->getPaymentOptionId('paynl_payment_klarna')) {
-                $strShippingFirstName = $arrShippingAddress['firstname'];
-            }
-
             $shippingAddress = array(
-                'initials' => $strShippingFirstName,
+                'initials' => $arrShippingAddress['firstname'],
                 'lastName' => $arrShippingAddress['lastname']
             );
             $arrAddress2 = \Paynl\Helper::splitAddress($arrShippingAddress['street']);
