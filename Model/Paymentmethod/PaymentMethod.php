@@ -260,7 +260,7 @@ abstract class PaymentMethod extends AbstractMethod
             }
 
             $invoiceAddress = array(
-                'initials' => $strBillingFirstName,
+                'initials' => $arrBillingAddress['firstname'],
                 'lastName' => $arrBillingAddress['lastname']
             );
 
