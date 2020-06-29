@@ -11,6 +11,7 @@ use Magento\Framework\App\Action\Context;
 use Magento\Quote\Model\QuoteRepository;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderRepository;
+use Paynl\Payment\Controller\PayAction;
 use Paynl\Payment\Model\Config;
 use Psr\Log\LoggerInterface;
 
@@ -19,7 +20,7 @@ use Psr\Log\LoggerInterface;
  *
  * @author Andy Pieters <andy@pay.nl>
  */
-class Finish extends Action
+class Finish extends PayAction
 {
     /**
      *
