@@ -23,7 +23,6 @@ use Paynl\Result\Transaction\Transaction;
  * @author Andy Pieters <andy@pay.nl>
  */
 class Exchange extends PayAction implements CsrfAwareActionInterface
-//    implements CsrfAwareActionInterface
 {
     /**
      *
@@ -128,6 +127,12 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             $this->logger->critical($e, $params);
 
             return $this->result->setContents('FALSE| Error fetching transaction. ' . $e->getMessage());
+        }
+
+        if(method_exists($transaction, 'isPartialPayment')) {
+            if($transaction->isPartialPayment()) {
+                return $this->result->setContents("TRUE| Partial payment");
+            }
         }
 
         if ($transaction->isPending()) {
