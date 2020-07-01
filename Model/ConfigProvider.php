@@ -9,7 +9,6 @@ use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Framework\Escaper;
 use Magento\Payment\Helper\Data as PaymentHelper;
 
-
 class ConfigProvider implements ConfigProviderInterface
 {
     /**
@@ -92,7 +91,8 @@ class ConfigProvider implements ConfigProviderInterface
         PaymentHelper $paymentHelper,
         Escaper $escaper,
         Config $paynlConfig
-    ) {
+    )
+    {
         $this->paynlConfig = $paynlConfig;
         $this->escaper = $escaper;
         foreach ($this->methodCodes as $code) {
@@ -109,15 +109,21 @@ class ConfigProvider implements ConfigProviderInterface
         foreach ($this->methodCodes as $code) {
             if ($this->methods[$code]->isAvailable()) {
                 $config['payment']['instructions'][$code] = $this->getInstructions($code);
-                $config['payment']['banks'][$code]        = $this->getBanks($code);
-                $config['payment']['icon'][$code]         = $this->getIcon($code);
-                $config['payment']['showkvk'][$code]      = $this->getKVK($code);
-                $config['payment']['showdob'][$code]      = $this->getDOB($code);
+                $config['payment']['banks'][$code] = $this->getBanks($code);
+                $config['payment']['icon'][$code] = $this->getIcon($code);
+                $config['payment']['showkvk'][$code] = $this->getKVK($code);
+                $config['payment']['showdob'][$code] = $this->getDOB($code);
             }
         }
 
         return $config;
     }
+
+    public function getMethodCodes()
+    {
+        return $this->methodCodes;
+    }
+
 
     /**
      * Get instructions text from config
@@ -155,7 +161,7 @@ class ConfigProvider implements ConfigProviderInterface
      */
     protected function getIcon($code)
     {
-        $url = $this->paynlConfig->getIconUrl();
+        $url = $this->paynlConfig->getIconUrl($this->methods[$code]->getPaymentOptionId());
         return str_replace('#paymentOptionId#', $this->methods[$code]->getPaymentOptionId(), $url);
     }
 }

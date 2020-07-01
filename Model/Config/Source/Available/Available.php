@@ -15,6 +15,8 @@ use Paynl\Payment\Model\Paymentmethod\PaymentMethod;
 use \Magento\Framework\Option\ArrayInterface;
 use \Paynl\Paymentmethods;
 use \Paynl\Payment\Model\Config;
+use \Paynl\Payment\Model\ConfigProvider;
+use Magento\Payment\Helper\Data as PaymentHelper;
 
 abstract class Available implements ArrayInterface
 {
@@ -43,6 +45,11 @@ abstract class Available implements ArrayInterface
     protected $_config;
 
     /**
+     * @var ConfigProvider
+     */
+    protected $_configProvider;
+
+    /**
      * @var  Store
      * */
     private $store;
@@ -61,9 +68,16 @@ abstract class Available implements ArrayInterface
      * @var  Changed
      * */
     private $changed;
+    /**
+     * @var ConfigProvider
+     */
+    protected $_paymentHelper;
+
 
     public function __construct(
+        PaymentHelper $paymentHelper,
         Config $config,
+        ConfigProvider $configProvider,
         RequestInterface $request,
         ScopeConfigInterface $scopeConfig,
         PaymentMethodFactory $paymentMethodFactory,
@@ -72,7 +86,9 @@ abstract class Available implements ArrayInterface
         \Magento\Framework\App\Cache\TypeListInterface $cacheTypeList
     )
     {
+        $this->_paymentHelper = $paymentHelper;
         $this->_config = $config;
+        $this->_configProvider = $configProvider;
         $this->_request = $request;
         $this->_scopeConfig = $scopeConfig;
         $this->_paymentmethodFactory = $paymentMethodFactory;
@@ -81,6 +97,7 @@ abstract class Available implements ArrayInterface
         $this->cacheTypeList = $cacheTypeList;
     }
 
+
     /**
      * Options getter
      *
@@ -88,7 +105,7 @@ abstract class Available implements ArrayInterface
      */
     public function toOptionArray()
     {
-        $this->setDefaults($list);
+        $this->setDefaults();
         $arrOptions = $this->toArray();
 
         $arrResult = [];
@@ -150,6 +167,7 @@ abstract class Available implements ArrayInterface
         return null;
     }
 
+
     protected function getConfigValue($path)
     {
         $scopeType = ScopeConfigInterface::SCOPE_TYPE_DEFAULT;
@@ -164,6 +182,7 @@ abstract class Available implements ArrayInterface
             $scopeValue = $website;
             $scopeType = ScopeInterface::SCOPE_WEBSITE;
         }
+
 
         return $this->_scopeConfig->getValue($path, $scopeType, $scopeValue);
     }
@@ -189,72 +208,26 @@ abstract class Available implements ArrayInterface
         $configured = $this->configureSDK();
         if ($configured) {
             $Paymentmethods = Paymentmethods::getList();
-            $Magento_paymentmethod_codes = array(
-                "0" => "paylink",
-                "739" => "afterpay",
-                "2080" => "alipay",
-                "1705" => "amex",
-                "2277" => "applepay",
-                "1672" => "billink",
-                "1744" => "capayable",
-                "1813" => "capayable_gespreid",
-                "1945" => "cartasi",
-                "710" => "cartebleue",
-                "1981" => "cashly",
-                "139" => "clickandbuy",
-                "2107" => "creditclick",
-                "1939" => "dankort",
-                "2062" => "eps",
-                "815" => "fashioncheque",
-                "1699" => "fashiongiftcard",
-                "1702" => "focum",
-                "812" => "gezondheidsbon",
-                "694" => "giropay",
-                "1657" => "givacard",
-                "2283" => "huisentuincadeau",
-                "10" => "ideal",
-                "1729" => "instore",
-                "1717" => "klarna",
-                "2265" => "klarnakp",
-                "712" => "maestro",
-                "436" => "mistercash",
-                "2271" => "multibanco",
-                "1588" => "mybank",
-                "136" => "overboeking",
-                "2379" => "payconiq",
-                "138" => "paypal",
-                "553" => "paysafecard",
-                "816" => "podiumcadeaukaart",
-                "707" => "postepay",
-                "2151" => "przelewy24",
-                "559" => "sofortbanking",
-                "1987" => "spraypay",
-                "1600" => "telefonischbetalen",
-                "2104" => "tikkie",
-                "706" => "visamastercard",
-                "1714" => "vvvgiftcard",
-                "811" => "webshopgiftcard",
-                "1978" => "wechatpay",
-                "1666" => "wijncadeau",
-                "1877" => "yehhpay",
-                "1645" => "yourgift",
-            );
+            $MethodCodes = $this->_configProvider->getMethodCodes();
 
             $this->changed = false;
 
-            foreach ($Paymentmethods as $key => $method) {
+            foreach ($MethodCodes as $key => $MethodCode) {
 
-                if (isset($Magento_paymentmethod_codes[$method['id']])) {
-                    $name = $Magento_paymentmethod_codes[$method['id']];
+                $MagentoMethod = $this->_paymentHelper->getMethodInstance($MethodCode);
+                $PaymentMethodId = $MagentoMethod->getPaymentOptionId();
+
+                if (isset($Paymentmethods[$PaymentMethodId])) {
+                    $method = $Paymentmethods[$PaymentMethodId];
 
                     if (isset($method['min_amount'])) {
-                        $this->setDefaultvalue('payment/paynl_payment_' . $name . '/min_order_total', $method['min_amount']);
+                        $this->setDefaultValue('payment/' . $MethodCode . '/min_order_total', $method['min_amount']);
                     }
                     if (isset($method['max_amount'])) {
-                        $this->setDefaultvalue('payment/paynl_payment_' . $name . '/max_order_total', $method['max_amount']);
+                        $this->setDefaultValue('payment/' . $MethodCode . '/max_order_total', $method['max_amount']);
                     }
                     if (isset($method['brand']['public_description'])) {
-                        $this->setDefaultvalue('payment/paynl_payment_' . $name . '/instructions', $method['brand']['public_description']);
+                        $this->setDefaultValue('payment/' . $MethodCode . '/instructions', $method['brand']['public_description']);
                     }
                 }
             }
@@ -267,10 +240,9 @@ abstract class Available implements ArrayInterface
                 header("Refresh:0");
             }
         }
-
     }
 
-    private function setDefaultvalue($configName, $value)
+    private function setDefaultValue($configName, $value)
     {
         if (strlen($this->store->getConfig($configName)) == 0) {
             $this->configWriter->save($configName, $value);
