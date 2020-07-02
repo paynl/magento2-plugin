@@ -2,6 +2,6 @@
 
 namespace Paynl\Payment\Controller;
 
-interface CsrfAwareActionInterface
+interface CsrfAwareActionInterface extends \Magento\Framework\App\CsrfAwareActionInterface
 {
 }
