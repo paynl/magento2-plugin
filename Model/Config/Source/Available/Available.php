@@ -104,8 +104,7 @@ abstract class Available implements ArrayInterface
      * @return array
      */
     public function toOptionArray()
-    {
-        $this->setDefaults();
+    {  
         $arrOptions = $this->toArray();
 
         $arrResult = [];
@@ -167,6 +166,15 @@ abstract class Available implements ArrayInterface
         return null;
     }
 
+    protected function getPaymentOptionCode()
+    {
+        $method = $this->_paymentmethodFactory->create($this->_class);
+        if ($method instanceof PaymentMethod) {
+            return $method->getCode();
+        }
+        return null;
+    }
+
 
     protected function getConfigValue($path)
     {
@@ -192,8 +200,9 @@ abstract class Available implements ArrayInterface
         $configured = $this->configureSDK();
         if ($configured) {
             $paymentOptionId = $this->getPaymentOptionId();
-
+            $paymentOptionCode =  $this->getPaymentOptionCode();        
             $list = Paymentmethods::getList();
+            $this->setDefaults($paymentOptionId, $paymentOptionCode, $list);
 
             if (isset($list[$paymentOptionId])) {
                 return true;
@@ -203,51 +212,45 @@ abstract class Available implements ArrayInterface
         return false;
     }
 
-    public function setDefaults()
-    {
-        $configured = $this->configureSDK();
-        if ($configured) {
-            $Paymentmethods = Paymentmethods::getList();
-            $MethodCodes = $this->_configProvider->getMethodCodes();
+    public function setDefaults($paymentOptionId, $paymentOptionCode, $list)
+    {              
+          
+        if (isset($list[$paymentOptionId])) {
+            $method = $list[$paymentOptionId];
 
-            $this->changed = false;
-
-            foreach ($MethodCodes as $key => $MethodCode) {
-
-                $MagentoMethod = $this->_paymentHelper->getMethodInstance($MethodCode);
-                $PaymentMethodId = $MagentoMethod->getPaymentOptionId();
-
-                if (isset($Paymentmethods[$PaymentMethodId])) {
-                    $method = $Paymentmethods[$PaymentMethodId];
-
-                    if (isset($method['min_amount'])) {
-                        $this->setDefaultValue('payment/' . $MethodCode . '/min_order_total', $method['min_amount']);
-                    }
-                    if (isset($method['max_amount'])) {
-                        $this->setDefaultValue('payment/' . $MethodCode . '/max_order_total', $method['max_amount']);
-                    }
-                    if (isset($method['brand']['public_description'])) {
-                        $this->setDefaultValue('payment/' . $MethodCode . '/instructions', $method['brand']['public_description']);
-                    }
-                }
+            if (isset($method['min_amount'])) {
+                $this->setDefaultValue('payment/' . $paymentOptionCode . '/min_order_total', $method['min_amount']);
             }
+            if (isset($method['max_amount'])) {
+                $this->setDefaultValue('payment/' . $paymentOptionCode . '/max_order_total', $method['max_amount']);
+            }
+            if (isset($method['brand']['public_description'])) {
+                $this->setDefaultValue('payment/' . $paymentOptionCode . '/instructions', $method['brand']['public_description']);
+            }
+        }        
 
-            //Clean the cache or esle it won't show the changes
-            $this->cacheTypeList->cleanType(\Magento\Framework\App\Cache\Type\Config::TYPE_IDENTIFIER);
+        //Clean the cache or esle it won't show the changes
+        $this->cacheTypeList->cleanType(\Magento\Framework\App\Cache\Type\Config::TYPE_IDENTIFIER);
 
-            //Refresh the page to apply the defaults after opening Payment methodes
-            if ($this->changed) {
+        $MethodCodes = $this->_configProvider->getMethodCodes();
+
+        //Refresh the page to apply the defaults after opening Payment methodes
+        if (isset($_COOKIE['Defaults_changed']) && $_COOKIE['Defaults_changed'] == true) {
+            if($paymentOptionCode == end($MethodCodes)){
+                setcookie("Defaults_changed", false); 
+                unset($_COOKIE['Defaults_changed']);                 
                 header("Refresh:0");
+                exit();
             }
-        }
+        }        
     }
 
     private function setDefaultValue($configName, $value)
     {
         if (strlen($this->store->getConfig($configName)) == 0) {
             $this->configWriter->save($configName, $value);
-            if (strlen($value) > 0) {
-                $this->changed = true;
+            if (strlen($value) > 0) {                           
+                setcookie("Defaults_changed", true);                             
             }
         }
     }

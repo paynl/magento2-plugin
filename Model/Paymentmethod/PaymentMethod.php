@@ -432,6 +432,11 @@ abstract class PaymentMethod extends AbstractMethod
         return $paymentOptionId;
     }
 
+    public function getCode()
+    {        
+        return $this->_code;
+    }
+
     /**
      * @return int the default payment option id
      */
