@@ -2,14 +2,9 @@
 
 namespace Paynl\Payment\Controller;
 
-//workaround to make sure this works in magento < 2.3
-
+# Workaround to make sure this works in magento < 2.3
 if (interface_exists('\Magento\Framework\App\CsrfAwareActionInterface')) {
-    interface CsrfAwareActionInterface extends \Magento\Framework\App\CsrfAwareActionInterface
-    {
-    }
+    include __DIR__ . "/CsrfInterface23.php";
 } else {
-    interface CsrfAwareActionInterface
-    {
-    }
+    include __DIR__ . "/CsrfInterface22.php";
 }
