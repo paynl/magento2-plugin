@@ -68,10 +68,16 @@ abstract class Available implements ArrayInterface
      * @var  Changed
      * */
     private $changed;
+
     /**
      * @var ConfigProvider
      */
     protected $_paymentHelper;
+
+    /**
+     * @var  PaymentMethod
+     * */
+    private $currentMethod;
 
 
     public function __construct(
@@ -157,20 +163,23 @@ abstract class Available implements ArrayInterface
         return false;
     }
 
-    protected function getPaymentOptionId()
+    protected function setCurrentMethode()
     {
-        $method = $this->_paymentmethodFactory->create($this->_class);
-        if ($method instanceof PaymentMethod) {
-            return $method->getPaymentOptionId();
+        $this->currentMethod = $this->_paymentmethodFactory->create($this->_class);        
+    }
+
+    protected function getPaymentOptionId()
+    {        
+        if ($this->currentMethod instanceof PaymentMethod) {
+            return $this->currentMethod->getPaymentOptionId();
         }
         return null;
     }
 
     protected function getPaymentOptionCode()
-    {
-        $method = $this->_paymentmethodFactory->create($this->_class);
-        if ($method instanceof PaymentMethod) {
-            return $method->getCode();
+    {        
+        if ($this->currentMethod instanceof PaymentMethod) {
+            return $this->currentMethod->getCode();
         }
         return null;
     }
@@ -199,6 +208,7 @@ abstract class Available implements ArrayInterface
     {
         $configured = $this->configureSDK();
         if ($configured) {
+            $this->setCurrentMethode();
             $paymentOptionId = $this->getPaymentOptionId();
             $paymentOptionCode =  $this->getPaymentOptionCode();        
             $list = Paymentmethods::getList();
@@ -227,16 +237,15 @@ abstract class Available implements ArrayInterface
             if (isset($method['brand']['public_description'])) {
                 $this->setDefaultValue('payment/' . $paymentOptionCode . '/instructions', $method['brand']['public_description']);
             }
-        }        
-
-        //Clean the cache or esle it won't show the changes
-        $this->cacheTypeList->cleanType(\Magento\Framework\App\Cache\Type\Config::TYPE_IDENTIFIER);
-
-        $MethodCodes = $this->_configProvider->getMethodCodes();
-
+        }             
+        
         //Refresh the page to apply the defaults after opening Payment methodes
         if (isset($_COOKIE['Defaults_changed']) && $_COOKIE['Defaults_changed'] == true) {
-            if($paymentOptionCode == end($MethodCodes)){
+            $methodCodes = $this->_configProvider->getMethodCodes();
+            if($paymentOptionCode == end($methodCodes)){
+                //Clean the cache or esle it won't show the changes
+                $this->cacheTypeList->cleanType(\Magento\Framework\App\Cache\Type\Config::TYPE_IDENTIFIER);
+
                 setcookie("Defaults_changed", false); 
                 unset($_COOKIE['Defaults_changed']);                 
                 header("Refresh:0");
