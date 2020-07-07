@@ -26,7 +26,7 @@ class Config
 
     public function getVersion()
     {
-      return '1.6.2';
+      return '1.6.3';
     }
 
     /**
@@ -148,7 +148,6 @@ class Config
                 $iconUrl = $this->resources->getViewFileUrl("Paynl_Payment::logos/" . $list[$PaymentMethodeID]['brand']['id'] . ".png");
             }
         }
-
         return empty($iconUrl) ? $url : $iconUrl;
     }
     

@@ -163,23 +163,26 @@ abstract class Available implements ArrayInterface
         return false;
     }
 
-    protected function setCurrentMethode()
+    protected function getCurrentMethod()
     {
-        $this->currentMethod = $this->_paymentmethodFactory->create($this->_class);        
+        if (!$this->currentMethod instanceof PaymentMethod) {
+            $this->currentMethod = $this->_paymentmethodFactory->create($this->_class); 
+        }
+        return $this->currentMethod;               
     }
 
     protected function getPaymentOptionId()
     {        
-        if ($this->currentMethod instanceof PaymentMethod) {
-            return $this->currentMethod->getPaymentOptionId();
+        if ($this->getCurrentMethod() instanceof PaymentMethod) {
+            return $this->getCurrentMethod()->getPaymentOptionId();
         }
         return null;
     }
 
     protected function getPaymentOptionCode()
     {        
-        if ($this->currentMethod instanceof PaymentMethod) {
-            return $this->currentMethod->getCode();
+        if ($this->getCurrentMethod() instanceof PaymentMethod) {
+            return $this->getCurrentMethod()->getCode();
         }
         return null;
     }
@@ -243,7 +246,7 @@ abstract class Available implements ArrayInterface
         if (isset($_COOKIE['Defaults_changed']) && $_COOKIE['Defaults_changed'] == true) {
             $methodCodes = $this->_configProvider->getMethodCodes();
             if($paymentOptionCode == end($methodCodes)){
-                //Clean the cache or esle it won't show the changes
+                //Clean the cache or else it won't show the changes
                 $this->cacheTypeList->cleanType(\Magento\Framework\App\Cache\Type\Config::TYPE_IDENTIFIER);
 
                 setcookie("Defaults_changed", false); 
