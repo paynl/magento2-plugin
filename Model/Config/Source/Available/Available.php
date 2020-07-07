@@ -211,7 +211,6 @@ abstract class Available implements ArrayInterface
     {
         $configured = $this->configureSDK();
         if ($configured) {
-            $this->setCurrentMethode();
             $paymentOptionId = $this->getPaymentOptionId();
             $paymentOptionCode =  $this->getPaymentOptionCode();        
             $list = Paymentmethods::getList();
