@@ -242,14 +242,14 @@ abstract class Available implements ArrayInterface
         }             
         
         //Refresh the page to apply the defaults after opening Payment methodes
-        if (isset($_COOKIE['Defaults_changed']) && $_COOKIE['Defaults_changed'] == true) {
+        if (isset($_COOKIE['pay_defaults_changed']) && $_COOKIE['pay_defaults_changed'] == true) {
             $methodCodes = $this->_configProvider->getMethodCodes();
             if($paymentOptionCode == end($methodCodes)){
                 //Clean the cache or else it won't show the changes
                 $this->cacheTypeList->cleanType(\Magento\Framework\App\Cache\Type\Config::TYPE_IDENTIFIER);
 
-                setcookie("Defaults_changed", false); 
-                unset($_COOKIE['Defaults_changed']);                 
+                setcookie("pay_defaults_changed", false); 
+                unset($_COOKIE['pay_defaults_changed']);                 
                 header("Refresh:0");
                 exit();
             }
@@ -259,9 +259,9 @@ abstract class Available implements ArrayInterface
     private function setDefaultValue($configName, $value)
     {
         if (strlen($this->store->getConfig($configName)) == 0) {
-            $this->configWriter->save($configName, $value);
-            if (strlen($value) > 0) {                           
-                setcookie("Defaults_changed", true);                             
+            if (strlen($value) > 0) {         
+                $this->configWriter->save($configName, $value);
+                setcookie("pay_defaults_changed", true);                             
             }
         }
     }
