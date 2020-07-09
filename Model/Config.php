@@ -153,14 +153,14 @@ class Config
         return trim($this->store->getConfig('payment/paynl/serviceid'));
     }
 
-    public function getIconUrl($PaymentMethodeID)
+    public function getIconUrl($paymentMethodeID)
     {      
         $iconUrl = 'https://static.pay.nl/payment_profiles/50x32/#paymentOptionId#.png';
         $configured = $this->configureSDK();
         if ($configured) {
             $list = Paymentmethods::getList();
-            if (isset($list[$PaymentMethodeID])) {
-                $iconUrl = $this->resources->getViewFileUrl("Paynl_Payment::logos/" . $list[$PaymentMethodeID]['brand']['id'] . ".png");
+            if (isset($list[$paymentMethodeID])) {
+                $iconUrl = $this->resources->getViewFileUrl("Paynl_Payment::logos/" . $list[$paymentMethodeID]['brand']['id'] . ".png");
             }
         }
 
