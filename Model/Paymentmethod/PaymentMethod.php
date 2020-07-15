@@ -113,12 +113,12 @@ abstract class PaymentMethod extends AbstractMethod
 
     public function getKVK()
     {
-      return [];
+        return $this->_scopeConfig->getValue('payment/'.$this->_code.'/showkvk', 'store');
     }
 
     public function getDOB()
     {
-      return [];
+        return $this->_scopeConfig->getValue('payment/'.$this->_code.'/showdob', 'store');
     }
 
     public function initialize($paymentAction, $stateObject)
@@ -414,13 +414,34 @@ abstract class PaymentMethod extends AbstractMethod
         if (!filter_var($ipAddress, FILTER_VALIDATE_IP)) {
             $ipAddress = \Paynl\Helper::getIp();
         }
-        $data['ipaddress'] = $ipAddress;
-
-       
+        $data['ipaddress'] = $ipAddress;       
 
         $transaction = \Paynl\Transaction::start($data);
 
         return $transaction;
+    }
+
+    public function assignData(\Magento\Framework\DataObject $data)
+    {
+        parent::assignData($data);
+
+        if (is_array($data))
+        {
+        $this->getInfoInstance()->setAdditionalInformation('kvknummer', $data['kvknummer']);
+        $this->getInfoInstance()->setAdditionalInformation('dob', $data['dob']);
+        } elseif ($data instanceof \Magento\Framework\DataObject)
+        {
+            $additional_data = $data->getAdditionalData();
+
+            if (isset($additional_data['kvknummer'])) {
+                $this->getInfoInstance()->setAdditionalInformation('kvknummer', $additional_data['kvknummer']);
+            }       
+
+            if (isset($additional_data['dob'])) {
+                $this->getInfoInstance()->setAdditionalInformation('dob', $additional_data['dob']);
+            }
+        }
+        return $this;
     }
 
     public function getPaymentOptionId()
