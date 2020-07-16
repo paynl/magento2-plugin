@@ -54,3 +54,17 @@ The plugin is now installed
 8. Save the settings
 
 Go to the *Manage* / *Services* tab in the PAY. Admin Panel to enable extra payment methods. 
+
+##### Update
+
+In command line, navigate to the installation directory of magento2
+
+Enter the following commands:
+
+```
+composer update paynl/magento2-plugin paynl/sdk
+php bin/magento setup:upgrade
+php bin/magento cache:clean
+```
+
+The plugin has now been updated
