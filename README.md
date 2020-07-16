@@ -30,7 +30,7 @@ Bank Transfer | Cartasi | GivaCard | SprayPay | Przelewy24 |
 
 ##### Installing
 
-In command line, navigate to the installation directory of magento2
+In command line, navigate to the installation directory of Magento2
 
 Enter the following commands:
 
@@ -57,7 +57,7 @@ Go to the *Manage* / *Services* tab in the PAY. Admin Panel to enable extra paym
 
 ##### Update
 
-In command line, navigate to the installation directory of magento2
+In command line, navigate to the installation directory of Magento2
 
 Enter the following commands:
 
