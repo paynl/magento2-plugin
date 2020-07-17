@@ -231,10 +231,10 @@ abstract class Available implements ArrayInterface
             $method = $list[$paymentOptionId];
 
             if (isset($method['min_amount'])) {
-                $this->setDefaultValue('payment/' . $paymentOptionCode . '/min_order_total', $method['min_amount']);
+                $this->setDefaultValue('payment/' . $paymentOptionCode . '/min_order_total', floatval($method['min_amount'] / 100));
             }
             if (isset($method['max_amount'])) {
-                $this->setDefaultValue('payment/' . $paymentOptionCode . '/max_order_total', $method['max_amount']);
+                $this->setDefaultValue('payment/' . $paymentOptionCode . '/max_order_total', floatval($method['max_amount'] / 100));
             }
             if (isset($method['brand']['public_description'])) {
                 $this->setDefaultValue('payment/' . $paymentOptionCode . '/instructions', $method['brand']['public_description']);
@@ -247,9 +247,7 @@ abstract class Available implements ArrayInterface
             if($paymentOptionCode == end($methodCodes)){
                 //Clean the cache or else it won't show the changes
                 $this->cacheTypeList->cleanType(\Magento\Framework\App\Cache\Type\Config::TYPE_IDENTIFIER);
-
-                setcookie("pay_defaults_changed", false); 
-                unset($_COOKIE['pay_defaults_changed']);                 
+                $_SESSION["pay_defaults_changed"] = false;     
                 header("Refresh:0");
                 exit();
             }
@@ -261,7 +259,7 @@ abstract class Available implements ArrayInterface
         if (strlen($this->store->getConfig($configName)) == 0) {
             if (strlen($value) > 0) {         
                 $this->configWriter->save($configName, $value);
-                setcookie("pay_defaults_changed", true);                             
+                $_SESSION["pay_defaults_changed"] = true;                            
             }
         }
     }
