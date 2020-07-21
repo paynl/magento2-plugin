@@ -242,7 +242,7 @@ abstract class Available implements ArrayInterface
         }             
         
         //Refresh the page to apply the defaults after opening Payment methodes
-        if (isset($_COOKIE['pay_defaults_changed']) && $_COOKIE['pay_defaults_changed'] == true) {
+        if (isset($_SESSION['pay_defaults_changed']) && $_SESSION['pay_defaults_changed'] == true) {
             $methodCodes = $this->_configProvider->getMethodCodes();
             if($paymentOptionCode == end($methodCodes)){
                 //Clean the cache or else it won't show the changes
