@@ -113,6 +113,7 @@ class ConfigProvider implements ConfigProviderInterface
                 $config['payment']['icon'][$code]         = $this->getIcon($code);
                 $config['payment']['showkvk'][$code]      = $this->getKVK($code);
                 $config['payment']['showdob'][$code]      = $this->getDOB($code);
+                $config['payment']['userdob'][$code]      = $this->getUserDOB($code);
             }
         }
 
@@ -144,6 +145,11 @@ class ConfigProvider implements ConfigProviderInterface
     protected function getDOB($code)
     {
         return $this->methods[$code]->getDOB();
+    }
+
+    protected function getUserDOB($code)
+    {
+        return $this->methods[$code]->getUserDOB();
     }
 
     /**

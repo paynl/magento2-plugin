@@ -121,6 +121,20 @@ abstract class PaymentMethod extends AbstractMethod
         return $this->_scopeConfig->getValue('payment/'.$this->_code.'/showdob', 'store');
     }
 
+    public function getUserDOB()
+    {
+        $objectManager =  '\Magento\Framework\App\ObjectManager'::getInstance();
+        $context = $objectManager->get('Magento\Framework\App\Http\Context');
+        $isLoggedIn = $context->getValue(\Magento\Customer\Model\Context::CONTEXT_AUTH);
+    
+        if($isLoggedIn){
+            $customerSession = $objectManager->get('Magento\Customer\Model\SessionFactory')->create();
+            return $customerSession->getCustomer()->getDob();
+        }
+        return '';
+       
+    }
+
     public function initialize($paymentAction, $stateObject)
     {
         $status = $this->getConfigData('order_status');

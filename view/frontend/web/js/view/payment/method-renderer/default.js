@@ -11,35 +11,39 @@ define(
         'use strict';
         return Component.extend({
             redirectAfterPlaceOrder: false,
-
             defaults: {
                 template: 'Paynl_Payment/payment/default'
             },
             dateofbirth: null,
             showDOB: function () {
-                console.log(this.item.method, this.getDOB());
+                if(this.getUserDOB().length > 0){
+                    this.dateofbirth = this.getUserDOB();
+                }              
                 return this.getDOB() > 0;
             },
             getDOB: function () {
                 return window.checkoutConfig.payment.showdob[this.item.method];
-            },
+            },            
+            getUserDOB: function () {                
+                return window.checkoutConfig.payment.userdob[this.item.method];
+            },             
             /**
              * Get payment method data
              */
-            getData: function () {
-
+            getData: function () {            
                 var dob = new Date(this.dateofbirth);
 
                 var dd = dob.getDate();
                 var mm = dob.getMonth() + 1;
-
                 var yyyy = dob.getFullYear();
+
                 if (dd < 10) {
                     dd = '0' + dd;
                 }
                 if (mm < 10) {
                     mm = '0' + mm;
                 }
+
                 var dob_format = dd + '-' + mm + '-' + yyyy;
 
                 return {
@@ -55,7 +59,7 @@ define(
             },
             getPaymentIcon: function () {
                 return window.checkoutConfig.payment.icon[this.item.method];
-            },
+            },           
             placeOrder: function (data, event) {
                 var placeOrder;                
                 var showingDOB = this.getDOB() == 2;
@@ -65,11 +69,11 @@ define(
                         alert('Voer een geldig geboortedatum in.');
                         return false;
                     }
-                }
+                }      
 
                 if (event) {
                     event.preventDefault();
-                }
+                }       
 
                 $('#pay-default-button').html('Processing').attr('disabled','disabled');
 
