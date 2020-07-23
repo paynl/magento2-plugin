@@ -12,4 +12,9 @@
             </argument>
         </arguments>
     </virtualType>
+    <type name="Magento\Sales\Model\Order\Payment">
+        <plugin name="paynl_payment_order_payment_additional_information"
+                type="Paynl\Payment\Plugin\OrderPaymentAdditionalInformation"
+        />
+    </type>
 </config>
