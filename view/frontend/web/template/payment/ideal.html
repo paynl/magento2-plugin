@@ -6,8 +6,15 @@
                data-bind="attr: {'id': getCode()}, value: getCode(), checked: isChecked, click: selectPaymentMethod, visible: isRadioButtonVisible()"/>
         <label data-bind="attr: {'for': getCode()}" class="label">
         <img data-bind="attr: {src: getPaymentIcon(), alt: getTitle()}"
-             class="payment-icon"  width="50px"/>
+             class="payment-icon" class="payment-icon" width="50px"/>
         <span data-bind="text: getTitle()"></span></label>
+        <div style="display: inline-block;">
+            <div class="payment-method-content" style="padding: 0;">
+                <div data-bind="visible: showBanks()" class="field-select-billing" style="display: inline-block; margin-left: 10px;">
+                    <select data-bind="options: getBanks(), optionsText: 'visibleName', optionsValue: 'id', value: selectedBank"></select>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="payment-method-content">
         <div class="payment-method-billing-address">
@@ -20,10 +27,7 @@
             <!-- ko template: getTemplate() --><!-- /ko -->
             <!--/ko-->
         </div>
-        <p data-bind="html: getInstructions();"></p>
-        <div data-bind="visible: showBanks()" class="field-select-billing">
-            <select data-bind="options: getBanks(), optionsText: 'visibleName', optionsValue: 'id', value: selectedBank"></select>
-        </div>
+        <p data-bind="html: getInstructions();"></p>   
         <div class="actions-toolbar">
             <div class="primary">
                 <button class="action primary checkout"

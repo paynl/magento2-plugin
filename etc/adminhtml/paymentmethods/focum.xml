@@ -9,6 +9,15 @@
             <source_model>Paynl\Payment\Model\Config\Source\Available\Focum</source_model>
             <config_path>payment/paynl_payment_focum/active</config_path>
         </field>
+        <field id="showdob" translate="label" type="select" sortOrder="66" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Show Date of birth field</label>
+            <source_model>Paynl\Payment\Model\Config\Source\showDobOptions</source_model>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+            <config_path>payment/paynl_payment_focum/showdob</config_path>
+            <comment><![CDATA[When choosen for Focum the customer can additionally enter his Date of Birth before continuing.]]></comment>
+        </field>
         <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1"
                showInStore="1">
             <label>Title</label>

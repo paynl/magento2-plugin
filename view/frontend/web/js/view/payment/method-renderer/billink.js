@@ -23,6 +23,9 @@ define(
                 return window.checkoutConfig.payment.showkvk[this.item.method];
             },
             showDOB: function () {
+                if(this.getUserDOB().length > 0){
+                    this.dateofbirth = this.getUserDOB();
+                }     
                 return this.getDOB() > 0;
             },
             getDOB: function () {
@@ -34,6 +37,9 @@ define(
             getKVKDOB: function () {
                 return (this.getDOB() > 0 && this.getKVK() > 0);
             },
+            getUserDOB: function () {                
+                return window.checkoutConfig.payment.userdob[this.item.method];
+            },  
             /**
              * Get payment method data
              */

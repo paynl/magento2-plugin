@@ -113,12 +113,26 @@ abstract class PaymentMethod extends AbstractMethod
 
     public function getKVK()
     {
-      return [];
+        return $this->_scopeConfig->getValue('payment/'.$this->_code.'/showkvk', 'store');
     }
 
     public function getDOB()
     {
-      return [];
+        return $this->_scopeConfig->getValue('payment/'.$this->_code.'/showdob', 'store');
+    }
+
+    public function getUserDOB()
+    {
+        $objectManager =  '\Magento\Framework\App\ObjectManager'::getInstance();
+        $context = $objectManager->get('Magento\Framework\App\Http\Context');
+        $isLoggedIn = $context->getValue(\Magento\Customer\Model\Context::CONTEXT_AUTH);
+    
+        if($isLoggedIn){
+            $customerSession = $objectManager->get('Magento\Customer\Model\SessionFactory')->create();
+            return $customerSession->getCustomer()->getDob();
+        }
+        return '';
+       
     }
 
     public function initialize($paymentAction, $stateObject)
@@ -421,6 +435,29 @@ abstract class PaymentMethod extends AbstractMethod
         $transaction = \Paynl\Transaction::start($data);
 
         return $transaction;
+    }
+
+    public function assignData(\Magento\Framework\DataObject $data)
+    {
+        parent::assignData($data);
+
+        if (is_array($data))
+        {
+        $this->getInfoInstance()->setAdditionalInformation('kvknummer', $data['kvknummer']);
+        $this->getInfoInstance()->setAdditionalInformation('dob', $data['dob']);
+        } elseif ($data instanceof \Magento\Framework\DataObject)
+        {
+            $additional_data = $data->getAdditionalData();
+
+            if (isset($additional_data['kvknummer'])) {
+                $this->getInfoInstance()->setAdditionalInformation('kvknummer', $additional_data['kvknummer']);
+            }       
+
+            if (isset($additional_data['dob'])) {
+                $this->getInfoInstance()->setAdditionalInformation('dob', $additional_data['dob']);
+            }
+        }
+        return $this;
     }
 
     public function getPaymentOptionId()
