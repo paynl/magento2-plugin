@@ -6,8 +6,6 @@
 namespace Paynl\Payment\Model;
 
 use Magento\Store\Model\Store;
-use \Paynl\Paymentmethods;
-
 
 /**
  * Description of Config
@@ -153,18 +151,16 @@ class Config
         return trim($this->store->getConfig('payment/paynl/serviceid'));
     }
 
-    public function getIconUrl($paymentMethodeID)
-    {      
+    public function getIconUrl($methodCode)
+    {
         $iconUrl = 'https://static.pay.nl/payment_profiles/50x32/#paymentOptionId#.png';
-        $configured = $this->configureSDK();
-        if ($configured) {
-            $list = Paymentmethods::getList();
-            if (isset($list[$paymentMethodeID])) {
-                $iconUrl = $this->resources->getViewFileUrl("Paynl_Payment::logos/" . $list[$paymentMethodeID]['brand']['id'] . ".png");
-            }
+
+        $brandId = $this->store->getConfig('payment/' . $methodCode . '/brand_id');
+        if(!empty($brandId)) {
+            $iconUrl = $this->resources->getViewFileUrl("Paynl_Payment::logos/" . $brandId . ".png");
         }
 
-        return empty($iconUrl) ? $url : $iconUrl;
+        return $iconUrl;
     }
 
     public function getCancelURL()

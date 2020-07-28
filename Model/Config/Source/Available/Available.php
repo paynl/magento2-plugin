@@ -239,6 +239,9 @@ abstract class Available implements ArrayInterface
             if (isset($method['brand']['public_description'])) {
                 $this->setDefaultValue('payment/' . $paymentOptionCode . '/instructions', $method['brand']['public_description']);
             }
+            if (isset($method['brand']['id'])) {
+                $this->setDefaultValue('payment/' . $paymentOptionCode . '/brand_id', $method['brand']['id']);
+            }
         }             
         
         //Refresh the page to apply the defaults after opening Payment methodes
