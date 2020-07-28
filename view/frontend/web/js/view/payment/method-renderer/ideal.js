@@ -13,6 +13,9 @@ define(
             },
 
             selectedBank: null,
+            getBanksText: function(){
+                return window.checkoutConfig.payment.bankstext[this.item.method];
+            },
             getBanks: function(){
                 return window.checkoutConfig.payment.banks[this.item.method];
             },

@@ -37,6 +37,11 @@ class Ideal extends PaymentMethod
         return $this;
     }
 
+    public function getBanksText()
+    {
+        return __('Choose your bank');
+    }
+
     public function getBanks()
     {
         $show_banks = $this->_scopeConfig->getValue('payment/' . $this->_code . '/bank_selection', 'store');
@@ -57,7 +62,7 @@ class Ideal extends PaymentMethod
         array_unshift($banks, array(
             'id' => '',
             'name' => __('Choose your bank'),
-            'visibleName' => __('Choose your bank')
+            'visibleName' => ''
         ));
         return $banks;
     }
