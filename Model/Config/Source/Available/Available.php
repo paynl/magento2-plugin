@@ -16,7 +16,6 @@ use \Magento\Framework\Option\ArrayInterface;
 use \Paynl\Paymentmethods;
 use \Paynl\Payment\Model\Config;
 use \Paynl\Payment\Model\ConfigProvider;
-use Magento\Payment\Helper\Data as PaymentHelper;
 
 abstract class Available implements ArrayInterface
 {
@@ -62,17 +61,7 @@ abstract class Available implements ArrayInterface
     /**
      * @var  CacheTypeList
      * */
-    private $cacheTypeList;
-
-    /**
-     * @var  Changed
-     * */
-    private $changed;
-
-    /**
-     * @var ConfigProvider
-     */
-    protected $_paymentHelper;
+    private $cacheTypeList;   
 
     /**
      * @var  PaymentMethod
@@ -80,8 +69,7 @@ abstract class Available implements ArrayInterface
     private $currentMethod;
 
 
-    public function __construct(
-        PaymentHelper $paymentHelper,
+    public function __construct(      
         Config $config,
         ConfigProvider $configProvider,
         RequestInterface $request,
@@ -91,8 +79,7 @@ abstract class Available implements ArrayInterface
         WriterInterface $configWriter,
         \Magento\Framework\App\Cache\TypeListInterface $cacheTypeList
     )
-    {
-        $this->_paymentHelper = $paymentHelper;
+    {     
         $this->_config = $config;
         $this->_configProvider = $configProvider;
         $this->_request = $request;
