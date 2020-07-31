@@ -453,6 +453,10 @@ abstract class PaymentMethod extends AbstractMethod
                 $this->getInfoInstance()->setAdditionalInformation('kvknummer', $additional_data['kvknummer']);
             }       
 
+            if (isset($additional_data['billink_agree'])) {
+                $this->getInfoInstance()->setAdditionalInformation('billink_agree', $additional_data['billink_agree']);
+            }
+
             if (isset($additional_data['dob'])) {
                 $this->getInfoInstance()->setAdditionalInformation('dob', $additional_data['dob']);
             }
