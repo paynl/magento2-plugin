@@ -59,11 +59,7 @@ class Ideal extends PaymentMethod
             $banks = \Paynl\Paymentmethods::getBanks($this->getPaymentOptionId());
             $cache->save(json_encode($banks), $cacheName);
         }
-        array_unshift($banks, array(
-            'id' => '',
-            'name' => __('Choose your bank'),
-            'visibleName' => ''
-        ));
+        
         return $banks;
     }
 
