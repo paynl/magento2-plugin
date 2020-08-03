@@ -155,13 +155,13 @@ abstract class PaymentMethod extends AbstractMethod
             Transaction::refund($transactionId, $amount);
         } catch (\Exception $e) {
 
-            $docslink = 'https://docs.pay.nl/plugins#magento2-errordefinitions';
+            $docsLink = 'https://docs.pay.nl/plugins#magento2-errordefinitions';
 
             $message = strtolower($e->getMessage());
             if (substr($message, 0, 19) == '403 - access denied') {
-                $message = 'PAY. could not authorize this refund. Errorcode: PAY-MAGENTO2-001. See for more information ' . $docslink;
+                $message = 'PAY. could not authorize this refund. Errorcode: PAY-MAGENTO2-001. See for more information ' . $docsLink;
             } else {
-                $message = 'PAY. could not process this refund (' . $message . '). Errorcode: PAY-MAGENTO2-002. More info: ' . $docslink;
+                $message = 'PAY. could not process this refund (' . $message . '). Errorcode: PAY-MAGENTO2-002. More info: ' . $docsLink;
             }
 
             throw new \Magento\Framework\Exception\LocalizedException(__($message));
@@ -213,7 +213,7 @@ abstract class PaymentMethod extends AbstractMethod
         $additionalData = $order->getPayment()->getAdditionalInformation();
         $bankId = null;
         $expireDate = null;
-        
+
         if (isset($additionalData['kvknummer']) && is_numeric($additionalData['kvknummer'])) {
             $kvknummer = $additionalData['kvknummer'];
         }
@@ -430,7 +430,7 @@ abstract class PaymentMethod extends AbstractMethod
         }
         $data['ipaddress'] = $ipAddress;
 
-       
+
 
         $transaction = \Paynl\Transaction::start($data);
 
