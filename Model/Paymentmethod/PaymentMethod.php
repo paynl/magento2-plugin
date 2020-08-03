@@ -151,7 +151,21 @@ abstract class PaymentMethod extends AbstractMethod
 
         $transactionId = $payment->getParentTransactionId();
 
-        Transaction::refund($transactionId, $amount);
+        try {
+            Transaction::refund($transactionId, $amount);
+        } catch (\Exception $e) {
+
+            $docslink = 'https://docs.pay.nl/plugins#magento2-errordefinitions';
+
+            $message = strtolower($e->getMessage());
+            if (substr($message, 0, 19) == '403 - access denied') {
+                $message = 'PAY. could not authorize this refund. Errorcode: PAY-MAGENTO2-001. See for more information ' . $docslink;
+            } else {
+                $message = 'PAY. could not process this refund (' . $message . '). Errorcode: PAY-MAGENTO2-002. More info: ' . $docslink;
+            }
+
+            throw new \Magento\Framework\Exception\LocalizedException(__($message));
+        }
 
         return $this;
     }
