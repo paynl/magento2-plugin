@@ -5,7 +5,7 @@
   
 # Description
 
-With this plug-in by PAY. you can easily add all desired payment methods to your Magento 2 webshop. Please refer to https://www.pay.nl (Dutch) for an overview of all features and services.
+With the PAY. plugin you can easily add different payement methods to your Magento 2 webshop. You can go to https://www.pay.nl (Dutch) for an overview of all our features and services and visit https://docs.pay.nl/plugins#magento-2 for more documentation of our plugin.
 
 - [Description](#description)
 - [Available payment methods](#available-payment-methods)
