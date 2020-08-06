@@ -136,6 +136,9 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         }
 
         if ($transaction->isPending()) {
+            if (isset($params['action']) && $params['action'] == 'new_ppt') {
+                return $this->result->setContents("FALSE| Payment is pending");
+            }
             return $this->result->setContents("TRUE| Ignoring pending");
         }
 
