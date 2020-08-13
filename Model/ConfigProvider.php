@@ -9,7 +9,6 @@ use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Framework\Escaper;
 use Magento\Payment\Helper\Data as PaymentHelper;
 
-
 class ConfigProvider implements ConfigProviderInterface
 {
     /**
@@ -92,7 +91,8 @@ class ConfigProvider implements ConfigProviderInterface
         PaymentHelper $paymentHelper,
         Escaper $escaper,
         Config $paynlConfig
-    ) {
+    )
+    {
         $this->paynlConfig = $paynlConfig;
         $this->escaper = $escaper;
         foreach ($this->methodCodes as $code) {
@@ -109,15 +109,24 @@ class ConfigProvider implements ConfigProviderInterface
         foreach ($this->methodCodes as $code) {
             if ($this->methods[$code]->isAvailable()) {
                 $config['payment']['instructions'][$code] = $this->getInstructions($code);
-                $config['payment']['banks'][$code]        = $this->getBanks($code);
-                $config['payment']['icon'][$code]         = $this->getIcon($code);
-                $config['payment']['showkvk'][$code]      = $this->getKVK($code);
-                $config['payment']['showdob'][$code]      = $this->getDOB($code);
+                $config['payment']['banks'][$code] = $this->getBanks($code);
+                $config['payment']['bankstext'][$code] = $this->getBanksText($code);
+                $config['payment']['icon'][$code] = $this->getIcon($code);
+                $config['payment']['showkvk'][$code] = $this->getKVK($code);
+                $config['payment']['showdob'][$code] = $this->getDOB($code);
+                $config['payment']['userdob'][$code] = $this->getUserDOB($code);
+                $config['payment']['showforcompany'][$code] = $this->getCompany($code);
             }
         }
 
         return $config;
     }
+
+    public function getMethodCodes()
+    {
+        return $this->methodCodes;
+    }
+
 
     /**
      * Get instructions text from config
@@ -136,6 +145,11 @@ class ConfigProvider implements ConfigProviderInterface
         return $this->methods[$code]->getBanks();
     }
 
+    protected function getBanksText($code)
+    {
+        return $this->methods[$code]->getBanksText();
+    }
+
     protected function getKVK($code)
     {
         return $this->methods[$code]->getKVK();
@@ -144,6 +158,16 @@ class ConfigProvider implements ConfigProviderInterface
     protected function getDOB($code)
     {
         return $this->methods[$code]->getDOB();
+    }
+
+    protected function getUserDOB($code)
+    {
+        return $this->methods[$code]->getUserDOB();
+    }
+
+    protected function getCompany($code)
+    {
+        return $this->methods[$code]->getCompany();
     }
 
     /**
@@ -155,7 +179,7 @@ class ConfigProvider implements ConfigProviderInterface
      */
     protected function getIcon($code)
     {
-        $url = $this->paynlConfig->getIconUrl();
+        $url = $this->paynlConfig->getIconUrl($code);
         return str_replace('#paymentOptionId#', $this->methods[$code]->getPaymentOptionId(), $url);
     }
 }

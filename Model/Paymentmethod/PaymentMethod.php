@@ -113,12 +113,29 @@ abstract class PaymentMethod extends AbstractMethod
 
     public function getKVK()
     {
-      return [];
+        return $this->_scopeConfig->getValue('payment/'.$this->_code.'/showkvk', 'store');
     }
 
     public function getDOB()
     {
-      return [];
+        return $this->_scopeConfig->getValue('payment/'.$this->_code.'/showdob', 'store');
+    }
+
+    public function getUserDOB()
+    {
+        $objectManager =  '\Magento\Framework\App\ObjectManager'::getInstance();
+        $context = $objectManager->get('Magento\Framework\App\Http\Context');
+        $isLoggedIn = $context->getValue(\Magento\Customer\Model\Context::CONTEXT_AUTH);
+    
+        if($isLoggedIn){
+            $customerSession = $objectManager->get('Magento\Customer\Model\SessionFactory')->create();
+            return $customerSession->getCustomer()->getDob();
+        }
+        return '';       
+    }
+
+    public function getCompany(){       
+        return $this->_scopeConfig->getValue('payment/'.$this->_code.'/showforcompany', 'store');
     }
 
     public function initialize($paymentAction, $stateObject)
@@ -151,21 +168,7 @@ abstract class PaymentMethod extends AbstractMethod
 
         $transactionId = $payment->getParentTransactionId();
 
-        try {
-            Transaction::refund($transactionId, $amount);
-        } catch (\Exception $e) {
-
-            $docsLink = 'https://docs.pay.nl/plugins#magento2-errordefinitions';
-
-            $message = strtolower($e->getMessage());
-            if (substr($message, 0, 19) == '403 - access denied') {
-                $message = 'PAY. could not authorize this refund. Errorcode: PAY-MAGENTO2-001. See for more information ' . $docsLink;
-            } else {
-                $message = 'PAY. could not process this refund (' . $message . '). Errorcode: PAY-MAGENTO2-002. More info: ' . $docsLink;
-            }
-
-            throw new \Magento\Framework\Exception\LocalizedException(__($message));
-        }
+        Transaction::refund($transactionId, $amount);
 
         return $this;
     }
@@ -211,9 +214,11 @@ abstract class PaymentMethod extends AbstractMethod
         $this->paynlConfig->setStore($order->getStore());
         $this->paynlConfig->configureSDK();
         $additionalData = $order->getPayment()->getAdditionalInformation();
+
+        
         $bankId = null;
         $expireDate = null;
-
+        
         if (isset($additionalData['kvknummer']) && is_numeric($additionalData['kvknummer'])) {
             $kvknummer = $additionalData['kvknummer'];
         }
@@ -392,6 +397,26 @@ abstract class PaymentMethod extends AbstractMethod
             );
         }
 
+        // Gift Wrapping
+        $gwCost = $order->getGwPriceInclTax();
+        $gwTax = $order->getGwTaxAmount();
+        
+        if ($this->paynlConfig->isAlwaysBaseCurrency()) {
+            $gwCost = $order->getGwBasePriceInclTax();
+            $gwTax = $order->getGwBaseTaxAmount();
+        }
+
+        if ($gwCost != 0) {
+            $arrProducts[] = array(
+                'id' => $order->getGwId(),
+                'name' => 'Gift Wrapping',
+                'price' => $gwCost,
+                'qty' => 1,
+                'tax' => $gwTax,
+                'type' => \Paynl\Transaction::PRODUCT_TYPE_HANDLING
+            );
+        }
+
         // kortingen
         $discount = $order->getDiscountAmount();
         $discountTax = $order->getDiscountTaxCompensationAmount() * -1;
@@ -430,11 +455,40 @@ abstract class PaymentMethod extends AbstractMethod
         }
         $data['ipaddress'] = $ipAddress;
 
-
+       
 
         $transaction = \Paynl\Transaction::start($data);
 
         return $transaction;
+    }
+
+    
+
+    public function assignData(\Magento\Framework\DataObject $data)
+    {
+        parent::assignData($data);
+
+        if (is_array($data))
+        {
+        $this->getInfoInstance()->setAdditionalInformation('kvknummer', $data['kvknummer']);
+        $this->getInfoInstance()->setAdditionalInformation('dob', $data['dob']);
+        } elseif ($data instanceof \Magento\Framework\DataObject)
+        {
+            $additional_data = $data->getAdditionalData();
+
+            if (isset($additional_data['kvknummer'])) {
+                $this->getInfoInstance()->setAdditionalInformation('kvknummer', $additional_data['kvknummer']);
+            }       
+
+            if (isset($additional_data['billink_agree'])) {
+                $this->getInfoInstance()->setAdditionalInformation('billink_agree', $additional_data['billink_agree']);
+            }
+
+            if (isset($additional_data['dob'])) {
+                $this->getInfoInstance()->setAdditionalInformation('dob', $additional_data['dob']);
+            }
+        }
+        return $this;
     }
 
     public function getPaymentOptionId()
@@ -444,6 +498,11 @@ abstract class PaymentMethod extends AbstractMethod
         if (empty($paymentOptionId)) $paymentOptionId = $this->getDefaultPaymentOptionId();
 
         return $paymentOptionId;
+    }
+
+    public function getCode()
+    {        
+        return $this->_code;
     }
 
     /**
