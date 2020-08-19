@@ -5,9 +5,10 @@ define(
         'jquery',
         'Magento_Checkout/js/view/payment/default',
         'mage/url',
-        'Magento_Checkout/js/action/place-order'
+        'Magento_Checkout/js/action/place-order',
+        'Magento_Checkout/js/model/quote'
     ],
-    function ($, Component, url, placeOrderAction) {
+    function ($, Component, url, placeOrderAction, quote) {
         'use strict';
         return Component.extend({
             defaults: {
@@ -23,6 +24,9 @@ define(
                 return window.checkoutConfig.payment.showkvk[this.item.method];
             },
             showDOB: function () {
+                if(this.getUserDOB().length > 0){
+                    this.dateofbirth = this.getUserDOB();
+                }     
                 return this.getDOB() > 0;
             },
             getDOB: function () {
@@ -34,6 +38,30 @@ define(
             getKVKDOB: function () {
                 return (this.getDOB() > 0 && this.getKVK() > 0);
             },
+            showforCompany: function(){              
+                if(this.getforCompany() == null || this.getforCompany().length == 0 || this.getforCompany() == 0){
+                    return true;
+                }
+                if(this.getforCompany() == 1 && this.getCompany().length == 0){
+                    return true;
+                }
+                if(this.getforCompany() == 2 && this.getCompany().length > 0){
+                    return true;
+                }
+                return false;
+            }, 
+            getCompany: function () {                
+                if (typeof quote.billingAddress._latestValue.company !== 'undefined') {
+                    return quote.billingAddress._latestValue.company;
+                }
+                return '';                
+            },  
+            getforCompany   : function () {
+                return window.checkoutConfig.payment.showforcompany[this.item.method];
+            }, 
+            getUserDOB: function () {                
+                return window.checkoutConfig.payment.userdob[this.item.method];
+            },  
             /**
              * Get payment method data
              */
