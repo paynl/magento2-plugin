@@ -1,4 +1,4 @@
-<div class="payment-method" data-bind="css: {'_active': (getCode() == isChecked())}">
+<div class="payment-method" data-bind="visible: showforCompany(), css: {'_active': (getCode() == isChecked())}">
     <div class="payment-method-title field choice">
         <input type="radio"
                name="payment[method]"
@@ -6,10 +6,21 @@
                data-bind="attr: {'id': getCode()}, value: getCode(), checked: isChecked, click: selectPaymentMethod, visible: isRadioButtonVisible()"/>
         <label data-bind="attr: {'for': getCode()}" class="label">
         <img data-bind="attr: {src: getPaymentIcon(), alt: getTitle()}"
-             class="payment-icon"/>
-        <span data-bind="text: getTitle()"></span></label>
+             class="payment-icon"  width="50px"/>
+             <span style="display: inline-block; width: calc(100% - 90px); vertical-align: middle;">
+                <span data-bind="text: getTitle()" style="display: block; font-weight: bold;"></span>
+                <span data-bind="html: getInstructions();"></span>  
+                <div style="position: absolute; margin-top: 15px;">
+                    <div class="payment-method-content" style="padding: 0;">
+                        <div data-bind="visible: showBanks()" class="field-select-billing">
+                            <span data-bind="html: getBanksText();" style="display: inline-block;"></span>:&nbsp;&nbsp;&nbsp;<select data-bind="options: getBanks(), optionsText: 'visibleName', optionsValue: 'id', value: selectedBank" style="display: inline-block; width: auto;"></select>
+                        </div>
+                    </div>
+                </div>
+            </span></label>
+        
     </div>
-    <div class="payment-method-content">
+    <div class="payment-method-content" style="margin-top:60px;">
         <div class="payment-method-billing-address">
             <!-- ko foreach: $parent.getRegion(getBillingAddressFormName()) -->
             <!-- ko template: getTemplate() --><!-- /ko -->
@@ -20,10 +31,7 @@
             <!-- ko template: getTemplate() --><!-- /ko -->
             <!--/ko-->
         </div>
-        <p data-bind="html: getInstructions();"></p>
-        <div data-bind="visible: showBanks()" class="field-select-billing">
-            <select data-bind="options: getBanks(), optionsText: 'visibleName', optionsValue: 'id', value: selectedBank"></select>
-        </div>
+              
         <div class="actions-toolbar">
             <div class="primary">
                 <button class="action primary checkout"
