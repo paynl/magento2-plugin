@@ -29,6 +29,12 @@ Bank Transfer | Cartasi | GivaCard | SprayPay | Przelewy24 |
 | Multibanco | | Paysafecard | | Payconiq
 | | | Huis en Tuin Cadeau
 
+# Requirements
+
+    PHP 7.2 or higher
+    Tested up to Magento 2.3.5b
+
+
 # Installation
 #### Installing
 
