@@ -9,6 +9,7 @@ With the PAY. plugin you can easily add different payment methods to your Magent
 
 - [Description](#description)
 - [Available payment methods](#available-payment-methods)
+- [Requirements](#requirements)
 - [Installation](#installation)
 - [Update instructions](#update-instructions)
 - [Usage](#usage)
@@ -28,6 +29,12 @@ Bank Transfer | Cartasi | GivaCard | SprayPay | Przelewy24 |
 | Tikkie | | YourGift | Creditclick | Apple Pay | 
 | Multibanco | | Paysafecard | | Payconiq
 | | | Huis en Tuin Cadeau
+
+# Requirements
+
+    PHP 7.2 or higher
+    Tested up to Magento 2.3.5b
+
 
 # Installation
 #### Installing
