@@ -9,6 +9,7 @@ With the PAY. plugin you can easily add different payment methods to your Magent
 
 - [Description](#description)
 - [Available payment methods](#available-payment-methods)
+- [Requirements](#requirements)
 - [Installation](#installation)
 - [Update instructions](#update-instructions)
 - [Usage](#usage)
