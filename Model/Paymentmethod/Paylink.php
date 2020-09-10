@@ -38,8 +38,14 @@ class Paylink extends PaymentMethod
             $transaction = $this->doStartTransaction($order);
 
             $status = $this->getConfigData('order_status');
+            $url = $transaction->getRedirectUrl();
+            $order->addStatusHistoryComment('Betaallink: ' . $url, $status);
+            
+            $ObjectManager = \Magento\Framework\App\ObjectManager::GetInstance();
+  
+            $orderCommentSender = $ObjectManager->create('Magento\Sales\Model\Order\Email\Sender\OrderCommentSender');
+            $orderCommentSender->send($order, true, 'Betaallink: ' . $url);
 
-            $order->addStatusHistoryComment('Betaallink: ' . $transaction->getRedirectUrl(), $status);
             parent::initialize($paymentAction, $stateObject);
         }
     }
