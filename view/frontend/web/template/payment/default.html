@@ -6,11 +6,8 @@
                data-bind="attr: {'id': getCode()}, value: getCode(), checked: isChecked, click: selectPaymentMethod, visible: isRadioButtonVisible()"/>
         <label data-bind="attr: {'for': getCode()}" class="label">
         <img data-bind="attr: {src: getPaymentIcon(), alt: getTitle()}"
-             class="payment-icon" width="50px"/>
-             <span style="display: inline-block; width: calc(100% - 90px); vertical-align: middle;">
-                <span data-bind="text: getTitle()" style="display: block; font-weight: bold;"></span>
-                <span data-bind="html: getInstructions();"></span>  
-            </span></label>
+             class="payment-icon"/>
+        <span data-bind="text: getTitle()"></span></label>
     </div>
     <div class="payment-method-content">
         <div class="payment-method-billing-address">
@@ -23,29 +20,11 @@
             <!-- ko template: getTemplate() --><!-- /ko -->
             <!--/ko-->
         </div>
-        <div data-bind="visible: showDOB()" class="field-select-billing">   
-            <label for="dob">Geboortedatum:&nbsp;&nbsp;&nbsp;</label>
-            <input type="date" data-bind="optionsValue: 'id', name: 'dateofbirth', value: dateofbirth" name="dateofbirth" placeholder="mm/dd/yyyy" style="    background: #fff url(../images/select-bg.svg) no-repeat 100% 45%;
-            background-clip: padding-box;
-            border: 1px solid #ccc;
-            border-radius: 1px;
-            font-family: inherit;
-            font-size: 14px;
-            height: 32px;
-            line-height: 1.42857143;
-            padding: 5px;
-            vertical-align: baseline;        
-            box-sizing: border-box;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            -ms-appearance: none;
-            appearance: none;
-            background-size: 30px 60px;
-            text-indent: .01em;"/>        
-        </div>   
+
+        <p data-bind="html: getInstructions();"></p>
         <div class="actions-toolbar">
             <div class="primary">
-                <button id="pay-default-button" class="action primary checkout"
+                <button class="action primary checkout"
                         type="submit"
                         data-bind="
                         click: placeOrder,

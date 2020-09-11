@@ -15,13 +15,10 @@ define(
             },
 
             selectedBank: null,
-            getBanksText: function(){
-                return window.checkoutConfig.payment.bankstext[this.item.method];
-            },
             getBanks: function(){
                 return window.checkoutConfig.payment.banks[this.item.method];
             },
-            showBanks: function(){           
+            showBanks: function(){
                 return window.checkoutConfig.payment.banks[this.item.method].length > 0;
             },
             showforCompany: function(){              
@@ -44,7 +41,7 @@ define(
             },   
             getforCompany   : function () {
                 return window.checkoutConfig.payment.showforcompany[this.item.method];
-            },    
+            }, 
             /**
              * Get payment method data
              */
