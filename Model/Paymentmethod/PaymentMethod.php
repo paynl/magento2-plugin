@@ -121,6 +121,10 @@ abstract class PaymentMethod extends AbstractMethod
       return [];
     }
 
+    public function getCompany(){       
+        return $this->_scopeConfig->getValue('payment/'.$this->_code.'/showforcompany', 'store');
+    }
+
     public function initialize($paymentAction, $stateObject)
     {
         $status = $this->getConfigData('order_status');
