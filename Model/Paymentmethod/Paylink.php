@@ -3,6 +3,7 @@
 namespace Paynl\Payment\Model\Paymentmethod;
 
 use Magento\Sales\Model\Order;
+use Magento\Framework\DataObject;
 
 /**
  *
@@ -27,6 +28,7 @@ class Paylink extends PaymentMethod
     // this is an admin only method
     protected $_canUseCheckout = false;
 
+   
 
     public function initialize($paymentAction, $stateObject)
     {
@@ -41,11 +43,51 @@ class Paylink extends PaymentMethod
             $url = $transaction->getRedirectUrl();
             $order->addStatusHistoryComment('Betaallink: ' . $url, $status);
             
-            $ObjectManager = \Magento\Framework\App\ObjectManager::GetInstance();
+            $objectManager = \Magento\Framework\App\ObjectManager::GetInstance();
   
-            $orderCommentSender = $ObjectManager->create('Magento\Sales\Model\Order\Email\Sender\OrderCommentSender');
-            $orderCommentSender->send($order, true, 'Betaallink: ' . $url);
+            $storeManager = $objectManager->create('\Magento\Store\Model\StoreManagerInterface');
+            $store = $storeManager->getStore();
+     
+            $getLocale = $objectManager->get('Magento\Framework\Locale\Resolver');
+            $haystack  = $getLocale->getLocale(); 
+            $lang = strstr($haystack, '_', true); 
+            
+            $pos = strrpos($url, 'NL');
+            if($pos !== false)
+            {
+                $url = substr_replace($url, strtoupper($lang), $pos, strlen('NL'));
+            }            
+            
+            $supportEmail = $this->_scopeConfig->getValue('trans_email/ident_support/email', 'store');
+            $senderName = $this->_scopeConfig->getValue('trans_email/ident_sales/name', 'store');
+            $senderEmail = $this->_scopeConfig->getValue('trans_email/ident_sales/email', 'store');
 
+            $sender = [
+                'name' => $senderName,
+                'email' => $senderEmail,
+            ];      
+
+            $templateVars = array(
+                'store' => $store,
+                'customer_name' =>  $order->getCustomerName(),
+                'paylink' => $url,
+                'support_email' => $supportEmail,
+                'current_language' => $lang
+            );
+
+            $customerEmail = array($order->getCustomerEmail());
+
+            $transportBuilder = $objectManager->create('\Magento\Framework\Mail\Template\TransportBuilder');
+
+            $transport = $transportBuilder->setTemplateIdentifier('paylink_email_template')
+            ->setTemplateOptions(['area' => \Magento\Framework\App\Area::AREA_FRONTEND, 'store' => \Magento\Store\Model\Store::DEFAULT_STORE_ID])
+            ->setTemplateVars($templateVars)
+            ->setFrom($sender)
+            ->addTo($customerEmail)
+            ->setReplyTo($supportEmail)            
+            ->getTransport();               
+            $transport->sendMessage();
+            
             parent::initialize($paymentAction, $stateObject);
         }
     }

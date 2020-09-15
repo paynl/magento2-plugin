@@ -1,0 +1,34 @@
+<!--@subject {{trans "Order Paylink"}}  @-->
+<!--@vars
+{"store url=\"\"":"Store Url",
+"skin url=\"images/logo_email.gif\" _area='frontend'":"Email Logo Image"}
+@-->
+<!--@styles
+body,td {
+    color: #333;
+    font-family: 'Open Sans','Helvetica Neue',Helvetica,Arial,sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.42857143;
+    font-size: 14px; 
+}
+@-->
+{{template config_path="design/email/header_template"}}
+
+<br/>
+{{var customer_name}},
+<p></p>
+<p>
+{{trans "Thank you for your order from "}}{{var store.getFrontendName()}}.
+</p>
+<p></p>
+<p>{{trans "If you have questions about your order, you can email us at"}} <a href="mailto:{{var support_email}}">{{var support_email}}</a>.</p>
+<br/>
+<p>
+{{trans "In order to pay for your order click the link below"}}
+<br/> 
+<a href="{{var paylink}}">{{trans "PAY. paylink"}}</a>
+</p>
+
+
+{{template config_path="design/email/footer_template"}}
