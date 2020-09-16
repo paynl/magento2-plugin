@@ -8,25 +8,25 @@
 "Payment canceled","Payment canceled"
 "Something went wrong, please try again later","Something went wrong, please try again later"
 "Enter your API-token and ServiceId first","Enter your API-token and ServiceId first"
-No,No
-Yes,Yes
+"No","No"
+"Yes","Yes"
 "Not available, you can enable this on admin.pay.nl","Not available, you can enable this on admin.pay.nl"
-Dutch,Dutch
-English,English
-German,German
-Italian,Italian
-French,French
-Spanish,Spanish
+"Dutch","Dutch"
+"English","English"
+"German","German"
+"Italian","Italian"
+"French","French"
+"Spanish","Spanish"
 "After successful payment","After successful payment"
 "Before payment","Before payment"
 "Choose your bank","Choose your bank"
 "Choose the pin terminal","Choose the pin terminal"
-Caution!,Caution!
+"Caution!","Caution!"
 "The paylink is added as an order note and will be sent as a separate email.","The paylink is added as an order note and will be sent as a separate email."
 "Valid for","Valid for"
-days,days
-Enabled,Enabled
-Title,Title
+"days","days"
+"Enabled","Enabled"
+"Title","Title"
 "New Order Status","New Order Status"
 "Payment from Applicable Countries","Payment from Applicable Countries"
 "Payment from Specific Countries","Payment from Specific Countries"
@@ -47,7 +47,7 @@ Title,Title
 "ServiceId","ServiceId"
 "Language payment screen","Language payment screen"
 "Never cancel order","Never cancel order"
-"Paymentmethods","Betaalmethoden"
+"Paymentmethods","Paymentmethods"
 "This setting will disable cancelling the order when the payment is canceled.
                     This can be used if uncancelling the order in case of a second chance payment produces errors. WARNING! Orders will never be cancelled automatically","This setting will disable cancelling the order when the payment is canceled.
                     This can be used if uncancelling the order in case of a second chance payment produces errors. WARNING! Orders will never be cancelled automatically"
