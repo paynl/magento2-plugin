@@ -38,16 +38,12 @@ class Paylink extends PaymentMethod
             $this->orderRepository->save($order);
 
             $transaction = $this->doStartTransaction($order);
-
+            
             $status = $this->getConfigData('order_status');
             $url = $transaction->getRedirectUrl();
-            $order->addStatusHistoryComment('Betaallink: ' . $url, $status);
-            
+
             $objectManager = \Magento\Framework\App\ObjectManager::GetInstance();
   
-            $storeManager = $objectManager->create('\Magento\Store\Model\StoreManagerInterface');
-            $store = $storeManager->getStore();
-     
             $getLocale = $objectManager->get('Magento\Framework\Locale\Resolver');
             $haystack  = $getLocale->getLocale(); 
             $lang = strstr($haystack, '_', true); 
@@ -56,8 +52,15 @@ class Paylink extends PaymentMethod
             if($pos !== false)
             {
                 $url = substr_replace($url, strtoupper($lang), $pos, strlen('NL'));
-            }            
-            
+            }    
+
+            $paylinktext = __('PAY. paylink');
+
+            $order->addStatusHistoryComment($paylinktext . ': ' . $url, $status);   
+
+            $storeManager = $objectManager->create('\Magento\Store\Model\StoreManagerInterface');
+            $store = $storeManager->getStore();
+     
             $supportEmail = $this->_scopeConfig->getValue('trans_email/ident_support/email', 'store');
             $senderName = $this->_scopeConfig->getValue('trans_email/ident_sales/name', 'store');
             $senderEmail = $this->_scopeConfig->getValue('trans_email/ident_sales/email', 'store');
