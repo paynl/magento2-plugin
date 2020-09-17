@@ -33,7 +33,7 @@ Bank Transfer | Cartasi | GivaCard | SprayPay | Przelewy24 |
 # Requirements
 
     PHP 7.2 or higher
-    Tested up to Magento 2.3.5b
+    Tested up to Magento 2.4.0
 
 
 # Installation
