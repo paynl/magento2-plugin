@@ -22,7 +22,7 @@
 "Choose your bank","Choose your bank"
 "Choose the pin terminal","Choose the pin terminal"
 "Caution!","Caution!"
-"The paylink is added as an order note and will be sent as a separate email.","The paylink is added as an order note and will be sent as a separate email."
+"An e-mail containing a PAY. payment link will be send.","An e-mail containing a PAY. payment link will be send."
 "Valid for","Valid for"
 "days","days"
 "Enabled","Enabled"
@@ -67,3 +67,4 @@
 "In order to pay for your order click the link below","In order to pay for your order click the link below"
 "PAY. paylink","PAY. paylink"
 "Order Paylink","Order Paylink"
+"A PAY. Paylink has been send to","A PAY. Paylink has been send to"

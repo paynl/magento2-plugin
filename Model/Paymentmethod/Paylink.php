@@ -54,9 +54,9 @@ class Paylink extends PaymentMethod
                 $url = substr_replace($url, strtoupper($lang), $pos, strlen('NL'));
             }    
 
-            $paylinktext = __('PAY. paylink');
+            $paylinktext = __('A PAY. Paylink has been send to');
 
-            $order->addStatusHistoryComment($paylinktext . ': ' . $url, $status);   
+            $order->addStatusHistoryComment($paylinktext . ' ' . $order->getCustomerEmail() . '.', $status);   
 
             $storeManager = $objectManager->create('\Magento\Store\Model\StoreManagerInterface');
             $store = $storeManager->getStore();
@@ -70,6 +70,8 @@ class Paylink extends PaymentMethod
                 'email' => $senderEmail,
             ];      
 
+            $customerEmail = array($order->getCustomerEmail());
+
             $templateVars = array(
                 'store' => $store,
                 'customer_name' =>  $order->getCustomerName(),
@@ -77,8 +79,6 @@ class Paylink extends PaymentMethod
                 'support_email' => $supportEmail,
                 'current_language' => $lang
             );
-
-            $customerEmail = array($order->getCustomerEmail());
 
             $transportBuilder = $objectManager->create('\Magento\Framework\Mail\Template\TransportBuilder');
 
