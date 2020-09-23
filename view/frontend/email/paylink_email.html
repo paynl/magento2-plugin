@@ -1,7 +1,25 @@
-<!--@subject {{trans "Order Paylink"}}  @-->
+<!--@subject {{trans "Order Paylink"}} #{{var order_id}}#  @-->
 <!--@vars
 {"store url=\"\"":"Store Url",
-"skin url=\"images/logo_email.gif\" _area='frontend'":"Email Logo Image"}
+"skin url=\"images/logo_email.gif\" _area='frontend'":"Email Logo Image"},
+"var formattedBillingAddress|raw":"Billing Address",
+"var order_data.email_customer_note|escape|nl2br":"Email Order Note",
+"var order.increment_id":"Order Id",
+"layout handle=\"sales_email_order_items\" order=$order area=\"frontend\"":"Order Items Grid",
+"var payment_html|raw":"Payment Details",
+"var formattedShippingAddress|raw":"Shipping Address",
+"var order.shipping_description":"Shipping Description",
+"var shipping_msg":"Shipping message",
+"var created_at_formatted":"Order Created At (datetime)",
+"var store.frontend_name":"Store Frontend Name",
+"var store_phone":"Store Phone",
+"var store_email":"Store Email",
+"var store_hours":"Store Hours",
+"var this.getUrl($store,'customer/account/',[_nosid:1])":"Customer Account URL",
+"var order_data.is_not_virtual":"Order Type",
+"var order":"Order",
+"var order_data.customer_name":"Customer Name"
+"var order_data.show_order_in_mail":"show Order",
 @-->
 <!--@styles
 body,td {
@@ -13,6 +31,7 @@ body,td {
     font-size: 14px; 
 }
 @-->
+
 {{template config_path="design/email/header_template"}}
 
 <br/>
@@ -29,6 +48,59 @@ body,td {
 <br/> 
 <a href="{{var paylink}}">{{trans "PAY. paylink"}}</a>
 </p>
-
+{{if order_data.show_order_in_mail}}
+<br/>
+<table style="width:100%;">    
+    <tr class="email-summary">
+        <td>
+            <h1>{{trans "Your Order"}} #{{var order_id}}</h1>
+            <p>{{trans "Placed on"}} {{var created_at_formatted}}</p>
+        </td>
+    </tr>
+    <tr class="email-information">
+        <td>
+            {{depend order_data.email_customer_note}}
+            <table class="message-info">
+                <tr>
+                    <td>
+                        {{var order_data.email_customer_note|escape|nl2br}}
+                    </td>
+                </tr>
+            </table>
+            {{/depend}}
+            <table class="order-details">
+                <tr>
+                    <td class="address-details">
+                        <h3>{{trans "Billing Info"}}</h3>
+                        <p>{{var formattedBillingAddress|raw}}</p>
+                    </td>
+                    {{depend order_data.is_not_virtual}}
+                    <td class="address-details">
+                        <h3>{{trans "Shipping Info"}}</h3>
+                        <p>{{var formattedShippingAddress|raw}}</p>
+                    </td>
+                    {{/depend}}
+                </tr>
+                <tr>
+                    <td class="method-info">
+                        <h3>{{trans "Payment Method"}}</h3>
+                        {{var payment_html|raw}}
+                    </td>
+                    {{depend order_data.is_not_virtual}}
+                    <td class="method-info">
+                        <h3>{{trans "Shipping Method"}}</h3>
+                        <p>{{var order.shipping_description}}</p>
+                        {{if shipping_msg}}
+                        <p>{{var shipping_msg}}</p>
+                        {{/if}}
+                    </td>
+                    {{/depend}}
+                </tr>
+            </table>
+            {{layout handle="sales_email_order_items" order=$order area="frontend"}}
+        </td>
+    </tr>
+</table>
+{{/if}}
 
 {{template config_path="design/email/footer_template"}}
