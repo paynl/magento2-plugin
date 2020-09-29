@@ -116,6 +116,15 @@
             <config_path>payment/paynl_payment_paylink/show_order_in_mail</config_path>
             <comment><![CDATA[Show order at the bottom of the email when sending a email containing the paylink.]]></comment>
         </field>
+        <field id="showforcompany" translate="label" type="select" sortOrder="150" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Show for companies</label>
+            <source_model>Paynl\Payment\Model\Config\Source\showCompanyOptions</source_model>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+            <config_path>payment/paynl_payment_paylink/showforcompany</config_path>
+            <comment><![CDATA[Allow payment method to be used for companies, private, or both.]]></comment>
+        </field>
         <field id="custom_success_page" translate="label" type="text" sortOrder="110" showInDefault="1"
                showInWebsite="1"
                showInStore="1">
