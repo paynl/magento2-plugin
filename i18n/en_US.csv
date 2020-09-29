@@ -8,46 +8,75 @@
 "Payment canceled","Payment canceled"
 "Something went wrong, please try again later","Something went wrong, please try again later"
 "Enter your API-token and ServiceId first","Enter your API-token and ServiceId first"
-No,No
-Yes,Yes
+"No","No"
+"Yes","Yes"
 "Not available, you can enable this on admin.pay.nl","Not available, you can enable this on admin.pay.nl"
-Dutch,Dutch
-English,English
-German,German
-Italian,Italian
-French,French
-Spanish,Spanish
+"Dutch","Dutch"
+"English","English"
+"German","German"
+"Italian","Italian"
+"French","French"
+"Spanish","Spanish"
 "After successful payment","After successful payment"
 "Before payment","Before payment"
 "Choose your bank","Choose your bank"
 "Choose the pin terminal","Choose the pin terminal"
-Caution!,Caution!
-"The paylink is added as an order note, you'll have to send the link to the customer yourself.","The paylink is added as an order note, you'll have to send the link to the customer yourself."
+"Caution!","Caution!"
+"An e-mail containing a PAY. payment link will be send.","An e-mail containing a PAY. payment link will be send."
 "Valid for","Valid for"
-days,days
-Enabled,Enabled
-Title,Title
+"days","days"
+"Enabled","Enabled"
+"Title","Title"
 "New Order Status","New Order Status"
 "Payment from Applicable Countries","Payment from Applicable Countries"
 "Payment from Specific Countries","Payment from Specific Countries"
-Instructions,Instructions
+"Instructions","Instructions"
 "Minimum Order Total","Minimum Order Total"
 "Maximum Order Total","Maximum Order Total"
 "Sort Order","Sort Order"
 "Send new order email","Send new order email"
-Advanced,Advanced
+"Advanced","Advanced"
 "Payment option id","Payment option id"
 "The id of the payment method, only change this if you are told to do so","The id of the payment method, only change this if you are told to do so"
 "Show bankselection","Show bankselection"
 "Set order on-hold","Set order on-hold"
 "PAY. Settings","PAY. Settings"
-Testmode,Testmode
-API-token,API-token
-ServiceId,ServiceId
+"Testmode","Testmode"
+"API-token","API-token"
+"Set order on-hold","Set order on-hold"
+"ServiceId","ServiceId"
 "Language payment screen","Language payment screen"
 "Never cancel order","Never cancel order"
+"Paymentmethods","Paymentmethods"
 "This setting will disable cancelling the order when the payment is canceled.
                     This can be used if uncancelling the order in case of a second chance payment produces errors. WARNING! Orders will never be cancelled automatically","This setting will disable cancelling the order when the payment is canceled.
                     This can be used if uncancelling the order in case of a second chance payment produces errors. WARNING! Orders will never be cancelled automatically"
-Paymentmethods,Paymentmethods
+"Always use base currency","Always use base currency"
+"Set this to yes if you always want to process payments in the base currency of this store. Magento acts strange when trying to register a payment in another currency than the base currency. The base currency MUST be EUR","Set this to yes if you always want to process payments in the base currency of this store. Magento acts strange when trying to register a payment in another currency than the base currency. The base currency MUST be EUR"
+"Skip fraud detection","Skip fraud detection"
+"Sometimes magento incorrectly marks an order as fraudulent. this happens more often when using different currencies. Set this to yes to skip fraud detection.","Sometimes magento incorrectly marks an order as fraudulent. this happens more often when using different currencies. Set this to yes to skip fraud detection."
+"The AT-code of your token, you can find your tokens <a target='_blank' href='https://admin.pay.nl/company/tokens'>here</a>", "The AT-code of your token, you can find your tokens <a target='_blank' href='https://admin.pay.nl/company/tokens'>here</a>"
+"Your API-token, you can find your tokens <a target='_blank' href='https://admin.pay.nl/company/tokens'>here</a>", "Your API-token, you can find your tokens <a target='_blank' href='https://admin.pay.nl/company/tokens'>here</a>"
+"The SL-code of your service, you can find your services <a target='_blank' href='https://admin.pay.nl/programs/programs'>here</a>", "The SL-code of your service, you can find your services <a target='_blank' href='https://admin.pay.nl/programs/programs'>here</a>",
 "URL of the payment option icons. Default URL: https://static.pay.nl/payment_profiles/50x32/#paymentOptionId#.png","URL of the payment option icons. Default URL: https://static.pay.nl/payment_profiles/50x32/#paymentOptionId#.png"
+"Send discount tax","Send discount tax"
+"Set this to NO if you have a mix of low and high vatrate products. Some pay later methods have issues when the discount has a tax amount other than the default vat categories","Set this to NO if you have a mix of low and high vatrate products. Some pay later methods have issues when the discount has a tax amount other than the default vat categories"
+"Paylink is only available with custom orders and won't appear in the checkout","Paylink is only available with custom orders and won't appear in the checkout"
+"Thank you for your order from ","Thank you for your order from "
+"If you have questions about your order, you can email us at","If you have questions about your order, you can email us at"
+"In order to pay for your order click the link below","In order to pay for your order click the link below"
+"PAY. paylink","PAY. paylink"
+"Order Paylink","Order Paylink"
+"A PAY. Paylink has been send to","A PAY. Paylink has been send to"
+"Billing Info","Billing Info"
+"Shipping Info","Shipping Info"
+"Payment Method","Payment Method"
+"Shipping Method","Shipping Method"
+"Your Order","Your Order"
+"Placed on","Placed on"
+"Qty","Qty"
+"Items","Items"
+"Price","Price"
+"Subtotal","Subtotal"
+"Shipping & Handling","Shipping & Handling"
+"Grand Total","Grand Total"

@@ -3,6 +3,7 @@
 namespace Paynl\Payment\Model\Paymentmethod;
 
 use Magento\Sales\Model\Order;
+use Magento\Framework\DataObject;
 
 /**
  *
@@ -27,6 +28,7 @@ class Paylink extends PaymentMethod
     // this is an admin only method
     protected $_canUseCheckout = false;
 
+   
 
     public function initialize($paymentAction, $stateObject)
     {
@@ -36,13 +38,97 @@ class Paylink extends PaymentMethod
             $this->orderRepository->save($order);
 
             $transaction = $this->doStartTransaction($order);
-
+            
             $status = $this->getConfigData('order_status');
+            $url = $transaction->getRedirectUrl();
 
-            $order->addStatusHistoryComment('Betaallink: ' . $transaction->getRedirectUrl(), $status);
+            $objectManager = \Magento\Framework\App\ObjectManager::GetInstance();
+  
+            $getLocale = $objectManager->get('Magento\Framework\Locale\Resolver');
+            $haystack  = $getLocale->getLocale(); 
+            $lang = strstr($haystack, '_', true); 
+            
+            $pos = strrpos($url, 'NL');
+            if($pos !== false)
+            {
+                $url = substr_replace($url, strtoupper($lang), $pos, strlen('NL'));
+            }    
+
+            $paylinktext = __('A PAY. Paylink has been send to');
+
+            $order->addStatusHistoryComment($paylinktext . ' ' . $order->getCustomerEmail() . '.', $status);   
+
+            $storeManager = $objectManager->create('\Magento\Store\Model\StoreManagerInterface');
+            $store = $storeManager->getStore();
+     
+            $supportEmail = $this->_scopeConfig->getValue('trans_email/ident_support/email', 'store');
+            $senderName = $this->_scopeConfig->getValue('trans_email/ident_sales/name', 'store');
+            $senderEmail = $this->_scopeConfig->getValue('trans_email/ident_sales/email', 'store');
+
+            $sender = [
+                'name' => $senderName,
+                'email' => $senderEmail,
+            ];      
+
+            $customerEmail = array($order->getCustomerEmail());
+
+            $paymentHelper = $objectManager->create('Magento\Payment\Helper\Data');
+            $identityContainer = $objectManager->create('Magento\Sales\Model\Order\Email\Container\OrderIdentity');
+
+            $orderHTML = $paymentHelper->getInfoBlockHtml(
+                $order->getPayment(),
+                $identityContainer->getStore()->getStoreId()
+            );       
+
+            $addressRenderer = $objectManager->create('Magento\Sales\Model\Order\Address\Renderer');
+
+            $show_order_in_mail = $this->_scopeConfig->getValue('payment/paynl_payment_paylink/show_order_in_mail', 'store');
+            if($show_order_in_mail){
+                $show_order_in_mail = 1;
+            }
+            else{
+                $show_order_in_mail = 0;
+            }
+
+            $templateVars = array(
+                'order' => $order,
+                'store' => $store,
+                'customer_name' =>  $order->getCustomerName(),
+                'paylink' => $url,
+                'support_email' => $supportEmail,
+                'current_language' => $lang,
+                'order_id' =>  $order->getIncrementId(),              
+                'billing' => $order->getBillingAddress(),
+                'payment_html' => $orderHTML,
+                'store' => $order->getStore(),
+                'formattedShippingAddress' => $order->getIsVirtual() ? null : $addressRenderer->format($order->getShippingAddress(), 'html'),
+                'formattedBillingAddress' => $addressRenderer->format($order->getBillingAddress(), 'html'),
+                'created_at_formatted' => $order->getCreatedAtFormatted(1),
+                'order_data' => [
+                    'customer_name' => $order->getCustomerName(),
+                    'is_not_virtual' => $order->getIsNotVirtual(),
+                    'email_customer_note' => $order->getEmailCustomerNote(),
+                    'frontend_status_label' => $order->getFrontendStatusLabel(),
+                    'show_order_in_mail' => $show_order_in_mail
+                ],
+                
+            );          
+
+            $transportBuilder = $objectManager->create('\Magento\Framework\Mail\Template\TransportBuilder');
+
+            $transport = $transportBuilder->setTemplateIdentifier('paylink_email_template')
+            ->setTemplateOptions(['area' => \Magento\Framework\App\Area::AREA_FRONTEND, 'store' => \Magento\Store\Model\Store::DEFAULT_STORE_ID])
+            ->setTemplateVars($templateVars)
+            ->setFrom($sender)
+            ->addTo($customerEmail)
+            ->setReplyTo($supportEmail)            
+            ->getTransport();               
+            $transport->sendMessage();
+        
             parent::initialize($paymentAction, $stateObject);
         }
     }
+    
 
     public function assignData(\Magento\Framework\DataObject $data)
     {
