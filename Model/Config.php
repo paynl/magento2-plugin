@@ -71,7 +71,9 @@ class Config
 
     public function isTestMode()
     {
-        $ip = isset($_SERVER['HTTP_CLIENT_IP']) ? $_SERVER['HTTP_CLIENT_IP'] : isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'];
+        $remoteIP =  isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'];
+        $ip = isset($_SERVER['HTTP_CLIENT_IP']) ? $_SERVER['HTTP_CLIENT_IP'] : $remoteIP;
+
         $ipconfig = $this->store->getConfig('payment/paynl/testipaddress');
         $allowed_ips = explode(',', $ipconfig);
         if(in_array($ip, $allowed_ips) && filter_var($ip, FILTER_VALIDATE_IP) && strlen($ip) > 0 && count($allowed_ips) > 0){
@@ -79,9 +81,12 @@ class Config
         }
         return $this->store->getConfig('payment/paynl/testmode') == 1;
     }
-    public function isSendDiscountTax(){
+
+    public function isSendDiscountTax()
+    {
         return $this->store->getConfig('payment/paynl/discount_tax') == 1;
     }
+
     public function isNeverCancel()
     {
         return $this->store->getConfig('payment/paynl/never_cancel') == 1;
@@ -104,10 +109,13 @@ class Config
         return $this->store->getConfig('payment/' . $methodCode . '/payment_option_id');
     }
 
-    public function getPendingStatus($methodCode){
+    public function getPendingStatus($methodCode)
+    {
         return $this->store->getConfig('payment/' . $methodCode . '/order_status');
     }
-    public function getAuthorizedStatus($methodCode){
+
+    public function getAuthorizedStatus($methodCode)
+    {
         return $this->store->getConfig('payment/' . $methodCode . '/order_status_authorized');
     }
 
@@ -166,14 +174,16 @@ class Config
         return trim($this->store->getConfig('payment/paynl/serviceid'));
     }
 
-    public function getIconUrl() {
+    public function getIconUrl()
+    {
         $url = 'https://static.pay.nl/payment_profiles/50x32/#paymentOptionId#.png';
         $iconUrl = trim($this->store->getConfig('payment/paynl/iconurl'));
 
         return empty($iconUrl)?$url:$iconUrl;
     }
 
-    public function getCancelURL() {
+    public function getCancelURL()
+    {
         return $this->store->getConfig('payment/paynl/cancelurl');
     }
 }
