@@ -24,9 +24,36 @@ class Config
         $this->store = $store;
     }
 
-    public function getVersion()
+    /**
+     * @param string $defaultValue
+     * @return mixed|string
+     */
+    public function getVersion($defaultValue = '')
     {
-      return '1.6.5';
+        $composerFilePath = sprintf('%s/%s', rtrim(__DIR__, '/'), '../composer.json');
+        if (file_exists($composerFilePath)) {
+            $composer = json_decode(file_get_contents($composerFilePath), true);
+
+            if (isset($composer['version'])) {
+                return $composer['version'];
+            }
+        }
+
+        return $defaultValue;
+    }
+
+    public function getMagentoVersion()
+    {
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $productMetadata = $objectManager->get('Magento\Framework\App\ProductMetadataInterface');
+        $version = $productMetadata->getVersion();
+
+        return $version;
+    }
+
+    public function getPHPVersion()
+    {
+        return substr(phpversion(), 0, 3);
     }
 
     /**
