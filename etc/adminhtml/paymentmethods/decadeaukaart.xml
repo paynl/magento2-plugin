@@ -113,7 +113,7 @@
                    showInStore="1">
                 <label>Payment option id</label>
                 <comment>The id of the payment method, only change this if you are told to do so</comment>
-                <config_path>payment/paynl_payment_decadeaukaarty/payment_option_id</config_path>
+                <config_path>payment/paynl_payment_decadeaukaart/payment_option_id</config_path>
             </field>
         </group>
     </group>
