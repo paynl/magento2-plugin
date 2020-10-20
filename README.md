@@ -26,9 +26,9 @@ MyBank | Carte Bancaire | Podium Cadeaukaart | Capayable Achteraf Betalen | Cash
 SOFORT | PostePay | Gezondheidsbon | in3 keer betalen, 0% rente | Pay Fixed Price (phone) |
 Maestro | Dankort | Fashion Giftcard | Klarna | Instore Payments (POS) |
 Bank Transfer | Cartasi | GivaCard | SprayPay | Przelewy24 | 
-| Tikkie | | YourGift | Creditclick | Apple Pay | 
+| Tikkie | De Cadeaukaart | YourGift | Creditclick | Apple Pay | 
 | Multibanco | | Paysafecard | | Payconiq
-| | | Huis en Tuin Cadeau
+| | | Huis en Tuin Cadeau 
 
 # Requirements
 

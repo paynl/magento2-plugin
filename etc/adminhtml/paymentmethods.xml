@@ -19,6 +19,7 @@
     <include path="Paynl_Payment::paymentmethods/clickandbuy.xml" />
     <include path="Paynl_Payment::paymentmethods/creditclick.xml" />
     <include path="Paynl_Payment::paymentmethods/dankort.xml" />
+    <include path="Paynl_Payment::paymentmethods/decadeaukaart.xml" />
     <include path="Paynl_Payment::paymentmethods/eps.xml" />
     <include path="Paynl_Payment::paymentmethods/fashioncheque.xml" />
     <include path="Paynl_Payment::paymentmethods/fashiongiftcard.xml" />
