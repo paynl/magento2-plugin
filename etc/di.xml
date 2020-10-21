@@ -17,4 +17,5 @@
                 type="Paynl\Payment\Plugin\OrderPaymentAdditionalInformation"
         />
     </type>
+    <preference for="Magento\Sales\Block\Adminhtml\Order\Creditmemo\Create\Items" type="Paynl\Payment\Block\Adminhtml\Order\Creditmemo\Create\Items" />
 </config>
