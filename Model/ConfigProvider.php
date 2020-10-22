@@ -83,19 +83,27 @@ class ConfigProvider implements ConfigProviderInterface
     protected $paynlConfig;
 
     /**
+     * @var \Magento\Payment\Model\Config|Magento\Payment\Model\Config
+     */
+    protected $paymentConfig;
+
+    /**
      * ConfigProvider constructor.
      * @param PaymentHelper $paymentHelper
      * @param Escaper $escaper
      * @param Config $paynlConfig
+     * @param Magento\Payment\Model\Config $paymentConfig
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function __construct(
         PaymentHelper $paymentHelper,
         Escaper $escaper,
-        Config $paynlConfig
+        Config $paynlConfig,
+        \Magento\Payment\Model\Config $paymentConfig
     ) {
         $this->paynlConfig = $paynlConfig;
         $this->escaper = $escaper;
+        $this->paymentConfig = $paymentConfig;
         foreach ($this->methodCodes as $code) {
             $this->methods[$code] = $paymentHelper->getMethodInstance($code);
         }
@@ -110,10 +118,17 @@ class ConfigProvider implements ConfigProviderInterface
         foreach ($this->methodCodes as $code) {
             if ($this->methods[$code]->isAvailable()) {
                 $config['payment']['instructions'][$code] = $this->getInstructions($code);
-                $config['payment']['banks'][$code]        = $this->getBanks($code);
-                $config['payment']['icon'][$code]         = $this->getIcon($code);
-                $config['payment']['showkvk'][$code]      = $this->getKVK($code);
-                $config['payment']['showdob'][$code]      = $this->getDOB($code);
+                $config['payment']['banks'][$code] = $this->getBanks($code);
+                $config['payment']['public_encryption_keys'][$code] = $this->getPublicEncryptionKeys($code);
+                $config['payment']['cse_enabled'][$code] = $this->getCseEnabled($code);
+                $config['payment']['cse_modal_payment_complete'][$code] = $this->getModalEnabledForPaymentComplete($code);
+                $config['payment']['cse_modal_payment_complete_redirection_timeout'][$code] = $this->getPaymentCompleteRedirectionTimeout($code);
+                $config['payment']['cse_modal_payment_failure'][$code] = $this->getModalEnabledForPaymentFailure($code);
+                $config['payment']['cc_months'][$code] = $this->getCcMonths();
+                $config['payment']['cc_years'][$code] = $this->getCcYears();
+                $config['payment']['icon'][$code] = $this->getIcon($code);
+                $config['payment']['showkvk'][$code] = $this->getKVK($code);
+                $config['payment']['showdob'][$code] = $this->getDOB($code);
                 $config['payment']['showforcompany'][$code] = $this->getCompany($code);
             }
         }
@@ -136,6 +151,31 @@ class ConfigProvider implements ConfigProviderInterface
     protected function getBanks($code)
     {
         return $this->methods[$code]->getBanks();
+    }
+
+    protected function getPublicEncryptionKeys($code)
+    {
+        return $this->methods[$code]->getPublicEncryptionKeys();
+    }
+
+    protected function getCseEnabled($code)
+    {
+        return $this->methods[$code]->getCseEnabled();
+    }
+
+    protected function getModalEnabledForPaymentComplete($code)
+    {
+        return $this->methods[$code]->getModalEnabledForPaymentComplete();
+    }
+
+    protected function getPaymentCompleteRedirectionTimeout($code)
+    {
+        return $this->methods[$code]->getPaymentCompleteRedirectionTimeout();
+    }
+
+    protected function getModalEnabledForPaymentFailure($code)
+    {
+        return $this->methods[$code]->getModalEnabledForPaymentFailure();
     }
 
     protected function getKVK($code)
@@ -164,5 +204,25 @@ class ConfigProvider implements ConfigProviderInterface
     {
         $url = $this->paynlConfig->getIconUrl();
         return str_replace('#paymentOptionId#', $this->methods[$code]->getPaymentOptionId(), $url);
+    }
+
+    /**
+     * Retrieve credit card expire months
+     *
+     * @return array
+     */
+    public function getCcMonths()
+    {
+        return $this->paymentConfig->getMonths();
+    }
+
+    /**
+     * Retrieve credit card expire years
+     *
+     * @return array
+     */
+    public function getCcYears()
+    {
+        return $this->paymentConfig->getYears();
     }
 }

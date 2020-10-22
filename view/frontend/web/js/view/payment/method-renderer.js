@@ -13,6 +13,10 @@ define(
         var idealComponent = 'Paynl_Payment/js/view/payment/method-renderer/ideal';
         var billinkComponent = 'Paynl_Payment/js/view/payment/method-renderer/billink';
 
+        // clientside encryption
+        var cse_enabled = window.checkoutConfig.payment.cse_enabled['paynl_payment_visamastercard'];
+        var visamastercardComponent = 'Paynl_Payment/js/view/payment/method-renderer/visamastercard';
+
         var methods = [
             {type: 'paynl_payment_afterpay', component: defaultComponent},
             {type: 'paynl_payment_alipay', component: defaultComponent},
@@ -54,7 +58,7 @@ define(
             {type: 'paynl_payment_spraypay', component: defaultComponent},
             {type: 'paynl_payment_telefonischbetalen', component: defaultComponent},
             {type: 'paynl_payment_tikkie', component: defaultComponent},
-            {type: 'paynl_payment_visamastercard', component: defaultComponent},
+            {type: 'paynl_payment_visamastercard', component: cse_enabled ? visamastercardComponent : defaultComponent},
             {type: 'paynl_payment_vvvgiftcard', component: defaultComponent},
             {type: 'paynl_payment_webshopgiftcard', component: defaultComponent},
             {type: 'paynl_payment_wechatpay', component: defaultComponent},

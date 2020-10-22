@@ -1,0 +1,23 @@
+<script type="text/javascript">
+    // check if we broke out of our original iframe
+    if (window.top === window.self) {
+        let url = new URL(window.location);
+        let queryParameters = new URLSearchParams(window.location.search);
+
+        if (queryParameters.has('payment_complete_url')) {
+            let paymentCompleteUrl = new URL(queryParameters.get('payment_complete_url'));
+            queryParameters.delete('payment_complete_url');
+
+            for (let [key, value] of queryParameters) {
+                paymentCompleteUrl.searchParams.set(key, value);
+            }
+
+            window.location.replace(paymentCompleteUrl.toString());
+        }
+    } else {
+        let eventData = <?php echo $block->getEventDetails() ?>;
+        let eventName = 'type' in eventData.detail ? eventData.detail['type'] : 'payment-complete';
+        let event = new CustomEvent(eventName, eventData);
+        window.top.dispatchEvent(event);
+    }
+</script>

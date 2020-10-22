@@ -20,7 +20,10 @@ use Magento\Payment\Model\Method\Logger;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderRepository;
 use Paynl\Payment\Model\Config;
+use Paynl\Payment\Model\Helper\PublicKeysHelper;
 use Paynl\Transaction;
+
+use function GuzzleHttp\Psr7\parse_query;
 
 /**
  * Description of AbstractPaymentMethod
@@ -56,6 +59,34 @@ abstract class PaymentMethod extends AbstractMethod
      */
     protected $orderConfig;
 
+    /**
+     * @var PublicKeysHelper
+     */
+    protected $publicKeysHelper;
+
+    /**
+     * @var \Magento\Framework\Json\Helper\Data
+     */
+    protected $jsonHelper;
+
+    /**
+     * PaymentMethod constructor.
+     * @param Context $context
+     * @param Registry $registry
+     * @param ExtensionAttributesFactory $extensionFactory
+     * @param AttributeValueFactory $customAttributeFactory
+     * @param Data $paymentData
+     * @param ScopeConfigInterface $scopeConfig
+     * @param Logger $logger
+     * @param Order\Config $orderConfig
+     * @param OrderRepository $orderRepository
+     * @param Config $paynlConfig
+     * @param AbstractResource|null $resource
+     * @param AbstractDb|null $resourceCollection
+     * @param PublicKeysHelper $publicKeysHelper
+     * @param \Magento\Framework\Json\Helper\Data $jsonHelper
+     * @param array $data
+     */
     public function __construct(
         Context $context,
         Registry $registry,
@@ -69,6 +100,8 @@ abstract class PaymentMethod extends AbstractMethod
         Config $paynlConfig,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
+        PublicKeysHelper $publicKeysHelper,
+        \Magento\Framework\Json\Helper\Data $jsonHelper,
         array $data = []
     )
     {
@@ -79,6 +112,8 @@ abstract class PaymentMethod extends AbstractMethod
         $this->paynlConfig = $paynlConfig;
         $this->orderRepository = $orderRepository;
         $this->orderConfig = $orderConfig;
+        $this->publicKeysHelper = $publicKeysHelper;
+        $this->jsonHelper = $jsonHelper;
     }
 
     protected function getState($status)
@@ -121,7 +156,57 @@ abstract class PaymentMethod extends AbstractMethod
       return [];
     }
 
-    public function getCompany(){       
+    /**
+     * Return the public encryption keys used for CSE.
+     *
+     * @return false|string
+     */
+    public function getPublicEncryptionKeys()
+    {
+        return $this->jsonHelper->jsonEncode($this->publicKeysHelper->getKeys());
+    }
+
+    /**
+     * Return if clientside encryption should be enabled.
+     * @return bool
+     */
+    public function getCseEnabled()
+    {
+        return (bool)$this->_scopeConfig->getValue('payment/'.$this->_code.'/cse_enabled', 'store');
+    }
+
+    /**
+     * Show a modal when the payment was successfully completed? Otherwise redirect straight away.
+     *
+     * @return bool
+     */
+    public function getModalEnabledForPaymentComplete() {
+        return (bool)$this->_scopeConfig->getValue('payment/'.$this->_code.'/cse_modal_payment_complete', 'store');
+    }
+
+    /**
+     * Redirection timeout for when the payment complete modal is enabled.
+     *
+     * @return int
+     */
+    public function getPaymentCompleteRedirectionTimeout() {
+        if (!$this->getModalEnabledForPaymentComplete()) {
+            return null;
+        }
+
+        return (int)$this->_scopeConfig->getValue('payment/'.$this->_code.'/cse_modal_payment_complete_redirection_timeout', 'store');
+    }
+
+    /**
+     * Show a modal when the payment has failed? Otherwise render error in the form.
+     *
+     * @return bool
+     */
+    public function getModalEnabledForPaymentFailure() {
+        return (bool)$this->_scopeConfig->getValue('payment/'.$this->_code.'/cse_modal_payment_failure', 'store');
+    }
+
+    public function getCompany(){
         return $this->_scopeConfig->getValue('payment/'.$this->_code.'/showforcompany', 'store');
     }
 
@@ -210,7 +295,26 @@ abstract class PaymentMethod extends AbstractMethod
         return $transaction->getRedirectUrl();
     }
 
-    protected function doStartTransaction(Order $order)
+    public function startEncryptedTransaction(Order $order, $payload, array $overwriteParameters = array())
+    {
+        $transaction = $this->doStartTransaction($order, $overwriteParameters);
+        $this->paynlConfig->setStore($order->getStore());
+
+        $holded = $this->_scopeConfig->getValue('payment/' . $this->_code . '/holded', 'store');
+
+        if ($holded) {
+            $order->hold();
+        }
+
+        $this->orderRepository->save($order);
+
+        return \Paynl\Transaction::captureWithEncryptedData(
+            $transaction->getTransactionId(),
+            $payload
+        );
+    }
+
+    protected function doStartTransaction(Order $order, array $overwriteParameters = array())
     {
         $this->paynlConfig->setStore($order->getStore());
         $this->paynlConfig->configureSDK();
@@ -434,9 +538,7 @@ abstract class PaymentMethod extends AbstractMethod
         }
         $data['ipaddress'] = $ipAddress;
 
-
-
-        $transaction = \Paynl\Transaction::start($data);
+        $transaction = \Paynl\Transaction::start(array_merge($data, $overwriteParameters));
 
         return $transaction;
     }

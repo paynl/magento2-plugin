@@ -9,6 +9,42 @@
             <source_model>Paynl\Payment\Model\Config\Source\Available\Visamastercard</source_model>
             <config_path>payment/paynl_payment_visamastercard/active</config_path>
         </field>
+        <field id="cse_enabled" translate="label" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Enable clientside encryption</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+            <config_path>payment/paynl_payment_visamastercard/cse_enabled</config_path>
+            <comment><![CDATA[Credit card data will be encrypted clientside, before being sent to the server.]]></comment>
+        </field>
+        <field id="cse_modal_payment_complete" translate="label" type="select" sortOrder="16" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Enable the payment complete modal.</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <depends>
+                <field id="cse_enabled">1</field>
+            </depends>
+            <config_path>payment/paynl_payment_visamastercard/cse_modal_payment_complete</config_path>
+            <comment><![CDATA[When enabled the user will be presented with a payment complete modal, after which we will redirect after set amount of milliseconds.]]></comment>
+        </field>
+        <field id="cse_modal_payment_complete_redirection_timeout" translate="label" type="text" sortOrder="17" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Redirection timeout</label>
+            <depends>
+                <field id="cse_modal_payment_complete">1</field>
+            </depends>
+            <config_path>payment/paynl_payment_visamastercard/cse_modal_payment_complete_redirection_timeout</config_path>
+            <comment><![CDATA[Please specify the amount of milliseconds to wait for the redirect to occur after the payment complete message was shown.]]></comment>
+            <validate>validate-number validate-zero-or-greater</validate>
+        </field>
+        <field id="cse_modal_payment_failure" translate="label" type="select" sortOrder="19" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Enable the payment failure modal.</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <depends>
+                <field id="cse_enabled">1</field>
+            </depends>
+            <config_path>payment/paynl_payment_visamastercard/cse_modal_payment_failure</config_path>
+            <comment><![CDATA[When the modal is enabled the user will be informed the payment failed and has to close the window themselves, otherwise an error will be presented below the credit card input fields.]]></comment>
+        </field>
         <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1"
                showInStore="1">
             <label>Title</label>
@@ -127,4 +163,3 @@
         </group>
     </group>
 </include>
-                
