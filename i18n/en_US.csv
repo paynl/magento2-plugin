@@ -80,3 +80,5 @@
 "Subtotal","Subtotal"
 "Shipping & Handling","Shipping & Handling"
 "Grand Total","Grand Total"
+"Offline refund","Offline refund"
+"This will create an offline refund. To create an online refund, open an invoice and create credit memo for it. Do you want to continue?","This will create an offline refund. To create an online refund, open an invoice and create credit memo for it. Do you want to continue?"
