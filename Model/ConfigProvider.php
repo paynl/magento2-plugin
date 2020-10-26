@@ -166,9 +166,8 @@ class ConfigProvider implements ConfigProviderInterface
         return false;
     }
 
-    protected function getUseragent($code) {
-
-
+    protected function getUseragent($code)
+    {
         $arr_browsers = ["Opera", "Edg", "Chrome", "Safari", "Firefox", "MSIE", "Trident"];
 
         $agent = $_SERVER['HTTP_USER_AGENT'];

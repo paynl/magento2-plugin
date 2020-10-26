@@ -121,15 +121,18 @@ abstract class PaymentMethod extends AbstractMethod
       return [];
     }
 
-    public function getCompany(){       
+    public function getCompany()
+    {
         return $this->_scopeConfig->getValue('payment/'.$this->_code.'/showforcompany', 'store');
     }
 
-    public function getIpaddress(){
+    public function getIpaddress()
+    {
         return $this->_scopeConfig->getValue('payment/'.$this->_code.'/showforipaddress', 'store');
     }
 
-    public function getUseragent(){
+    public function getUseragent()
+    {
         return $this->_scopeConfig->getValue('payment/'.$this->_code.'/showforuseragent', 'store');
     }
 
