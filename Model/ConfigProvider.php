@@ -115,6 +115,8 @@ class ConfigProvider implements ConfigProviderInterface
                 $config['payment']['showkvk'][$code]      = $this->getKVK($code);
                 $config['payment']['showdob'][$code]      = $this->getDOB($code);
                 $config['payment']['showforcompany'][$code] = $this->getCompany($code);
+                $config['payment']['showforipaddress'][$code] = $this->getIpaddress($code);
+                $config['payment']['showforuseragent'][$code] = $this->getUseragent($code);
             }
         }
 
@@ -151,6 +153,49 @@ class ConfigProvider implements ConfigProviderInterface
     protected function getCompany($code)
     {
         return $this->methods[$code]->getCompany();
+    }
+
+    protected function getIpaddress($code)
+    {
+        $ip = isset($_SERVER['HTTP_CLIENT_IP']) ? $_SERVER['HTTP_CLIENT_IP'] : isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'];
+        if ($this->methods[$code]->getIpaddress() == $ip ) {
+            return true;
+        } elseif (empty($this->methods[$code]->getIpaddress())) {
+            return true;
+        }
+        return false;
+    }
+
+    protected function getUseragent($code) {
+
+
+        $arr_browsers = ["Opera", "Edg", "Chrome", "Safari", "Firefox", "MSIE", "Trident"];
+
+        $agent = $_SERVER['HTTP_USER_AGENT'];
+
+        $user_browser = '';
+        foreach ($arr_browsers as $browser) {
+            if (strpos($agent, $browser) !== false) {
+                $user_browser = $browser;
+                break;
+            }
+        }
+
+        switch ($user_browser) {
+            case 'MSIE':
+                $user_browser = 'MSIE';
+                break;
+
+            case 'Trident':
+                $user_browser = 'MSIE';
+                break;
+        }
+
+        if ($this->methods[$code]->getUseragent() == $user_browser || $this->methods[$code]->getUseragent() == 'All') {
+            return true;
+        }
+
+        return false;
     }
 
     /**

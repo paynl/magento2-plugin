@@ -125,6 +125,14 @@ abstract class PaymentMethod extends AbstractMethod
         return $this->_scopeConfig->getValue('payment/'.$this->_code.'/showforcompany', 'store');
     }
 
+    public function getIpaddress(){
+        return $this->_scopeConfig->getValue('payment/'.$this->_code.'/showforipaddress', 'store');
+    }
+
+    public function getUseragent(){
+        return $this->_scopeConfig->getValue('payment/'.$this->_code.'/showforuseragent', 'store');
+    }
+
     public function initialize($paymentAction, $stateObject)
     {
         $status = $this->getConfigData('order_status');
@@ -324,7 +332,7 @@ abstract class PaymentMethod extends AbstractMethod
             'extra3' => $order->getEntityId(),
             'exchangeUrl' => $exchangeUrl,
             'currency' => $currency,
-            'object' => substr('magento2 ' . $this->paynlConfig->getVersion() . ' | ' . $this->paynlConfig->getMagentoVersion() . ' | ' . $this->paynlConfig->getPHPVersion(), 0, 64),
+            'object' => 'magento2 ' . $this->paynlConfig->getVersion(),
         );
         if (isset($shippingAddress)) {
             $data['address'] = $shippingAddress;
