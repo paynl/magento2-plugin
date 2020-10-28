@@ -35,17 +35,23 @@ define(
             getKVKDOB: function () {
                 return (this.getDOB() > 0 && this.getKVK() > 0);
             },
-            showforCompany: function(){              
-                if(this.getforCompany() == null || this.getforCompany().length == 0 || this.getforCompany() == 0){
-                    return true;
+            isVisible:function(){
+                var currentShippingMehtode = quote.shippingMethod().carrier_code+'_'+quote.shippingMethod().method_code;
+                var disallowedShippingMethodes = this.getDisallowedShipping().split(',');
+
+                if(disallowedShippingMethodes.includes(currentShippingMehtode)){
+                    return false;
                 }
-                if(this.getforCompany() == 1 && this.getCompany().length == 0){
-                    return true;
+                if(this.getforCompany() == 1 && this.getCompany().length != 0){
+                    return false;
                 }
-                if(this.getforCompany() == 2 && this.getCompany().length > 0){
-                    return true;
+                if(this.getforCompany() == 2 && this.getCompany().length == 0){
+                    return false;
                 }
-                return false;
+                return true;
+            },
+            getDisallowedShipping: function () {
+                return window.checkoutConfig.payment.disallowedshipping[this.item.method];
             }, 
             getCompany: function () {                
                 if (typeof quote.billingAddress._latestValue.company !== 'undefined') {
