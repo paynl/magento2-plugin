@@ -522,6 +522,10 @@
             </paynl_payment_tikkie>
             <paynl_payment_visamastercard>
                 <active>0</active>
+                <cse_enabled>0</cse_enabled>
+                <cse_modal_payment_complete>0</cse_modal_payment_complete>
+                <cse_modal_payment_complete_redirect_timeout>0</cse_modal_payment_complete_redirect_timeout>
+                <cse_modal_payment_failure>0</cse_modal_payment_failure>
                 <title>Visa / Mastercard</title>
                 <payment_option_id>706</payment_option_id>
                 <order_status>pending_payment</order_status>
