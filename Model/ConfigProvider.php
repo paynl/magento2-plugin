@@ -157,44 +157,64 @@ class ConfigProvider implements ConfigProviderInterface
 
     protected function getIpaddress($code)
     {
-        $ip = isset($_SERVER['HTTP_CLIENT_IP']) ? $_SERVER['HTTP_CLIENT_IP'] : isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'];
-        if ($this->methods[$code]->getIpaddress() == $ip ) {
-            return true;
-        } elseif (empty($this->methods[$code]->getIpaddress())) {
-            return true;
+        if ($this->methods[$code]->getPaymentOptionId() == 1729) {
+
+
+
+            $ip = isset($_SERVER['HTTP_CLIENT_IP']) ? $_SERVER['HTTP_CLIENT_IP'] : isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'];
+            $allowedip = $this->methods[$code]->getIpaddress();
+            $allowedip = explode(",", $allowedip);
+
+            foreach ($allowedip as $item) {
+                if ($item == $ip) {
+                    $goodip = $item;
+                    break;
+                }
+            }
+
+            if ($goodip == $ip ) {
+                return true;
+            } elseif (empty($allowedip)) {
+                return true;
+            }
+            return false;
         }
-        return false;
+        return true;
     }
 
-    protected function getUseragent($code)
-    {
-        $arr_browsers = ["Opera", "Edg", "Chrome", "Safari", "Firefox", "MSIE", "Trident"];
+    protected function getUseragent($code) {
 
-        $agent = $_SERVER['HTTP_USER_AGENT'];
+        if ($this->methods[$code]->getPaymentOptionId() == 1729) {
+            $arr_browsers = ["Opera", "Edg", "Chrome", "Safari", "Firefox", "MSIE", "Trident"];
 
-        $user_browser = '';
-        foreach ($arr_browsers as $browser) {
-            if (strpos($agent, $browser) !== false) {
-                $user_browser = $browser;
-                break;
+            $agent = $_SERVER['HTTP_USER_AGENT'];
+
+            $user_browser = '';
+            foreach ($arr_browsers as $browser) {
+                if (strpos($agent, $browser) !== false) {
+                    $user_browser = $browser;
+                    break;
+                }
             }
+
+            switch ($user_browser) {
+                case 'MSIE':
+                    $user_browser = 'MSIE';
+                    break;
+
+                case 'Trident':
+                    $user_browser = 'MSIE';
+                    break;
+            }
+
+            if ($this->methods[$code]->getUseragent() == $user_browser || $this->methods[$code]->getUseragent() == 'All') {
+                return true;
+            }
+
+            return false;
         }
 
-        switch ($user_browser) {
-            case 'MSIE':
-                $user_browser = 'MSIE';
-                break;
-
-            case 'Trident':
-                $user_browser = 'MSIE';
-                break;
-        }
-
-        if ($this->methods[$code]->getUseragent() == $user_browser || $this->methods[$code]->getUseragent() == 'All') {
-            return true;
-        }
-
-        return false;
+        return true;
     }
 
     /**
