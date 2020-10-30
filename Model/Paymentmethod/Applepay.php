@@ -6,7 +6,7 @@ namespace Paynl\Payment\Model\Paymentmethod;
  * Class okkeApplepay
  * @package Paynl\Payment\Model\Paymentmethod
  */
-class okkeApplepay extends PaymentMethod
+class Applepay extends PaymentMethod
 {
     protected $_code = 'paynl_payment_applepay';
 
