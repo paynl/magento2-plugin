@@ -6,9 +6,8 @@
 namespace Paynl\Payment\Model\Paymentmethod;
 
 /**
- * Description of Ideal
- *
- * @author Andy Pieters <andy@pay.nl>
+ * Class Sofortbanking
+ * @package Paynl\Payment\Model\Paymentmethod
  */
 class Sofortbanking extends PaymentMethod
 {

@@ -4,7 +4,10 @@
  */
 
 namespace Paynl\Payment\Model\Paymentmethod;
-
+/**
+ * Class Cartasi
+ * @package Paynl\Payment\Model\Paymentmethod
+ */
 class Cartasi extends PaymentMethod
 {
     protected $_code = 'paynl_payment_cartasi';

@@ -8,9 +8,8 @@ namespace Paynl\Payment\Model\Paymentmethod;
 use Paynl\Payment\Model\Config;
 
 /**
- * Description of Ideal
- *
- * @author Andy Pieters <andy@pay.nl>
+ * Class Ideal
+ * @package Paynl\Payment\Model\Paymentmethod
  */
 class Ideal extends PaymentMethod
 {

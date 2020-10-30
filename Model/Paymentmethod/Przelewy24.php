@@ -6,9 +6,8 @@
 namespace Paynl\Payment\Model\Paymentmethod;
 
 /**
- * Description of Przelewy24
- *
- * @author Andy Pieters <andy@pay.nl>
+ * Class Przelewy24
+ * @package Paynl\Payment\Model\Paymentmethod
  */
 class Przelewy24 extends PaymentMethod
 {
