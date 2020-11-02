@@ -23,9 +23,9 @@ define(
             },
             isVisible:function(){
                 var currentShippingMehtode = quote.shippingMethod().carrier_code+'_'+quote.shippingMethod().method_code;
-                var disallowedShippingMethodes = this.getDisallowedShipping().split(',');
+                var disallowedShippingMethods = this.getDisallowedShipping().split(',');
 
-                if(disallowedShippingMethodes.includes(currentShippingMehtode)){
+                if(disallowedShippingMethods.includes(currentShippingMehtode)){
                     return false;
                 }
                 if(this.getforCompany() == 1 && this.getCompany().length != 0){

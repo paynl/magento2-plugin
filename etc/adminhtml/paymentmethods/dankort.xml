@@ -108,7 +108,7 @@
         </field>
         <field id="disallowedshipping" translate="label" type="multiselect" sortOrder="110" showInDefault="1"
                showInWebsite="1" showInStore="1">
-            <label>Disallowed Shipping Methodes</label>
+            <label>Disallowed Shipping Methods</label>
             <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
             <can_be_empty>1</can_be_empty>
             <config_path>payment/paynl_payment_dankort/disallowedshipping</config_path>

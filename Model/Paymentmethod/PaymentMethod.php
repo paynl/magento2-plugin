@@ -121,7 +121,7 @@ abstract class PaymentMethod extends AbstractMethod
       return [];
     }
 
-    public function getDisallowedShippingMethodes(){       
+    public function getDisallowedShippingMethods(){       
         return $this->_scopeConfig->getValue('payment/'.$this->_code.'/disallowedshipping', 'store');
     }
 
