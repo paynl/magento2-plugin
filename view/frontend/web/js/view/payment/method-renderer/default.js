@@ -18,8 +18,10 @@ define(
             },
             isVisible:function(){
                 var currentShippingMehtode = quote.shippingMethod().carrier_code+'_'+quote.shippingMethod().method_code;
-                var disallowedShippingMethods = this.getDisallowedShipping().split(',');
-
+                var disallowedShippingMethods = [];
+                if(this.getDisallowedShipping()){
+                    disallowedShippingMethods = this.getDisallowedShipping().split(',');
+                }
                 if(disallowedShippingMethods.includes(currentShippingMehtode)){
                     return false;
                 }
