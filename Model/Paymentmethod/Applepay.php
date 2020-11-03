@@ -3,7 +3,7 @@
 namespace Paynl\Payment\Model\Paymentmethod;
 
 /**
- * Class okkeApplepay
+ * Class Applepay
  * @package Paynl\Payment\Model\Paymentmethod
  */
 class Applepay extends PaymentMethod
