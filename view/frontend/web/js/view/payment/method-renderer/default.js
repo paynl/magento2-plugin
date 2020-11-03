@@ -17,12 +17,12 @@ define(
                 template: 'Paynl_Payment/payment/default'
             },
             isVisible:function(){
-                var currentShippingMehtode = quote.shippingMethod().carrier_code+'_'+quote.shippingMethod().method_code;
+                var currentShippingMethod = quote.shippingMethod().carrier_code+'_'+quote.shippingMethod().method_code;
                 var disallowedShippingMethods = [];
                 if(this.getDisallowedShipping()){
                     disallowedShippingMethods = this.getDisallowedShipping().split(',');
                 }
-                if(disallowedShippingMethods.includes(currentShippingMehtode)){
+                if(disallowedShippingMethods.includes(currentShippingMethod)){
                     return false;
                 }
                 if(this.getforCompany() == 1 && this.getCompany().length != 0){
