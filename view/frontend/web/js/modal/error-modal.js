@@ -25,7 +25,7 @@ define([
                 'outerClickHandler': null,
                 'clickableOverlay': false,
                 'buttons': [{
-                    text: $.mage.__('Ok'),
+                    text: $t('Ok'),
                     class: '',
                     attr: {},
 
@@ -36,7 +36,7 @@ define([
                         this.closeModal(event);
                     }
                 }],
-                'title': $.mage.__('Error processing payment'),
+                'title': $.mage.__('Sorry, but something went wrong.'),
                 'subTitle': null,
                 'closed': function() {
                     window.dispatchEvent(new Event('pay-trigger-modal-close'))

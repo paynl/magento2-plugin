@@ -11,11 +11,12 @@ define(
         'Magento_Checkout/js/model/full-screen-loader',
         'Magento_Checkout/js/view/payment/default',
         'mage/url',
+        'mage/translate',
         'Magento_Checkout/js/action/place-order',
         'Magento_Checkout/js/model/quote',
         'Paynl_Payment/js/view/payment/method-renderer/pay-cryptography.amd.min'
     ],
-    function ($, _, ko, paymentModal, paymentCompleteModal, errorModal, fullScreenLoader, Component, url, placeOrderAction, quote, payCryptography) {
+    function ($, _, ko, paymentModal, paymentCompleteModal, errorModal, fullScreenLoader, Component, url, $t, placeOrderAction, quote, payCryptography) {
         'use strict';
         return Component.extend({
             redirectAfterPlaceOrder: false,
@@ -25,6 +26,7 @@ define(
             paymentErrorMessage: ko.observable(null),
             contentHeight: ko.observable(null),
             modalWindow: null,
+            activeModal: null,
             isCreditCardFormIsReadyForSubmission: ko.observable(false),
             initialize: function() {
                 this._super();
@@ -34,8 +36,8 @@ define(
                 el.setAttribute('data-pay-encrypt-form', '');
 
                 this.encryptedForm = new payCryptography.EncryptedForm({
-                    'debug': true,
                     'public_keys': this.getPublicEncryptionKeys(),
+                    'language': this.getLanguage(),
                     'post_url': url.build('paynl/checkout/processEncryptedTransaction'),
                     'payment_complete_url': url.build('paynl/checkout/finish'),
                     'refresh_url': url.build('paynl/checkout/publicKeys'),
@@ -73,6 +75,7 @@ define(
                 eventDispatcher.addListener(
                     payCryptography.Events.onSubmitDataEvent,
                     function(event){
+                        self.paymentErrorMessage('');
                         event.subject.set('form_key', el.querySelector('input[name="form_key"]').value);
                     }
                 );
@@ -98,28 +101,34 @@ define(
                         event.stopPropagation();
                         self.paymentModalContent('');
 
+                        if (null !== self.activeModal) {
+                            self.activeModal.closeModal();
+                        }
+
                         if (event.subject instanceof payCryptography.PaymentCompleteModal && !paymentCompleteModalEnabled) {
                             return;
                         }
 
                         if (event.subject instanceof payCryptography.ErrorModal && !paymentFailureModalEnabled) {
-                            $(paymentModal.modalWindow).modal('closeModal');
                             self.paymentErrorMessage(`<div class="message error"><div>${event.getSubject().render()}</div></div>`);
                             return;
                         }
 
                         if (event.subject instanceof payCryptography.PaymentCompleteModal) {
+                            self.activeModal = paymentCompleteModal;
                             self.paymentCompleteModalContent(event.getSubject().render());
                             paymentCompleteModal.showModal();
                             return;
                         }
 
                         if (event.subject instanceof payCryptography.ErrorModal) {
+                            self.activeModal = errorModal;
                             self.paymentErrorModalContent(event.getSubject().render());
                             errorModal.showModal();
                             return;
                         }
 
+                        self.activeModal = paymentModal;
                         self.paymentModalContent(event.getSubject().render());
                         paymentModal.showModal();
                     },
@@ -130,7 +139,6 @@ define(
                     payCryptography.Events.onModalCloseEvent,
                     function(event){
                         event.stopPropagation();
-                        paymentModal.closeModal();
                     },
                     10
                 );
@@ -148,15 +156,16 @@ define(
 
                 // custom event that launches when the modal closes, allows for better control
                 window.addEventListener('pay-trigger-modal-close', function(e){
-                    let event = new payCryptography.ModalCloseEvent(e);
-                    eventDispatcher.dispatch(event, payCryptography.Events.onModalCloseEvent);
-
                     eventDispatcher.dispatch(new payCryptography.StateChangeEvent(e, {
                         'state': {modalOpen: false, formSubmitted: false}
                     }), payCryptography.Events.onStateChangeEvent);
-                });
 
+                    self.activeModal = null;
+                });
                 return this;
+            },
+            getLanguage: function(){
+                return window.checkoutConfig.payment.language[this.item.method];
             },
             initPaymentModal: function (element) {
                 paymentModal.createModal(element);

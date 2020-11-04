@@ -3,6 +3,7 @@ namespace Paynl\Payment\Model\Helper;
 
 use Magento\Framework\App\CacheInterface;
 use Magento\Framework\Json\Helper\Data;
+use Paynl\Creditcard;
 use Paynl\Encryption;
 use Paynl\Error\Api;
 use Paynl\Error\Error;
@@ -59,7 +60,7 @@ class PublicKeysHelper
         if ($keysJson) {
             $keysJson = $this->jsonHelper->jsonDecode($keysJson);
         } else {
-            $keysJson = Encryption::publicKeys();
+            $keysJson = Creditcard::publicKeys();
 
             if (count($keysJson) > 0) {
                 $this->cache->save(

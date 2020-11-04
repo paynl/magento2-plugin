@@ -24,7 +24,7 @@ define([
                 'innerScroll': true,
                 'outerClickHandler': null,
                 'clickableOverlay': false,
-                'title': $.mage.__('Payment received'),
+                'title': $t('Success'),
                 'subTitle': null,
                 'closed': function() {
                     window.dispatchEvent(new Event('pay-trigger-modal-close'))

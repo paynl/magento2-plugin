@@ -37,7 +37,7 @@ define([
             $(this.modalWindow).modal('openModal');
         },
         closeModal: function () {
-            // $(this.modalWindow).modal('closeModal');
+            $(this.modalWindow).modal('closeModal');
         }
     };
 });

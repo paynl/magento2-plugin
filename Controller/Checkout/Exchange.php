@@ -115,6 +115,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         \Paynl\Config::setApiToken($this->config->getApiToken());
 
         $params = $this->getRequest()->getParams();
+
         if (!isset($params['order_id'])) {
             $this->logger->critical('Exchange: order_id is not set in the request', $params);
 

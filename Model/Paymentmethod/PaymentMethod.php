@@ -308,7 +308,7 @@ abstract class PaymentMethod extends AbstractMethod
 
         $this->orderRepository->save($order);
 
-        return \Paynl\Transaction::captureWithEncryptedData(
+        return \Paynl\Creditcard::captureWithEncryptedData(
             $transaction->getTransactionId(),
             $payload
         );

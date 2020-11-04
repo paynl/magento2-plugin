@@ -88,22 +88,30 @@ class ConfigProvider implements ConfigProviderInterface
     protected $paymentConfig;
 
     /**
+     * @var Magento\Framework\Locale\Resolver
+     */
+    protected $resolver;
+
+    /**
      * ConfigProvider constructor.
      * @param PaymentHelper $paymentHelper
      * @param Escaper $escaper
      * @param Config $paynlConfig
      * @param Magento\Payment\Model\Config $paymentConfig
+     * @param Magento\Framework\Locale\Resolver $resolver
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function __construct(
         PaymentHelper $paymentHelper,
         Escaper $escaper,
         Config $paynlConfig,
-        \Magento\Payment\Model\Config $paymentConfig
+        \Magento\Payment\Model\Config $paymentConfig,
+        \Magento\Framework\Locale\Resolver $resolver
     ) {
         $this->paynlConfig = $paynlConfig;
         $this->escaper = $escaper;
         $this->paymentConfig = $paymentConfig;
+        $this->resolver = $resolver;
         foreach ($this->methodCodes as $code) {
             $this->methods[$code] = $paymentHelper->getMethodInstance($code);
         }
@@ -115,6 +123,10 @@ class ConfigProvider implements ConfigProviderInterface
     public function getConfig()
     {
         $config = [];
+        $locale = $this->resolver->getLocale();
+        $localeParts = explode('_', $locale);
+        $language = mb_strtoupper($localeParts[0]);
+
         foreach ($this->methodCodes as $code) {
             if ($this->methods[$code]->isAvailable()) {
                 $config['payment']['instructions'][$code] = $this->getInstructions($code);
@@ -130,6 +142,7 @@ class ConfigProvider implements ConfigProviderInterface
                 $config['payment']['showkvk'][$code] = $this->getKVK($code);
                 $config['payment']['showdob'][$code] = $this->getDOB($code);
                 $config['payment']['showforcompany'][$code] = $this->getCompany($code);
+                $config['payment']['language'][$code] = $language;
             }
         }
 

@@ -1,4 +1,107 @@
-<div class="payment-method" data-bind="visible: showforCompany(), css: {'_active': (getCode() == isChecked())}">
+<style>
+    .container-wrap {
+        display:flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        align-items: stretch;
+        align-content: stretch;
+        padding-bottom:.25em;
+    }
+
+    .form-element-container {
+        display:block;
+        flex-basis: 0;
+        align-self: auto;
+    }
+
+    .container-cardholder {
+        flex-grow:1;
+    }
+
+    .container-creditcard {
+        flex-grow:3;
+        padding:.5em 1em .5em 0;
+    }
+
+    .container-cvc {
+        flex-grow:1;
+        padding:.5em 0 .5em 1em;
+    }
+
+    .container-cvc input {
+        text-align:center;
+    }
+
+    .container-exp-month {
+        flex-grow:1;
+        padding:.5em 1em .5em 0;
+    }
+
+    .container-exp-year {
+        flex-grow:1;
+        padding:.5em 0 .5em 1em;
+    }
+
+    .checkout-payment-method .payment-method-cse .actions-toolbar .primary button {
+        float:none;
+        padding: 1em;
+        margin: 1em 1em 1em 0;
+        background-color: #052854;
+        color: #A2CC83;
+        border: 0;
+        border-radius: 15px;
+        text-transform: uppercase;
+        font-weight: 700;
+        width: 100%;
+    }
+
+    .payment-method-cse [data-validation="invalid"] {
+        border: 1px solid red;
+    }
+
+    .payment-method-cse [data-validation="valid"] {
+        border: 1px solid green;
+    }
+
+    .payment-method-cse [data-validation="potentially-valid"] {
+        border: 1px solid orange;
+    }
+
+    .checkout-payment-method .payment-method-cse .payment-method-content {
+        width:350px;
+    }
+
+    .checkout-payment-method .payment-method-cse label {
+        padding-bottom:.5em;
+    }
+
+    .checkout-payment-method .payment-method-cse .actions-toolbar .primary {
+        display:block;
+        float:none;
+        margin:0;
+    }
+
+    .payment-method-cse fieldset {
+        position:relative;
+        border:0;
+        padding:0;
+        margin:0;
+    }
+
+    .payment-method fieldset legend {
+        position:relative;
+        float:left;
+        display:block;
+        width:100%;
+        color: #052854;
+        font-size: 1.5em;
+        font-weight: 400;
+        padding: .5em 0 .5em 0;
+    }
+</style>
+
+<div class="payment-method payment-method-cse" data-bind="visible: showforCompany(), css: {'_active': (getCode() == isChecked())}">
     <div class="payment-method-title field choice">
         <input type="radio"
                name="payment[method]"
@@ -22,81 +125,84 @@
         </div>
 
         <fieldset>
-            <legend><!-- ko i18n: 'Payment Data'--><!-- /ko --></legend>
-            <label for="card-holder"><!-- ko i18n: 'Credit Card Holder'--><!-- /ko --></label>
-            <input id="card-holder"
-                   type="text"
-                   name="cardholder"
-                   required
-                   data-pay-encrypt-field
-                   data-bind="attr: {placeholder: $t('Credit Card Holder')}"
-            />
+            <div class="container-wrap">
+                <legend><!-- ko i18n: 'Payment Information'--><!-- /ko --></legend>
+            </div>
 
-            <div class="form-element-container has-icon-container">
-                <label for="cardnumber"><!-- ko i18n: 'Credit Card Number'--><!-- /ko --></label>
-                <div class="has-icon-wrap">
-                    <span class="input-container">
-                        <input id="cardnumber"
-                               type="text"
-                               name="cardnumber"
-                               required
-                               data-pay-encrypt-field
-                               data-bind="attr: {placeholder: $t('Credit Card Number')}"
-                        />
-                    </span>
-
-                    <div class="icon-container">
-                        <img src="" data-credit-card-type alt="Card type" />
-                    </div>
+            <div class="container-wrap">
+                <div class="form-element-container container-cardholder">
+                    <label for="card-holder"><!-- ko i18n: 'Cardholder Name'--><!-- /ko --></label>
+                    <input id="card-holder"
+                           type="text"
+                           name="cardholder"
+                           required
+                           data-pay-encrypt-field
+                           data-bind="attr: {placeholder: $t('Cardholder Name')}"
+                    />
                 </div>
             </div>
 
-            <div class="form-element-container has-icon-container">
-                <label for="cvc" data-cvc-label><!-- ko i18n: 'Card Verification Number'--><!-- /ko --></label>
-                <div class="has-icon-wrap">
-                    <span class="input-container">
+            <div class="container-wrap">
+                <div class="form-element-container has-icon-container container-creditcard">
+                    <label for="cardnumber"><!-- ko i18n: 'Credit Card Number'--><!-- /ko --></label>
+                    <div class="has-icon-wrap">
+                        <span class="input-container">
+                            <input id="cardnumber"
+                                   type="text"
+                                   name="cardnumber"
+                                   required
+                                   data-pay-encrypt-field
+                                   data-bind="attr: {placeholder: $t('Credit Card Number')}"
+                            />
+                        </span>
+
+                        <div class="icon-container">
+                            <img src="" data-credit-card-type alt="Card type" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-element-container container-cvc">
+                    <label for="cvc" data-cvc-label><!-- ko i18n: 'CVC'--><!-- /ko --></label>
                         <input id="cvc"
                                type="text"
                                name="cardcvc"
                                required
                                data-pay-encrypt-field
-                               data-bind="attr: {placeholder: $t('Card Verification Number')}"
+                               data-bind="attr: {placeholder: $t('CVC')}"
                         />
-                    </span>
-                    <div class="icon-container">
-                        <img src="" data-credit-card-cvc alt="CVC" />
-                    </div>
                 </div>
             </div>
 
-            <div class="form-element-container">
-                <label for="month"><!-- ko i18n: 'Month'--><!-- /ko --></label>
-                <select name="valid_thru_month"
-                        id="month"
-                        data-pay-encrypt-field
-                        class="select select-month"
-                        data-bind="options: getCcMonthsValues(),
-                                   optionsValue: 'value',
-                                   optionsText: 'month',
-                                   value: getCurrentMonth()
-                                   ">
-                </select>
-            </div>
-
-            <div class="form-element-container">
-                <label for="year"><!-- ko i18n: 'Year'--><!-- /ko --></label>
-                    <select name="valid_thru_year"
-                            id="year"
-                            class="select select-year"
+            <div class="container-wrap">
+                <div class="form-element-container container-exp-month">
+                    <label for="month"><!-- ko i18n: 'Month'--><!-- /ko --></label>
+                    <select name="valid_thru_month"
+                            id="month"
                             data-pay-encrypt-field
-                            data-bind="options: getCcYearsValues(),
+                            class="select select-month"
+                            data-bind="options: getCcMonthsValues(),
                                        optionsValue: 'value',
-                                       optionsText: 'year'
+                                       optionsText: 'month',
+                                       value: getCurrentMonth()
                                        ">
                     </select>
-                </select>
-            </div>
+                </div>
 
+                <div class="form-element-container container-exp-year">
+                    <label for="year"><!-- ko i18n: 'Year'--><!-- /ko --></label>
+                        <select name="valid_thru_year"
+                                id="year"
+                                class="select select-year"
+                                data-pay-encrypt-field
+                                data-bind="options: getCcYearsValues(),
+                                           optionsValue: 'value',
+                                           optionsText: 'year'
+                                           ">
+                        </select>
+                    </select>
+                </div>
+            </div>
         <p data-bind="html: getInstructions();"></p>
 
         <div class="checkout-payment-errors" data-bind="html: paymentErrorMessage"></div>
