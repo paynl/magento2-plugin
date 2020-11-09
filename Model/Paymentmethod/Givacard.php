@@ -16,6 +16,6 @@ class Givacard extends PaymentMethod
 
     protected function getDefaultPaymentOptionId()
     {
-        return 1675;
+        return 1657;
     }
 }
