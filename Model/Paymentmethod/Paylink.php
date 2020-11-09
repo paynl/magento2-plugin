@@ -6,8 +6,8 @@ use Magento\Sales\Model\Order;
 use Magento\Framework\DataObject;
 
 /**
- *
- * @author Andy Pieters <andy@pay.nl>
+ * Class Paylink
+ * @package Paynl\Payment\Model\Paymentmethod
  */
 class Paylink extends PaymentMethod
 {

@@ -6,9 +6,8 @@
 namespace Paynl\Payment\Model\Paymentmethod;
 
 /**
- * Description of Creditclick
- *
- * @author Andy Pieters <andy@pay.nl>
+ * Class Creditclick
+ * @package Paynl\Payment\Model\Paymentmethod
  */
 class Creditclick extends PaymentMethod
 {

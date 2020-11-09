@@ -8,7 +8,6 @@ namespace Paynl\Payment\Model\Paymentmethod;
 /**
  * Class Tikkie
  * @package Paynl\Payment\Model\Paymentmethod
- * @author Daan Stokhof <daan@Pay.nl>
  */
 class Tikkie extends PaymentMethod
 {

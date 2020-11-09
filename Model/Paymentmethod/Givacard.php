@@ -6,9 +6,8 @@
 namespace Paynl\Payment\Model\Paymentmethod;
 
 /**
- * Description of Ideal
- *
- * @author Andy Pieters <andy@pay.nl>
+ * Class Givacard
+ * @package Paynl\Payment\Model\Paymentmethod
  */
 class Givacard extends PaymentMethod
 {

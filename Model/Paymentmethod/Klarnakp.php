@@ -6,9 +6,8 @@
 namespace Paynl\Payment\Model\Paymentmethod;
 
 /**
- * Description of KlarnaKP
- *
- * @author Max Geraci <max@pay.nl>
+ * Class Klarnakp
+ * @package Paynl\Payment\Model\Paymentmethod
  */
 class Klarnakp extends PaymentMethod
 {

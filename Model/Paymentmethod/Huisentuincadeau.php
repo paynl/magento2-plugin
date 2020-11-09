@@ -6,8 +6,8 @@
 namespace Paynl\Payment\Model\Paymentmethod;
 
 /**
- * Description of Huisentuincadeau
- *
+ * Class Huisentuincadeau
+ * @package Paynl\Payment\Model\Paymentmethod
  */
 class Huisentuincadeau extends PaymentMethod
 {

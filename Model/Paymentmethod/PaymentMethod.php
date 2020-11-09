@@ -23,9 +23,8 @@ use Paynl\Payment\Model\Config;
 use Paynl\Transaction;
 
 /**
- * Description of AbstractPaymentMethod
- *
- * @author Andy Pieters <andy@pay.nl>
+ * Class PaymentMethod
+ * @package Paynl\Payment\Model\Paymentmethod
  */
 abstract class PaymentMethod extends AbstractMethod
 {

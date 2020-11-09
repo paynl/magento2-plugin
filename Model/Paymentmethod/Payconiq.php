@@ -6,8 +6,8 @@
 namespace Paynl\Payment\Model\Paymentmethod;
 
 /**
- * Description of Payconiq
- *
+ * Class Payconiq
+ * @package Paynl\Payment\Model\Paymentmethod
  */
 class Payconiq extends PaymentMethod
 {

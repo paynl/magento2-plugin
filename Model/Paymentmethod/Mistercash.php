@@ -6,9 +6,8 @@
 namespace Paynl\Payment\Model\Paymentmethod;
 
 /**
- * Description of Ideal
- *
- * @author Andy Pieters <andy@pay.nl>
+ * Class Mistercash
+ * @package Paynl\Payment\Model\Paymentmethod
  */
 class Mistercash extends PaymentMethod
 {
