@@ -35,17 +35,25 @@ define(
             getKVKDOB: function () {
                 return (this.getDOB() > 0 && this.getKVK() > 0);
             },
-            showforCompany: function(){              
-                if(this.getforCompany() == null || this.getforCompany().length == 0 || this.getforCompany() == 0){
-                    return true;
+            isVisible:function(){
+                var currentShippingMethod = quote.shippingMethod().carrier_code+'_'+quote.shippingMethod().method_code;
+                var disallowedShippingMethods = [];
+                if(this.getDisallowedShipping()){
+                    disallowedShippingMethods = this.getDisallowedShipping().split(',');
                 }
-                if(this.getforCompany() == 1 && this.getCompany().length == 0){
-                    return true;
+                if(disallowedShippingMethods.includes(currentShippingMethod)){
+                    return false;
                 }
-                if(this.getforCompany() == 2 && this.getCompany().length > 0){
-                    return true;
+                if(this.getforCompany() == 1 && this.getCompany().length != 0){
+                    return false;
                 }
-                return false;
+                if(this.getforCompany() == 2 && this.getCompany().length == 0){
+                    return false;
+                }
+                return true;
+            },
+            getDisallowedShipping: function () {
+                return window.checkoutConfig.payment.disallowedshipping[this.item.method];
             }, 
             getCompany: function () {                
                 if (typeof quote.billingAddress._latestValue.company !== 'undefined') {

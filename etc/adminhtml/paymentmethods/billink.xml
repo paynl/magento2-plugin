@@ -124,6 +124,17 @@
                 <field id="active">1</field>
             </depends>
         </field>
+        <field id="disallowedshipping" translate="label" type="multiselect" sortOrder="110" showInDefault="1"
+               showInWebsite="1" showInStore="1">
+            <label>Disallowed Shipping Methods</label>
+            <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
+            <can_be_empty>1</can_be_empty>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+            <config_path>payment/paynl_payment_billink/disallowedshipping</config_path>
+            <comment><![CDATA[Hold CTRL button to select/deselect multiple]]></comment>
+        </field>
         <field id="showforcompany" translate="label" type="select" sortOrder="150" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Show for companies</label>
             <source_model>Paynl\Payment\Model\Config\Source\showCompanyOptions</source_model>
