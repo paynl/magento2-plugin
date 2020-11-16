@@ -12,7 +12,6 @@ define(
         'use strict';
         return Component.extend({
             redirectAfterPlaceOrder: false,
-
             defaults: {
                 template: 'Paynl_Payment/payment/default'
             },
