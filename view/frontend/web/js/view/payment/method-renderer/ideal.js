@@ -33,7 +33,7 @@ define(
                 if(this.getDisallowedShipping()){
                     disallowedShippingMethods = this.getDisallowedShipping().split(',');
                 }
-                if(disallowedShippingMethods.includes(currentShippingMethod)){
+                if(disallowedShippingMethods.includes(currentShippingMethod)  && currentShippingMethod.length > 0){
                     return false;
                 }
                 if(this.getforCompany() == 1 && this.getCompany().length != 0){
