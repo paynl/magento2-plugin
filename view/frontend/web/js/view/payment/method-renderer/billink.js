@@ -36,18 +36,15 @@ define(
                 return (this.getDOB() > 0 && this.getKVK() > 0);
             },
             isVisible:function(){
-                var disallowedShippingMethods = this.getDisallowedShipping();
-                if(disallowedShippingMethods){
+                var disallowedShippingMethods = this.getDisallowedShipping().split(',');
+                if($.isArray(disallowedShippingMethods) && disallowedShippingMethods.length > 0){
                     var carrier_code = typeof quote.shippingMethod().carrier_code !== 'undefined' ? quote.shippingMethod().carrier_code + '_' : '';
                     var method_code = typeof quote.shippingMethod().method_code !== 'undefined' ? quote.shippingMethod().method_code : '';
-                    var currentShippingMethod = carrier_code + method_code;
-                    
-                    var disallowedShippingMethods_arr = disallowedShippingMethods.split(',');
-                    
-                    if(disallowedShippingMethods_arr.includes(currentShippingMethod) && currentShippingMethod.length > 0){
+                    var currentShippingMethod = carrier_code + method_code;                  
+                    if(disallowedShippingMethods.includes(currentShippingMethod) && currentShippingMethod.length > 0){
                         return false;
                     }
-                }     
+                }        
                 if(this.getforCompany() == 1 && this.getCompany().length != 0){
                     return false;
                 }
