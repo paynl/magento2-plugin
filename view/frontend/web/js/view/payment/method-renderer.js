@@ -9,15 +9,13 @@ define(
               rendererList) {
         'use strict';
 
-        var defaultComponent = 'Paynl_Payment/js/view/payment/method-renderer/default';
-        var idealComponent = 'Paynl_Payment/js/view/payment/method-renderer/ideal';
-        var billinkComponent = 'Paynl_Payment/js/view/payment/method-renderer/billink';
+        var defaultComponent = 'Paynl_Payment/js/view/payment/method-renderer/default';       
 
         var methods = [
             {type: 'paynl_payment_afterpay', component: defaultComponent},
             {type: 'paynl_payment_alipay', component: defaultComponent},
             {type: 'paynl_payment_amex', component: defaultComponent},
-            {type: 'paynl_payment_billink', component: billinkComponent},
+            {type: 'paynl_payment_billink', component: defaultComponent},
             {type: 'paynl_payment_capayable', component: defaultComponent},
             {type: 'paynl_payment_capayable_gespreid', component: defaultComponent},
             {type: 'paynl_payment_cartasi', component: defaultComponent},
@@ -26,7 +24,7 @@ define(
             {type: 'paynl_payment_clickandbuy', component: defaultComponent},
             {type: 'paynl_payment_creditclick', component: defaultComponent},
             {type: 'paynl_payment_dankort', component: defaultComponent},
-            {type: 'paynl_payment_decadeaukaart', component: defaultComponent},
+            {type: 'paynl_payrendererListment_decadeaukaart', component: defaultComponent},
             {type: 'paynl_payment_eps', component: defaultComponent},
             {type: 'paynl_payment_fashioncheque', component: defaultComponent},
             {type: 'paynl_payment_fashiongiftcard', component: defaultComponent},
@@ -35,10 +33,10 @@ define(
             {type: 'paynl_payment_giropay', component: defaultComponent},
             {type: 'paynl_payment_givacard', component: defaultComponent},
             {type: 'paynl_payment_huisentuincadeau', component: defaultComponent},
-            {type: 'paynl_payment_ideal', component: idealComponent},
-            {type: 'paynl_payment_instore', component: idealComponent},
-            {type: 'paynl_payment_klarna', component: idealComponent},
-            {type: 'paynl_payment_klarnakp', component: idealComponent},
+            {type: 'paynl_payment_ideal', component: defaultComponent},
+            {type: 'paynl_payment_instore', component: defaultComponent},
+            {type: 'paynl_payment_klarna', component: defaultComponent},
+            {type: 'paynl_payment_klarnakp', component: defaultComponent},
             {type: 'paynl_payment_maestro', component: defaultComponent},
             {type: 'paynl_payment_mistercash', component: defaultComponent},
             {type: 'paynl_payment_multibanco', component: defaultComponent},
