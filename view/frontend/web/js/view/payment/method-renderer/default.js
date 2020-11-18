@@ -17,15 +17,18 @@ define(
                 template: 'Paynl_Payment/payment/default'
             },
             isVisible:function(){
-                var disallowedShippingMethods = this.getDisallowedShipping().split(',');
-                if($.isArray(disallowedShippingMethods) && disallowedShippingMethods.length > 0){
+                var disallowedShippingMethods = this.getDisallowedShipping();
+
+                if (disallowedShippingMethods) {
                     var carrier_code = typeof quote.shippingMethod().carrier_code !== 'undefined' ? quote.shippingMethod().carrier_code + '_' : '';
                     var method_code = typeof quote.shippingMethod().method_code !== 'undefined' ? quote.shippingMethod().method_code : '';
-                    var currentShippingMethod = carrier_code + method_code;                  
-                    if(disallowedShippingMethods.includes(currentShippingMethod) && currentShippingMethod.length > 0){
+                    var currentShippingMethod = carrier_code + method_code;
+
+                    var disallowedShippingMethodsSplitted = disallowedShippingMethods.split(',');
+                    if (disallowedShippingMethodsSplitted.includes(currentShippingMethod) && currentShippingMethod.length > 0) {
                         return false;
                     }
-                }     
+                }
                 if(this.getforCompany() == 1 && this.getCompany().length != 0){
                     return false;
                 }
@@ -36,23 +39,23 @@ define(
             },
             getDisallowedShipping: function () {
                 return window.checkoutConfig.payment.disallowedshipping[this.item.method];
-            },  
-            getCompany: function () {                
+            },
+            getCompany: function () {
                 if (typeof quote.billingAddress._latestValue.company !== 'undefined') {
                     return quote.billingAddress._latestValue.company;
                 }
-                return '';                
-            },    
+                return '';
+            },
             getforCompany   : function () {
                 return window.checkoutConfig.payment.showforcompany[this.item.method];
-            },  
+            },
             getInstructions: function () {
                 return window.checkoutConfig.payment.instructions[this.item.method];
             },
             getPaymentIcon: function () {
                 return window.checkoutConfig.payment.icon[this.item.method];
             },
-            
+
             afterPlaceOrder: function () {
                 window.location.replace(url.build('/paynl/checkout/redirect?nocache='+ (new Date().getTime())));
             },
