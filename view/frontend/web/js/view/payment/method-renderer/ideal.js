@@ -22,7 +22,13 @@ define(
                 return window.checkoutConfig.payment.banks[this.item.method].length > 0;
             },
             isVisible:function(){
-                var currentShippingMethod = quote.shippingMethod().carrier_code+'_'+quote.shippingMethod().method_code;
+                var currentShippingMethod = "";
+                if (typeof quote.shippingMethod().carrier_code !== 'undefined' && typeof quote.shippingMethod().method_code !== 'undefined') {
+                    currentShippingMethod = quote.shippingMethod().carrier_code+'_'+quote.shippingMethod().method_code;
+                }
+                else if(typeof quote.shippingMethod().method_code !== 'undefined'){
+                    currentShippingMethod = quote.shippingMethod().method_code;
+                }
                 var disallowedShippingMethods = [];
                 if(this.getDisallowedShipping()){
                     disallowedShippingMethods = this.getDisallowedShipping().split(',');
