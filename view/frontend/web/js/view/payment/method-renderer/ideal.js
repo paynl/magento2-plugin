@@ -23,12 +23,10 @@ define(
             },
             isVisible:function(){
                 var disallowedShippingMethods = this.getDisallowedShipping();
-
                 if (disallowedShippingMethods) {
                     var carrier_code = typeof quote.shippingMethod().carrier_code !== 'undefined' ? quote.shippingMethod().carrier_code + '_' : '';
                     var method_code = typeof quote.shippingMethod().method_code !== 'undefined' ? quote.shippingMethod().method_code : '';
                     var currentShippingMethod = carrier_code + method_code;
-
                     var disallowedShippingMethodsSplitted = disallowedShippingMethods.split(',');
                     if (disallowedShippingMethodsSplitted.includes(currentShippingMethod) && currentShippingMethod.length > 0) {
                         return false;
