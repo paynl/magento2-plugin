@@ -36,13 +36,15 @@ define(
                 return (this.getDOB() > 0 && this.getKVK() > 0);
             },
             isVisible:function(){
-                var currentShippingMethod = quote.shippingMethod().carrier_code+'_'+quote.shippingMethod().method_code;
-                var disallowedShippingMethods = [];
-                if(this.getDisallowedShipping()){
-                    disallowedShippingMethods = this.getDisallowedShipping().split(',');
-                }
-                if(disallowedShippingMethods.includes(currentShippingMethod)){
-                    return false;
+                var disallowedShippingMethods = this.getDisallowedShipping();
+                if (disallowedShippingMethods) {
+                    var carrier_code = typeof quote.shippingMethod().carrier_code !== 'undefined' ? quote.shippingMethod().carrier_code + '_' : '';
+                    var method_code = typeof quote.shippingMethod().method_code !== 'undefined' ? quote.shippingMethod().method_code : '';
+                    var currentShippingMethod = carrier_code + method_code;
+                    var disallowedShippingMethodsSplitted = disallowedShippingMethods.split(',');
+                    if (disallowedShippingMethodsSplitted.includes(currentShippingMethod) && currentShippingMethod.length > 0) {
+                        return false;
+                    }
                 }
                 if(this.getforCompany() == 1 && this.getCompany().length != 0){
                     return false;
@@ -54,16 +56,16 @@ define(
             },
             getDisallowedShipping: function () {
                 return window.checkoutConfig.payment.disallowedshipping[this.item.method];
-            }, 
-            getCompany: function () {                
+            },
+            getCompany: function () {
                 if (typeof quote.billingAddress._latestValue.company !== 'undefined') {
                     return quote.billingAddress._latestValue.company;
                 }
-                return '';                
-            },  
+                return '';
+            },
             getforCompany   : function () {
                 return window.checkoutConfig.payment.showforcompany[this.item.method];
-            }, 
+            },
             /**
              * Get payment method data
              */
