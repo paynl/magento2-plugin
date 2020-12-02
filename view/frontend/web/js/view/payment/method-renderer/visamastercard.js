@@ -46,22 +46,22 @@ define(
                     },
                     'icons': {
                         'creditcard': {
-                            'default': baseUrl + '/images/creditcard/mono/generic.svg',
-                            'alipay': baseUrl + '/images/creditcard/logo/alipay.svg',
-                            'american-express': baseUrl + '/images/creditcard/logo/amex.svg',
-                            'diners-club': baseUrl + '/images/creditcard/logo/diners.svg',
-                            'discover': baseUrl + '/images/creditcard/logo/discover.svg',
-                            'elo': baseUrl + '/images/creditcard/logo/elo.svg',
-                            'hiper': baseUrl + '/images/creditcard/logo/hiper.svg',
-                            'hipercard': baseUrl + '/images/creditcard/logo/hipercard.svg',
-                            'jcb': baseUrl + '/images/creditcard/logo/jcb.svg',
-                            'maestro': baseUrl + '/images/creditcard/logo/maestro.svg',
-                            'mastercard': baseUrl + '/images/creditcard/logo/mastercard.svg',
-                            'mir': baseUrl + '/images/creditcard/logo/mir.svg',
-                            'unionpay': baseUrl + '/images/creditcard/logo/unionpay.svg',
-                            'visa': baseUrl + '/images/creditcard/logo/visa.svg'
+                            'default': baseUrl + '/images/creditcard/cc-front.svg',
+                            'alipay': baseUrl + '/images/creditcard/cc-alipay.svg',
+                            'american-express': baseUrl + '/images/creditcard/cc-amex.svg',
+                            'diners-club': baseUrl + '/images/creditcard/cc-diners-club.svg',
+                            'discover': baseUrl + '/images/creditcard/cc-discover.svg',
+                            'elo': baseUrl + '/images/creditcard/cc-elo.svg',
+                            'hiper': baseUrl + '/images/creditcard/cc-hiper.svg',
+                            'hipercard': baseUrl + '/images/creditcard/cc-hipercard.svg',
+                            'jcb': baseUrl + '/images/creditcard/cc-jcb.svg',
+                            'maestro': baseUrl + '/images/creditcard/cc-maestro.svg',
+                            'mastercard': baseUrl + '/images/creditcard/cc-mastercard.svg',
+                            'mir': baseUrl + '/images/creditcard/cc-mir.svg',
+                            'unionpay': baseUrl + '/images/creditcard/cc-unionpay.svg',
+                            'visa': baseUrl + '/images/creditcard/cc-visa.svg'
                         },
-                        'cvc': baseUrl + '/images/creditcard/mono/code.svg',
+                        'cvc': baseUrl + '/images/creditcard/cc-back.svg',
                     }
                 });
 
@@ -116,7 +116,7 @@ define(
 
                         if (event.subject instanceof payCryptography.PaymentCompleteModal) {
                             self.activeModal = paymentCompleteModal;
-                            self.paymentCompleteModalContent(event.getSubject().render());
+                            self.paymentCompleteModalContent(`<p>${$t('Thanks for your order. We\'ll email you order details and tracking information.')}</p>`);
                             paymentCompleteModal.showModal();
                             return;
                         }
@@ -187,7 +187,8 @@ define(
                 template: 'Paynl_Payment/payment/visamastercard'
             },
             initializePaymentForm: function(){
-                this.encryptedForm.init();
+                console.log('test disable init');
+                // this.encryptedForm.init();
             },
             showforCompany: function(){
                 if(this.getforCompany() == null || this.getforCompany().length == 0 || this.getforCompany() == 0){
@@ -231,25 +232,29 @@ define(
             getCcYears: function () {
                 return window.checkoutConfig.payment.cc_years[this.getCode()];
             },
-            getCcMonthsValues: function () {
-                return _.map(this.getCcMonths(), function (value, key) {
-                    return {
-                        'value': key,
-                        'month': value
-                    };
+            prependChooseOption: function(items, key, label) {
+                let options = [{
+                    'value': '',
+                    [key]: label
+                }];
+
+                _.map(items, function (value, itemKey) {
+                    options.push({
+                        'value': itemKey,
+                        [key]: value.toString().toUpperCase()
+                    });
                 });
+
+                return options;
+            },
+            getCcMonthsValues: function () {
+                return this.prependChooseOption(this.getCcMonths(), 'month', $t('Select'));
             },
             getCcYearsValues: function () {
-                return _.map(this.getCcYears(), function (value, key) {
-                    return {
-                        'value': key,
-                        'year': value
-                    };
-                });
+                return this.prependChooseOption(this.getCcYears(), 'year', $t('Select'));
             },
-            getCurrentMonth: function(el){
-                let date = new Date();
-                return date.getMonth() + 1;
+            setEmptyValuesDisabled: function(option, item) {
+                ko.applyBindingsToNode(option, {disable: item.value === ''}, item);
             },
             placeOrder: function(e){
                 let self = this;

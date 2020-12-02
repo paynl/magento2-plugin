@@ -24,9 +24,9 @@ form[data-pay-encrypt-form] .has-icon-container .icon-container {
     flex-direction: row-reverse;
     align-items: center;
     position: absolute;
-    right: 0;
-    top: 0;
-    height: 100%;
+    right: 2px;
+    top: 2px;
+    height: 28px;
 }
 
 form[data-pay-encrypt-form] .has-icon-container .input-container {
@@ -53,4 +53,117 @@ form[data-pay-encrypt-form] .has-icon-container .input-container input {
 
 .checkout-index-index .modal-popup.pay-payment-modal .modal-content iframe {
     border:0;
+}
+
+.container-wrap {
+    display:flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    align-content: stretch;
+    padding-bottom:.45em;
+}
+
+.form-element-container {
+    display:block;
+    flex-basis: 0;
+    align-self: auto;
+}
+
+.container-cardholder {
+    flex-grow:1;
+}
+
+.container-creditcard {
+    flex-grow:3;
+    padding:.5em 1em 0 0;
+}
+
+.container-cvc {
+    flex-grow:1;
+    padding:.5em 0 0 1em;
+}
+
+.container-cvc input {
+    text-align:center;
+}
+
+.container-exp-month {
+    flex-grow:1;
+    padding:.5em 1em .5em 0;
+}
+
+.container-exp-year {
+    flex-grow:1;
+    padding:.5em 0 .5em 1em;
+}
+
+.checkout-payment-method .payment-method-cse .actions-toolbar .primary button {
+    float:none;
+    padding: 1em;
+    margin: 1em 1em 1em 0;
+    background-color: #052854;
+    color: #A2CC83;
+    border: 0;
+    border-radius: 15px;
+    text-transform: uppercase;
+    font-weight: 700;
+    width: 100%;
+}
+
+form[data-pay-encrypt-form] select option {
+    color:#000;
+}
+
+.payment-method-cse input::placeholder,
+form[data-pay-encrypt-form] select:invalid,
+form[data-pay-encrypt-form] select option[value=""] {
+    color:#767676 !important;
+    opacity:1;
+}
+
+.payment-method-cse [data-validation="invalid"] {
+    border: 1px solid red;
+}
+
+.payment-method-cse [data-validation="valid"] {
+    border: 1px solid green;
+}
+
+.payment-method-cse [data-validation="potentially-valid"] {
+    border: 1px solid orange;
+}
+
+.checkout-payment-method .payment-method-cse .payment-method-content {
+    width:420px;
+}
+
+.checkout-payment-method .payment-method-cse label {
+    display:block;
+    margin-bottom:.3em;
+}
+
+.checkout-payment-method .payment-method-cse .actions-toolbar .primary {
+    display:block;
+    float:none;
+    margin:0;
+}
+
+.payment-method-cse fieldset {
+    position:relative;
+    border:0;
+    padding:0;
+    margin:0;
+}
+
+.payment-method fieldset legend {
+    position:relative;
+    float:left;
+    display:block;
+    width:100%;
+    color: #052854;
+    font-size: 1.5em;
+    font-weight: 400;
+    padding: .5em 0 .7em 0;
 }
