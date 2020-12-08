@@ -90,7 +90,27 @@ class Paylink extends PaymentMethod
                 $show_order_in_mail = 0;
             }
 
+            $subject = $this->_scopeConfig->getValue('payment/paynl_payment_paylink/paylink_subject', 'store');
+            $subject = str_replace('((paylink))','<a href="'.$url.'">'.__('PAY. paylink').'</a>',$subject);
+            $subject = str_replace('((customer_name))',$order->getCustomerName(),$subject);
+            $subject = str_replace('((store_name))',$order->getStore()->getName(),$subject);
+            $subject = str_replace('((support_email))','<a href="mailto:'.$supportEmail.'">'.$supportEmail.'</a>',$subject);
+            $subject = str_replace('((order_id))',$order->getIncrementId(),$subject);
+           
+            $body = $this->_scopeConfig->getValue('payment/paynl_payment_paylink/paylink_body', 'store');;
+            $body = nl2br($body);
+            $body = str_replace('((paylink))','<a href="'.$url.'">'.__('PAY. paylink').'</a>',$body);
+            $body = str_replace('((customer_name))',$order->getCustomerName(),$body);
+            $body = str_replace('((store_name))',$order->getStore()->getName(),$body);
+            $body = str_replace('((support_email))','<a href="mailto:'.$supportEmail.'">'.$supportEmail.'</a>',$body);
+            $body = str_replace('((order_id))',$order->getIncrementId(),$body);
+
+            echo $body;
+            echo $order->getId();
+            
             $templateVars = array(
+                'subject' => $subject,
+                'body' => $body,
                 'order' => $order,
                 'store' => $store,
                 'customer_name' =>  $order->getCustomerName(),
@@ -109,7 +129,7 @@ class Paylink extends PaymentMethod
                     'is_not_virtual' => $order->getIsNotVirtual(),
                     'email_customer_note' => $order->getEmailCustomerNote(),
                     'frontend_status_label' => $order->getFrontendStatusLabel(),
-                    'show_order_in_mail' => $show_order_in_mail
+                    'show_order_in_mail' => $show_order_in_mail                    
                 ],
                 
             );          
@@ -125,6 +145,8 @@ class Paylink extends PaymentMethod
             ->getTransport();               
             $transport->sendMessage();
         
+            exit('sending');
+
             parent::initialize($paymentAction, $stateObject);
         }
     }
