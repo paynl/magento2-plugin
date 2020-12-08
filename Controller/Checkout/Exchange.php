@@ -159,11 +159,15 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
 
         if ($transaction->isPaid() || $transaction->isAuthorized()) {
             return $this->processPaidOrder($transaction, $order);
-
         } elseif ($transaction->isCanceled()) {
-            return $this->cancelOrder($order);
+            if ($order->isCanceled()) {
+                $returnMessage = "TRUE| ALLREADY CANCELED";
+            } else {
+                return $this->cancelOrder($order);
+            }
         }
 
+        return $this->result->setContents($returnMessage);
     }
 
     private function cancelOrder(Order $order)
