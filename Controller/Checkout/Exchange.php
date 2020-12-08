@@ -166,8 +166,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
                 return $this->cancelOrder($order);
             }
         }
-
-        return $this->result->setContents($returnMessage);
+        
     }
 
     private function cancelOrder(Order $order)
