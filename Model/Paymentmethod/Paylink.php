@@ -145,8 +145,6 @@ class Paylink extends PaymentMethod
             ->getTransport();               
             $transport->sendMessage();
         
-            exit('sending');
-
             parent::initialize($paymentAction, $stateObject);
         }
     }
