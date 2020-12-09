@@ -115,6 +115,12 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         \Paynl\Config::setApiToken($this->config->getApiToken());
 
         $params = $this->getRequest()->getParams();
+        $action = !empty($params['action']) ? strtolower($params['action']) : '';
+
+        if ($action == 'pending') {
+            return $this->result->setContents('TRUE| Ignore pending');
+        }
+
         if (!isset($params['order_id'])) {
             $this->logger->critical('Exchange: order_id is not set in the request', $params);
 
@@ -136,7 +142,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         }
 
         if ($transaction->isPending()) {
-            if (isset($params['action']) && $params['action'] == 'new_ppt') {
+            if ($action == 'new_ppt') {
                 return $this->result->setContents("FALSE| Payment is pending");
             }
             return $this->result->setContents("TRUE| Ignoring pending");
