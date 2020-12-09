@@ -160,7 +160,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         if ($order->getTotalDue() <= 0) {
             $this->logger->debug('Total due <= 0, so not touching the status of the order: ' . $orderEntityId);
 
-            return $this->result->setContents('TRUE| Ignoring: order has been paid');
+            return $this->result->setContents('TRUE| Ignoring: order has already been paid');
         }
 
         if ($transaction->isPaid() || $transaction->isAuthorized()) {
