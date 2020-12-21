@@ -126,7 +126,11 @@ class Finish extends PayAction
             return $resultRedirect;
         }
 
-        $this->messageManager->addNoticeMessage(__('Payment canceled'));
+        $orderStatus = empty($params['orderStatusId']) ? null : $params['orderStatusId'];
+
+        $cancelMessage = $orderStatus == -63 ? __('Payment denied') : __('Payment canceled');
+
+        $this->messageManager->addNoticeMessage($cancelMessage);
         $cancelURL = $this->config->getCancelURL();
         $resultRedirect->setPath($cancelURL);
 
