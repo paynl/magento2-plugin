@@ -43,7 +43,7 @@ define(
                 return window.checkoutConfig.payment.disallowedshipping[this.item.method];
             },  
             getCompany: function () {                
-                if (typeof quote.billingAddress._latestValue.company !== 'undefined') {
+                if (typeof quote.billingAddress._latestValue.company !== 'undefined' && quote.billingAddress._latestValue.company !== null) {
                     return quote.billingAddress._latestValue.company;
                 }
                 return '';                
