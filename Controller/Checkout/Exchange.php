@@ -115,6 +115,12 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         \Paynl\Config::setApiToken($this->config->getApiToken());
 
         $params = $this->getRequest()->getParams();
+        $action = !empty($params['action']) ? strtolower($params['action']) : '';
+
+        if ($action == 'pending') {
+            return $this->result->setContents('TRUE| Ignore pending');
+        }
+
         if (!isset($params['order_id'])) {
             $this->logger->critical('Exchange: order_id is not set in the request', $params);
 
@@ -136,7 +142,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         }
 
         if ($transaction->isPending()) {
-            if (isset($params['action']) && $params['action'] == 'new_ppt') {
+            if ($action == 'new_ppt') {
                 return $this->result->setContents("FALSE| Payment is pending");
             }
             return $this->result->setContents("TRUE| Ignoring pending");
@@ -152,16 +158,19 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             return $this->result->setContents('FALSE| Cannot load order');
         }
         if ($order->getTotalDue() <= 0) {
-            $this->logger->debug('Total due <= 0, so iam not touching the status of the order: ' . $orderEntityId);
+            $this->logger->debug('Total due <= 0, so not touching the status of the order: ' . $orderEntityId);
 
-            return $this->result->setContents('TRUE| Total due <= 0, so iam not touching the status of the order');
+            return $this->result->setContents('TRUE| Ignoring: order has already been paid');
         }
 
         if ($transaction->isPaid() || $transaction->isAuthorized()) {
             return $this->processPaidOrder($transaction, $order);
-
         } elseif ($transaction->isCanceled()) {
-            return $this->cancelOrder($order);
+            if ($order->isCanceled()) {
+                return $this->result->setContents("TRUE| ALLREADY CANCELED");
+            } else {
+                return $this->cancelOrder($order);
+            }
         }
 
     }
