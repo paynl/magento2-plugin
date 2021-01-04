@@ -114,7 +114,11 @@ class Finish extends PayAction
 
         if ($transaction->isPaid() || $transaction->isAuthorized() || ($transaction->isPending() && $pinStatus == null)) {
             $successUrl = $this->config->getSuccessPage($payment->getMethod());
-	        $resultRedirect->setPath($successUrl, ['_query' => ['utm_nooverride' => '1']]);
+            $resultRedirect->setPath($successUrl, ['_query' => ['utm_nooverride' => '1']]);
+            
+            if($payment->toArray()['method'] == 'paynl_payment_paylink'){
+                $resultRedirect->setPath('paynl/checkout/paylink/');
+            }
 
             // make the cart inactive
 	        $session = $this->checkoutSession;
