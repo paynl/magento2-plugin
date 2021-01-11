@@ -128,8 +128,7 @@
         <field id="paylink_body" translate="label" type="textarea" sortOrder="170" showInDefault="1"
                showInWebsite="1"
                showInStore="1">
-            <label>Email Body</label>
-            <source_model>Paynl\Payment\Model\Config\Source\SendNewOrderEmail</source_model>
+            <label>Email Body</label>        
             <config_path>payment/paynl_payment_paylink/paylink_body</config_path>
             <depends>
                 <field id="active">1</field>
