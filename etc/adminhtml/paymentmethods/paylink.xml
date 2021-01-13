@@ -139,7 +139,6 @@
                showInWebsite="1"
                showInStore="1">
             <label>Custom success page</label>
-            <source_model>Paynl\Payment\Model\Config\Source\SendNewOrderEmail</source_model>
             <config_path>payment/paynl_payment_paylink/custom_success_page</config_path>
             <depends>
                 <field id="active">1</field>
