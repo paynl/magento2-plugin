@@ -162,13 +162,13 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
 
             return $this->result->setContents('TRUE| Ignoring: order has already been paid');
         }
-        if ($_REQUEST["action"] == 'capture') {
+        if ($action == 'capture') {
             $payment = $order->getPayment();
-            if ($payment->getAdditionalInformation('manual_capture')) {
+            if(!empty($payment) && $payment->getAdditionalInformation('manual_capture')){
                 $this->logger->debug('Already captured.');
 
                 return $this->result->setContents('TRUE| Already captured.');
-            }
+            }           
         }
 
         if ($transaction->isPaid() || $transaction->isAuthorized()) {
