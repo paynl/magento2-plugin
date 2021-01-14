@@ -183,6 +183,10 @@ abstract class PaymentMethod extends AbstractMethod
     {
         $this->paynlConfig->configureSDK();
 
+        $payment->setAdditionalInformation('manual_capture', 'true');
+        $order = $payment->getOrder();
+        $order->save();
+
         $transactionId = $payment->getParentTransactionId();
 
         Transaction::capture($transactionId);
