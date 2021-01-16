@@ -114,13 +114,14 @@ class Finish extends PayAction
 
         if ($transaction->isPaid() || $transaction->isAuthorized() || ($transaction->isPending() && $pinStatus == null)) {
             $successUrl = $this->config->getSuccessPage($payment->getMethod());
-            $resultRedirect->setPath($successUrl, ['_query' => ['utm_nooverride' => '1']]);
-            
-            if($payment->toArray()['method'] == 'paynl_payment_paylink'){
-                $resultRedirect->setPath('paynl/checkout/paylink/');
+
+            if(empty($successUrl)) {
+                $successUrl = ($payment->getMethod() == 'paynl_payment_paylink') ? Config::FINISH_PAYLINK : Config::FINISH_STANDARD;
             }
 
-            // make the cart inactive
+            $resultRedirect->setPath($successUrl, ['_query' => ['utm_nooverride' => '1']]);
+
+            # Make the cart inactive
 	        $session = $this->checkoutSession;
 
 	        $quote = $session->getQuote();
@@ -131,7 +132,13 @@ class Finish extends PayAction
         }
 
         $this->messageManager->addNoticeMessage(__('Payment canceled'));
-        $cancelURL = $this->config->getCancelURL();
+
+        if ($payment->getMethod() == 'paynl_payment_paylink') {
+            $cancelURL = Config::FINISH_PAYLINK . '?cancel=1';
+        } else {
+            $cancelURL = $this->config->getCancelURL();
+        }
+
         $resultRedirect->setPath($cancelURL);
 
 
