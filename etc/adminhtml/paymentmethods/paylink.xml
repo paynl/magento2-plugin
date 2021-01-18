@@ -114,17 +114,27 @@
                 <field id="active">1</field>
             </depends>
             <config_path>payment/paynl_payment_paylink/show_order_in_mail</config_path>
-            <comment><![CDATA[Show order at the bottom of the email when sending a email containing the paylink.]]></comment>
-        </field>
-        <field id="showforcompany" translate="label" type="select" sortOrder="150" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Show for companies</label>
-            <source_model>Paynl\Payment\Model\Config\Source\showCompanyOptions</source_model>
+            <comment><![CDATA[Show order at the bottom of the email when sending an email containing the paylink.]]></comment>
+        </field>       
+        <field id="paylink_subject" translate="label" type="text" sortOrder="160" showInDefault="1"
+               showInWebsite="1"
+               showInStore="1">
+            <label>Email subject</label>
+            <config_path>payment/paynl_payment_paylink/paylink_subject</config_path>
             <depends>
                 <field id="active">1</field>
             </depends>
-            <config_path>payment/paynl_payment_paylink/showforcompany</config_path>
-            <comment><![CDATA[Allow payment method to be used for companies, private, or both.]]></comment>
         </field>
+        <field id="paylink_body" translate="label" type="textarea" sortOrder="170" showInDefault="1"
+               showInWebsite="1"
+               showInStore="1">
+            <label>Email Body</label>        
+            <config_path>payment/paynl_payment_paylink/paylink_body</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+            <comment>In order to insert variables into the email use the following text in the subject/body: ((customer_name)), ((paylink)), ((order_id)), ((store_name)), ((support_email))</comment>
+        </field> 
         <field id="custom_success_page" translate="label" type="text" sortOrder="110" showInDefault="1"
                showInWebsite="1"
                showInStore="1">

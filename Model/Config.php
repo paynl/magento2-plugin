@@ -14,6 +14,8 @@ use Magento\Store\Model\Store;
  */
 class Config
 {
+    const FINISH_PAYLINK = 'paynl/checkout/paylink';
+    const FINISH_STANDARD = 'checkout/onepage/success';
 
     /** @var  Store */
     private $store;
@@ -73,20 +75,20 @@ class Config
     {
         $remoteIP =  isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'];
         $ip = isset($_SERVER['HTTP_CLIENT_IP']) ? $_SERVER['HTTP_CLIENT_IP'] : $remoteIP;
-        
+
         $ipconfig = $this->store->getConfig('payment/paynl/testipaddress');
-        $allowed_ips = explode(',', $ipconfig);       
+        $allowed_ips = explode(',', $ipconfig);
         if(in_array($ip, $allowed_ips) && filter_var($ip, FILTER_VALIDATE_IP) && strlen($ip) > 0 && count($allowed_ips) > 0){
             return true;
-        }        
+        }
         return $this->store->getConfig('payment/paynl/testmode') == 1;
     }
-    
+
     public function isSendDiscountTax()
     {
         return $this->store->getConfig('payment/paynl/discount_tax') == 1;
     }
-    
+
     public function isNeverCancel()
     {
         return $this->store->getConfig('payment/paynl/never_cancel') == 1;
@@ -113,7 +115,7 @@ class Config
     {
         return $this->store->getConfig('payment/' . $methodCode . '/order_status');
     }
-    
+
     public function getAuthorizedStatus($methodCode)
     {
         return $this->store->getConfig('payment/' . $methodCode . '/order_status_authorized');
@@ -127,11 +129,9 @@ class Config
      * @param $methodCode string
      * @return string
      */
-    public function getSuccessPage($methodCode){
-        $success_page = $this->store->getConfig('payment/' . $methodCode . '/custom_success_page');
-        if(empty($success_page)) $success_page = 'checkout/onepage/success';
-
-        return $success_page;
+    public function getSuccessPage($methodCode)
+    {
+        return $this->store->getConfig('payment/' . $methodCode . '/custom_success_page');
     }
 
     /**
@@ -174,15 +174,15 @@ class Config
         return trim($this->store->getConfig('payment/paynl/serviceid'));
     }
 
-    public function getIconUrl() 
+    public function getIconUrl()
     {
         $url = 'https://static.pay.nl/payment_profiles/50x32/#paymentOptionId#.png';
         $iconUrl = trim($this->store->getConfig('payment/paynl/iconurl'));
 
         return empty($iconUrl)?$url:$iconUrl;
     }
-    
-    public function getCancelURL() 
+
+    public function getCancelURL()
     {
         return $this->store->getConfig('payment/paynl/cancelurl');
     }
