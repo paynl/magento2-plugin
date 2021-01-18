@@ -1,6 +1,6 @@
 <?php
-namespace Paynl\Payment\Block;
-class Success extends \Magento\Framework\View\Element\Template
+namespace Paynl\Payment\Block\Page;
+class Paylink extends \Magento\Framework\View\Element\Template
 {
 	public function __construct(\Magento\Framework\View\Element\Template\Context $context)
 	{      

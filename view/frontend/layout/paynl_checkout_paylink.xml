@@ -6,18 +6,9 @@
  */
 -->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
-    <head>
-        <title>Success Page</title>
-    </head>
-    <body>
-        <referenceBlock name="page.main.title">
-            <block class="Magento\Checkout\Block\Onepage\Success" name="checkout.success.print.button" template="Magento_Checkout::button.phtml"/>
-            <action method="setPageTitle">
-                <argument translate="true" name="title" xsi:type="string">Thank you for your purchase!</argument>
-            </action>
-        </referenceBlock>
-        <referenceContainer name="content">
-                <block class="Paynl\Payment\Block\Success" name="paylink_success" template="Paynl_Payment::success.phtml" />
+    <body> 
+         <referenceContainer name="content">
+                <block class="Paynl\Payment\Block\Page\Paylink" name="paylink_checkout" template="Paynl_Payment::paylink_checkout.phtml" />
          </referenceContainer>
     </body>
 </page>
