@@ -109,10 +109,10 @@ define(
             },
             placeOrder: function (data, event) {
                 var placeOrder;
-                var showingKVK = this.getKVK() == 2;
-                var showingDOB = this.getDOB() == 2;
-                if (showingKVK) {
-                    if (this.billink_agree != true) {                        
+                var cocRequired = this.getKVK() == 2;
+                var dobRequired = this.getDOB() == 2;
+                if (cocRequired) {
+                    if (this.billink_agree != true) {
                         alert({
                             title: $.mage.__('Betalingsvoorwaarden'),
                             content: $.mage.__('U dient eerst akkoord te gaan met de betalingsvoorwaarden.'),
@@ -133,8 +133,8 @@ define(
                         return false;
                     }
                 }
-                if (showingDOB) {
-                    if (this.dateofbirth == null || this.dateofbirth.length < 1) {              
+                if (dobRequired) {
+                    if (this.dateofbirth == null || this.dateofbirth.length < 1) {
                         alert({
                             title: $.mage.__('Ongeldig geboortedatum'),
                             content: $.mage.__('Voer een geldig geboortedatum in.'),
