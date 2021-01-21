@@ -85,3 +85,7 @@
 "Thank you for your purchase!","Thank you for your purchase!"
 "The payment has been canceled.","The payment has been canceled."
 "PAY. -Order has been shipped, but no invoice was found. Capturing the payment automatically.","PAY. -Order has been shipped, but no invoice was found. Capturing the payment automatically."
+"On","On"
+"Off","Off"
+"Auto capture","Auto capture"
+"Automatically captures the payment when creating a new shipment for the order.","Automatically captures the payment when creating a new shipment for the order."

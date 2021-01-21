@@ -86,3 +86,7 @@
 "Thank you for your purchase!","Bedankt voor uw aankoop!"
 "The payment has been canceled.","De betaling is geannuleerd."
 "PAY. -Order has been shipped, but no invoice was found. Capturing the payment automatically.","PAY. -Bestelling is verzonden, maar er is geen factuur gevonden. De betaling wordt automatisch gecaptured."
+"On","Aan"
+"Off","Uit"
+"Auto capture","Automatische capture"
+"Automatically captures the payment when creating a new shipment for the order.","Capture de betaling automatisch bij het aanmaken van een nieuwe zending voor de bestelling."
