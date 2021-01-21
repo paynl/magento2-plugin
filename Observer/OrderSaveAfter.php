@@ -44,12 +44,12 @@ class OrderSaveAfter implements ObserverInterface
         $order = $observer->getEvent()->getOrder();
 
         $auto_capture = $this->store->getConfig('payment/paynl/auto_capture');
-        
+
         if (!$order->hasInvoices() && $order->hasShipments() && $order->getState() == 'processing' && $auto_capture == 1) {
             $payment = $order->getPayment();
-            $data = $payment->getData();          
+            $data = $payment->getData();
             if (isset($data['last_trans_id'])) {
-                $transactionId = $data['last_trans_id'];                
+                $transactionId = $data['last_trans_id'];
                 $amountAuthorized = isset($data['base_amount_authorized']) ? (float)$data['base_amount_authorized'] : null;
                 $amountPaid = isset($data['amount_paid']) ? $data['amount_paid'] : null;
                 $amountRefunded = isset($data['amount_refunded']) ? $data['amount_refunded'] : null;
@@ -60,7 +60,6 @@ class OrderSaveAfter implements ObserverInterface
                         $result = \Paynl\Transaction::capture($transactionId);
                     } catch (\Paynl\Error\Error $e) {
                         $this->logger->notice('Order PAY error: ' . $e->getMessage() . ' EntityId: ' . $order->getEntityId());
-                        
                     }
                 }
             }
