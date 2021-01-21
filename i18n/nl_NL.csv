@@ -85,3 +85,4 @@
 "This will create an offline refund. To create an online refund, open an invoice and create credit memo for it. Do you want to continue?","Dit zorgt voor een offline terugbetaling. Om een ​​online terugbetaling te creëren, opent u een factuur en maakt u er een creditnota voor aan. Wilt u doorgaan?"
 "Thank you for your purchase!","Bedankt voor uw aankoop!"
 "The payment has been canceled.","De betaling is geannuleerd."
+"PAY. -Order has been shipped, but no invoice was found. Capturing the payment automatically.","PAY. -Bestelling is verzonden, maar er is geen factuur gevonden. De betaling wordt automatisch gecaptured."

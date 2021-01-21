@@ -84,3 +84,4 @@
 "This will create an offline refund. To create an online refund, open an invoice and create credit memo for it. Do you want to continue?","This will create an offline refund. To create an online refund, open an invoice and create credit memo for it. Do you want to continue?"
 "Thank you for your purchase!","Thank you for your purchase!"
 "The payment has been canceled.","The payment has been canceled."
+"PAY. -Order has been shipped, but no invoice was found. Capturing the payment automatically.","PAY. -Order has been shipped, but no invoice was found. Capturing the payment automatically."

@@ -54,7 +54,7 @@ class OrderSaveAfter implements ObserverInterface
                 $amountPaid = isset($data['amount_paid']) ? $data['amount_paid'] : null;
                 $amountRefunded = isset($data['amount_refunded']) ? $data['amount_refunded'] : null;
                 if ($amountAuthorized > 0 && !is_null($amountAuthorized) && is_null($amountPaid) && is_null($amountRefunded) && !empty($transactionId) && !is_null($transactionId)) {
-                    $order->addStatusHistoryComment('PAY. -Order has been shipped, but no invoice was found. Capturing the payment automatically.', false);
+                    $order->addStatusHistoryComment(__('PAY. -Order has been shipped, but no invoice was found. Capturing the payment automatically.'), false);
                     try {
                         \Paynl\Config::setApiToken($this->config->getApiToken());
                         $result = \Paynl\Transaction::capture($transactionId);
