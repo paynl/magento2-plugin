@@ -104,9 +104,6 @@ class Paylink extends PaymentMethod
             $body = str_replace('((store_name))',$order->getStore()->getName(),$body);
             $body = str_replace('((support_email))','<a href="mailto:'.$supportEmail.'">'.$supportEmail.'</a>',$body);
             $body = str_replace('((order_id))',$order->getIncrementId(),$body);
-
-            echo $body;
-            echo $order->getId();
             
             $templateVars = array(
                 'subject' => $subject,
@@ -148,7 +145,6 @@ class Paylink extends PaymentMethod
             parent::initialize($paymentAction, $stateObject);
         }
     }
-    
 
     public function assignData(\Magento\Framework\DataObject $data)
     {
