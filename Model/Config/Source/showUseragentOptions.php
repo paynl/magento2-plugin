@@ -42,7 +42,8 @@ class showUseragentOptions implements ArrayInterface
             'MSIE' => __('Internet Explorer'),
             'Opera' => __('Opera'),
             'Firefox' => __('Firefox'),
-            'Edg' => __('Edge')
+            'Edg' => __('Edge'),
+            'Custom' => __('Custom')
         ];
     }
 

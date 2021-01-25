@@ -64,22 +64,6 @@
                 <field id="active">1</field>
             </depends>
         </field>
-        <field id="ipaddress" translate="label" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Allow on ipaddress</label>
-            <comment>Add a comma between ip address for multiple inputs.</comment>
-            <depends>
-                <field id="active">1</field>
-            </depends>
-            <config_path>payment/paynl_payment_instore/showforipaddress</config_path>
-        </field>
-        <field id="useragent" translate="label" type="select" sortOrder="150" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Allow on useragent</label>
-            <source_model>Paynl\Payment\Model\Config\Source\showUseragentOptions</source_model>
-            <depends>
-                <field id="active">1</field>
-            </depends>
-            <config_path>payment/paynl_payment_instore/showforuseragent</config_path>
-        </field>
         <field id="instructions" translate="label" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Instructions</label>
             <depends>
@@ -122,6 +106,32 @@
                 <field id="active">1</field>
             </depends>
         </field>
+        <field id="ipaddress" translate="label" type="text" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Exclusive for IP-Address</label>
+            <comment>Add a comma between ip address for multiple inputs.</comment>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+            <config_path>payment/paynl_payment_instore/exclusiveforipaddress</config_path>
+        </field>
+        <field id="useragent" translate="label" type="select" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Exclusive for useragent</label>
+            <source_model>Paynl\Payment\Model\Config\Source\showUseragentOptions</source_model>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+            <config_path>payment/paynl_payment_instore/exclusiveforuseragent</config_path>
+        </field>
+        <field id="custom_useragent" translate="label" type="text" sortOrder="121" showInDefault="1" showInWebsite="1"
+               showInStore="1">
+            <label>Custom useragent</label>
+            <comment>Add a comma between useragents for multiple inputs.</comment>           
+            <depends>
+                <field id="active">1</field>
+                <field id="useragent">Custom</field>
+            </depends>
+            <config_path>payment/paynl_payment_instore/exclusiveforuseragent_custom</config_path>
+        </field>
         <group id="advanced" translate="label" sortOrder="200" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Advanced</label>
             <field id="payment_option_id" translate="label comment" type="text" sortOrder="10" showInDefault="1"
@@ -134,3 +144,4 @@
         </group>
     </group>
 </include>
+                

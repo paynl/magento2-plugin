@@ -37,8 +37,20 @@ define(
                 if(this.getforCompany() == 2 && this.getCompany().length == 0){
                     return false;
                 }
+                if(!this.isExclusiveForCurrentIP()){
+                    return false;
+                }
+                if(!this.isExclusiveForCurrentUseragent()){
+                    return false;
+                }
                 return true;
             },
+            isExclusiveForCurrentIP: function () {
+                return window.checkoutConfig.payment.exclusiveforipaddress[this.item.method];
+            },  
+            isExclusiveForCurrentUseragent: function () {
+                return window.checkoutConfig.payment.exclusiveforuseragent[this.item.method];
+            },  
             getDisallowedShipping: function () {
                 return window.checkoutConfig.payment.disallowedshipping[this.item.method];
             },  
