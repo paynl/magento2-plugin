@@ -273,6 +273,10 @@ abstract class PaymentMethod extends AbstractMethod
                 $enduser['dob'] = $additionalData['dob'];
             }
 
+            if (isset($additionalData['gender'])) {
+                $enduser['gender'] = $additionalData['gender'];
+            } 
+
             if (isset($arrBillingAddress['company']) && !empty($arrBillingAddress['company'])) {
               $enduser['company']['name'] = $arrBillingAddress['company'];
               $enduser['company']['countryCode'] =  $arrBillingAddress['country_id'];
