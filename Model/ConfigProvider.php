@@ -115,8 +115,12 @@ class ConfigProvider implements ConfigProviderInterface
                 $config['payment']['showkvk'][$code]      = $this->getKVK($code);
                 $config['payment']['showdob'][$code]      = $this->getDOB($code);
                 $config['payment']['showforcompany'][$code] = $this->getCompany($code);
+<<<<<<< HEAD
                 $config['payment']['showforipaddress'][$code] = $this->getIpaddress($code);
                 $config['payment']['showforuseragent'][$code] = $this->getUseragent($code);
+=======
+                $config['payment']['disallowedshipping'][$code] = $this->getDisallowedShippingMethods($code);
+>>>>>>> master
             }
         }
 
@@ -148,6 +152,11 @@ class ConfigProvider implements ConfigProviderInterface
     protected function getDOB($code)
     {
         return $this->methods[$code]->getDOB();
+    }
+
+    protected function getDisallowedShippingMethods($code)
+    {
+        return $this->methods[$code]->getDisallowedShippingMethods();
     }
 
     protected function getCompany($code)

@@ -6,8 +6,8 @@
 namespace Paynl\Payment\Model\Paymentmethod;
 
 /**
- *
- * @author Andy Pieters <andy@pay.nl>
+ * Class Amex
+ * @package Paynl\Payment\Model\Paymentmethod
  */
 class Amex extends PaymentMethod
 {

@@ -6,8 +6,8 @@
 namespace Paynl\Payment\Model\Paymentmethod;
 
 /**
- * Description of Multibanco
- *
+ * Class Multibanco
+ * @package Paynl\Payment\Model\Paymentmethod
  */
 class Multibanco extends PaymentMethod
 {

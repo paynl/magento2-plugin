@@ -8,9 +8,8 @@ namespace Paynl\Payment\Model\Paymentmethod;
 use Paynl\Payment\Model\Config;
 
 /**
- * Description of Billink
- *
- * @author Andy Pieters <andy@pay.nl>
+ * Class Billink
+ * @package Paynl\Payment\Model\Paymentmethod
  */
 class Billink extends PaymentMethod
 {

@@ -14,7 +14,7 @@
             </paynl>
             <paynl_payment_paylink>
                 <active>1</active>
-                <title>PAY. betaallink</title>
+                <title>PAY. paylink</title>
                 <payment_option_id>961</payment_option_id>
                 <order_status>pending</order_status>
                 <order_status_authorized>processing</order_status_authorized>
@@ -24,6 +24,16 @@
                 <group>paynl_payment</group>
                 <paymentInfoKeys>valid_days</paymentInfoKeys>
                 <send_new_order_email>before_payment</send_new_order_email>
+                <paylink_subject>Order Paylink #((order_id))#</paylink_subject>
+                <paylink_body>((customer_name)),
+Thank you for your order from ((store_name)).
+                
+If you have questions about your order, you can email us at ((support_email))
+
+In order to pay for your order click the link below
+((paylink))
+                </paylink_body>
+
             </paynl_payment_paylink>
             <paynl_payment_afterpay>
                 <active>0</active>

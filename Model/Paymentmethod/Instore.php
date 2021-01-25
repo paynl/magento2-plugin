@@ -6,10 +6,10 @@
 namespace Paynl\Payment\Model\Paymentmethod;
 
 use Magento\Sales\Model\Order;
+
 /**
- * Description of Instore
- *
- * @author Andy Pieters <andy@pay.nl>
+ * Class Instore
+ * @package Paynl\Payment\Model\Paymentmethod
  */
 class Instore extends PaymentMethod
 {

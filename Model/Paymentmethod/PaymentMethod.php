@@ -23,9 +23,8 @@ use Paynl\Payment\Model\Config;
 use Paynl\Transaction;
 
 /**
- * Description of AbstractPaymentMethod
- *
- * @author Andy Pieters <andy@pay.nl>
+ * Class PaymentMethod
+ * @package Paynl\Payment\Model\Paymentmethod
  */
 abstract class PaymentMethod extends AbstractMethod
 {
@@ -121,9 +120,20 @@ abstract class PaymentMethod extends AbstractMethod
       return [];
     }
 
+<<<<<<< HEAD
     public function getCompany()
     {
         return $this->_scopeConfig->getValue('payment/'.$this->_code.'/showforcompany', 'store');
+=======
+    public function getDisallowedShippingMethods()
+    {
+        return $this->_scopeConfig->getValue('payment/' . $this->_code . '/disallowedshipping', 'store');
+    }
+
+    public function getCompany()
+    {
+        return $this->_scopeConfig->getValue('payment/' . $this->_code . '/showforcompany', 'store');
+>>>>>>> master
     }
 
     public function getIpaddress()
@@ -188,6 +198,10 @@ abstract class PaymentMethod extends AbstractMethod
     public function capture(InfoInterface $payment, $amount)
     {
         $this->paynlConfig->configureSDK();
+
+        $payment->setAdditionalInformation('manual_capture', 'true');
+        $order = $payment->getOrder();
+        $order->save();
 
         $transactionId = $payment->getParentTransactionId();
 

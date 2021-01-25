@@ -17,6 +17,69 @@
                 <field id="active">1</field>
             </depends>
         </field>
+        <field id="instructions" translate="label" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Instructions</label>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+            <config_path>payment/paynl_payment_creditclick/instructions</config_path>
+        </field>
+        <field id="min_order_total" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1"
+               showInStore="1">
+            <label>Minimum Order Total</label>
+            <config_path>payment/paynl_payment_creditclick/min_order_total</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+        <field id="max_order_total" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1"
+               showInStore="1">
+            <label>Maximum Order Total</label>
+            <config_path>payment/paynl_payment_creditclick/max_order_total</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+        <field id="sort_order" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1"
+               showInStore="1">
+            <label>Sort Order</label>
+            <frontend_class>validate-number</frontend_class>
+            <config_path>payment/paynl_payment_creditclick/sort_order</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+        <field id="allowspecific" translate="label" type="allowspecific" sortOrder="70" showInDefault="1"
+               showInWebsite="1" showInStore="1">
+            <label>Payment from Applicable Countries</label>
+            <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
+            <config_path>payment/paynl_payment_creditclick/allowspecific</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+        <field id="specificcountry" translate="label" type="multiselect" sortOrder="80" showInDefault="1"
+               showInWebsite="1" showInStore="1">
+            <label>Payment from Specific Countries</label>
+            <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
+            <can_be_empty>1</can_be_empty>
+            <config_path>payment/paynl_payment_creditclick/specificcountry</config_path>
+            <depends>
+                <field id="allowspecific">1</field>
+                <field id="active">1</field>
+            </depends>
+        </field>
+        <field id="disallowedshipping" translate="label" type="multiselect" sortOrder="90" showInDefault="1"
+               showInWebsite="1" showInStore="1">
+            <label>Disallowed Shipping Methods</label>
+            <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
+            <can_be_empty>1</can_be_empty>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+            <config_path>payment/paynl_payment_creditclick/disallowedshipping</config_path>
+            <comment><![CDATA[Hold CTRL button to select/deselect multiple]]></comment>
+        </field>
         <field id="showforcompany" translate="label" type="select" sortOrder="150" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Show for companies</label>
             <source_model>Paynl\Payment\Model\Config\Source\showCompanyOptions</source_model>
