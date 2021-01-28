@@ -49,7 +49,7 @@ class OrderSaveCommitAfter implements ObserverInterface
             $payment = $order->getPayment();
             $data = $payment->getData();
 
-            if (isset($data['last_trans_id'])) {
+            if (!empty($data['last_trans_id'])) {
                 $bHasAmountAuthorized = !empty($data['base_amount_authorized']);
                 $amountPaid = isset($data['amount_paid']) ? $data['amount_paid'] : null;
                 $amountRefunded = isset($data['amount_refunded']) ? $data['amount_refunded'] : null;
