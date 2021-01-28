@@ -29,30 +29,14 @@ class OrderSaveCommitAfter implements ObserverInterface
      */
     private $config;
 
-    /**
-     *
-     * @var \Magento\Sales\Model\Order\Email\Sender\OrderSender
-     */
-    private $orderSender;
-
-    /**
-     *
-     * @var \Magento\Sales\Model\Order\Email\Sender\InvoiceSender
-     */
-    private $invoiceSender;
-
     public function __construct(
         LoggerInterface $logger,
         Config $config,
-        Store $store,
-        \Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender,
-        \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender
+        Store $store
     ) {
         $this->logger = $logger;
         $this->config = $config;
         $this->store = $store;
-        $this->orderSender = $orderSender;
-        $this->invoiceSender = $invoiceSender;
     }
 
     public function execute(\Magento\Framework\Event\Observer $observer)
