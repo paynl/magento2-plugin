@@ -65,7 +65,7 @@ class OrderSaveCommitAfter implements ObserverInterface
                         $strResult = 'Failed. Errorcode: PAY-MAGENTO2-003. See docs.pay.nl for more information';
                     }
 
-                    $order->addStatusHistoryComment(__('PAY. - Performed auto-capture. Result: ' . $strResult), false)->save();
+                    $order->addStatusHistoryComment(__('PAY. - Performed auto-capture. Result: ') . $strResult, false)->save();
                 }
             }
         }
