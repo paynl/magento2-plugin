@@ -44,6 +44,8 @@
     <include path="Paynl_Payment::paymentmethods/postepay.xml" />
     <include path="Paynl_Payment::paymentmethods/przelewy24.xml" />
     <include path="Paynl_Payment::paymentmethods/sofortbanking.xml" />
+    <include path="Paynl_Payment::paymentmethods/sofortbanking_hr.xml" />
+    <include path="Paynl_Payment::paymentmethods/sofortbanking_ds.xml" />
     <include path="Paynl_Payment::paymentmethods/spraypay.xml" />
     <include path="Paynl_Payment::paymentmethods/telefonischbetalen.xml" />
     <include path="Paynl_Payment::paymentmethods/tikkie.xml" />

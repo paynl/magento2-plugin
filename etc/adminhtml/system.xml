@@ -82,11 +82,10 @@
                     <label>Test IP Address</label>
                     <comment><![CDATA[Forces testmode on these Ip addresses, separate ip's by comma's for multiple ip's]]></comment>
                 </field>
-                <field id="auto_capture" translate="label" type="select" sortOrder="105" showInDefault="1" showInWebsite="1"
-                       showInStore="1">
-                    <label>Auto capture</label>
-                    <comment><![CDATA[Automatically captures the payment when creating a new shipment for the order.]]></comment>
-                     <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
+                <field id="auto_capture" translate="label" type="select" sortOrder="105" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Auto Capture</label>
+                    <comment><![CDATA[Automatically capture authorisation-transaction when creating the shipment for the order.]]></comment>
+                    <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
                 </field>
 
                 <group id="paynl_paymentmethods" translate="label" sortOrder="110" showInDefault="1" showInWebsite="1"
