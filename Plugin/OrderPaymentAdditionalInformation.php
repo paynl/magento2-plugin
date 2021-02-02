@@ -30,17 +30,6 @@ class OrderPaymentAdditionalInformation
                     $customer = $this->customerRepository->getById($order->getCustomerId());
                     $gender = $customer->getGender();
                 }
-                switch ($gender) {
-                    case '1':
-                        $gender = 'M';
-                        break;
-                    case '2':
-                        $gender = 'F';
-                        break;
-                    default:
-                        $gender = null;
-                        break;
-                }
                 if (!empty($gender)) {
                     $result['gender'] = $gender;
                 }
