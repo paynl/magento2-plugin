@@ -89,5 +89,5 @@
 "On","Aan"
 "Off","Uit"
 "Auto capture","Automatische capture"
-"Automatically captures the payment when creating a new shipment for the order.","Capture de betaling automatisch bij het aanmaken van een nieuwe zending voor de bestelling."
+"Automatically capture authorisation-transaction when creating the shipment for the order.","Capture een geautoriseerde betaling automatisch bij het aanmaken van een nieuwe verzending."
 "PAY. - Performed auto-capture. Result: ","PAY. - Auto-capture uitgevoerd. Resultaat: "
