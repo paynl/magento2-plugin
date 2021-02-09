@@ -143,7 +143,6 @@ class Paylink extends PaymentMethod
             parent::initialize($paymentAction, $stateObject);
         }
     }
-    
 
     public function assignData(\Magento\Framework\DataObject $data)
     {
