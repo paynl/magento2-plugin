@@ -58,12 +58,12 @@ class Paylink extends PaymentMethod
 
             $order->addStatusHistoryComment($paylinktext . ' ' . $order->getCustomerEmail() . '.', $status);   
 
-            $storeManager = $objectManager->create('\Magento\Store\Model\StoreManagerInterface');
-            $store = $storeManager->getStore();
-     
-            $supportEmail = $this->_scopeConfig->getValue('trans_email/ident_support/email', 'store');
-            $senderName = $this->_scopeConfig->getValue('trans_email/ident_sales/name', 'store');
-            $senderEmail = $this->_scopeConfig->getValue('trans_email/ident_sales/email', 'store');
+            $store = $order->getStore();
+            $storeId = $order->getStoreId();
+
+            $supportEmail = $this->_scopeConfig->getValue('trans_email/ident_support/email', 'store', $storeId);
+            $senderName = $this->_scopeConfig->getValue('trans_email/ident_sales/name', 'store', $storeId);
+            $senderEmail = $this->_scopeConfig->getValue('trans_email/ident_sales/email', 'store', $storeId);
 
             $sender = [
                 'name' => $senderName,
@@ -73,16 +73,15 @@ class Paylink extends PaymentMethod
             $customerEmail = array($order->getCustomerEmail());
 
             $paymentHelper = $objectManager->create('Magento\Payment\Helper\Data');
-            $identityContainer = $objectManager->create('Magento\Sales\Model\Order\Email\Container\OrderIdentity');
 
             $orderHTML = $paymentHelper->getInfoBlockHtml(
                 $order->getPayment(),
-                $identityContainer->getStore()->getStoreId()
+                $storeId
             );       
 
             $addressRenderer = $objectManager->create('Magento\Sales\Model\Order\Address\Renderer');
 
-            $show_order_in_mail = $this->_scopeConfig->getValue('payment/paynl_payment_paylink/show_order_in_mail', 'store');
+            $show_order_in_mail = $this->_scopeConfig->getValue('payment/paynl_payment_paylink/show_order_in_mail', 'store', $storeId);
             if($show_order_in_mail){
                 $show_order_in_mail = 1;
             }
@@ -90,23 +89,20 @@ class Paylink extends PaymentMethod
                 $show_order_in_mail = 0;
             }
 
-            $subject = $this->_scopeConfig->getValue('payment/paynl_payment_paylink/paylink_subject', 'store');
+            $subject = $this->_scopeConfig->getValue('payment/paynl_payment_paylink/paylink_subject', 'store', $storeId);
             $subject = str_replace('((paylink))','<a href="'.$url.'">'.__('PAY. paylink').'</a>',$subject);
             $subject = str_replace('((customer_name))',$order->getCustomerName(),$subject);
             $subject = str_replace('((store_name))',$order->getStore()->getName(),$subject);
             $subject = str_replace('((support_email))','<a href="mailto:'.$supportEmail.'">'.$supportEmail.'</a>',$subject);
             $subject = str_replace('((order_id))',$order->getIncrementId(),$subject);
            
-            $body = $this->_scopeConfig->getValue('payment/paynl_payment_paylink/paylink_body', 'store');;
+            $body = $this->_scopeConfig->getValue('payment/paynl_payment_paylink/paylink_body', 'store', $storeId);
             $body = nl2br($body);
             $body = str_replace('((paylink))','<a href="'.$url.'">'.__('PAY. paylink').'</a>',$body);
             $body = str_replace('((customer_name))',$order->getCustomerName(),$body);
             $body = str_replace('((store_name))',$order->getStore()->getName(),$body);
             $body = str_replace('((support_email))','<a href="mailto:'.$supportEmail.'">'.$supportEmail.'</a>',$body);
             $body = str_replace('((order_id))',$order->getIncrementId(),$body);
-
-            echo $body;
-            echo $order->getId();
             
             $templateVars = array(
                 'subject' => $subject,
@@ -119,8 +115,7 @@ class Paylink extends PaymentMethod
                 'current_language' => $lang,
                 'order_id' =>  $order->getIncrementId(),              
                 'billing' => $order->getBillingAddress(),
-                'payment_html' => $orderHTML,
-                'store' => $order->getStore(),
+                'payment_html' => $orderHTML,        
                 'formattedShippingAddress' => $order->getIsVirtual() ? null : $addressRenderer->format($order->getShippingAddress(), 'html'),
                 'formattedBillingAddress' => $addressRenderer->format($order->getBillingAddress(), 'html'),
                 'created_at_formatted' => $order->getCreatedAtFormatted(1),
@@ -137,7 +132,7 @@ class Paylink extends PaymentMethod
             $transportBuilder = $objectManager->create('\Magento\Framework\Mail\Template\TransportBuilder');
 
             $transport = $transportBuilder->setTemplateIdentifier('paylink_email_template')
-            ->setTemplateOptions(['area' => \Magento\Framework\App\Area::AREA_FRONTEND, 'store' => \Magento\Store\Model\Store::DEFAULT_STORE_ID])
+            ->setTemplateOptions(['area' => \Magento\Framework\App\Area::AREA_FRONTEND, 'store' => $storeId])
             ->setTemplateVars($templateVars)
             ->setFrom($sender)
             ->addTo($customerEmail)
