@@ -24,12 +24,8 @@ class OrderPaymentAdditionalInformation
             if (empty($result['dob']) && $order->getCustomerDob()) {
                 $result['dob'] = (new \DateTime($order->getCustomerDob()))->format('Y-m-d');
             }
-            if (empty($result['gender']) && ($order->getCustomerGender() || !empty($order->getCustomerId()))) {
+            if (empty($result['gender']) && $order->getCustomerGender()) {
                 $gender = $order->getCustomerGender();
-                if (empty($gender) && !empty($order->getCustomerId())) {
-                    $customer = $this->customerRepository->getById($order->getCustomerId());
-                    $gender = $customer->getGender();
-                }
                 if (!empty($gender)) {
                     $result['gender'] = $gender;
                 }
