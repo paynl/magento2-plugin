@@ -56,6 +56,8 @@ abstract class PaymentMethod extends AbstractMethod
      */
     protected $orderConfig;
 
+    protected $helper;
+
     public function __construct(
         Context $context,
         Registry $registry,
@@ -76,6 +78,9 @@ abstract class PaymentMethod extends AbstractMethod
             $context, $registry, $extensionFactory, $customAttributeFactory,
             $paymentData, $scopeConfig, $logger, $resource, $resourceCollection, $data);
 
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+
+        $this->helper = $objectManager->create('Paynl\Payment\Helper\PayHelper');
         $this->paynlConfig = $paynlConfig;
         $this->orderRepository = $orderRepository;
         $this->orderConfig = $orderConfig;
@@ -131,70 +136,15 @@ abstract class PaymentMethod extends AbstractMethod
         return $this->_scopeConfig->getValue('payment/' . $this->_code . '/showforcompany', 'store');
     }
 
-    public function isExclusiveForCurrentIP()
-    {       
-        if ($this->getPaymentOptionId() == 1729) {
-            $ip = isset($_SERVER['HTTP_CLIENT_IP']) ? $_SERVER['HTTP_CLIENT_IP'] : isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'];
-            $allowedip = $this->_scopeConfig->getValue('payment/'.$this->_code.'/exclusiveforipaddress', 'store');
-            if(strlen($allowedip) > 0){
-                $allowedip = explode(",", $allowedip);
-            }
-            else{
-                return true;
-            }
-           
-            foreach ($allowedip as $item) {
-                if ($item == $ip) {
-                    return true;
-                }
-            }            
-            return false;
-        }
+    public function isCurrentIpValid()
+    {
         return true;
     }
 
-    public function isExclusiveForCurrentUseragent()
-    {        
-        if ($this->getPaymentOptionId() == 1729) {
-            $useragent = $this->_scopeConfig->getValue('payment/'.$this->_code.'/exclusiveforuseragent', 'store');
-            $arr_browsers = ["Opera", "Edg", "Chrome", "Safari", "Firefox", "MSIE", "Trident"];
-
-            $agent = $_SERVER['HTTP_USER_AGENT'];
-
-            $user_browser = '';
-            foreach ($arr_browsers as $browser) {
-                if (strpos($agent, $browser) !== false) {
-                    $user_browser = $browser;
-                    break;
-                }
-            }
-
-            switch ($user_browser) {
-                case 'MSIE':
-                    $user_browser = 'MSIE';
-                    break;
-                case 'Trident':
-                    $user_browser = 'MSIE';
-                    break;                
-            }          
-
-            if ($useragent == $user_browser || $useragent == 'All') {
-                return true;
-            }
-            else if($useragent == 'Custom'){
-                $custom_useragents = $this->_scopeConfig->getValue('payment/'.$this->_code.'/exclusiveforuseragent_custom', 'store');
-                $custom_useragents = explode(",", $custom_useragents);                
-                foreach ($custom_useragents as $key => $custom_useragent) {
-                    if(strpos($agent, $custom_useragent) !== false){
-                        return true;
-                    }
-                }
-            }          
-            return false;
-        }
-        return true;        
+    public function isCurrentAgentValid()
+    {
+        return true;
     }
-
 
     public function initialize($paymentAction, $stateObject)
     {

@@ -20,7 +20,7 @@ define(
             kvknummer: null,
             dateofbirth: null,
             billink_agree: null,
-            isVisible:function(){
+            isVisible:function() {
                 var disallowedShippingMethods = this.getDisallowedShipping();
                 if (disallowedShippingMethods) {
                     var carrier_code = typeof quote.shippingMethod().carrier_code !== 'undefined' ? quote.shippingMethod().carrier_code + '_' : '';
@@ -37,20 +37,20 @@ define(
                 if(this.getforCompany() == 2 && this.getCompany().length == 0){
                     return false;
                 }
-                if(!this.isExclusiveForCurrentIP()){
+                if (!this.currentIpIsValid()) {
                     return false;
                 }
-                if(!this.isExclusiveForCurrentUseragent()){
+                if (!this.currentAgentIsValid()) {
                     return false;
                 }
                 return true;
             },
-            isExclusiveForCurrentIP: function () {
-                return window.checkoutConfig.payment.exclusiveforipaddress[this.item.method];
-            },  
-            isExclusiveForCurrentUseragent: function () {
-                return window.checkoutConfig.payment.exclusiveforuseragent[this.item.method];
-            },  
+            currentIpIsValid: function () {
+                return window.checkoutConfig.payment.currentipisvalid[this.item.method];
+            },
+            currentAgentIsValid: function () {
+                return window.checkoutConfig.payment.currentagentisvalid[this.item.method];
+            },
             getDisallowedShipping: function () {
                 return window.checkoutConfig.payment.disallowedshipping[this.item.method];
             },  

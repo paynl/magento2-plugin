@@ -36,7 +36,7 @@ class showUseragentOptions implements ArrayInterface
     public function toArray()
     {
         return [
-            'All' => __('All of them'),
+            'No' => __('No'),
             'Chrome' => __('Google Chrome'),
             'Safari' => __('Safari'),
             'MSIE' => __('Internet Explorer'),

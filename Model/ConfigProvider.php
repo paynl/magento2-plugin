@@ -117,8 +117,8 @@ class ConfigProvider implements ConfigProviderInterface
                 $config['payment']['showdob'][$code]      = $this->getDOB($code);
                 $config['payment']['showforcompany'][$code] = $this->getCompany($code);
                 $config['payment']['disallowedshipping'][$code] = $this->getDisallowedShippingMethods($code);
-                $config['payment']['exclusiveforipaddress'][$code] = $this->isAvailableForCurrentIP($code);
-                $config['payment']['exclusiveforuseragent'][$code] = $this->isAvailableForCurrentUseragent($code);
+                $config['payment']['currentipisvalid'][$code]    = $this->methods[$code]->isCurrentIpValid();
+                $config['payment']['currentagentisvalid'][$code] = $this->methods[$code]->isCurrentAgentValid();
             }
         }
 
@@ -160,16 +160,6 @@ class ConfigProvider implements ConfigProviderInterface
     protected function getCompany($code)
     {
         return $this->methods[$code]->getCompany();
-    }
-
-    protected function isAvailableForCurrentIP($code)
-    {
-        return $this->methods[$code]->isExclusiveForCurrentIP();
-    }
-
-    protected function isAvailableForCurrentUseragent($code)
-    {
-        return $this->methods[$code]->isExclusiveForCurrentUseragent();
     }
 
     /**
