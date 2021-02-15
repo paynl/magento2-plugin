@@ -82,7 +82,7 @@ define(
                 return window.checkoutConfig.payment.banks[this.item.method];
             },
             afterPlaceOrder: function () {
-                window.location.replace(url.build('/paynl/checkout/redirect?nocache='+ (new Date().getTime())));
+                window.location.replace(url.build('paynl/checkout/redirect?nocache='+ (new Date().getTime())));
             },
             getData: function () {
                 var dob = new Date(this.dateofbirth);
