@@ -22,6 +22,7 @@ use Magento\Sales\Model\OrderRepository;
 use Paynl\Payment\Model\Config;
 use Paynl\Transaction;
 
+
 /**
  * Class PaymentMethod
  * @package Paynl\Payment\Model\Paymentmethod
@@ -55,6 +56,8 @@ abstract class PaymentMethod extends AbstractMethod
      */
     protected $orderConfig;
 
+    protected $helper;
+
     public function __construct(
         Context $context,
         Registry $registry,
@@ -75,6 +78,9 @@ abstract class PaymentMethod extends AbstractMethod
             $context, $registry, $extensionFactory, $customAttributeFactory,
             $paymentData, $scopeConfig, $logger, $resource, $resourceCollection, $data);
 
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+
+        $this->helper = $objectManager->create('Paynl\Payment\Helper\PayHelper');
         $this->paynlConfig = $paynlConfig;
         $this->orderRepository = $orderRepository;
         $this->orderConfig = $orderConfig;
@@ -130,6 +136,17 @@ abstract class PaymentMethod extends AbstractMethod
         return $this->_scopeConfig->getValue('payment/' . $this->_code . '/showforcompany', 'store');
     }
 
+ 
+    public function isCurrentIpValid()
+    {
+        return true;
+    }
+
+    public function isCurrentAgentValid()
+    {
+        return true;
+    }
+  
     public function genderConversion($gender)
     {
         switch ($gender) {
