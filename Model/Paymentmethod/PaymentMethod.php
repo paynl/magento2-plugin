@@ -444,6 +444,26 @@ abstract class PaymentMethod extends AbstractMethod
             );
         }
 
+        // Gift Wrapping
+        $gwCost = $order->getGwPriceInclTax();
+        $gwTax = $order->getGwTaxAmount();
+        
+        if ($this->paynlConfig->isAlwaysBaseCurrency()) {
+            $gwCost = $order->getGwBasePriceInclTax();
+            $gwTax = $order->getGwBaseTaxAmount();
+        }
+
+        if ($gwCost != 0) {
+            $arrProducts[] = array(
+                'id' => $order->getGwId(),
+                'name' => 'Gift Wrapping',
+                'price' => $gwCost,
+                'qty' => 1,
+                'tax' => $gwTax,
+                'type' => \Paynl\Transaction::PRODUCT_TYPE_HANDLING
+            );
+        }
+
         // kortingen
         $discount = $order->getDiscountAmount();
         $discountTax = $order->getDiscountTaxCompensationAmount() * -1;
