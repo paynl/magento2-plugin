@@ -136,7 +136,7 @@ abstract class PaymentMethod extends AbstractMethod
         return $this->_scopeConfig->getValue('payment/' . $this->_code . '/showforcompany', 'store');
     }
 
- 
+
     public function isCurrentIpValid()
     {
         return true;
@@ -146,7 +146,7 @@ abstract class PaymentMethod extends AbstractMethod
     {
         return true;
     }
-  
+
     public function genderConversion($gender)
     {
         switch ($gender) {
@@ -192,6 +192,7 @@ abstract class PaymentMethod extends AbstractMethod
         $this->paynlConfig->configureSDK();
 
         $transactionId = $payment->getParentTransactionId();
+        $transactionId = str_replace('-capture', '', $transactionId);
 
         try {
             Transaction::refund($transactionId, $amount);
@@ -203,7 +204,7 @@ abstract class PaymentMethod extends AbstractMethod
             if (substr($message, 0, 19) == '403 - access denied') {
                 $message = 'PAY. could not authorize this refund. Errorcode: PAY-MAGENTO2-001. See for more information ' . $docsLink;
             } else {
-                $message = 'PAY. could not process this refund (' . $message . '). Errorcode: PAY-MAGENTO2-002. More info: ' . $docsLink;
+                $message = 'PAY. could not process this refund (' . $message . '). Errorcode: PAY-MAGENTO2-002. Transaction: '.$transactionId.'. More info: ' . $docsLink;
             }
 
             throw new \Magento\Framework\Exception\LocalizedException(__($message));
@@ -306,7 +307,7 @@ abstract class PaymentMethod extends AbstractMethod
             if (isset($additionalData['dob'])) {
                 $enduser['dob'] = $additionalData['dob'];
             }
-       
+
             if (isset($additionalData['gender'])) {
                 $enduser['gender'] = $additionalData['gender'];
             }
@@ -447,7 +448,7 @@ abstract class PaymentMethod extends AbstractMethod
         // Gift Wrapping
         $gwCost = $order->getGwPriceInclTax();
         $gwTax = $order->getGwTaxAmount();
-        
+
         if ($this->paynlConfig->isAlwaysBaseCurrency()) {
             $gwCost = $order->getGwBasePriceInclTax();
             $gwTax = $order->getGwBaseTaxAmount();
