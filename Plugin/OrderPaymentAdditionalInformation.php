@@ -26,17 +26,6 @@ class OrderPaymentAdditionalInformation
             }
             if (empty($result['gender']) && $order->getCustomerGender()) {
                 $gender = $order->getCustomerGender();
-                switch ($gender) {
-                    case '1':
-                        $gender = 'M';
-                        break;
-                    case '2':
-                        $gender = 'F';
-                        break;
-                    default:
-                        $gender = null;
-                        break;
-                }
                 if (!empty($gender)) {
                     $result['gender'] = $gender;
                 }

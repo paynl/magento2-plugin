@@ -136,6 +136,7 @@ abstract class PaymentMethod extends AbstractMethod
         return $this->_scopeConfig->getValue('payment/' . $this->_code . '/showforcompany', 'store');
     }
 
+ 
     public function isCurrentIpValid()
     {
         return true;
@@ -144,6 +145,22 @@ abstract class PaymentMethod extends AbstractMethod
     public function isCurrentAgentValid()
     {
         return true;
+    }
+  
+    public function genderConversion($gender)
+    {
+        switch ($gender) {
+            case '1':
+                $gender = 'M';
+                break;
+            case '2':
+                $gender = 'F';
+                break;
+            default:
+                $gender = null;
+                break;
+        }
+        return $gender;
     }
 
     public function initialize($paymentAction, $stateObject)
@@ -285,9 +302,15 @@ abstract class PaymentMethod extends AbstractMethod
                 'phoneNumber' => $arrBillingAddress['telephone'],
                 'emailAddress' => $arrBillingAddress['email'],
             );
+
             if (isset($additionalData['dob'])) {
                 $enduser['dob'] = $additionalData['dob'];
             }
+       
+            if (isset($additionalData['gender'])) {
+                $enduser['gender'] = $additionalData['gender'];
+            }
+            $enduser['gender'] = $this->genderConversion((empty($enduser['gender'])) ? $order->getCustomerGender($order) : $enduser['gender']);
 
             if (isset($arrBillingAddress['company']) && !empty($arrBillingAddress['company'])) {
               $enduser['company']['name'] = $arrBillingAddress['company'];
