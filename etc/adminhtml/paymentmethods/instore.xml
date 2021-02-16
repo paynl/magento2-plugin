@@ -108,7 +108,7 @@
         </field>
         <field id="ipaddress" translate="label" type="text" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Only available with IP-Address</label>
-            <comment>Add a comma between ip address for multiple inputs.</comment>
+            <comment>Add a comma between ip addresses for multiple inputs.</comment>
             <depends>
                 <field id="active">1</field>
             </depends>
