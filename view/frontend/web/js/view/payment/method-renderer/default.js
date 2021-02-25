@@ -20,6 +20,13 @@ define(
             kvknummer: null,
             dateofbirth: null,
             billink_agree: null,
+            initialize: function () {
+                this._super(); 
+                if(!quote.paymentMethod()){    
+                    this.selectPaymentMethod();
+                }
+                return this;
+            },
             isVisible:function() {
                 var disallowedShippingMethods = this.getDisallowedShipping();
                 if (disallowedShippingMethods) {
