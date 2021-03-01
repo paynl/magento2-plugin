@@ -300,7 +300,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         //Skip creation of invoice for B2B
         $skipB2BInvoice = $this->config->ignoreB2BInvoice($order->getPayment()->getMethod());
         $orderCompany = $order->getBillingAddress()->getCompany(); 
-        if($skipB2BInvoice == 1 && strlen($orderCompany) > 0){           
+        if($skipB2BInvoice == 1 && !empty($orderCompany)){           
             $this->orderSender->send($order);
             $order->addStatusHistoryComment(
                 __('Order paid, but transaction is B2B so invoice has not been created.')
