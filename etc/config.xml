@@ -94,6 +94,7 @@ In order to pay for your order click the link below
                 <model>Paynl\Payment\Model\Paymentmethod\Billink</model>
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
+                <turn_off_invoices_b2b>No</turn_off_invoices_b2b>
             </paynl_payment_billink>
             <paynl_payment_capayable>
                 <active>0</active>

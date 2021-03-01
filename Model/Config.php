@@ -125,6 +125,12 @@ class Config
         return $this->store->getConfig('payment/' . $methodCode . '/order_status_processing');
     }
 
+    public function ignoreB2BInvoice($methodCode)
+    {
+        return $this->store->getConfig('payment/' . $methodCode . '/turn_off_invoices_b2b');
+    }
+
+
     /**
      * @param $methodCode string
      * @return string
