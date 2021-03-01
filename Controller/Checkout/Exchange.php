@@ -288,6 +288,29 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             }
         }
 
+        // Force order state/status to processing
+        $order->setState(Order::STATE_PROCESSING)->setStatus(Order::STATE_PROCESSING)->save();
+
+        // notify customer
+        if ($order && !$order->getEmailSent()) {
+            $this->orderSender->send($order);
+            $order->addStatusHistoryComment(
+                __('New order email sent')
+            )->setIsCustomerNotified(
+                true
+            )->save();
+        }
+
+        //Skip creation of invoice for B2B
+        $skipB2BInvoice = $this->config->ignoreB2BInvoice($order->getPayment()->getMethod());
+        $orderCompany = $order->getBillingAddress()->getCompany();
+        if ($skipB2BInvoice == 1 && !empty($orderCompany)) {
+            $order->addStatusHistoryComment(
+                __('Order paid, but transaction is B2B so invoice has not been created.')
+            )->save();
+            return $this->result->setContents("TRUE| B2B - No invoice created");
+        }
+
         if ($transaction->isAuthorized()) {
             $paidAmount = $transaction->getCurrencyAmount();
             $payment->registerAuthorizationNotification($paidAmount);
@@ -296,22 +319,6 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
                 $paidAmount, $this->config->isSkipFraudDetection()
             );
         }
-
-        //Skip creation of invoice for B2B
-        $skipB2BInvoice = $this->config->ignoreB2BInvoice($order->getPayment()->getMethod());
-        $orderCompany = $order->getBillingAddress()->getCompany(); 
-        if($skipB2BInvoice == 1 && !empty($orderCompany)){           
-            $this->orderSender->send($order);
-            $order->addStatusHistoryComment(
-                __('Order paid, but transaction is B2B so invoice has not been created.')
-            )->setIsCustomerNotified(
-                true
-            )->save();
-            return $this->result->setContents("TRUE| B2B - No invoice created");
-        }
-
-        // Force order state/status to processing
-        $order->setState(Order::STATE_PROCESSING);
 
         $statusPaid = $this->config->getPaidStatus($order->getPayment()->getMethod());
         $statusAuthorized= $this->config->getAuthorizedStatus($order->getPayment()->getMethod());
@@ -323,18 +330,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         } else {
             $order->setStatus($statusPaid);
         }
-
         $this->orderRepository->save($order);
-
-        // notify customer
-        if ($order && !$order->getEmailSent()) {
-            $this->orderSender->send($order);
-            $order->addStatusHistoryComment(
-                __('New order email sent')
-            )->setIsCustomerNotified(
-                true
-            )->save();
-        }
 
         $invoice = $payment->getCreatedInvoice();
         if ($invoice && !$invoice->getEmailSent()) {
