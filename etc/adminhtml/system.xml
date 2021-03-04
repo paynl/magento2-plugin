@@ -88,6 +88,11 @@
                     <label>Paymentmethods</label>
                     <include path="Paynl_Payment::paymentmethods.xml"/>
                 </group>
+                <field id="errors" translate="label" type="hidden" sortOrder="120" showInDefault="1" showInWebsite="1"
+                       showInStore="1">                    
+                    <source_model>Paynl\Payment\Model\Config\Source\Errors</source_model>
+                    <frontend_model>Paynl\Payment\Block\Adminhtml\Render\Hidden</frontend_model>
+                </field> 
             </group>
         </section>
     </system>
