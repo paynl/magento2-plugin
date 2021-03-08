@@ -119,6 +119,7 @@ class ConfigProvider implements ConfigProviderInterface
                 $config['payment']['disallowedshipping'][$code] = $this->getDisallowedShippingMethods($code);
                 $config['payment']['currentipisvalid'][$code]    = $this->methods[$code]->isCurrentIpValid();
                 $config['payment']['currentagentisvalid'][$code] = $this->methods[$code]->isCurrentAgentValid();
+                $config['payment']['defaultpaymentoption'][$code] = $this->methods[$code]->isDefaultPaymentOption();
             }
         }
 

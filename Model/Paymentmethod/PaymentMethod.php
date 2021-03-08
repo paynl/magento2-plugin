@@ -147,6 +147,12 @@ abstract class PaymentMethod extends AbstractMethod
         return true;
     }
 
+    public function isDefaultPaymentOption()
+    {
+        $default_payment_option = $this->paynlConfig->getDefaultPaymentOption();
+        return ($default_payment_option == $this->_code);
+    }
+
     public function genderConversion($gender)
     {
         switch ($gender) {

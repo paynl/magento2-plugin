@@ -22,7 +22,7 @@ define(
             billink_agree: null,
             initialize: function () {
                 this._super(); 
-                if(!quote.paymentMethod()){    
+                if(!quote.paymentMethod() && window.checkoutConfig.payment.defaultpaymentoption[this.item.method]){    
                     this.selectPaymentMethod();
                 }
                 return this;
