@@ -24,16 +24,16 @@
         <div data-bind="visible: showBanks()" class="field-select-billing">
             <select data-bind="options: getBanks(), optionsText: 'visibleName', optionsValue: 'id', value: selectedBank"></select>
         </div>
-        <div data-bind="visible: showDOB()" class="field-select-billing">   
+        <div data-bind="visible: showDOB()" class="field-select-billing">
             <label for="dob">Geboortedatum</label>
-            <input type="date" data-bind="optionsValue: 'id', name: 'dateofbirth', value: dateofbirth" name="dateofbirth" placeholder="mm/dd/yyyy"/>        
+            <input type="date" data-bind="optionsValue: 'id', name: 'dateofbirth', value: dateofbirth" name="dateofbirth" placeholder="mm/dd/yyyy"/>
         </div>
         <div data-bind="visible: showKVKDOB()" class="field-select-billing">
             <br/>
         </div>
         <div data-bind="visible: showKVK()" class="field-select-billing">
             <label for="kvknummer">KVK nummer</label>
-            <input data-bind="optionsValue: 'id', name: 'kvknummer', value: kvknummer" name="kvknummer"/>    
+            <input data-bind="optionsValue: 'id', name: 'kvknummer', value: kvknummer" name="kvknummer"/>
             <div style="padding-top:10px; padding-bottom:10px">
                 <input type="checkbox" data-bind="checked: billink_agree"/>
                 <label for="billink_agree">U dient akkoord te gaan met de</label> <a target="_blank" href="https://billink.nl/voorwaarden/gebruikersvoorwaarden.pdf">betalingsvoorwaarden</a>
@@ -41,8 +41,7 @@
         </div>
         <div class="actions-toolbar">
             <div class="primary">
-                <button id="payment-button" class="action primary checkout"
-                        type="submit"
+                <button class="action primary checkout" type="submit"
                         data-bind="
                         click: placeOrder,
                         attr: {title: $t('Place Order')},
