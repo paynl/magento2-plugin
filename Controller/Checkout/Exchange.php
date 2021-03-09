@@ -287,9 +287,21 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
                 $paidAmount = $order->getBaseGrandTotal();
             }
         }
-
+        
         // Force order state/status to processing
-        $order->setState(Order::STATE_PROCESSING)->setStatus(Order::STATE_PROCESSING)->save();
+        $order->setState(Order::STATE_PROCESSING)->save();
+
+        $statusPaid = $this->config->getPaidStatus($order->getPayment()->getMethod());
+        $statusAuthorized= $this->config->getAuthorizedStatus($order->getPayment()->getMethod());
+        $statusPaid = !empty($statusPaid) ? $statusPaid : Order::STATE_PROCESSING;
+        $statusAuthorized = !empty($statusAuthorized) ? $statusAuthorized : Order::STATE_PROCESSING;
+
+        if($transaction->isAuthorized()){
+            $order->setStatus($statusAuthorized);
+        } else {
+            $order->setStatus($statusPaid);
+        }
+        $this->orderRepository->save($order);
 
         // notify customer
         if ($order && !$order->getEmailSent()) {
@@ -311,6 +323,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             return $this->result->setContents("TRUE| B2B - No invoice created");
         }
 
+        //Make the invoice and send it to the customer
         if ($transaction->isAuthorized()) {
             $paidAmount = $transaction->getCurrencyAmount();
             $payment->registerAuthorizationNotification($paidAmount);
@@ -318,20 +331,8 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             $payment->registerCaptureNotification(
                 $paidAmount, $this->config->isSkipFraudDetection()
             );
-        }
-
-        $statusPaid = $this->config->getPaidStatus($order->getPayment()->getMethod());
-        $statusAuthorized= $this->config->getAuthorizedStatus($order->getPayment()->getMethod());
-        $statusPaid = !empty($statusPaid) ? $statusPaid : Order::STATE_PROCESSING;
-        $statusAuthorized = !empty($statusAuthorized) ? $statusAuthorized : Order::STATE_PROCESSING;
-
-        if($transaction->isAuthorized()){
-            $order->setStatus($statusAuthorized);
-        } else {
-            $order->setStatus($statusPaid);
-        }
-        $this->orderRepository->save($order);
-
+        }       
+        
         $invoice = $payment->getCreatedInvoice();
         if ($invoice && !$invoice->getEmailSent()) {
             $this->invoiceSender->send($invoice);
