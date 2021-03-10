@@ -275,55 +275,44 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         );
 
         $payment->setPreparedMessage('PAY. - ');
-        $payment->setIsTransactionClosed(
-            0
-        );
+        $payment->setIsTransactionClosed(0);
 
         $paidAmount = $transaction->getPaidCurrencyAmount();
 
         if (!$this->paynlConfig->isAlwaysBaseCurrency()) {
             if ($order->getBaseCurrencyCode() != $order->getOrderCurrencyCode()) {
-                // we can only register the payment in the base currency
+                # We can only register the payment in the base currency
                 $paidAmount = $order->getBaseGrandTotal();
             }
         }
-        
-        // Force order state/status to processing
-        $order->setState(Order::STATE_PROCESSING)->save();
 
-        $statusPaid = $this->config->getPaidStatus($order->getPayment()->getMethod());
-        $statusAuthorized= $this->config->getAuthorizedStatus($order->getPayment()->getMethod());
-        $statusPaid = !empty($statusPaid) ? $statusPaid : Order::STATE_PROCESSING;
-        $statusAuthorized = !empty($statusAuthorized) ? $statusAuthorized : Order::STATE_PROCESSING;
+        # Force order state to processing
+        $order->setState(Order::STATE_PROCESSING);
 
-        if($transaction->isAuthorized()){
-            $order->setStatus($statusAuthorized);
+        if ($transaction->isAuthorized()) {
+            $statusAuthorized = $this->config->getAuthorizedStatus($order->getPayment()->getMethod());
+            $order->setStatus(!empty($statusAuthorized) ? $statusAuthorized : Order::STATE_PROCESSING);
         } else {
-            $order->setStatus($statusPaid);
+            $statusPaid = $this->config->getPaidStatus($order->getPayment()->getMethod());
+            $order->setStatus(!empty($statusPaid) ? $statusPaid : Order::STATE_PROCESSING);
         }
         $this->orderRepository->save($order);
 
-        // notify customer
+        # Notify customer
         if ($order && !$order->getEmailSent()) {
             $this->orderSender->send($order);
-            $order->addStatusHistoryComment(
-                __('New order email sent')
-            )->setIsCustomerNotified(
-                true
-            )->save();
+            $order->addStatusHistoryComment(__('New order email sent'))->setIsCustomerNotified(true)->save();
         }
 
-        //Skip creation of invoice for B2B
+        # Skip creation of invoice for B2B
         $skipB2BInvoice = $this->config->ignoreB2BInvoice($order->getPayment()->getMethod());
         $orderCompany = $order->getBillingAddress()->getCompany();
         if ($skipB2BInvoice == 1 && !empty($orderCompany)) {
-            $order->addStatusHistoryComment(
-                __('Order paid, but transaction is B2B so invoice has not been created.')
-            )->save();
-            return $this->result->setContents("TRUE| B2B - No invoice created");
+            $order->addStatusHistoryComment(__('B2B Setting: Skipped creating invoice'))->save();
+            return $this->result->setContents("TRUE| " . $message . " (B2B: No invoice created)");
         }
 
-        //Make the invoice and send it to the customer
+        # Make the invoice and send it to the customer
         if ($transaction->isAuthorized()) {
             $paidAmount = $transaction->getCurrencyAmount();
             $payment->registerAuthorizationNotification($paidAmount);
@@ -331,19 +320,14 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             $payment->registerCaptureNotification(
                 $paidAmount, $this->config->isSkipFraudDetection()
             );
-        }       
-        
+        }
+
         $invoice = $payment->getCreatedInvoice();
         if ($invoice && !$invoice->getEmailSent()) {
             $this->invoiceSender->send($invoice);
-
-            $order->addStatusHistoryComment(
-                __('You notified customer about invoice #%1.',
-                    $invoice->getIncrementId())
-            )->setIsCustomerNotified(
-                true
-            )->save();
-
+            $order->addStatusHistoryComment(__('You notified customer about invoice #%1.', $invoice->getIncrementId()))
+                ->setIsCustomerNotified(true)
+                ->save();
         }
 
         return $this->result->setContents("TRUE| " . $message);
