@@ -322,6 +322,8 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             );
         }
 
+        $this->orderRepository->save($order);
+
         $invoice = $payment->getCreatedInvoice();
         if ($invoice && !$invoice->getEmailSent()) {
             $this->invoiceSender->send($invoice);
