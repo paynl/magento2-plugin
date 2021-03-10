@@ -295,8 +295,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         } else {
             $statusPaid = $this->config->getPaidStatus($order->getPayment()->getMethod());
             $order->setStatus(!empty($statusPaid) ? $statusPaid : Order::STATE_PROCESSING);
-        }
-        $this->orderRepository->save($order);
+        }        
 
         # Notify customer
         if ($order && !$order->getEmailSent()) {
@@ -309,6 +308,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         $orderCompany = $order->getBillingAddress()->getCompany();
         if ($skipB2BInvoice == 1 && !empty($orderCompany)) {
             $order->addStatusHistoryComment(__('B2B Setting: Skipped creating invoice'))->save();
+            $this->orderRepository->save($order);
             return $this->result->setContents("TRUE| " . $message . " (B2B: No invoice created)");
         }
 
