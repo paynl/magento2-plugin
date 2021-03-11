@@ -307,7 +307,19 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         $skipB2BInvoice = $this->config->ignoreB2BInvoice($order->getPayment()->getMethod());
         $orderCompany = $order->getBillingAddress()->getCompany();
         if ($skipB2BInvoice == 1 && !empty($orderCompany)) {
-            $order->addStatusHistoryComment(__('B2B Setting: Skipped creating invoice'))->save();
+            # Create transaction
+            $formatedPrice = $order->getBaseCurrency()->formatTxt($order->getGrandTotal());
+            $transactionMessage = __('PAY. - Captured amount of %1.', $formatedPrice);
+            $transactionBuilder = $this->builderInterface->setPayment($payment)
+                ->setOrder($order)
+                ->setTransactionId($transaction->getId())
+                ->setFailSafe(true)
+                ->build('capture');
+            $payment->addTransactionCommentsToOrder($transactionBuilder, $transactionMessage);
+            $payment->setParentTransactionId(null);
+            $payment->save();           
+            $transactionBuilder->save();
+            $order->addStatusHistoryComment(__('B2B Setting: Skipped creating invoice'));
             $this->orderRepository->save($order);
             return $this->result->setContents("TRUE| " . $message . " (B2B: No invoice created)");
         }
