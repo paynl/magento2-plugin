@@ -63,6 +63,12 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
      */
     private $orderRepository;
 
+    /**
+     *
+     * @var Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface
+     */
+    private $builderInterface;
+
     private $paynlConfig;
 
     public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
@@ -95,7 +101,8 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         \Psr\Log\LoggerInterface $logger,
         \Magento\Framework\Controller\Result\Raw $result,
         OrderRepository $orderRepository,
-        \Paynl\Payment\Model\Config $paynlConfig
+        \Paynl\Payment\Model\Config $paynlConfig,
+        \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $builderInterface
     )
     {
         $this->result = $result;
@@ -106,6 +113,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         $this->logger = $logger;
         $this->orderRepository = $orderRepository;
         $this->paynlConfig = $paynlConfig;
+        $this->builderInterface = $builderInterface;
 
         parent::__construct($context);
     }
