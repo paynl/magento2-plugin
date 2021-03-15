@@ -127,7 +127,7 @@ class Config
 
     public function ignoreB2BInvoice($methodCode)
     {
-        return $this->store->getConfig('payment/' . $methodCode . '/turn_off_invoices_b2b');
+        return $this->store->getConfig('payment/' . $methodCode . '/turn_off_invoices_b2b') == 1;
     }
 
 
