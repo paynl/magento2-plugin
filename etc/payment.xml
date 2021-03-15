@@ -63,6 +63,9 @@
         <method name="paynl_payment_gezondheidsbon">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
+        <method name="paynl_payment_good4fun">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
         <method name="paynl_payment_giropay">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
@@ -115,6 +118,9 @@
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_sofortbanking">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_soforthighrisk">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_spraypay">
