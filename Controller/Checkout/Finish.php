@@ -74,6 +74,16 @@ class Finish extends PayAction
         parent::__construct($context);
     }
 
+    private function checkSession(Order $order, $orderId, $session){ 
+        if ($session->getLastOrderId() != $order->getId()) {
+            $additionalInformation = $order->getPayment()->getAdditionalInformation();
+            $transactionId = (isset($additionalInformation['transactionId'])) ? $additionalInformation['transactionId'] : null;
+            if($orderId == $transactionId){
+                $this->checkoutSession->setLastQuoteId($order->getQuoteId())->setLastSuccessQuoteId($order->getQuoteId())->setLastOrderId($order->getId())->setLastRealOrderId($order->getIncrementId());
+            }            
+        }   
+    }
+
     public function execute()
     {
         $resultRedirect = $this->resultRedirectFactory->create();
@@ -123,6 +133,7 @@ class Finish extends PayAction
 
             # Make the cart inactive
 	        $session = $this->checkoutSession;
+            $this->checkSession($order, $params['orderId'], $session);
 
 	        $quote = $session->getQuote();
 	        $quote->setIsActive(false);

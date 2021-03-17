@@ -242,6 +242,7 @@ abstract class PaymentMethod extends AbstractMethod
     public function startTransaction(Order $order)
     {
         $transaction = $this->doStartTransaction($order);
+        $order->getPayment()->setAdditionalInformation('transactionId', $transaction->getTransactionId());
         $this->paynlConfig->setStore($order->getStore());
 
         $holded = $this->_scopeConfig->getValue('payment/' . $this->_code . '/holded', 'store');
