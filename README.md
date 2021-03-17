@@ -29,7 +29,7 @@ Bank Transfer | Cartasi | GivaCard | SprayPay | Przelewy24 |
 Sofort High Risk | Tikkie | De Cadeaukaart | YourGift | Creditclick | Apple Pay | 
 | Multibanco | | Paysafecard | | Payconiq
 | | | Huis en Tuin Cadeau
-| | | Good 4 Fun
+| | | Good4Fun
 
 # Requirements
 
