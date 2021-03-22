@@ -121,7 +121,8 @@ class Config
         return $this->store->getConfig('payment/' . $methodCode . '/order_status_authorized');
     }
 
-    public function getPaidStatus($methodCode){
+    public function getPaidStatus($methodCode)
+    {
         return $this->store->getConfig('payment/' . $methodCode . '/order_status_processing');
     }
 
@@ -129,7 +130,11 @@ class Config
     {
         return $this->store->getConfig('payment/' . $methodCode . '/turn_off_invoices_b2b') == 1;
     }
-
+    
+    public function autoCaptureEnabled()
+    {
+       return $this->store->getConfig('payment/paynl/auto_capture') == 1;
+    }
 
     /**
      * @param $methodCode string
