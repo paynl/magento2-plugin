@@ -94,6 +94,7 @@ In order to pay for your order click the link below
                 <model>Paynl\Payment\Model\Paymentmethod\Billink</model>
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
+                <turn_off_invoices_b2b>No</turn_off_invoices_b2b>
             </paynl_payment_billink>
             <paynl_payment_capayable>
                 <active>0</active>
@@ -230,7 +231,7 @@ In order to pay for your order click the link below
             <paynl_payment_fashiongiftcard>
                 <active>0</active>
                 <title>Fashiongiftcard</title>
-                <payment_option_id>1699</payment_option_id>
+                <payment_option_id>1669</payment_option_id>
                 <order_status>pending_payment</order_status>
                 <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>

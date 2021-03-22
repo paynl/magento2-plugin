@@ -15,6 +15,6 @@ class Fashiongiftcard extends PaymentMethod
 
     protected function getDefaultPaymentOptionId()
     {
-        return 1699;
+        return 1669;
     }
 }

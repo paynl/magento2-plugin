@@ -20,7 +20,7 @@ define(
             kvknummer: null,
             dateofbirth: null,
             billink_agree: null,
-            isVisible:function(){
+            isVisible:function() {
                 var disallowedShippingMethods = this.getDisallowedShipping();
                 if (disallowedShippingMethods) {
                     var carrier_code = typeof quote.shippingMethod().carrier_code !== 'undefined' ? quote.shippingMethod().carrier_code + '_' : '';
@@ -37,7 +37,19 @@ define(
                 if(this.getforCompany() == 2 && this.getCompany().length == 0){
                     return false;
                 }
+                if (!this.currentIpIsValid()) {
+                    return false;
+                }
+                if (!this.currentAgentIsValid()) {
+                    return false;
+                }
                 return true;
+            },
+            currentIpIsValid: function () {
+                return window.checkoutConfig.payment.currentipisvalid[this.item.method];
+            },
+            currentAgentIsValid: function () {
+                return window.checkoutConfig.payment.currentagentisvalid[this.item.method];
             },
             getDisallowedShipping: function () {
                 return window.checkoutConfig.payment.disallowedshipping[this.item.method];
@@ -82,7 +94,7 @@ define(
                 return window.checkoutConfig.payment.banks[this.item.method];
             },
             afterPlaceOrder: function () {
-                window.location.replace(url.build('/paynl/checkout/redirect?nocache='+ (new Date().getTime())));
+                window.location.replace(url.build('paynl/checkout/redirect?nocache='+ (new Date().getTime())));
             },
             getData: function () {
                 var dob = new Date(this.dateofbirth);
@@ -148,10 +160,19 @@ define(
                 if (event) {
                     event.preventDefault();
                 }
-                $('#payment-button').html('Processing').attr('disabled','disabled');
+
+                var objButton = $(event.target);
+                if (objButton.length > 0) {
+                    var curText = objButton.text();
+                    objButton.text($.mage.__('Processing')).prop('disabled', true);
+                }
+
                 this.isPlaceOrderActionAllowed(false);
                 placeOrder = placeOrderAction(this.getData(), this.redirectAfterPlaceOrder);
                 $.when(placeOrder).fail(function () {
+                    if (objButton.length > 0) {
+                        objButton.text(curText).prop('disabled', false);
+                    }
                     this.isPlaceOrderActionAllowed(true);
                 }.bind(this)).done(this.afterPlaceOrder.bind(this));
                 return true;

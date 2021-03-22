@@ -22,6 +22,7 @@ use Magento\Sales\Model\OrderRepository;
 use Paynl\Payment\Model\Config;
 use Paynl\Transaction;
 
+
 /**
  * Class PaymentMethod
  * @package Paynl\Payment\Model\Paymentmethod
@@ -55,6 +56,8 @@ abstract class PaymentMethod extends AbstractMethod
      */
     protected $orderConfig;
 
+    protected $helper;
+
     public function __construct(
         Context $context,
         Registry $registry,
@@ -75,6 +78,9 @@ abstract class PaymentMethod extends AbstractMethod
             $context, $registry, $extensionFactory, $customAttributeFactory,
             $paymentData, $scopeConfig, $logger, $resource, $resourceCollection, $data);
 
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+
+        $this->helper = $objectManager->create('Paynl\Payment\Helper\PayHelper');
         $this->paynlConfig = $paynlConfig;
         $this->orderRepository = $orderRepository;
         $this->orderConfig = $orderConfig;
@@ -130,6 +136,33 @@ abstract class PaymentMethod extends AbstractMethod
         return $this->_scopeConfig->getValue('payment/' . $this->_code . '/showforcompany', 'store');
     }
 
+
+    public function isCurrentIpValid()
+    {
+        return true;
+    }
+
+    public function isCurrentAgentValid()
+    {
+        return true;
+    }
+
+    public function genderConversion($gender)
+    {
+        switch ($gender) {
+            case '1':
+                $gender = 'M';
+                break;
+            case '2':
+                $gender = 'F';
+                break;
+            default:
+                $gender = null;
+                break;
+        }
+        return $gender;
+    }
+
     public function initialize($paymentAction, $stateObject)
     {
         $status = $this->getConfigData('order_status');
@@ -159,6 +192,7 @@ abstract class PaymentMethod extends AbstractMethod
         $this->paynlConfig->configureSDK();
 
         $transactionId = $payment->getParentTransactionId();
+        $transactionId = str_replace('-capture', '', $transactionId);
 
         try {
             Transaction::refund($transactionId, $amount);
@@ -170,7 +204,7 @@ abstract class PaymentMethod extends AbstractMethod
             if (substr($message, 0, 19) == '403 - access denied') {
                 $message = 'PAY. could not authorize this refund. Errorcode: PAY-MAGENTO2-001. See for more information ' . $docsLink;
             } else {
-                $message = 'PAY. could not process this refund (' . $message . '). Errorcode: PAY-MAGENTO2-002. More info: ' . $docsLink;
+                $message = 'PAY. could not process this refund (' . $message . '). Errorcode: PAY-MAGENTO2-002. Transaction: '.$transactionId.'. More info: ' . $docsLink;
             }
 
             throw new \Magento\Framework\Exception\LocalizedException(__($message));
@@ -269,9 +303,15 @@ abstract class PaymentMethod extends AbstractMethod
                 'phoneNumber' => $arrBillingAddress['telephone'],
                 'emailAddress' => $arrBillingAddress['email'],
             );
+
             if (isset($additionalData['dob'])) {
                 $enduser['dob'] = $additionalData['dob'];
             }
+
+            if (isset($additionalData['gender'])) {
+                $enduser['gender'] = $additionalData['gender'];
+            }
+            $enduser['gender'] = $this->genderConversion((empty($enduser['gender'])) ? $order->getCustomerGender($order) : $enduser['gender']);
 
             if (isset($arrBillingAddress['company']) && !empty($arrBillingAddress['company'])) {
               $enduser['company']['name'] = $arrBillingAddress['company'];
@@ -402,6 +442,26 @@ abstract class PaymentMethod extends AbstractMethod
                 'qty' => 1,
                 'tax' => $shippingTax,
                 'type' => \Paynl\Transaction::PRODUCT_TYPE_SHIPPING
+            );
+        }
+
+        // Gift Wrapping
+        $gwCost = $order->getGwPriceInclTax();
+        $gwTax = $order->getGwTaxAmount();
+
+        if ($this->paynlConfig->isAlwaysBaseCurrency()) {
+            $gwCost = $order->getGwBasePriceInclTax();
+            $gwTax = $order->getGwBaseTaxAmount();
+        }
+
+        if ($gwCost != 0) {
+            $arrProducts[] = array(
+                'id' => $order->getGwId(),
+                'name' => 'Gift Wrapping',
+                'price' => $gwCost,
+                'qty' => 1,
+                'tax' => $gwTax,
+                'type' => \Paynl\Transaction::PRODUCT_TYPE_HANDLING
             );
         }
 

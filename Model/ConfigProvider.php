@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright © 2015 Pay.nl All rights reserved.
  */
@@ -118,6 +119,8 @@ class ConfigProvider implements ConfigProviderInterface
                 $config['payment']['showdob'][$code]      = $this->getDOB($code);
                 $config['payment']['showforcompany'][$code] = $this->getCompany($code);
                 $config['payment']['disallowedshipping'][$code] = $this->getDisallowedShippingMethods($code);
+                $config['payment']['currentipisvalid'][$code]    = $this->methods[$code]->isCurrentIpValid();
+                $config['payment']['currentagentisvalid'][$code] = $this->methods[$code]->isCurrentAgentValid();
             }
         }
 
