@@ -74,14 +74,15 @@ class Finish extends PayAction
         parent::__construct($context);
     }
 
-    private function checkSession(Order $order, $orderId, $session){ 
+    private function checkSession(Order $order, $orderId, $session)
+    {
         if ($session->getLastOrderId() != $order->getId()) {
             $additionalInformation = $order->getPayment()->getAdditionalInformation();
             $transactionId = (isset($additionalInformation['transactionId'])) ? $additionalInformation['transactionId'] : null;
-            if($orderId == $transactionId){
+            if ($orderId == $transactionId) {
                 $this->checkoutSession->setLastQuoteId($order->getQuoteId())->setLastSuccessQuoteId($order->getQuoteId())->setLastOrderId($order->getId())->setLastRealOrderId($order->getIncrementId());
-            }            
-        }   
+            }
+        }
     }
 
     public function execute()
@@ -145,13 +146,13 @@ class Finish extends PayAction
         $orderStatus = empty($params['orderStatusId']) ? null : $params['orderStatusId'];
         $cancelMessage = $orderStatus == -63 ? __('Payment denied') : __('Payment canceled');
         $this->messageManager->addNoticeMessage($cancelMessage);
-      
+
         if ($payment->getMethod() == 'paynl_payment_paylink') {
             $cancelURL = Config::FINISH_PAYLINK . '?cancel=1';
         } else {
             $cancelURL = $this->config->getCancelURL();
         }
-  
+
         $resultRedirect->setPath($cancelURL);
 
 
