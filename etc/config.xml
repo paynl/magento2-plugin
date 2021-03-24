@@ -506,9 +506,6 @@ In order to pay for your order click the link below
                 <model>Paynl\Payment\Model\Paymentmethod\Sofortbanking</model>
                 <group>paynl_payment</group>
                 <send_new_order_email>before_payment</send_new_order_email>
-<<<<<<< HEAD
-            </paynl_payment_sofortbanking>          
-=======
             </paynl_payment_sofortbanking>
             <paynl_payment_sofortbanking_hr>
                 <active>0</active>
@@ -536,7 +533,6 @@ In order to pay for your order click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>before_payment</send_new_order_email>
             </paynl_payment_sofortbanking_ds>
->>>>>>> master
             <paynl_payment_spraypay>
                 <active>0</active>
                 <title>SprayPay</title>
