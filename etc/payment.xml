@@ -120,9 +120,6 @@
         <method name="paynl_payment_sofortbanking">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
-        <method name="paynl_payment_soforthighrisk">
-            <allow_multiple_address>0</allow_multiple_address>
-        </method>
         <method name="paynl_payment_spraypay">
             <allow_multiple_address>0</allow_multiple_address>
         </method>

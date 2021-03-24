@@ -50,7 +50,6 @@ define(
             {type: 'paynl_payment_postepay', component: defaultComponent},
             {type: 'paynl_payment_przelewy24', component: defaultComponent},
             {type: 'paynl_payment_sofortbanking', component: defaultComponent},
-            {type: 'paynl_payment_soforthighrisk', component: defaultComponent},
             {type: 'paynl_payment_spraypay', component: defaultComponent},
             {type: 'paynl_payment_telefonischbetalen', component: defaultComponent},
             {type: 'paynl_payment_tikkie', component: defaultComponent},
