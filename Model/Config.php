@@ -197,4 +197,9 @@ class Config
     {
         return $this->store->getConfig('payment/paynl/cancelurl');
     }
+
+    public function getDefaultPaymentOption()
+    {
+        return $this->store->getConfig('payment/paynl/default_payment_option');
+    }
 }
