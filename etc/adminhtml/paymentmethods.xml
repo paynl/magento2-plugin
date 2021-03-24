@@ -27,6 +27,7 @@
     <include path="Paynl_Payment::paymentmethods/gezondheidsbon.xml" />
     <include path="Paynl_Payment::paymentmethods/giropay.xml" />
     <include path="Paynl_Payment::paymentmethods/givacard.xml" />
+    <include path="Paynl_Payment::paymentmethods/good4fun.xml" />
     <include path="Paynl_Payment::paymentmethods/huisentuincadeau.xml" />
     <include path="Paynl_Payment::paymentmethods/ideal.xml" />
     <include path="Paynl_Payment::paymentmethods/instore.xml" />

@@ -38,6 +38,7 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_gezondheidsbon',
         'paynl_payment_giropay',
         'paynl_payment_givacard',
+        'paynl_payment_good4fun',
         'paynl_payment_huisentuincadeau',
         'paynl_payment_ideal',
         'paynl_payment_instore',
