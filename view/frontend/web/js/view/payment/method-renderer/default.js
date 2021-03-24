@@ -167,10 +167,19 @@ define(
                 if (event) {
                     event.preventDefault();
                 }
-                $('#payment-button').html('Processing').attr('disabled','disabled');
+
+                var objButton = $(event.target);
+                if (objButton.length > 0) {
+                    var curText = objButton.text();
+                    objButton.text($.mage.__('Processing')).prop('disabled', true);
+                }
+
                 this.isPlaceOrderActionAllowed(false);
                 placeOrder = placeOrderAction(this.getData(), this.redirectAfterPlaceOrder);
                 $.when(placeOrder).fail(function () {
+                    if (objButton.length > 0) {
+                        objButton.text(curText).prop('disabled', false);
+                    }
                     this.isPlaceOrderActionAllowed(true);
                 }.bind(this)).done(this.afterPlaceOrder.bind(this));
                 return true;
