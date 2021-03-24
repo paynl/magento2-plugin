@@ -63,6 +63,12 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
      */
     private $orderRepository;
 
+    /**
+     *
+     * @var Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface
+     */
+    private $builderInterface;
+
     private $paynlConfig;
 
     public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
@@ -95,7 +101,8 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         \Psr\Log\LoggerInterface $logger,
         \Magento\Framework\Controller\Result\Raw $result,
         OrderRepository $orderRepository,
-        \Paynl\Payment\Model\Config $paynlConfig
+        \Paynl\Payment\Model\Config $paynlConfig,
+        \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $builderInterface
     )
     {
         $this->result = $result;
@@ -106,6 +113,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         $this->logger = $logger;
         $this->orderRepository = $orderRepository;
         $this->paynlConfig = $paynlConfig;
+        $this->builderInterface = $builderInterface;
 
         parent::__construct($context);
     }
@@ -168,7 +176,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
                 $this->logger->debug('Already captured.');
 
                 return $this->result->setContents('TRUE| Already captured.');
-            }           
+            }
         }
 
         if ($transaction->isPaid() || $transaction->isAuthorized()) {
@@ -275,19 +283,54 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         );
 
         $payment->setPreparedMessage('PAY. - ');
-        $payment->setIsTransactionClosed(
-            0
-        );
+        $payment->setIsTransactionClosed(0);
 
         $paidAmount = $transaction->getPaidCurrencyAmount();
 
         if (!$this->paynlConfig->isAlwaysBaseCurrency()) {
             if ($order->getBaseCurrencyCode() != $order->getOrderCurrencyCode()) {
-                // we can only register the payment in the base currency
+                # We can only register the payment in the base currency
                 $paidAmount = $order->getBaseGrandTotal();
             }
         }
 
+        # Force order state to processing
+        $order->setState(Order::STATE_PROCESSING);
+        $paymentMethod = $order->getPayment()->getMethod();
+
+        if ($transaction->isAuthorized()) {
+            $statusAuthorized = $this->config->getAuthorizedStatus($paymentMethod);
+            $order->setStatus(!empty($statusAuthorized) ? $statusAuthorized : Order::STATE_PROCESSING);
+        } else {
+            $statusPaid = $this->config->getPaidStatus($paymentMethod);
+            $order->setStatus(!empty($statusPaid) ? $statusPaid : Order::STATE_PROCESSING);
+        }
+
+        # Notify customer
+        if ($order && !$order->getEmailSent()) {
+            $this->orderSender->send($order);
+            $order->addStatusHistoryComment(__('New order email sent'))->setIsCustomerNotified(true)->save();
+        }
+
+        # Skip creation of invoice for B2B if enabled
+        if ($this->config->ignoreB2BInvoice($paymentMethod)) {
+            $orderCompany = $order->getBillingAddress()->getCompany();
+            if(!empty($orderCompany)) {
+                # Create transaction
+                $formatedPrice = $order->getBaseCurrency()->formatTxt($order->getGrandTotal());
+                $transactionMessage = __('PAY. - Captured amount of %1.', $formatedPrice);
+                $transactionBuilder = $this->builderInterface->setPayment($payment)->setOrder($order)->setTransactionId($transaction->getId())->setFailSafe(true)->build('capture');
+                $payment->addTransactionCommentsToOrder($transactionBuilder, $transactionMessage);
+                $payment->setParentTransactionId(null);
+                $payment->save();
+                $transactionBuilder->save();
+                $order->addStatusHistoryComment(__('B2B Setting: Skipped creating invoice'));
+                $this->orderRepository->save($order);
+                return $this->result->setContents("TRUE| " . $message . " (B2B: No invoice created)");
+            }
+        }
+
+        # Make the invoice and send it to the customer
         if ($transaction->isAuthorized()) {
             $paidAmount = $transaction->getCurrencyAmount();
             $payment->registerAuthorizationNotification($paidAmount);
@@ -297,43 +340,14 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             );
         }
 
-        // Force order state/status to processing
-        $order->setState(Order::STATE_PROCESSING);
-
-        $statusPaid = $this->config->getPaidStatus($order->getPayment()->getMethod());
-        $statusAuthorized= $this->config->getAuthorizedStatus($order->getPayment()->getMethod());
-        $statusPaid = !empty($statusPaid) ? $statusPaid : Order::STATE_PROCESSING;
-        $statusAuthorized = !empty($statusAuthorized) ? $statusAuthorized : Order::STATE_PROCESSING;
-
-        if($transaction->isAuthorized()){
-            $order->setStatus($statusAuthorized);
-        } else {
-            $order->setStatus($statusPaid);
-        }
-
         $this->orderRepository->save($order);
-
-        // notify customer
-        if ($order && !$order->getEmailSent()) {
-            $this->orderSender->send($order);
-            $order->addStatusHistoryComment(
-                __('New order email sent')
-            )->setIsCustomerNotified(
-                true
-            )->save();
-        }
 
         $invoice = $payment->getCreatedInvoice();
         if ($invoice && !$invoice->getEmailSent()) {
             $this->invoiceSender->send($invoice);
-
-            $order->addStatusHistoryComment(
-                __('You notified customer about invoice #%1.',
-                    $invoice->getIncrementId())
-            )->setIsCustomerNotified(
-                true
-            )->save();
-
+            $order->addStatusHistoryComment(__('You notified customer about invoice #%1.', $invoice->getIncrementId()))
+                ->setIsCustomerNotified(true)
+                ->save();
         }
 
         return $this->result->setContents("TRUE| " . $message);

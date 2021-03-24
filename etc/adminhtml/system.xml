@@ -82,8 +82,16 @@
                     <label>Test IP Address</label>
                     <comment><![CDATA[Forces testmode on these Ip addresses, separate ip's by comma's for multiple ip's]]></comment>
                 </field>
-                <group id="paynl_paymentmethods" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1"
-                       showInStore="1">
+                <field id="default_payment_option" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Select default payment option</label>
+                    <source_model>Paynl\Payment\Model\Config\Source\DefaultPaymentOption</source_model>
+              </field>
+                <field id="auto_capture" translate="label" type="select" sortOrder="105" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Auto Capture</label>
+                    <comment><![CDATA[Automatically capture authorisation-transaction when creating the shipment for the order.]]></comment>
+                    <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
+                </field>
+                <group id="paynl_paymentmethods" translate="label" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
                     <frontend_model>Paynl\Payment\Block\Adminhtml\System\Config\Fieldset\Expanded</frontend_model>
                     <label>Paymentmethods</label>
                     <include path="Paynl_Payment::paymentmethods.xml"/>

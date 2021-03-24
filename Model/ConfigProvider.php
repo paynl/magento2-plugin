@@ -56,6 +56,8 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_postepay',
         'paynl_payment_przelewy24',
         'paynl_payment_sofortbanking',
+        'paynl_payment_sofortbanking_hr',
+        'paynl_payment_sofortbanking_ds',
         'paynl_payment_spraypay',
         'paynl_payment_telefonischbetalen',
         'paynl_payment_tikkie',
@@ -120,6 +122,7 @@ class ConfigProvider implements ConfigProviderInterface
                 $config['payment']['disallowedshipping'][$code] = $this->getDisallowedShippingMethods($code);
                 $config['payment']['currentipisvalid'][$code]    = $this->methods[$code]->isCurrentIpValid();
                 $config['payment']['currentagentisvalid'][$code] = $this->methods[$code]->isCurrentAgentValid();
+                $config['payment']['defaultpaymentoption'][$code] = $this->methods[$code]->isDefaultPaymentOption();
             }
         }
 

@@ -27,7 +27,7 @@
                 <paylink_subject>Order Paylink #((order_id))#</paylink_subject>
                 <paylink_body>((customer_name)),
 Thank you for your order from ((store_name)).
-                
+
 If you have questions about your order, you can email us at ((support_email))
 
 In order to pay for your order click the link below
@@ -94,6 +94,7 @@ In order to pay for your order click the link below
                 <model>Paynl\Payment\Model\Paymentmethod\Billink</model>
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
+                <turn_off_invoices_b2b>No</turn_off_invoices_b2b>
             </paynl_payment_billink>
             <paynl_payment_capayable>
                 <active>0</active>
@@ -505,7 +506,37 @@ In order to pay for your order click the link below
                 <model>Paynl\Payment\Model\Paymentmethod\Sofortbanking</model>
                 <group>paynl_payment</group>
                 <send_new_order_email>before_payment</send_new_order_email>
+<<<<<<< HEAD
             </paynl_payment_sofortbanking>          
+=======
+            </paynl_payment_sofortbanking>
+            <paynl_payment_sofortbanking_hr>
+                <active>0</active>
+                <title>Sofortbanking HighRisk</title>
+                <payment_option_id>595</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <holded>1</holded>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\SofortbankingHighRisk</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>before_payment</send_new_order_email>
+            </paynl_payment_sofortbanking_hr>
+            <paynl_payment_sofortbanking_ds>
+                <active>0</active>
+                <title>Sofortbanking Digital Services</title>
+                <payment_option_id>577</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <holded>1</holded>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\SofortbankingDigitalServices</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>before_payment</send_new_order_email>
+            </paynl_payment_sofortbanking_ds>
+>>>>>>> master
             <paynl_payment_spraypay>
                 <active>0</active>
                 <title>SprayPay</title>
