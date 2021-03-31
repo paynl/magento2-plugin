@@ -21,8 +21,8 @@ define(
             dateofbirth: null,
             billink_agree: null,
             initialize: function () {
-                this._super(); 
-                if(!quote.paymentMethod() && window.checkoutConfig.payment.defaultpaymentoption[this.item.method]){    
+                this._super();
+                if (!quote.paymentMethod() && window.checkoutConfig.payment.defaultpaymentoption[this.item.method]) {
                     this.selectPaymentMethod();
                 }
                 return this;
@@ -38,10 +38,10 @@ define(
                         return false;
                     }
                 }
-                if(this.getforCompany() == 1 && this.getCompany().length != 0){
+                if (this.getforCompany() == 1 && this.getCompany().length != 0) {
                     return false;
                 }
-                if(this.getforCompany() == 2 && this.getCompany().length == 0){
+                if (this.getforCompany() == 2 && this.getCompany().length == 0) {
                     return false;
                 }
                 if (!this.currentIpIsValid()) {
@@ -60,16 +60,16 @@ define(
             },
             getDisallowedShipping: function () {
                 return window.checkoutConfig.payment.disallowedshipping[this.item.method];
-            },  
-            getCompany: function () {                
+            },
+            getCompany: function () {
                 if (typeof quote.billingAddress._latestValue.company !== 'undefined' && quote.billingAddress._latestValue.company !== null) {
                     return quote.billingAddress._latestValue.company;
                 }
-                return '';                
-            },    
+                return '';
+            },
             getforCompany   : function () {
                 return window.checkoutConfig.payment.showforcompany[this.item.method];
-            },  
+            },
             getInstructions: function () {
                 return window.checkoutConfig.payment.instructions[this.item.method];
             },
@@ -80,23 +80,23 @@ define(
                 return this.getKVK() > 0;
             },
             getKVK: function () {
-                return window.checkoutConfig.payment.showkvk[this.item.method];
+                return (typeof window.checkoutConfig.payment.showkvk !== 'undefined') ? window.checkoutConfig.payment.showkvk[this.item.method] : '';
             },
             showDOB: function () {
                 return this.getDOB() > 0;
             },
             getDOB: function () {
-                return window.checkoutConfig.payment.showdob[this.item.method];
+                return (typeof window.checkoutConfig.payment.showdob !== 'undefined') ? window.checkoutConfig.payment.showdob[this.item.method] : '';
             },
             showKVKDOB: function () {
                 return this.getKVKDOB() > 0;
             },
             getKVKDOB: function () {
                 return (this.getDOB() > 0 && this.getKVK() > 0);
-            },  
+            },
             showBanks: function(){
                 return window.checkoutConfig.payment.banks[this.item.method].length > 0;
-            },     
+            },
             getBanks: function(){
                 return window.checkoutConfig.payment.banks[this.item.method];
             },
