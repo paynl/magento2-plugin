@@ -20,10 +20,15 @@ class Config
     /** @var  Store */
     private $store;
 
+    /** @var  Resources */
+    private $resources;
+
     public function __construct(
-        Store $store
+        Store $store,
+        \Magento\Framework\View\Element\Template $resources
     ) {
         $this->store = $store;
+        $this->resources = $resources;
     }
 
     /**
@@ -185,12 +190,16 @@ class Config
         return trim($this->store->getConfig('payment/paynl/serviceid'));
     }
 
-    public function getIconUrl()
+    public function getIconUrl($methodCode)
     {
-        $url = 'https://static.pay.nl/payment_profiles/50x32/#paymentOptionId#.png';
-        $iconUrl = trim($this->store->getConfig('payment/paynl/iconurl'));
+        $iconUrl = 'https://static.pay.nl/payment_profiles/50x32/#paymentOptionId#.png';
 
-        return empty($iconUrl)?$url:$iconUrl;
+        $brandId = $this->store->getConfig('payment/' . $methodCode . '/brand_id');
+        if(!empty($brandId)) {
+            $iconUrl = $this->resources->getViewFileUrl("Paynl_Payment::logos/" . $brandId . ".png");
+        }
+
+        return $iconUrl;
     }
 
     public function getCancelURL()

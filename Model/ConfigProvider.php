@@ -175,7 +175,7 @@ class ConfigProvider implements ConfigProviderInterface
      */
     protected function getIcon($code)
     {
-        $url = $this->paynlConfig->getIconUrl();
+        $url = $this->paynlConfig->getIconUrl($code);
         return str_replace('#paymentOptionId#', $this->methods[$code]->getPaymentOptionId(), $url);
     }
 }

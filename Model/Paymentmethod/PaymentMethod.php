@@ -526,6 +526,35 @@ abstract class PaymentMethod extends AbstractMethod
         return $paymentOptionId;
     }
 
+    public function assignData(\Magento\Framework\DataObject $data)
+    {
+        parent::assignData($data);
+
+        if (is_array($data))
+        {
+        $this->getInfoInstance()->setAdditionalInformation('kvknummer', $data['kvknummer']);
+        $this->getInfoInstance()->setAdditionalInformation('dob', $data['dob']);
+        } elseif ($data instanceof \Magento\Framework\DataObject)
+        {
+
+        $additional_data = $data->getAdditionalData();
+
+        if (isset($additional_data['kvknummer'])) {
+            $this->getInfoInstance()->setAdditionalInformation('kvknummer', $additional_data['kvknummer']);
+        }
+
+        if (isset($additional_data['billink_agree'])) {
+            $this->getInfoInstance()->setAdditionalInformation('billink_agree', $additional_data['billink_agree']);
+        }
+
+        if (isset($additional_data['dob'])) {
+            $this->getInfoInstance()->setAdditionalInformation('dob', $additional_data['dob']);
+        }
+
+        }
+        return $this;
+    }
+
     /**
      * @return int the default payment option id
      */

@@ -71,6 +71,15 @@
             </depends>
             <config_path>payment/paynl_payment_focum/instructions</config_path>
         </field>
+        <field id="showdob" translate="label" type="select" sortOrder="66" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Show Date of birth field</label>
+            <source_model>Paynl\Payment\Model\Config\Source\showDobOptions</source_model>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+            <config_path>payment/paynl_payment_focum/showdob</config_path>
+            <comment><![CDATA[When choosen for Focum the customer can additionally enter his Date of Birth before continuing to Focum.]]></comment>
+        </field>
         <field id="min_order_total" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1"
                showInStore="1">
             <label>Minimum Order Total</label>

@@ -17,4 +17,9 @@ class Klarnakp extends PaymentMethod
     {
         return 2265;
     }
+
+    public function getDOB()
+    {
+        return $this->_scopeConfig->getValue('payment/paynl_payment_klarnakp/showdob', 'store');
+    }
 }

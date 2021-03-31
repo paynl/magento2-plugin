@@ -17,4 +17,9 @@ class Afterpay extends PaymentMethod
     {
         return 739;
     }
+
+    public function getDOB()
+    {
+        return $this->_scopeConfig->getValue('payment/paynl_payment_afterpay/showdob', 'store');
+    }
 }
