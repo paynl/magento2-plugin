@@ -99,6 +99,11 @@ class Config
         return $this->store->getConfig('payment/paynl/always_base_currency') == 1;
     }
 
+    public function useMagOrderAmountForAuth()
+    {
+        return $this->store->getConfig('payment/paynl/use_magorder_for_auth') == 1;
+    }
+
     public function getLanguage()
     {
         $language = $this->store->getConfig('payment/paynl/language');
@@ -130,7 +135,7 @@ class Config
     {
         return $this->store->getConfig('payment/' . $methodCode . '/turn_off_invoices_b2b') == 1;
     }
-    
+
     public function autoCaptureEnabled()
     {
        return $this->store->getConfig('payment/paynl/auto_capture') == 1;

@@ -172,9 +172,8 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         }
         if ($action == 'capture') {
             $payment = $order->getPayment();
-            if(!empty($payment) && $payment->getAdditionalInformation('manual_capture')){
+            if (!empty($payment) && $payment->getAdditionalInformation('manual_capture')) {
                 $this->logger->debug('Already captured.');
-
                 return $this->result->setContents('TRUE| Already captured.');
             }
         }
@@ -182,8 +181,10 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         if ($transaction->isPaid() || $transaction->isAuthorized()) {
             return $this->processPaidOrder($transaction, $order);
         } elseif ($transaction->isCanceled()) {
-            if ($order->isCanceled()) {
-                return $this->result->setContents("TRUE| ALLREADY CANCELED");
+            if ($order->getState() == Order::STATE_PROCESSING) {
+                return $this->result->setContents("TRUE| Ignoring cancel, order is `processing`");
+            } elseif ($order->isCanceled()) {
+                return $this->result->setContents("TRUE| Already canceled");
             } else {
                 return $this->cancelOrder($order);
             }
@@ -330,14 +331,11 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             }
         }
 
-        # Make the invoice and send it to the customer
         if ($transaction->isAuthorized()) {
-            $paidAmount = $transaction->getCurrencyAmount();
-            $payment->registerAuthorizationNotification($paidAmount);
+            $authAmount = $this->config->useMagOrderAmountForAuth() ? $order->getBaseGrandTotal() : $transaction->getCurrencyAmount();
+            $payment->registerAuthorizationNotification($authAmount);
         } else {
-            $payment->registerCaptureNotification(
-                $paidAmount, $this->config->isSkipFraudDetection()
-            );
+            $payment->registerCaptureNotification($paidAmount, $this->config->isSkipFraudDetection());
         }
 
         $this->orderRepository->save($order);
