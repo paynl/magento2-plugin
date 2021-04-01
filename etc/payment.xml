@@ -135,6 +135,9 @@
         <method name="paynl_payment_tikkie">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
+        <method name="paynl_payment_trustly">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
         <method name="paynl_payment_visamastercard">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
