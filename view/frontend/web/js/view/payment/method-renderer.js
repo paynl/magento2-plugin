@@ -55,6 +55,7 @@ define(
             {type: 'paynl_payment_spraypay', component: defaultComponent},
             {type: 'paynl_payment_telefonischbetalen', component: defaultComponent},
             {type: 'paynl_payment_tikkie', component: defaultComponent},
+            {type: 'paynl_payment_trustly', component: defaultComponent},
             {type: 'paynl_payment_visamastercard', component: defaultComponent},
             {type: 'paynl_payment_vvvgiftcard', component: defaultComponent},
             {type: 'paynl_payment_webshopgiftcard', component: defaultComponent},

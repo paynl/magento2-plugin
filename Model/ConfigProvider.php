@@ -61,6 +61,7 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_spraypay',
         'paynl_payment_telefonischbetalen',
         'paynl_payment_tikkie',
+        'paynl_payment_trustly',
         'paynl_payment_visamastercard',
         'paynl_payment_vvvgiftcard',
         'paynl_payment_webshopgiftcard',

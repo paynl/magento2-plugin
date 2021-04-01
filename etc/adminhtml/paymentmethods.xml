@@ -50,6 +50,7 @@
     <include path="Paynl_Payment::paymentmethods/spraypay.xml" />
     <include path="Paynl_Payment::paymentmethods/telefonischbetalen.xml" />
     <include path="Paynl_Payment::paymentmethods/tikkie.xml" />
+    <include path="Paynl_Payment::paymentmethods/trustly.xml" />
     <include path="Paynl_Payment::paymentmethods/visamastercard.xml" />
     <include path="Paynl_Payment::paymentmethods/vvvgiftcard.xml" />
     <include path="Paynl_Payment::paymentmethods/webshopgiftcard.xml" />
