@@ -22,9 +22,15 @@ define(
             billink_agree: null,
             initialize: function () {
                 this._super();
-                if (!quote.paymentMethod() && window.checkoutConfig.payment.defaultpaymentoption[this.item.method]) {
+
+                var defaultPaymentMethod = window.checkoutConfig.payment.defaultpaymentoption;
+                if (!quote.paymentMethod() &&
+                    typeof defaultPaymentMethod !== 'undefined' &&
+                    typeof defaultPaymentMethod[this.item.method] !== 'undefined' &&
+                    defaultPaymentMethod[this.item.method])  {
                     this.selectPaymentMethod();
                 }
+
                 return this;
             },
             isVisible:function() {
