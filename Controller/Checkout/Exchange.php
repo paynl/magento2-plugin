@@ -325,6 +325,11 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
                 $payment->setParentTransactionId(null);
                 $payment->save();
                 $transactionBuilder->save();
+
+                # Change amount paid manually              
+                $order->setTotalPaid($order->getGrandTotal());
+                $order->setBaseTotalPaid($order->getBaseGrandTotal());   
+
                 $order->addStatusHistoryComment(__('B2B Setting: Skipped creating invoice'));
                 $this->orderRepository->save($order);
                 return $this->result->setContents("TRUE| " . $message . " (B2B: No invoice created)");
