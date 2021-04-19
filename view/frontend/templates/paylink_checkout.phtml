@@ -9,7 +9,8 @@
     <h1 class="page-title">
         <span class="base" data-ui-id="page-title-wrapper">
             <?php
-            $cancel = (isset($_GET['cancel'])) ? $_GET['cancel'] : 0;
+            $cancel = $block->getParam('cancel');
+            
             $message = __('Thank you for your purchase!');
             if($cancel == 1){
                 $message = __('The payment has been canceled.');
