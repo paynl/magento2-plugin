@@ -27,7 +27,8 @@ class Paylink extends \Magento\Framework\View\Element\Template
         return $this->_storeManager->getStore()->getBaseUrl();
     }
 
-    public function getParam($param){
+    public function getParam($param)
+    {
         $params = $this->request->getParams();
         return (isset($params[$param])) ? $params[$param] : null;
     }

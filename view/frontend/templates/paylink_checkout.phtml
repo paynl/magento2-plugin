@@ -10,9 +10,9 @@
         <span class="base" data-ui-id="page-title-wrapper">
             <?php
             $cancel = $block->getParam('cancel');
-            
+
             $message = __('Thank you for your purchase!');
-            if($cancel == 1){
+            if ($cancel == 1) {
                 $message = __('The payment has been canceled.');
             }
             echo $message;
