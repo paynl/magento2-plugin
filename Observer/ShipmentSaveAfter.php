@@ -41,9 +41,7 @@ class ShipmentSaveAfter implements ObserverInterface
     }
 
     public function execute(\Magento\Framework\Event\Observer $observer)
-    {
-
-        $this->logger->debug("SHIPMENT OBSERVER CALLED");
+    {       
 
         if ($this->config->autoCaptureEnabled()) {
             $shipment = $observer->getEvent()->getShipment();
