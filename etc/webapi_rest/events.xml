@@ -6,9 +6,6 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
-    <event name="sales_order_save_commit_after">
-        <observer name="sales_order_save_commit_after" instance="Paynl\Payment\Observer\OrderSaveCommitAfter" />
-    </event>
     <event name="sales_order_shipment_save_after">
         <observer name="sales_order_shipment_save_after" instance="Paynl\Payment\Observer\ShipmentSaveAfter" />
     </event>
