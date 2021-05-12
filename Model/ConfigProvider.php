@@ -19,6 +19,7 @@ class ConfigProvider implements ConfigProviderInterface
     protected $methodCodes = [
         'paynl_payment_afterpay',
         'paynl_payment_alipay',
+        'paynl_payment_amazonpay',
         'paynl_payment_amex',
         'paynl_payment_applepay',
         'paynl_payment_billink',
