@@ -7,9 +7,10 @@ define(
         'mage/url',
         'Magento_Checkout/js/action/place-order',
         'Magento_Checkout/js/model/quote',
-        'Magento_Ui/js/modal/alert'
+        'Magento_Ui/js/modal/alert',
+        'Magento_Checkout/js/model/payment/additional-validators'
     ],
-    function ($, Component, url, placeOrderAction, quote, alert) {
+    function ($, Component, url, placeOrderAction, quote, alert, additionalValidators) {
         'use strict';
         return Component.extend({
             redirectAfterPlaceOrder: false,
@@ -133,6 +134,10 @@ define(
                 };
             },
             placeOrder: function (data, event) {
+
+                this.validate();
+                additionalValidators.validate();
+
                 var placeOrder;
                 var cocRequired = this.getKVK() == 2;
                 var dobRequired = this.getDOB() == 2;
