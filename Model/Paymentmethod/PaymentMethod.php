@@ -255,9 +255,12 @@ abstract class PaymentMethod extends AbstractMethod
         if ($holded) {
             $order->hold();
         }
+
+        $redirectUrl = $transaction->getRedirectUrl();
+        $order->getPayment()->setAdditionalInformation('payNLRedirectUrl', $redirectUrl);
         $this->orderRepository->save($order);
 
-        return $transaction->getRedirectUrl();
+        return $redirectUrl;
     }
 
     protected function doStartTransaction(Order $order)
