@@ -88,7 +88,7 @@ abstract class Available implements ArrayInterface
                 return [0 => __('Not available, you can enable this on admin.pay.nl')];
             }
         } catch (\Exception $e) {
-            return [0 => 'Error: ' . $e->getMessage()];
+            return [0 => __('Not available')];
         }
 
     }
