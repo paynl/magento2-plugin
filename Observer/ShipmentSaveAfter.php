@@ -41,12 +41,11 @@ class ShipmentSaveAfter implements ObserverInterface
     }
 
     public function execute(\Magento\Framework\Event\Observer $observer)
-    {       
+    {
 
         if ($this->config->autoCaptureEnabled()) {
-            $shipment = $observer->getEvent()->getShipment();
-            $order = $shipment->getOrder();
-            if ($order->getState() == Order::STATE_PROCESSING && !$order->hasInvoices() && $order->hasShipments()) {
+            $order = $observer->getEvent()->getShipment()->getOrder();
+            if ($order->getState() == Order::STATE_PROCESSING && !$order->hasInvoices()) {
                 $data = $order->getPayment()->getData();
 
                 if (!empty($data['last_trans_id'])) {
@@ -55,21 +54,20 @@ class ShipmentSaveAfter implements ObserverInterface
                     $amountRefunded = isset($data['amount_refunded']) ? $data['amount_refunded'] : null;
 
                     if ($bHasAmountAuthorized && is_null($amountPaid) && is_null($amountRefunded)) {
-                        $this->logger->debug('PAY.: AUTO-CAPTURING ' . $data['last_trans_id']);
+                        $this->logger->debug('PAY.: AUTO-CAPTURING (rest)' . $data['last_trans_id']);
                         try {
                             \Paynl\Config::setApiToken($this->config->getApiToken());
                             $result = \Paynl\Transaction::capture($data['last_trans_id']);
                             $strResult = 'Success';
                         } catch (\Exception $e) {
-                            $this->logger->debug('Order PAY error: ' . $e->getMessage() . ' EntityId: ' . $order->getEntityId());
-                            $strResult = 'Failed. Errorcode: PAY-MAGENTO2-003. See docs.pay.nl for more information';
+                            $this->logger->debug('Order PAY error (rest): ' . $e->getMessage() . ' EntityId: ' . $order->getEntityId());
+                            $strResult = 'Failed. Errorcode: PAY-MAGENTO2-004. See docs.pay.nl for more information';
                         }
 
-                        $order->addStatusHistoryComment(__('PAY. - Performed auto-capture. Result: ') . $strResult, false)->save();
+                        $order->addStatusHistoryComment(__('PAY. - Performed auto-capture (rest). Result: ') . $strResult, false)->save();
                     }
                 }
             }
         }
     }
-
 }
