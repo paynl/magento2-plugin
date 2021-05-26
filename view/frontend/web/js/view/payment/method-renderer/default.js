@@ -89,6 +89,9 @@ define(
             getKVK: function () {
                 return (typeof window.checkoutConfig.payment.showkvk !== 'undefined') ? window.checkoutConfig.payment.showkvk[this.item.method] : '';
             },
+            useAdditionalValidation: function () {
+                return (typeof window.checkoutConfig.payment.useAdditionalValidation !== 'undefined') ? window.checkoutConfig.payment.useAdditionalValidation[this.item.method] : false;
+            },
             showDOB: function () {
                 return this.getDOB() > 0;
             },
@@ -135,8 +138,10 @@ define(
             },
             placeOrder: function (data, event) {
 
-                this.validate();
-                additionalValidators.validate();
+                if(this.useAdditionalValidation()) {
+                    this.validate();
+                    additionalValidators.validate();
+                }
 
                 var placeOrder;
                 var cocRequired = this.getKVK() == 2;
