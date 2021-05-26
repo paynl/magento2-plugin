@@ -90,7 +90,7 @@ define(
                 return (typeof window.checkoutConfig.payment.showkvk !== 'undefined') ? window.checkoutConfig.payment.showkvk[this.item.method] : '';
             },
             useAdditionalValidation: function () {
-                return (typeof window.checkoutConfig.payment.useAdditionalValidation !== 'undefined') ? window.checkoutConfig.payment.useAdditionalValidation[this.item.method] : false;
+                return (typeof window.checkoutConfig.payment.useAdditionalValidation !== 'undefined') ? window.checkoutConfig.payment.useAdditionalValidation : false;
             },
             showDOB: function () {
                 return this.getDOB() > 0;
