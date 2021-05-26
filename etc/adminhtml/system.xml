@@ -90,6 +90,11 @@
                     <label>Select default payment option</label>
                     <source_model>Paynl\Payment\Model\Config\Source\DefaultPaymentOption</source_model>
               </field>
+                <field id="use_additional_validation" translate="label" type="select" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable additional validation</label>
+                    <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
+                    <comment><![CDATA[Enable this to also apply the validation of other activated (third party) modules during the payment process.]]></comment>
+                </field>
                 <field id="auto_capture" translate="label" type="select" sortOrder="105" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Auto Capture</label>
                     <comment><![CDATA[Automatically capture authorisation-transaction when creating the shipment for the order.]]></comment>

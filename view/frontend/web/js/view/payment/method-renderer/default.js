@@ -7,9 +7,10 @@ define(
         'mage/url',
         'Magento_Checkout/js/action/place-order',
         'Magento_Checkout/js/model/quote',
-        'Magento_Ui/js/modal/alert'
+        'Magento_Ui/js/modal/alert',
+        'Magento_Checkout/js/model/payment/additional-validators'
     ],
-    function ($, Component, url, placeOrderAction, quote, alert) {
+    function ($, Component, url, placeOrderAction, quote, alert, additionalValidators) {
         'use strict';
         return Component.extend({
             redirectAfterPlaceOrder: false,
@@ -88,6 +89,9 @@ define(
             getKVK: function () {
                 return (typeof window.checkoutConfig.payment.showkvk !== 'undefined') ? window.checkoutConfig.payment.showkvk[this.item.method] : '';
             },
+            useAdditionalValidation: function () {
+                return (typeof window.checkoutConfig.payment.useAdditionalValidation !== 'undefined') ? window.checkoutConfig.payment.useAdditionalValidation : false;
+            },
             showDOB: function () {
                 return this.getDOB() > 0;
             },
@@ -133,6 +137,12 @@ define(
                 };
             },
             placeOrder: function (data, event) {
+
+                if(this.useAdditionalValidation()) {
+                    this.validate();
+                    additionalValidators.validate();
+                }
+
                 var placeOrder;
                 var cocRequired = this.getKVK() == 2;
                 var dobRequired = this.getDOB() == 2;

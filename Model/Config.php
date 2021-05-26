@@ -198,6 +198,11 @@ class Config
         return empty($iconUrl)?$url:$iconUrl;
     }
 
+    public function getUseAdditionalValidation()
+    {
+        return trim($this->store->getConfig('payment/paynl/use_additional_validation'));
+    }
+
     public function getCancelURL()
     {
         return $this->store->getConfig('payment/paynl/cancelurl');

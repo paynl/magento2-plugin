@@ -121,12 +121,15 @@ class ConfigProvider implements ConfigProviderInterface
                 $config['payment']['showkvk'][$code]      = $this->getKVK($code);
                 $config['payment']['showdob'][$code]      = $this->getDOB($code);
                 $config['payment']['showforcompany'][$code] = $this->getCompany($code);
+
                 $config['payment']['disallowedshipping'][$code] = $this->getDisallowedShippingMethods($code);
                 $config['payment']['currentipisvalid'][$code]    = $this->methods[$code]->isCurrentIpValid();
                 $config['payment']['currentagentisvalid'][$code] = $this->methods[$code]->isCurrentAgentValid();
                 $config['payment']['defaultpaymentoption'][$code] = $this->methods[$code]->isDefaultPaymentOption();
             }
         }
+
+        $config['payment']['useAdditionalValidation'] = $this->paynlConfig->getUseAdditionalValidation();
 
         return $config;
     }
