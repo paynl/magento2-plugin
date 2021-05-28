@@ -13,6 +13,7 @@ use Magento\Sales\Model\Order\Payment\Interceptor;
 use Magento\Sales\Model\OrderRepository;
 use Paynl\Payment\Controller\CsrfAwareActionInterface;
 use Paynl\Payment\Controller\PayAction;
+use Paynl\Result\Transaction\Status;
 use Paynl\Result\Transaction\Transaction;
 
 
@@ -124,19 +125,20 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
 
         $params = $this->getRequest()->getParams();
         $action = !empty($params['action']) ? strtolower($params['action']) : '';
+        $payOrderId = isset($params['order_id']) ? $params['order_id'] : null;
+        $orderEntityId = isset($params['extra3']) ? $params['extra3'] : null;
 
         if ($action == 'pending') {
             return $this->result->setContents('TRUE| Ignore pending');
         }
 
-        if (!isset($params['order_id'])) {
-            $this->logger->critical('Exchange: order_id is not set in the request', $params);
-
+        if (empty($payOrderId) || empty($orderEntityId)) {
+            $this->logger->critical('Exchange: order_id or orderEntity is not set', $params);
             return $this->result->setContents('FALSE| order_id is not set in the request');
         }
 
         try {
-            $transaction = \Paynl\Transaction::get($params['order_id']);
+            $transaction = \Paynl\Transaction::status($payOrderId);
         } catch (\Exception $e) {
             $this->logger->critical($e, $params);
 
@@ -156,22 +158,39 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             return $this->result->setContents("TRUE| Ignoring pending");
         }
 
-        $orderEntityId = $transaction->getExtra3();
-        /** @var Order $order */
+        $orderNumber = $transaction->getOrderNumber();
         $order = $this->orderRepository->get($orderEntityId);
 
         if (empty($order)) {
             $this->logger->critical('Cannot load order: ' . $orderEntityId);
-
             return $this->result->setContents('FALSE| Cannot load order');
         }
-        if ($order->getTotalDue() <= 0) {
-            $this->logger->debug('Total due <= 0, so not touching the status of the order: ' . $orderEntityId);
 
+        if ($order->getIncrementId() != $orderNumber) {
+            $this->logger->critical('Ordernumber not equal' . $orderEntityId);
+            return $this->result->setContents('TRUE| Failed. Ordernumber not found.');
+        }
+
+        $payment = $order->getPayment();
+        $info = $payment->getAdditionalInformation();
+        if (!empty($info['transactionId'])) {
+            if($info['transactionId'] != $payOrderId) {
+                $this->logger->critical('transaction not equal');
+                return $this->result->setContents('FALSE| Cannot load order');
+            } else {
+                $this->logger->debug('transactions match!');
+            }
+        } else {
+            $this->logger->critical('transaction not set in order');
+            return $this->result->setContents('TRUE| Failed. transaction not set.');
+        }
+
+        if ($order->getTotalDue() <= 0) {
+            $this->logger->debug($action . '. Ignoring - already paid: ' . $orderEntityId);
             return $this->result->setContents('TRUE| Ignoring: order has already been paid');
         }
+
         if ($action == 'capture') {
-            $payment = $order->getPayment();
             if (!empty($payment) && $payment->getAdditionalInformation('manual_capture')) {
                 $this->logger->debug('Already captured.');
                 return $this->result->setContents('TRUE| Already captured.');
@@ -261,7 +280,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
      * @param Order $order
      * @return \Magento\Framework\Controller\Result\Raw
      */
-    private function processPaidOrder(Transaction $transaction, Order $order)
+    private function processPaidOrder(Status $transaction, Order $order)
     {
         if ($transaction->isPaid()) {
             $message = "PAID";
@@ -326,9 +345,9 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
                 $payment->save();
                 $transactionBuilder->save();
 
-                # Change amount paid manually              
+                # Change amount paid manually
                 $order->setTotalPaid($order->getGrandTotal());
-                $order->setBaseTotalPaid($order->getBaseGrandTotal());   
+                $order->setBaseTotalPaid($order->getBaseGrandTotal());
 
                 $order->addStatusHistoryComment(__('B2B Setting: Skipped creating invoice'));
                 $this->orderRepository->save($order);

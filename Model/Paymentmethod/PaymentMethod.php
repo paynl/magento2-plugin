@@ -294,8 +294,8 @@ abstract class PaymentMethod extends AbstractMethod
 
         $store = $order->getStore();
         $baseUrl = $store->getBaseUrl();
-        // i want to use the url builder here, but that doenst work from admin, even if the store is supplied
-        $returnUrl = $baseUrl . 'paynl/checkout/finish/';
+        
+        $returnUrl = $baseUrl . 'paynl/checkout/finish/?entityid=' . $order->getEntityId();
         $exchangeUrl = $baseUrl . 'paynl/checkout/exchange/';
 
         $paymentOptionId = $this->getPaymentOptionId();
