@@ -362,7 +362,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
      * @param Details $details
      * @return \Magento\Framework\Controller\Result\Raw
      */
-    private function processPartiallyPaidOrder(Status $transaction, Order $order, Details $details)
+    private function processPartiallyPaidOrder(Transaction $transaction, Order $order, Details $details)
     {
             $paymentDetails = $details->getPaymentDetails();
             $transactionDetails = $paymentDetails['transactionDetails'];
