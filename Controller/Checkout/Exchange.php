@@ -13,6 +13,7 @@ use Magento\Sales\Model\Order\Payment\Interceptor;
 use Magento\Sales\Model\OrderRepository;
 use Paynl\Payment\Controller\CsrfAwareActionInterface;
 use Paynl\Payment\Controller\PayAction;
+use Paynl\Result\Transaction\Details;
 use Paynl\Result\Transaction\Transaction;
 
 
@@ -143,10 +144,13 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             return $this->result->setContents('FALSE| Error fetching transaction. ' . $e->getMessage());
         }
 
-        if(method_exists($transaction, 'isPartialPayment')) {
-            if($transaction->isPartialPayment()) {
-                return $this->result->setContents("TRUE| Partial payment");
-            }
+        $orderEntityId = $transaction->getExtra3();
+        /** @var Order $order */
+        $order = $this->orderRepository->get($orderEntityId);  
+        
+        if ($action == 'partial_payment') {
+            $details = \Paynl\Transaction::details($payOrderId);
+            return $this->processPartiallyPaidOrder($transaction, $order, $details);
         }
 
         if ($transaction->isPending()) {
@@ -155,10 +159,6 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             }
             return $this->result->setContents("TRUE| Ignoring pending");
         }
-
-        $orderEntityId = $transaction->getExtra3();
-        /** @var Order $order */
-        $order = $this->orderRepository->get($orderEntityId);
 
         if (empty($order)) {
             $this->logger->critical('Cannot load order: ' . $orderEntityId);
@@ -354,5 +354,67 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         }
 
         return $this->result->setContents("TRUE| " . $message);
+    }
+
+    /**
+     * @param Transaction $transaction
+     * @param Order $order
+     * @param Details $details
+     * @return \Magento\Framework\Controller\Result\Raw
+     */
+    private function processPartiallyPaidOrder(Status $transaction, Order $order, Details $details)
+    {
+            $paymentDetails = $details->getPaymentDetails();
+            $transactionDetails = $paymentDetails['transactionDetails'];
+         
+            /** @var Interceptor $payment */
+            $payment = $order->getPayment();
+            $payment->setTransactionId(
+                $transaction->getId()
+            );
+            $payment->setMethod('paynl_payment_multipayment');
+            $payment->setPreparedMessage('PAY. - ');
+            $payment->setIsTransactionClosed(0);
+            $payment->save();
+
+            if($transactionDetails && count($transactionDetails) > 0){
+
+                $totalpaid = 0;
+                foreach ($transactionDetails as $key => $transactionDetail) {                   
+                    $transactionId = (isset($transactionDetail['transactionId'])) ? $transactionDetail['transactionId'] : null;
+                    $amountarr = (isset($transactionDetail['amount'])) ? $transactionDetail['amount'] : null;
+                    $amount = (isset($transactionDetail['amount']['value'])) ? $transactionDetail['amount']['value'] / 100 : null;
+                    $currency = (isset($transactionDetail['amount']['currency'])) ? $transactionDetail['amount']['currency'] : null;
+                    $method = (isset($transactionDetail['paymentProfileName'])) ? $transactionDetail['paymentProfileName'] : null;
+                   
+                    $addedTransactions = json_decode($payment->getAdditionalInformation('transactions'));
+                    $addedTransactions = (is_array($addedTransactions)) ? $addedTransactions : array();
+                    if(in_array($transactionId, $addedTransactions) || $transactionId == null || $amount == null || $currency == null || $method == null){
+                        continue;
+                    }       
+                    
+                    $totalpaid += $amount;              
+                    $addedTransactions[] = $transactionId;
+                    $payment->setParentTransactionId($transaction->getId());
+                    $payment->setAdditionalInformation('transactions', json_encode($addedTransactions));
+                    $formatedPrice = $order->getBaseCurrency()->formatTxt($amount);
+                    $transactionMessage = __('PAY. - Captured partial payment of %1, Payment Method: '.$method.'.', $formatedPrice);
+                    $transactionBuilder = $this->builderInterface->setPayment($payment)->setOrder($order)->setTransactionId($transactionId)->setFailSafe(true)->build('capture')->setAdditionalInformation(\Magento\Sales\Model\Order\Payment\Transaction::RAW_DETAILS, array("Paymentmethod" => $method, "Amount" => $amount, "Currency" => $currency));
+                    $payment->addTransactionCommentsToOrder($transactionBuilder, $transactionMessage);
+            
+                    $payment->save();
+                    $transactionBuilder->save();
+                    $this->orderRepository->save($order);           
+                }                
+
+                # Change amount paid manually
+                $order->setTotalPaid($totalpaid);
+                $order->setBaseTotalPaid($totalpaid);
+
+                $this->orderRepository->save($order);           
+            }
+
+            return $this->result->setContents("TRUE| Partial payment");
+          
     }
 }

@@ -409,6 +409,18 @@ In order to pay for your order click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_multibanco>
+            <paynl_payment_multipayment>
+                <active>0</active>
+                <title>Multipayment</title>
+                <payment_option_id>0</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Multipayment</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_multipayment>
             <paynl_payment_mybank>
                 <active>0</active>
                 <title>Mybank</title>
