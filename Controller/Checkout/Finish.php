@@ -99,7 +99,7 @@ class Finish extends PayAction
         $bDenied = $orderStatusId === Config::ORDERSTATUS_DENIED;
         $pinStatus = null;
         $pinCanceled = null;
-
+        
         try {
             $this->checkEmpty($payOrderId, 'payOrderid', 101);
             $this->checkEmpty($magOrderId, 'magOrderId', 1012);
@@ -114,7 +114,6 @@ class Finish extends PayAction
 
             if (!empty($information['terminal_hash'])) {
                 $status = \Paynl\Instore::status(['hash' => $information['terminal_hash']]);
-                $this->logger->debug($status->getTransactionState(), $params);
                 $pinStatus = $status->getTransactionState();
                 $pinCanceled = false;
                 if (in_array($pinStatus, ['cancelled', 'expired', 'error'])) {
