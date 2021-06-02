@@ -97,9 +97,8 @@ class Finish extends PayAction
         $magOrderId = empty($params['entityid']) ? null : $params['entityid'];
         $bSuccess = $orderStatusId === Config::ORDERSTATUS_PAID;
         $bDenied = $orderStatusId === Config::ORDERSTATUS_DENIED;
-        $pinStatus = null;
-        $pinCanceled = null;
-        
+        $isPinTransaction = false;
+
         try {
             $this->checkEmpty($payOrderId, 'payOrderid', 101);
             $this->checkEmpty($magOrderId, 'magOrderId', 1012);
@@ -112,19 +111,12 @@ class Finish extends PayAction
 
             $this->checkEmpty($information['transactionId'] == $payOrderId, '', 1014, 'transaction mismatch');
 
-            if (!empty($information['terminal_hash'])) {
-                $status = \Paynl\Instore::status(['hash' => $information['terminal_hash']]);
-                $pinStatus = $status->getTransactionState();
-                $pinCanceled = false;
-                if (in_array($pinStatus, ['cancelled', 'expired', 'error'])) {
-                    # Instore does not send a canceled exchange message, so cancel it here
-                    $order->cancel();
-                    $this->orderRepository->save($order);
-                    $pinCanceled = true;
-                }
+            if (!empty($information['terminal_hash']) && !$bSuccess) {
+                $isPinTransaction = true;
+                $this->handlePin($information['terminal_hash'], $order);
             }
 
-            if (empty($bSuccess) || $pinCanceled == false) {
+            if (empty($bSuccess) && !$isPinTransaction) {
                 $transaction = \Paynl\Transaction::status($payOrderId);
                 $orderNumber = $transaction->getOrderNumber();
                 $this->checkEmpty($order->getIncrementId() == $orderNumber, '', 104, 'order mismatch');
@@ -168,4 +160,20 @@ class Finish extends PayAction
         return $resultRedirect;
     }
 
+    /**
+     * @param $hash
+     * @param $order
+     * @throws \Magento\Framework\Exception\AlreadyExistsException
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    private function handlePin($hash, $order)
+    {
+        $status = \Paynl\Instore::status(['hash' => $hash]);
+        if (in_array($status->getTransactionState(), ['cancelled', 'expired', 'error'])) {
+            # Instore does not send a canceled exchange message, so cancel it here
+            $order->cancel();
+            $this->orderRepository->save($order);
+        }
+    }
 }

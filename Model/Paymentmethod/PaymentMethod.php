@@ -12,11 +12,13 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
+use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\Registry;
 use Magento\Payment\Helper\Data;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Payment\Model\Method\AbstractMethod;
 use Magento\Payment\Model\Method\Logger;
+use Psr\Log\LoggerInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderRepository;
 use Paynl\Payment\Model\Config;
@@ -31,7 +33,6 @@ abstract class PaymentMethod extends AbstractMethod
 {
     protected $_code = 'paynl_payment_base';
 
-
     protected $_isInitializeNeeded = true;
 
     protected $_canRefund = true;
@@ -41,6 +42,11 @@ abstract class PaymentMethod extends AbstractMethod
 
     protected $_canVoid = true;
 
+    /**
+     *
+     * @var Psr\Log\LoggerInterface
+     */
+    protected $logger;
 
     /**
      * @var Config
@@ -58,6 +64,11 @@ abstract class PaymentMethod extends AbstractMethod
 
     protected $helper;
 
+    /**
+     * @var Magento\Framework\Message\ManagerInterface
+     */
+    protected $messageManager;
+
     public function __construct(
         Context $context,
         Registry $registry,
@@ -65,25 +76,28 @@ abstract class PaymentMethod extends AbstractMethod
         AttributeValueFactory $customAttributeFactory,
         Data $paymentData,
         ScopeConfigInterface $scopeConfig,
-        Logger $logger,
+        Logger $methodLogger,
         \Magento\Sales\Model\Order\Config $orderConfig,
         OrderRepository $orderRepository,
         Config $paynlConfig,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
-        array $data = []
+        array $data = [],
+        ManagerInterface $messageManager,
+        LoggerInterface $logger
     )
     {
         parent::__construct(
             $context, $registry, $extensionFactory, $customAttributeFactory,
-            $paymentData, $scopeConfig, $logger, $resource, $resourceCollection, $data);
+            $paymentData, $scopeConfig, $methodLogger, $resource, $resourceCollection, $data);
 
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-
+        $this->messageManager = $messageManager;
         $this->helper = $objectManager->create('Paynl\Payment\Helper\PayHelper');
         $this->paynlConfig = $paynlConfig;
         $this->orderRepository = $orderRepository;
         $this->orderConfig = $orderConfig;
+        $this->logger = $logger;
     }
 
     protected function getState($status)
@@ -294,7 +308,7 @@ abstract class PaymentMethod extends AbstractMethod
 
         $store = $order->getStore();
         $baseUrl = $store->getBaseUrl();
-        
+
         $returnUrl = $baseUrl . 'paynl/checkout/finish/?entityid=' . $order->getEntityId();
         $exchangeUrl = $baseUrl . 'paynl/checkout/exchange/';
 
