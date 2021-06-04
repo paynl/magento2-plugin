@@ -12,13 +12,11 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
-use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\Registry;
 use Magento\Payment\Helper\Data;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Payment\Model\Method\AbstractMethod;
 use Magento\Payment\Model\Method\Logger;
-use Psr\Log\LoggerInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderRepository;
 use Paynl\Payment\Model\Config;
@@ -82,9 +80,7 @@ abstract class PaymentMethod extends AbstractMethod
         Config $paynlConfig,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
-        array $data = [],
-        ManagerInterface $messageManager,
-        LoggerInterface $logger
+        array $data = []
     )
     {
         parent::__construct(
@@ -92,12 +88,13 @@ abstract class PaymentMethod extends AbstractMethod
             $paymentData, $scopeConfig, $methodLogger, $resource, $resourceCollection, $data);
 
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $this->messageManager = $messageManager;
+
+        $this->messageManager = $objectManager->get(\Magento\Framework\Message\ManagerInterface::class);
         $this->helper = $objectManager->create('Paynl\Payment\Helper\PayHelper');
         $this->paynlConfig = $paynlConfig;
         $this->orderRepository = $orderRepository;
         $this->orderConfig = $orderConfig;
-        $this->logger = $logger;
+        $this->logger = $objectManager->get(\Psr\Log\LoggerInterface::class);
     }
 
     protected function getState($status)
