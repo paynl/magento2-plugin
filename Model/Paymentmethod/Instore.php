@@ -22,27 +22,43 @@ class Instore extends PaymentMethod
 
     public function startTransaction(Order $order)
     {
+        $store = $order->getStore();
+        $url = $store->getBaseUrl() . 'checkout/cart/';
 
         $additionalData = $order->getPayment()->getAdditionalInformation();
-        $bankId = null;
+        $terminalId = null;
         if (isset($additionalData['bank_id'])) {
-            $bankId = $additionalData['bank_id'];
+            $terminalId = $additionalData['bank_id'];
         }
         unset($additionalData['bank_id']);
 
-        $transaction = $this->doStartTransaction($order);
+        try {
+            if (empty($terminalId)) {
+                throw new \Exception(__('Please select a pin-terminal'), 201);
+            }
+            $transaction = $this->doStartTransaction($order);
 
-        $instorePayment = \Paynl\Instore::payment([
-            'transactionId' => $transaction->getTransactionId(),
-            'terminalId' => $bankId
-        ]);
+            $instorePayment = \Paynl\Instore::payment(['transactionId' => $transaction->getTransactionId(), 'terminalId' => $terminalId]);
 
-        $additionalData['terminal_hash'] = $instorePayment->getHash();
+            $additionalData['transactionId'] = $transaction->getTransactionId();
+            $additionalData['terminal_hash'] = $instorePayment->getHash();
 
-        $order->getPayment()->setAdditionalInformation($additionalData);
-        $order->save();
+            $order->getPayment()->setAdditionalInformation($additionalData);
+            $order->save();
 
-        return $instorePayment->getRedirectUrl();
+            $url = $instorePayment->getRedirectUrl();
+
+        } catch (\Exception $e) {
+            $this->logger->critical($e->getMessage(), array());
+
+            if ($e->getCode() == 201) {
+                $this->messageManager->addNoticeMessage($e->getMessage());
+            } else {
+                $this->messageManager->addNoticeMessage(__('Pin transaction could not be started'));
+            }
+        }
+
+        return $url;
     }
 
     public function assignData(\Magento\Framework\DataObject $data)
