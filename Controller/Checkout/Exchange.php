@@ -249,7 +249,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
                 return $this->result->setContents('TRUE| Already captured.');
             }
         }
-        
+
         if ($transaction->isPaid() || $transaction->isAuthorized()) {
             return $this->processPaidOrder($transaction, $order);
         } elseif ($transaction->isCanceled()) {
@@ -352,10 +352,9 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
 
         $payments = $order->getAllPayments();
         if (count($payments) > 1) {
-            $order->addStatusHistoryComment(__('B2B Setting: Skipped creating invoice'));
-            $this->logger->debug('finished multipayment: ');
-        } else
-        {
+            $order->addStatusHistoryComment(__('finished multipayme'));
+            $this->logger->debug('finished multipayment:');
+        } else {
             $this->logger->debug('just 1 payment: ');
         }
 
