@@ -134,7 +134,7 @@ abstract class PaymentMethod extends AbstractMethod
 
     public function getDOB()
     {
-      return [];
+        return $this->_scopeConfig->getValue('payment/' . $this->_code . '/showdob', 'store');
     }
 
     public function getDisallowedShippingMethods()

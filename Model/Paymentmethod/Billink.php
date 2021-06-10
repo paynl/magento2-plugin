@@ -25,11 +25,6 @@ class Billink extends PaymentMethod
     return $this->_scopeConfig->getValue('payment/paynl_payment_billink/showkvk', 'store');
   }
 
-  public function getDOB()
-  {
-    return $this->_scopeConfig->getValue('payment/paynl_payment_billink/showdob', 'store');
-  }
-
   public function assignData(\Magento\Framework\DataObject $data)
   {
     parent::assignData($data);
