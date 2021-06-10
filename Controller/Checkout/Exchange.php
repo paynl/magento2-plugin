@@ -13,9 +13,9 @@ use Magento\Sales\Model\Order\Payment\Interceptor;
 use Magento\Sales\Model\OrderRepository;
 use Paynl\Payment\Controller\CsrfAwareActionInterface;
 use Paynl\Payment\Controller\PayAction;
+use Paynl\Result\Transaction\Details;
 use Paynl\Result\Transaction\Status;
 use Paynl\Result\Transaction\Transaction;
-
 
 
 /**
@@ -119,6 +119,59 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         parent::__construct($context);
     }
 
+
+    private function processPartiallyPaidOrder(Status $transaction, Order $order, Details $details)
+    {
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $orderPaymentFactory = $objectManager->get(\Magento\Sales\Model\Order\PaymentFactory::class);
+
+        $paymentDetails = $details->getPaymentDetails();
+        $transactionDetails = $paymentDetails['transactionDetails'];
+        $_detail = end($transactionDetails);
+
+        $this->logger->debug('paymentId: ', $_detail);
+
+        $profileId = $_detail['paymentProfileId'];
+        $method = $_detail['paymentProfileName'];
+        $amount = $_detail['amount']['value'];
+        $amount = 1 ; //temp overwrite
+        $currency = $_detail['amount']['currency'];
+
+        $this->logger->debug('paymentId: ', array($transactionDetails));
+        $this->logger->debug('profileId: ', array($profileId));
+
+        /** @var Interceptor $payment */
+        $payment = $order->getPayment();
+
+        $this->logger->debug('paymentId: ' . $payment->getEntityId());
+
+        /** @var Interceptor $orderPayment */
+        $orderPayment = $orderPaymentFactory->create();
+
+        $helper = $objectManager->create('Paynl\Payment\Helper\PayHelper');
+        $profileId = 10; //temp
+        $methodCode = $this->config->getPaymentmethodCode($profileId);
+        $this->logger->debug('methodCode: ', array($methodCode));
+
+        $orderPayment->setMethod($methodCode);
+
+        $orderPayment->setOrder($order);
+        $orderPayment->setBaseAmountPaid(1);
+        $orderPayment->save();
+
+        $transactionBuilder = $this->builderInterface->setPayment($orderPayment)->setOrder($order)->setTransactionId($transaction->getId())
+            ->setFailSafe(true)->build('capture')
+            ->setAdditionalInformation(\Magento\Sales\Model\Order\Payment\Transaction::RAW_DETAILS,
+                array("Paymentmethod" => $method, "Amount" => $amount, "Currency" => $currency));
+
+        $transactionBuilder->save();
+        $order->addStatusHistoryComment(__('Added part-trans with amount EUR ' . $amount));
+        $this->orderRepository->save($order);
+
+        return $this->result->setContents("TRUE| Partial payment");
+    }
+
+
     public function execute()
     {
         \Paynl\Config::setApiToken($this->config->getApiToken());
@@ -145,12 +198,6 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             return $this->result->setContents('FALSE| Error fetching transaction. ' . $e->getMessage());
         }
 
-        if(method_exists($transaction, 'isPartialPayment')) {
-            if($transaction->isPartialPayment()) {
-                return $this->result->setContents("TRUE| Partial payment");
-            }
-        }
-
         if ($transaction->isPending()) {
             if ($action == 'new_ppt') {
                 return $this->result->setContents("FALSE| Payment is pending");
@@ -160,6 +207,14 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
 
         $orderNumber = $transaction->getOrderNumber();
         $order = $this->orderRepository->get($orderEntityId);
+
+        if (method_exists($transaction, 'isPartialPayment')) {
+            if ($transaction->isPartialPayment()) {
+                $details = \Paynl\Transaction::details($payOrderId);
+                return $this->processPartiallyPaidOrder($transaction, $order, $details);
+            }
+        }
+
 
         if (empty($order)) {
             $this->logger->critical('Cannot load order: ' . $orderEntityId);
@@ -294,12 +349,20 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             }
             $message .= " order was uncanceled";
         }
+
+        $payments = $order->getAllPayments();
+        if (count($payments) > 1) {
+            $order->addStatusHistoryComment(__('B2B Setting: Skipped creating invoice'));
+            $this->logger->debug('finished multipayment: ');
+        } else
+        {
+            $this->logger->debug('just 1 payment: ');
+        }
+
         /** @var Interceptor $payment */
         $payment = $order->getPayment();
-        $payment->setTransactionId(
-            $transaction->getId()
-        );
 
+        $payment->setTransactionId($transaction->getId());
         $payment->setPreparedMessage('PAY. - ');
         $payment->setIsTransactionClosed(0);
 
