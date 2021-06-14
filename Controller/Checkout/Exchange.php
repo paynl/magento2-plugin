@@ -193,12 +193,6 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             return $this->result->setContents('TRUE| Ignoring: order has already been paid');
         }
 
-        # If order is already partially paid, prevent it from reaching processPaidOrder to prevent conflicts. 
-        if ($order->getTotalDue() <= $order->getBaseGrandTotal()) {
-            $this->logger->debug($action . '. Ignoring - already partailly paid: ' . $orderEntityId);
-            return $this->result->setContents('TRUE| Ignoring: order has already been partailly paid');
-        }
-
         if ($action == 'capture') {
             if (!empty($payment) && $payment->getAdditionalInformation('manual_capture')) {
                 $this->logger->debug('Already captured.');
