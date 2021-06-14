@@ -145,21 +145,26 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
 
             return $this->result->setContents('FALSE| Error fetching transaction. ' . $e->getMessage());
         }
-        
-        $orderNumber = $transaction->getOrderNumber();
-        $order = $this->orderRepository->get($orderEntityId);
-
-        if ($action == 'partial_payment') {
-            $details = \Paynl\Transaction::details($payOrderId);
-            return $this->processPartiallyPaidOrder($transaction, $order, $details);
-        }
 
         if ($transaction->isPending()) {
             if ($action == 'new_ppt') {
                 return $this->result->setContents("FALSE| Payment is pending");
             }
             return $this->result->setContents("TRUE| Ignoring pending");
-        }     
+        }   
+        
+        $orderNumber = $transaction->getOrderNumber();
+        $order = $this->orderRepository->get($orderEntityId);
+
+        if (method_exists($transaction, 'isPartialPayment')) {
+            if ($transaction->isPartialPayment()) {
+                $details = \Paynl\Transaction::details($payOrderId);
+                if ($this->config->registerPartialPayments()) {
+                    return $this->processPartiallyPaidOrder($transaction, $order, $details);
+                }
+                return $this->result->setContents("TRUE| Partial payment");
+            }
+        } 
 
         if (empty($order)) {
             $this->logger->critical('Cannot load order: ' . $orderEntityId);
@@ -318,6 +323,30 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             }
         }
 
+        # Multipayments finish
+        $payments = $order->getAllPayments();
+        if (count($payments) > 1 && $this->config->registerPartialPayments()) {
+            $params = $this->getRequest()->getParams();
+            $details = \Paynl\Transaction::details($params['order_id']);
+            $paymentDetails = $details->getPaymentDetails();
+            $transactionDetails = $paymentDetails['transactionDetails'];
+            $_detail = end($transactionDetails);
+
+            $profileId = $_detail['paymentProfileId'];
+            $method = $_detail['paymentProfileName'];
+            $amount = $_detail['amount']['value'] / 100;
+            $currency = $_detail['amount']['currency'];
+            $methodcode = $this->config->getPaymentmethodCode($profileId);
+
+            $payment->setMethod($methodcode);
+            $payment->save();
+
+            $order->addStatusHistoryComment(__('Added part-trans with amount ' . $currency . ' ' . $amount . 'using method:' . $method));
+            $order->addStatusHistoryComment(__('Finished multipayments'));
+            
+            $paidAmount = $order->getBaseGrandTotal();
+        } 
+
         # Force order state to processing
         $order->setState(Order::STATE_PROCESSING);
         $paymentMethod = $order->getPayment()->getMethod();
@@ -392,110 +421,35 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
 
         $paymentDetails = $details->getPaymentDetails();
         $transactionDetails = $paymentDetails['transactionDetails'];
+        $_detail = end($transactionDetails);
+
+        $profileId = $_detail['paymentProfileId'];
+        $method = $_detail['paymentProfileName'];
+        $amount = $_detail['amount']['value'] / 100;
+        $currency = $_detail['amount']['currency'];
+        $methodCode = $this->config->getPaymentmethodCode($profileId);
 
         /** @var Interceptor $payment */
         $payment = $order->getPayment();
-        $payment->setTransactionId(
-            $transaction->getId()
-        );
 
-        $payment->setPreparedMessage('PAY. - ');
-        $payment->setIsTransactionClosed(0);
-        $payment->save();
+        /** @var Interceptor $orderPayment */
+        $orderPayment = $orderPaymentFactory->create();
+        $orderPayment->setMethod($methodCode);
+        $orderPayment->setOrder($order);
+        $orderPayment->setBaseAmountPaid($amount);
+        $orderPayment->save();
 
-        if ($transactionDetails && count($transactionDetails) > 0) {
+        $transactionBuilder = $this->builderInterface->setPayment($orderPayment)->setOrder($order)->setTransactionId($transaction->getId())
+            ->setFailSafe(true)->build('capture')
+            ->setAdditionalInformation(
+                \Magento\Sales\Model\Order\Payment\Transaction::RAW_DETAILS,
+                array("Paymentmethod" => $method, "Amount" => $amount, "Currency" => $currency)
+            );
 
-            $totalpaid = 0;
-            foreach ($transactionDetails as $key => $transactionDetail) {
-                
-                $transactionId = (isset($transactionDetail['transactionId'])) ? $transactionDetail['transactionId'] : null;
-                $amountarr = (isset($transactionDetail['amount'])) ? $transactionDetail['amount'] : null;
-                $amount = (isset($transactionDetail['amount']['value'])) ? $transactionDetail['amount']['value'] / 100 : null;
-                $currency = (isset($transactionDetail['amount']['currency'])) ? $transactionDetail['amount']['currency'] : null;
-                $method = (isset($transactionDetail['paymentProfileName'])) ? $transactionDetail['paymentProfileName'] : null;
-                $paymentProfileId = (isset($transactionDetail['paymentProfileId'])) ? $transactionDetail['paymentProfileId'] : null;
-                $methodcode = $this->config->getPaymentmethodCode($paymentProfileId);
-             
-                $allpayments = $order->getAllPayments();
-
-                if (!isset($allpayments[$key])) {
-                    $orderPayment = $orderPaymentFactory->create();
-                    $orderPayment->setMethod($methodcode);
-                    $orderPayment->setOrder($order);
-                } else {
-                    $orderPayment = $payment;
-                }
-
-                $orderPayment->save();
-                $totalpaid += $amount;
-
-                $addedTransactions = json_decode($orderPayment->getAdditionalInformation('transactions'));
-                $addedTransactions = (is_array($addedTransactions)) ? $addedTransactions : array();
-                if (in_array($transactionId, $addedTransactions) || $transactionId == null || $amount == null || $currency == null || $method == null) {
-                    continue;
-                }
-
-                $orderPayment->setBaseShippingAmount($amount);
-                $orderPayment->setShippingAmount($amount);
-
-                $orderPayment->setBaseAmountOrdered($amount);
-                $orderPayment->setAmountOrdered($amount);
-
-                $orderPayment->setAmountPaid($amount);
-                $orderPayment->setBaseAmountPaid($amount);
-
-                $addedTransactions[] = $transactionId;
-                $orderPayment->setParentTransactionId($transaction->getId());
-                $orderPayment->setAdditionalInformation('transactions', json_encode($addedTransactions));
-                $formatedPrice = $order->getBaseCurrency()->formatTxt($amount);
-                $transactionMessage = __('PAY. - Captured partial payment of %1, Payment Method: ' . $method . '.', $formatedPrice);
-                $transactionBuilder = $this->builderInterface->setPayment($orderPayment)->setOrder($order)->setTransactionId($transaction->getId() . '-' . $key)->setFailSafe(true)->build('capture')->setAdditionalInformation(\Magento\Sales\Model\Order\Payment\Transaction::RAW_DETAILS, array("Paymentmethod" => $method, "Amount" => $amount, "Currency" => $currency));
-                $orderPayment->addTransactionCommentsToOrder($transactionBuilder, $transactionMessage);
-                $orderPayment->setIsTransactionClosed(0);
-                $orderPayment->save();
-                $transactionBuilder->save();
-                $this->orderRepository->save($order);
-            }
-
-            # Change amount paid manually
-            $order->setTotalPaid($totalpaid);
-            $order->setBaseTotalPaid($totalpaid);
-
-            $this->orderRepository->save($order);
-
-            $quoteFactory = $objectManager->create('\Magento\Quote\Model\QuoteFactory');
-
-            $quote = $quoteFactory->create()->load($order->getQuoteId());
-
-            if ($totalpaid >= $quote->getBaseGrandTotal() && $order->canInvoice()) {
-            
-                #create invoice
-                $invoiceService = $objectManager->create('\Magento\Sales\Model\Service\InvoiceService');
-                $transactionFactory = $objectManager->create('\Magento\Framework\DB\TransactionFactory');
-
-                $invoice = $invoiceService->prepareInvoice($order);
-                $invoice->setRequestedCaptureCase(\Magento\Sales\Model\Order\Invoice::CAPTURE_OFFLINE);
-                $invoice->register();
-                $invoice->getOrder()->setCustomerNoteNotify(false);
-                $invoice->getOrder()->setIsInProcess(true);                
-                $transactionSave = $transactionFactory->create()->addObject($invoice)->addObject($invoice->getOrder());
-                $transactionSave->save();
-
-                $order->setState(Order::STATE_PROCESSING)->setStatus(Order::STATE_PROCESSING);
-
-                $this->orderRepository->save($order);
-
-                if ($invoice && !$invoice->getEmailSent()) {
-                    $this->invoiceSender->send($invoice);
-                    $order->addStatusHistoryComment(__('You notified customer about invoice #%1.', $invoice->getIncrementId()))
-                        ->setIsCustomerNotified(true)
-                        ->save();
-                }
-
-                return $this->result->setContents("TRUE| PAID");
-            }
-        }
+        $transactionBuilder->save();
+        $order->addStatusHistoryComment(__('Added part-trans with amount ' . $currency . ' ' . $amount . 'using method:' . $method));
+        $this->orderRepository->save($order);
 
         return $this->result->setContents("TRUE| Partial payment");
-    } 
+    }
 }

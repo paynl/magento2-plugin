@@ -215,6 +215,11 @@ class Config
         return $this->store->getConfig('payment/paynl/default_payment_option');
     }
 
+    public function registerPartialPayments()
+    {
+        return $this->store->getConfig('payment/paynl/register_partial_payments');
+    }
+
     public function getPaymentmethodCode($paymentProfileId){
 
         //Get all PAY. methods
