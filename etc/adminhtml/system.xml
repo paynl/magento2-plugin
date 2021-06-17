@@ -102,7 +102,7 @@
                 </field>
                 <field id="register_partial_payments" translate="label" type="select" sortOrder="106" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Register partial payments</label>
-                    <comment><![CDATA[Register each sepperate partial payment on the order page.]]></comment>
+                    <comment><![CDATA[Register partial payments]]></comment>
                     <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
                 </field>
                 <group id="paynl_paymentmethods" translate="label" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
