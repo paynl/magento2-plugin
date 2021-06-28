@@ -167,11 +167,6 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             return $this->result->setContents('FALSE| Cannot load order');
         }
 
-        if ($order->getIncrementId() != $orderNumber) {
-            $this->logger->critical('Ordernumber not equal' . $orderEntityId);
-            return $this->result->setContents('TRUE| Failed. Ordernumber not found.');
-        }
-
         $payment = $order->getPayment();
         $info = $payment->getAdditionalInformation();
         if (!empty($info['transactionId'])) {
