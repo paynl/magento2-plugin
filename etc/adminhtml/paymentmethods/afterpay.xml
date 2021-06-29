@@ -106,6 +106,15 @@
                 <field id="active">1</field>
             </depends>
         </field>
+        <field id="showdob" translate="label" type="select" sortOrder="66" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Show Date of birth field</label>
+            <source_model>Paynl\Payment\Model\Config\Source\showDobOptions</source_model>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+            <config_path>payment/paynl_payment_afterpay/showdob</config_path>
+            <comment><![CDATA[When selecting AfterPay, a date of birth field will be visible. This might increase the chance for a successful payment.]]></comment>
+        </field>
         <field id="disallowedshipping" translate="label" type="multiselect" sortOrder="110" showInDefault="1"
                showInWebsite="1" showInStore="1">
             <label>Disallowed Shipping Methods</label>
@@ -126,6 +135,15 @@
             <config_path>payment/paynl_payment_afterpay/showforcompany</config_path>
             <comment><![CDATA[Allow payment method to be used for companies, private, or both.]]></comment>
         </field>
+        <field id="turn_off_invoices_b2b" translate="label" type="select" sortOrder="160" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Turn off invoices for B2B</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+            <config_path>payment/paynl_payment_afterpay/turn_off_invoices_b2b</config_path>
+            <comment><![CDATA[Set to `Yes` to disable creating invoices for business orders]]></comment>
+        </field>
         <group id="advanced" translate="label" sortOrder="200" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Advanced</label>
             <field id="payment_option_id" translate="label comment" type="text" sortOrder="10" showInDefault="1"
@@ -139,4 +157,3 @@
 
     </group>
 </include>
-                

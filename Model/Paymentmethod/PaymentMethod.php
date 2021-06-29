@@ -22,6 +22,7 @@ use Magento\Sales\Model\OrderRepository;
 use Paynl\Payment\Model\Config;
 use Paynl\Transaction;
 
+
 /**
  * Class PaymentMethod
  * @package Paynl\Payment\Model\Paymentmethod
@@ -29,7 +30,6 @@ use Paynl\Transaction;
 abstract class PaymentMethod extends AbstractMethod
 {
     protected $_code = 'paynl_payment_base';
-
 
     protected $_isInitializeNeeded = true;
 
@@ -40,6 +40,11 @@ abstract class PaymentMethod extends AbstractMethod
 
     protected $_canVoid = true;
 
+    /**
+     *
+     * @var Psr\Log\LoggerInterface
+     */
+    protected $logger;
 
     /**
      * @var Config
@@ -55,6 +60,13 @@ abstract class PaymentMethod extends AbstractMethod
      */
     protected $orderConfig;
 
+    protected $helper;
+
+    /**
+     * @var Magento\Framework\Message\ManagerInterface
+     */
+    protected $messageManager;
+
     public function __construct(
         Context $context,
         Registry $registry,
@@ -62,7 +74,7 @@ abstract class PaymentMethod extends AbstractMethod
         AttributeValueFactory $customAttributeFactory,
         Data $paymentData,
         ScopeConfigInterface $scopeConfig,
-        Logger $logger,
+        Logger $methodLogger,
         \Magento\Sales\Model\Order\Config $orderConfig,
         OrderRepository $orderRepository,
         Config $paynlConfig,
@@ -73,11 +85,16 @@ abstract class PaymentMethod extends AbstractMethod
     {
         parent::__construct(
             $context, $registry, $extensionFactory, $customAttributeFactory,
-            $paymentData, $scopeConfig, $logger, $resource, $resourceCollection, $data);
+            $paymentData, $scopeConfig, $methodLogger, $resource, $resourceCollection, $data);
 
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+
+        $this->messageManager = $objectManager->get(\Magento\Framework\Message\ManagerInterface::class);
+        $this->helper = $objectManager->create('Paynl\Payment\Helper\PayHelper');
         $this->paynlConfig = $paynlConfig;
         $this->orderRepository = $orderRepository;
         $this->orderConfig = $orderConfig;
+        $this->logger = $objectManager->get(\Psr\Log\LoggerInterface::class);
     }
 
     protected function getState($status)
@@ -117,7 +134,7 @@ abstract class PaymentMethod extends AbstractMethod
 
     public function getDOB()
     {
-      return [];
+        return $this->_scopeConfig->getValue('payment/' . $this->_code . '/showdob', 'store');
     }
 
     public function getDisallowedShippingMethods()
@@ -128,6 +145,39 @@ abstract class PaymentMethod extends AbstractMethod
     public function getCompany()
     {
         return $this->_scopeConfig->getValue('payment/' . $this->_code . '/showforcompany', 'store');
+    }
+
+
+    public function isCurrentIpValid()
+    {
+        return true;
+    }
+
+    public function isCurrentAgentValid()
+    {
+        return true;
+    }
+
+    public function isDefaultPaymentOption()
+    {
+        $default_payment_option = $this->paynlConfig->getDefaultPaymentOption();
+        return ($default_payment_option == $this->_code);
+    }
+
+    public function genderConversion($gender)
+    {
+        switch ($gender) {
+            case '1':
+                $gender = 'M';
+                break;
+            case '2':
+                $gender = 'F';
+                break;
+            default:
+                $gender = null;
+                break;
+        }
+        return $gender;
     }
 
     public function initialize($paymentAction, $stateObject)
@@ -159,6 +209,7 @@ abstract class PaymentMethod extends AbstractMethod
         $this->paynlConfig->configureSDK();
 
         $transactionId = $payment->getParentTransactionId();
+        $transactionId = str_replace('-capture', '', $transactionId);
 
         try {
             Transaction::refund($transactionId, $amount);
@@ -170,7 +221,7 @@ abstract class PaymentMethod extends AbstractMethod
             if (substr($message, 0, 19) == '403 - access denied') {
                 $message = 'PAY. could not authorize this refund. Errorcode: PAY-MAGENTO2-001. See for more information ' . $docsLink;
             } else {
-                $message = 'PAY. could not process this refund (' . $message . '). Errorcode: PAY-MAGENTO2-002. More info: ' . $docsLink;
+                $message = 'PAY. could not process this refund (' . $message . '). Errorcode: PAY-MAGENTO2-002. Transaction: '.$transactionId.'. More info: ' . $docsLink;
             }
 
             throw new \Magento\Framework\Exception\LocalizedException(__($message));
@@ -182,6 +233,10 @@ abstract class PaymentMethod extends AbstractMethod
     public function capture(InfoInterface $payment, $amount)
     {
         $this->paynlConfig->configureSDK();
+
+        $payment->setAdditionalInformation('manual_capture', 'true');
+        $order = $payment->getOrder();
+        $order->save();
 
         $transactionId = $payment->getParentTransactionId();
 
@@ -204,6 +259,7 @@ abstract class PaymentMethod extends AbstractMethod
     public function startTransaction(Order $order)
     {
         $transaction = $this->doStartTransaction($order);
+        $order->getPayment()->setAdditionalInformation('transactionId', $transaction->getTransactionId());
         $this->paynlConfig->setStore($order->getStore());
 
         $holded = $this->_scopeConfig->getValue('payment/' . $this->_code . '/holded', 'store');
@@ -249,8 +305,8 @@ abstract class PaymentMethod extends AbstractMethod
 
         $store = $order->getStore();
         $baseUrl = $store->getBaseUrl();
-        // i want to use the url builder here, but that doenst work from admin, even if the store is supplied
-        $returnUrl = $baseUrl . 'paynl/checkout/finish/';
+
+        $returnUrl = $baseUrl . 'paynl/checkout/finish/?entityid=' . $order->getEntityId();
         $exchangeUrl = $baseUrl . 'paynl/checkout/exchange/';
 
         $paymentOptionId = $this->getPaymentOptionId();
@@ -265,9 +321,15 @@ abstract class PaymentMethod extends AbstractMethod
                 'phoneNumber' => $arrBillingAddress['telephone'],
                 'emailAddress' => $arrBillingAddress['email'],
             );
+
             if (isset($additionalData['dob'])) {
                 $enduser['dob'] = $additionalData['dob'];
             }
+
+            if (isset($additionalData['gender'])) {
+                $enduser['gender'] = $additionalData['gender'];
+            }
+            $enduser['gender'] = $this->genderConversion((empty($enduser['gender'])) ? $order->getCustomerGender($order) : $enduser['gender']);
 
             if (isset($arrBillingAddress['company']) && !empty($arrBillingAddress['company'])) {
               $enduser['company']['name'] = $arrBillingAddress['company'];
@@ -398,6 +460,26 @@ abstract class PaymentMethod extends AbstractMethod
                 'qty' => 1,
                 'tax' => $shippingTax,
                 'type' => \Paynl\Transaction::PRODUCT_TYPE_SHIPPING
+            );
+        }
+
+        // Gift Wrapping
+        $gwCost = $order->getGwPriceInclTax();
+        $gwTax = $order->getGwTaxAmount();
+
+        if ($this->paynlConfig->isAlwaysBaseCurrency()) {
+            $gwCost = $order->getGwBasePriceInclTax();
+            $gwTax = $order->getGwBaseTaxAmount();
+        }
+
+        if ($gwCost != 0) {
+            $arrProducts[] = array(
+                'id' => $order->getGwId(),
+                'name' => 'Gift Wrapping',
+                'price' => $gwCost,
+                'qty' => 1,
+                'tax' => $gwTax,
+                'type' => \Paynl\Transaction::PRODUCT_TYPE_HANDLING
             );
         }
 

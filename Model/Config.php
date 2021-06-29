@@ -14,6 +14,10 @@ use Magento\Store\Model\Store;
  */
 class Config
 {
+    const FINISH_PAYLINK = 'paynl/checkout/paylink';
+    const FINISH_STANDARD = 'checkout/onepage/success';
+    const ORDERSTATUS_PAID = 100;
+    const ORDERSTATUS_DENIED = -63;
 
     /** @var  Store */
     private $store;
@@ -73,20 +77,20 @@ class Config
     {
         $remoteIP =  isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'];
         $ip = isset($_SERVER['HTTP_CLIENT_IP']) ? $_SERVER['HTTP_CLIENT_IP'] : $remoteIP;
-        
+
         $ipconfig = $this->store->getConfig('payment/paynl/testipaddress');
-        $allowed_ips = explode(',', $ipconfig);       
+        $allowed_ips = explode(',', $ipconfig);
         if(in_array($ip, $allowed_ips) && filter_var($ip, FILTER_VALIDATE_IP) && strlen($ip) > 0 && count($allowed_ips) > 0){
             return true;
-        }        
+        }
         return $this->store->getConfig('payment/paynl/testmode') == 1;
     }
-    
+
     public function isSendDiscountTax()
     {
         return $this->store->getConfig('payment/paynl/discount_tax') == 1;
     }
-    
+
     public function isNeverCancel()
     {
         return $this->store->getConfig('payment/paynl/never_cancel') == 1;
@@ -95,6 +99,11 @@ class Config
     public function isAlwaysBaseCurrency()
     {
         return $this->store->getConfig('payment/paynl/always_base_currency') == 1;
+    }
+
+    public function useMagOrderAmountForAuth()
+    {
+        return $this->store->getConfig('payment/paynl/use_magorder_for_auth') == 1;
     }
 
     public function getLanguage()
@@ -113,25 +122,34 @@ class Config
     {
         return $this->store->getConfig('payment/' . $methodCode . '/order_status');
     }
-    
+
     public function getAuthorizedStatus($methodCode)
     {
         return $this->store->getConfig('payment/' . $methodCode . '/order_status_authorized');
     }
 
-    public function getPaidStatus($methodCode){
+    public function getPaidStatus($methodCode)
+    {
         return $this->store->getConfig('payment/' . $methodCode . '/order_status_processing');
+    }
+
+    public function ignoreB2BInvoice($methodCode)
+    {
+        return $this->store->getConfig('payment/' . $methodCode . '/turn_off_invoices_b2b') == 1;
+    }
+
+    public function autoCaptureEnabled()
+    {
+       return $this->store->getConfig('payment/paynl/auto_capture') == 1;
     }
 
     /**
      * @param $methodCode string
      * @return string
      */
-    public function getSuccessPage($methodCode){
-        $success_page = $this->store->getConfig('payment/' . $methodCode . '/custom_success_page');
-        if(empty($success_page)) $success_page = 'checkout/onepage/success';
-
-        return $success_page;
+    public function getSuccessPage($methodCode)
+    {
+        return $this->store->getConfig('payment/' . $methodCode . '/custom_success_page');
     }
 
     /**
@@ -174,16 +192,26 @@ class Config
         return trim($this->store->getConfig('payment/paynl/serviceid'));
     }
 
-    public function getIconUrl() 
+    public function getIconUrl()
     {
         $url = 'https://static.pay.nl/payment_profiles/50x32/#paymentOptionId#.png';
         $iconUrl = trim($this->store->getConfig('payment/paynl/iconurl'));
 
         return empty($iconUrl)?$url:$iconUrl;
     }
-    
-    public function getCancelURL() 
+
+    public function getUseAdditionalValidation()
+    {
+        return trim($this->store->getConfig('payment/paynl/use_additional_validation'));
+    }
+
+    public function getCancelURL()
     {
         return $this->store->getConfig('payment/paynl/cancelurl');
+    }
+
+    public function getDefaultPaymentOption()
+    {
+        return $this->store->getConfig('payment/paynl/default_payment_option');
     }
 }

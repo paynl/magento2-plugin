@@ -13,6 +13,7 @@ use Magento\Sales\Model\Order\Payment\Interceptor;
 use Magento\Sales\Model\OrderRepository;
 use Paynl\Payment\Controller\CsrfAwareActionInterface;
 use Paynl\Payment\Controller\PayAction;
+use Paynl\Result\Transaction\Status;
 use Paynl\Result\Transaction\Transaction;
 
 
@@ -63,6 +64,12 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
      */
     private $orderRepository;
 
+    /**
+     *
+     * @var Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface
+     */
+    private $builderInterface;
+
     private $paynlConfig;
 
     public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
@@ -95,7 +102,8 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         \Psr\Log\LoggerInterface $logger,
         \Magento\Framework\Controller\Result\Raw $result,
         OrderRepository $orderRepository,
-        \Paynl\Payment\Model\Config $paynlConfig
+        \Paynl\Payment\Model\Config $paynlConfig,
+        \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $builderInterface
     )
     {
         $this->result = $result;
@@ -106,6 +114,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         $this->logger = $logger;
         $this->orderRepository = $orderRepository;
         $this->paynlConfig = $paynlConfig;
+        $this->builderInterface = $builderInterface;
 
         parent::__construct($context);
     }
@@ -115,14 +124,21 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         \Paynl\Config::setApiToken($this->config->getApiToken());
 
         $params = $this->getRequest()->getParams();
-        if (!isset($params['order_id'])) {
-            $this->logger->critical('Exchange: order_id is not set in the request', $params);
+        $action = !empty($params['action']) ? strtolower($params['action']) : '';
+        $payOrderId = isset($params['order_id']) ? $params['order_id'] : null;
+        $orderEntityId = isset($params['extra3']) ? $params['extra3'] : null;
 
+        if ($action == 'pending') {
+            return $this->result->setContents('TRUE| Ignore pending');
+        }
+
+        if (empty($payOrderId) || empty($orderEntityId)) {
+            $this->logger->critical('Exchange: order_id or orderEntity is not set', $params);
             return $this->result->setContents('FALSE| order_id is not set in the request');
         }
 
         try {
-            $transaction = \Paynl\Transaction::get($params['order_id']);
+            $transaction = \Paynl\Transaction::status($payOrderId);
         } catch (\Exception $e) {
             $this->logger->critical($e, $params);
 
@@ -136,32 +152,59 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         }
 
         if ($transaction->isPending()) {
-            if (isset($params['action']) && $params['action'] == 'new_ppt') {
+            if ($action == 'new_ppt') {
                 return $this->result->setContents("FALSE| Payment is pending");
             }
             return $this->result->setContents("TRUE| Ignoring pending");
         }
 
-        $orderEntityId = $transaction->getExtra3();
-        /** @var Order $order */
+        $orderNumber = $transaction->getOrderNumber();
         $order = $this->orderRepository->get($orderEntityId);
 
         if (empty($order)) {
             $this->logger->critical('Cannot load order: ' . $orderEntityId);
-
             return $this->result->setContents('FALSE| Cannot load order');
         }
-        if ($order->getTotalDue() <= 0) {
-            $this->logger->debug('Total due <= 0, so iam not touching the status of the order: ' . $orderEntityId);
 
-            return $this->result->setContents('TRUE| Total due <= 0, so iam not touching the status of the order');
+        if ($order->getIncrementId() != $orderNumber) {
+            $this->logger->critical('Ordernumber not equal' . $orderEntityId);
+            return $this->result->setContents('TRUE| Failed. Ordernumber not found.');
         }
 
+        $payment = $order->getPayment();
+        $info = $payment->getAdditionalInformation();
+        if (!empty($info['transactionId'])) {
+            if ($info['transactionId'] != $payOrderId) {
+                $this->logger->critical('Transaction not equal');
+                return $this->result->setContents('FALSE| Cannot load order');
+            }
+        } else {
+            $this->logger->critical('Transaction not set in order');
+            return $this->result->setContents('TRUE| Failed. Transaction not set.');
+        }
+
+        if ($order->getTotalDue() <= 0) {
+            $this->logger->debug($action . '. Ignoring - already paid: ' . $orderEntityId);
+            return $this->result->setContents('TRUE| Ignoring: order has already been paid');
+        }
+
+        if ($action == 'capture') {
+            if (!empty($payment) && $payment->getAdditionalInformation('manual_capture')) {
+                $this->logger->debug('Already captured.');
+                return $this->result->setContents('TRUE| Already captured.');
+            }
+        }
+        
         if ($transaction->isPaid() || $transaction->isAuthorized()) {
             return $this->processPaidOrder($transaction, $order);
-
         } elseif ($transaction->isCanceled()) {
-            return $this->cancelOrder($order);
+            if ($order->getState() == Order::STATE_PROCESSING) {
+                return $this->result->setContents("TRUE| Ignoring cancel, order is `processing`");
+            } elseif ($order->isCanceled()) {
+                return $this->result->setContents("TRUE| Already canceled");
+            } else {
+                return $this->cancelOrder($order);
+            }
         }
 
     }
@@ -235,7 +278,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
      * @param Order $order
      * @return \Magento\Framework\Controller\Result\Raw
      */
-    private function processPaidOrder(Transaction $transaction, Order $order)
+    private function processPaidOrder(Status $transaction, Order $order)
     {
         if ($transaction->isPaid()) {
             $message = "PAID";
@@ -258,65 +301,73 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         );
 
         $payment->setPreparedMessage('PAY. - ');
-        $payment->setIsTransactionClosed(
-            0
-        );
+        $payment->setIsTransactionClosed(0);
 
         $paidAmount = $transaction->getPaidCurrencyAmount();
 
         if (!$this->paynlConfig->isAlwaysBaseCurrency()) {
             if ($order->getBaseCurrencyCode() != $order->getOrderCurrencyCode()) {
-                // we can only register the payment in the base currency
+                # We can only register the payment in the base currency
                 $paidAmount = $order->getBaseGrandTotal();
             }
         }
 
+        # Force order state to processing
+        $order->setState(Order::STATE_PROCESSING);
+        $paymentMethod = $order->getPayment()->getMethod();
+
         if ($transaction->isAuthorized()) {
-            $paidAmount = $transaction->getCurrencyAmount();
-            $payment->registerAuthorizationNotification($paidAmount);
+            $statusAuthorized = $this->config->getAuthorizedStatus($paymentMethod);
+            $order->setStatus(!empty($statusAuthorized) ? $statusAuthorized : Order::STATE_PROCESSING);
         } else {
-            $payment->registerCaptureNotification(
-                $paidAmount, $this->config->isSkipFraudDetection()
-            );
+            $statusPaid = $this->config->getPaidStatus($paymentMethod);
+            $order->setStatus(!empty($statusPaid) ? $statusPaid : Order::STATE_PROCESSING);
         }
 
-        // Force order state/status to processing
-        $order->setState(Order::STATE_PROCESSING);
+        # Notify customer
+        if ($order && !$order->getEmailSent()) {
+            $this->orderSender->send($order);
+            $order->addStatusHistoryComment(__('New order email sent'))->setIsCustomerNotified(true)->save();
+        }
 
-        $statusPaid = $this->config->getPaidStatus($order->getPayment()->getMethod());
-        $statusAuthorized= $this->config->getAuthorizedStatus($order->getPayment()->getMethod());
-        $statusPaid = !empty($statusPaid) ? $statusPaid : Order::STATE_PROCESSING;
-        $statusAuthorized = !empty($statusAuthorized) ? $statusAuthorized : Order::STATE_PROCESSING;
+        # Skip creation of invoice for B2B if enabled
+        if ($this->config->ignoreB2BInvoice($paymentMethod)) {
+            $orderCompany = $order->getBillingAddress()->getCompany();
+            if(!empty($orderCompany)) {
+                # Create transaction
+                $formatedPrice = $order->getBaseCurrency()->formatTxt($order->getGrandTotal());
+                $transactionMessage = __('PAY. - Captured amount of %1.', $formatedPrice);
+                $transactionBuilder = $this->builderInterface->setPayment($payment)->setOrder($order)->setTransactionId($transaction->getId())->setFailSafe(true)->build('capture');
+                $payment->addTransactionCommentsToOrder($transactionBuilder, $transactionMessage);
+                $payment->setParentTransactionId(null);
+                $payment->save();
+                $transactionBuilder->save();
 
-        if($transaction->isAuthorized()){
-            $order->setStatus($statusAuthorized);
+                # Change amount paid manually
+                $order->setTotalPaid($order->getGrandTotal());
+                $order->setBaseTotalPaid($order->getBaseGrandTotal());
+
+                $order->addStatusHistoryComment(__('B2B Setting: Skipped creating invoice'));
+                $this->orderRepository->save($order);
+                return $this->result->setContents("TRUE| " . $message . " (B2B: No invoice created)");
+            }
+        }
+
+        if ($transaction->isAuthorized()) {
+            $authAmount = $this->config->useMagOrderAmountForAuth() ? $order->getBaseGrandTotal() : $transaction->getCurrencyAmount();
+            $payment->registerAuthorizationNotification($authAmount);
         } else {
-            $order->setStatus($statusPaid);
+            $payment->registerCaptureNotification($paidAmount, $this->config->isSkipFraudDetection());
         }
 
         $this->orderRepository->save($order);
 
-        // notify customer
-        if ($order && !$order->getEmailSent()) {
-            $this->orderSender->send($order);
-            $order->addStatusHistoryComment(
-                __('New order email sent')
-            )->setIsCustomerNotified(
-                true
-            )->save();
-        }
-
         $invoice = $payment->getCreatedInvoice();
         if ($invoice && !$invoice->getEmailSent()) {
             $this->invoiceSender->send($invoice);
-
-            $order->addStatusHistoryComment(
-                __('You notified customer about invoice #%1.',
-                    $invoice->getIncrementId())
-            )->setIsCustomerNotified(
-                true
-            )->save();
-
+            $order->addStatusHistoryComment(__('You notified customer about invoice #%1.', $invoice->getIncrementId()))
+                ->setIsCustomerNotified(true)
+                ->save();
         }
 
         return $this->result->setContents("TRUE| " . $message);

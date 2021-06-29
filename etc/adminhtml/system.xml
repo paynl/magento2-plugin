@@ -48,10 +48,14 @@
                     This can be used if uncancelling the order in case of a second chance payment produces errors. WARNING! Orders will never be cancelled automaticly]]></comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="always_base_currency" translate="label,comment" type="select" sortOrder="70" showInDefault="1"
-                       showInWebsite="1" showInStore="1">
+                <field id="always_base_currency" translate="label,comment" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Always use base currency</label>
                     <comment><![CDATA[Set this to yes if you always want to process payments in the base currency of this store. Magento acts strange when trying to register a payment in another currency than the base currency. The base currency MUST be EUR]]></comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="use_magorder_for_auth" translate="label,comment" type="select" sortOrder="71" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Use base amount for authorisations</label>
+                    <comment><![CDATA[Set this to yes to use base amount as authorize amount instead of currencyamount]]></comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="skip_fraud_detection" translate="label,comment" type="select" sortOrder="80" showInDefault="1"
@@ -82,8 +86,21 @@
                     <label>Test IP Address</label>
                     <comment><![CDATA[Forces testmode on these Ip addresses, separate ip's by comma's for multiple ip's]]></comment>
                 </field>
-                <group id="paynl_paymentmethods" translate="label" sortOrder="101" showInDefault="1" showInWebsite="1"
-                       showInStore="1">
+                <field id="default_payment_option" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Select default payment option</label>
+                    <source_model>Paynl\Payment\Model\Config\Source\DefaultPaymentOption</source_model>
+              </field>
+                <field id="use_additional_validation" translate="label" type="select" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable additional validation</label>
+                    <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
+                    <comment><![CDATA[Enable this to also apply the validation of other activated (third party) modules during the payment process.]]></comment>
+                </field>
+                <field id="auto_capture" translate="label" type="select" sortOrder="105" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Auto Capture</label>
+                    <comment><![CDATA[Automatically capture authorisation-transaction when creating the shipment for the order.]]></comment>
+                    <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
+                </field>
+                <group id="paynl_paymentmethods" translate="label" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
                     <frontend_model>Paynl\Payment\Block\Adminhtml\System\Config\Fieldset\Expanded</frontend_model>
                     <label>Paymentmethods</label>
                     <include path="Paynl_Payment::paymentmethods.xml"/>

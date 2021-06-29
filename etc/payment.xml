@@ -18,6 +18,9 @@
         <method name="paynl_payment_alipay">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
+        <method name="paynl_payment_amazonpay">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
         <method name="paynl_payment_amex">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
@@ -61,6 +64,9 @@
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_gezondheidsbon">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_good4fun">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_giropay">
@@ -120,6 +126,12 @@
         <method name="paynl_payment_sofortbanking">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
+        <method name="paynl_payment_sofortbanking_hr">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_sofortbanking_ds">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
         <method name="paynl_payment_spraypay">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
@@ -127,6 +139,9 @@
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_tikkie">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_trustly">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_visamastercard">
