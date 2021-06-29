@@ -377,6 +377,8 @@ abstract class PaymentMethod extends AbstractMethod
             $shippingAddress['country'] = $arrShippingAddress['country_id'];
 
         }
+
+        $prefix = $this->_scopeConfig->getValue('payment/paynl/order_description_prefix', 'store');
         $data = array(
             'amount' => $total,
             'returnUrl' => $returnUrl,
@@ -385,7 +387,7 @@ abstract class PaymentMethod extends AbstractMethod
             'bank' => $bankId,
             'expireDate' => $expireDate,
             'orderNumber' => $orderId,
-            'description' => $orderId,
+            'description' => $prefix . $orderId,
             'extra1' => $orderId,
             'extra2' => $quoteId,
             'extra3' => $order->getEntityId(),
