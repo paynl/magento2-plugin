@@ -312,6 +312,18 @@ In order to pay for your order click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_good4fun>
+            <paynl_payment_googlepay>
+                <active>0</active>
+                <title>Google Pay</title>
+                <payment_option_id>2558</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Googlepay</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_googlepay>
             <paynl_payment_huisentuincadeau>
                 <active>0</active>
                 <title>Huis en Tuin Cadeau</title>
