@@ -47,7 +47,7 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
     {
         $setup->startSetup();
 
-        $this->logger->debug('PAY.: Install. Module version: ' . $context->getVersion());
+        $this->logger->debug('PAY.: Installing module.');
         $this->setDefaultValue('payment/paynl/order_description_prefix', 'Order: ');
 
         $setup->endSetup();
