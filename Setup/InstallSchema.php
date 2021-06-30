@@ -48,17 +48,9 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
         $setup->startSetup();
 
         $this->logger->debug('PAY.: Installing module.');
-        $this->setDefaultValue('payment/paynl/order_description_prefix', 'Order: ');
-
+        $this->configWriter->save('payment/paynl/order_description_prefix', 'Order ');
+        
         $setup->endSetup();
     }
 
-    private function setDefaultValue($configName, $value)
-    {
-        if (strlen($this->store->getConfig($configName)) == 0) {
-            if (strlen($value) > 0) {
-                $this->configWriter->save($configName, $value);
-            }
-        }
-    }
 }
