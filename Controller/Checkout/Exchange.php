@@ -13,7 +13,6 @@ use Magento\Sales\Model\Order\Payment\Interceptor;
 use Magento\Sales\Model\OrderRepository;
 use Paynl\Payment\Controller\CsrfAwareActionInterface;
 use Paynl\Payment\Controller\PayAction;
-use Paynl\Result\Transaction\Status;
 use Paynl\Result\Transaction\Transaction;
 
 /**
@@ -136,7 +135,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         }
 
         try {
-            $transaction = \Paynl\Transaction::status($payOrderId);
+            $transaction = \Paynl\Transaction::get($payOrderId);
         } catch (\Exception $e) {
             $this->logger->critical($e, $params);
 
@@ -150,7 +149,6 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             return $this->result->setContents("TRUE| Ignoring pending");
         }
 
-        $orderNumber = $transaction->getOrderNumber();
         $order = $this->orderRepository->get($orderEntityId);
 
         if (method_exists($transaction, 'isPartialPayment')) {
@@ -276,7 +274,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
      * @param Order $order
      * @return \Magento\Framework\Controller\Result\Raw
      */
-    private function processPaidOrder(Status $transaction, Order $order)
+    private function processPaidOrder(Transaction $transaction, Order $order)
     {
         if ($transaction->isPaid()) {
             $message = "PAID";
