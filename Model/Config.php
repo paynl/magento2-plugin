@@ -214,4 +214,26 @@ class Config
     {
         return $this->store->getConfig('payment/paynl/default_payment_option');
     }
+
+    public function registerPartialPayments()
+    {
+        return $this->store->getConfig('payment/paynl/register_partial_payments');
+    }
+
+    public function getPaymentmethodCode($paymentProfileId){
+
+        //Get all PAY. methods
+        $objectManager =  \Magento\Framework\App\ObjectManager::getInstance();
+        $paymentHelper = $objectManager->get('Magento\Payment\Helper\Data');
+        $paymentMethodList = $paymentHelper->getPaymentMethods();
+        $pay_methods = array();
+        foreach ($paymentMethodList as $key => $value) {
+            if (strpos($key, 'paynl_') !== false && $key != 'paynl_payment_paylink') {
+                $code = $this->store->getConfig('payment/' . $key . '/payment_option_id');
+                if($code == $paymentProfileId){
+                    return $key;
+                }
+            }
+        }
+    }
 }
