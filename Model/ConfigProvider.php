@@ -19,6 +19,7 @@ class ConfigProvider implements ConfigProviderInterface
     protected $methodCodes = [
         'paynl_payment_afterpay',
         'paynl_payment_alipay',
+        'paynl_payment_amazonpay',
         'paynl_payment_amex',
         'paynl_payment_applepay',
         'paynl_payment_billink',
@@ -39,6 +40,7 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_giropay',
         'paynl_payment_givacard',
         'paynl_payment_good4fun',
+        'paynl_payment_googlepay',
         'paynl_payment_huisentuincadeau',
         'paynl_payment_ideal',
         'paynl_payment_instore',
@@ -61,6 +63,7 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_spraypay',
         'paynl_payment_telefonischbetalen',
         'paynl_payment_tikkie',
+        'paynl_payment_trustly',
         'paynl_payment_visamastercard',
         'paynl_payment_vvvgiftcard',
         'paynl_payment_webshopgiftcard',
@@ -119,12 +122,15 @@ class ConfigProvider implements ConfigProviderInterface
                 $config['payment']['showkvk'][$code]      = $this->getKVK($code);
                 $config['payment']['showdob'][$code]      = $this->getDOB($code);
                 $config['payment']['showforcompany'][$code] = $this->getCompany($code);
+
                 $config['payment']['disallowedshipping'][$code] = $this->getDisallowedShippingMethods($code);
                 $config['payment']['currentipisvalid'][$code]    = $this->methods[$code]->isCurrentIpValid();
                 $config['payment']['currentagentisvalid'][$code] = $this->methods[$code]->isCurrentAgentValid();
                 $config['payment']['defaultpaymentoption'][$code] = $this->methods[$code]->isDefaultPaymentOption();
             }
         }
+
+        $config['payment']['useAdditionalValidation'] = $this->paynlConfig->getUseAdditionalValidation();
 
         return $config;
     }

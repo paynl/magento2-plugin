@@ -31,7 +31,6 @@ abstract class PaymentMethod extends AbstractMethod
 {
     protected $_code = 'paynl_payment_base';
 
-
     protected $_isInitializeNeeded = true;
 
     protected $_canRefund = true;
@@ -41,6 +40,11 @@ abstract class PaymentMethod extends AbstractMethod
 
     protected $_canVoid = true;
 
+    /**
+     *
+     * @var Psr\Log\LoggerInterface
+     */
+    protected $logger;
 
     /**
      * @var Config
@@ -58,6 +62,11 @@ abstract class PaymentMethod extends AbstractMethod
 
     protected $helper;
 
+    /**
+     * @var Magento\Framework\Message\ManagerInterface
+     */
+    protected $messageManager;
+
     public function __construct(
         Context $context,
         Registry $registry,
@@ -65,7 +74,7 @@ abstract class PaymentMethod extends AbstractMethod
         AttributeValueFactory $customAttributeFactory,
         Data $paymentData,
         ScopeConfigInterface $scopeConfig,
-        Logger $logger,
+        Logger $methodLogger,
         \Magento\Sales\Model\Order\Config $orderConfig,
         OrderRepository $orderRepository,
         Config $paynlConfig,
@@ -76,14 +85,16 @@ abstract class PaymentMethod extends AbstractMethod
     {
         parent::__construct(
             $context, $registry, $extensionFactory, $customAttributeFactory,
-            $paymentData, $scopeConfig, $logger, $resource, $resourceCollection, $data);
+            $paymentData, $scopeConfig, $methodLogger, $resource, $resourceCollection, $data);
 
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
 
+        $this->messageManager = $objectManager->get(\Magento\Framework\Message\ManagerInterface::class);
         $this->helper = $objectManager->create('Paynl\Payment\Helper\PayHelper');
         $this->paynlConfig = $paynlConfig;
         $this->orderRepository = $orderRepository;
         $this->orderConfig = $orderConfig;
+        $this->logger = $objectManager->get(\Psr\Log\LoggerInterface::class);
     }
 
     protected function getState($status)
@@ -123,7 +134,7 @@ abstract class PaymentMethod extends AbstractMethod
 
     public function getDOB()
     {
-      return [];
+        return $this->_scopeConfig->getValue('payment/' . $this->_code . '/showdob', 'store');
     }
 
     public function getDisallowedShippingMethods()
@@ -294,8 +305,8 @@ abstract class PaymentMethod extends AbstractMethod
 
         $store = $order->getStore();
         $baseUrl = $store->getBaseUrl();
-        // i want to use the url builder here, but that doenst work from admin, even if the store is supplied
-        $returnUrl = $baseUrl . 'paynl/checkout/finish/';
+
+        $returnUrl = $baseUrl . 'paynl/checkout/finish/?entityid=' . $order->getEntityId();
         $exchangeUrl = $baseUrl . 'paynl/checkout/exchange/';
 
         $paymentOptionId = $this->getPaymentOptionId();

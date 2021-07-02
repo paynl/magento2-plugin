@@ -8,6 +8,7 @@
     <include path="Paynl_Payment::paymentmethods/paylink.xml" />
     <include path="Paynl_Payment::paymentmethods/afterpay.xml" />
     <include path="Paynl_Payment::paymentmethods/alipay.xml" />
+    <include path="Paynl_Payment::paymentmethods/amazonpay.xml" />
     <include path="Paynl_Payment::paymentmethods/amex.xml" />
     <include path="Paynl_Payment::paymentmethods/applepay.xml" />
     <include path="Paynl_Payment::paymentmethods/billink.xml" />
@@ -28,6 +29,7 @@
     <include path="Paynl_Payment::paymentmethods/giropay.xml" />
     <include path="Paynl_Payment::paymentmethods/givacard.xml" />
     <include path="Paynl_Payment::paymentmethods/good4fun.xml" />
+    <include path="Paynl_Payment::paymentmethods/googlepay.xml" />
     <include path="Paynl_Payment::paymentmethods/huisentuincadeau.xml" />
     <include path="Paynl_Payment::paymentmethods/ideal.xml" />
     <include path="Paynl_Payment::paymentmethods/instore.xml" />
@@ -50,6 +52,7 @@
     <include path="Paynl_Payment::paymentmethods/spraypay.xml" />
     <include path="Paynl_Payment::paymentmethods/telefonischbetalen.xml" />
     <include path="Paynl_Payment::paymentmethods/tikkie.xml" />
+    <include path="Paynl_Payment::paymentmethods/trustly.xml" />
     <include path="Paynl_Payment::paymentmethods/visamastercard.xml" />
     <include path="Paynl_Payment::paymentmethods/vvvgiftcard.xml" />
     <include path="Paynl_Payment::paymentmethods/webshopgiftcard.xml" />

@@ -61,7 +61,7 @@
 "URL of the payment option icons. Default URL: https://static.pay.nl/payment_profiles/50x32/#paymentOptionId#.png","URL of the payment option icons. Default URL: https://static.pay.nl/payment_profiles/50x32/#paymentOptionId#.png"
 "Send discount tax","Send discount tax"
 "Set this to NO if you have a mix of low and high vatrate products. Some pay later methods have issues when the discount has a tax amount other than the default vat categories","Set this to NO if you have a mix of low and high vatrate products. Some pay later methods have issues when the discount has a tax amount other than the default vat categories"
-"Paylink is only available with custom orders and won't appear in the checkout","Paylink is only available with custom orders and won't appear in the checkout"
+"Paylink is only available for backorders and won't appear in the checkout","Paylink is only available for backorders and won't appear in the checkout"
 "Thank you for your order from ","Thank you for your order from "
 "If you have questions about your order, you can email us at","If you have questions about your order, you can email us at"
 "In order to pay for your order click the link below","In order to pay for your order click the link below"

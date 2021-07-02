@@ -16,6 +16,8 @@ class Config
 {
     const FINISH_PAYLINK = 'paynl/checkout/paylink';
     const FINISH_STANDARD = 'checkout/onepage/success';
+    const ORDERSTATUS_PAID = 100;
+    const ORDERSTATUS_DENIED = -63;
 
     /** @var  Store */
     private $store;
@@ -104,6 +106,11 @@ class Config
         return $this->store->getConfig('payment/paynl/always_base_currency') == 1;
     }
 
+    public function useMagOrderAmountForAuth()
+    {
+        return $this->store->getConfig('payment/paynl/use_magorder_for_auth') == 1;
+    }
+
     public function getLanguage()
     {
         $language = $this->store->getConfig('payment/paynl/language');
@@ -135,7 +142,7 @@ class Config
     {
         return $this->store->getConfig('payment/' . $methodCode . '/turn_off_invoices_b2b') == 1;
     }
-    
+
     public function autoCaptureEnabled()
     {
        return $this->store->getConfig('payment/paynl/auto_capture') == 1;
@@ -202,6 +209,11 @@ class Config
         return $iconUrl;
     }
 
+    public function getUseAdditionalValidation()
+    {
+        return trim($this->store->getConfig('payment/paynl/use_additional_validation'));
+    }
+
     public function getCancelURL()
     {
         return $this->store->getConfig('payment/paynl/cancelurl');
@@ -210,5 +222,27 @@ class Config
     public function getDefaultPaymentOption()
     {
         return $this->store->getConfig('payment/paynl/default_payment_option');
+    }
+
+    public function registerPartialPayments()
+    {
+        return $this->store->getConfig('payment/paynl/register_partial_payments');
+    }
+
+    public function getPaymentmethodCode($paymentProfileId){
+
+        //Get all PAY. methods
+        $objectManager =  \Magento\Framework\App\ObjectManager::getInstance();
+        $paymentHelper = $objectManager->get('Magento\Payment\Helper\Data');
+        $paymentMethodList = $paymentHelper->getPaymentMethods();
+        $pay_methods = array();
+        foreach ($paymentMethodList as $key => $value) {
+            if (strpos($key, 'paynl_') !== false && $key != 'paynl_payment_paylink') {
+                $code = $this->store->getConfig('payment/' . $key . '/payment_option_id');
+                if($code == $paymentProfileId){
+                    return $key;
+                }
+            }
+        }
     }
 }

@@ -7,9 +7,10 @@ define(
         'mage/url',
         'Magento_Checkout/js/action/place-order',
         'Magento_Checkout/js/model/quote',
-        'Magento_Ui/js/modal/alert'
+        'Magento_Ui/js/modal/alert',
+        'Magento_Checkout/js/model/payment/additional-validators'
     ],
-    function ($, Component, url, placeOrderAction, quote, alert) {
+    function ($, Component, url, placeOrderAction, quote, alert, additionalValidators) {
         'use strict';
         return Component.extend({
             redirectAfterPlaceOrder: false,
@@ -21,10 +22,16 @@ define(
             dateofbirth: null,
             billink_agree: null,
             initialize: function () {
-                this._super(); 
-                if(!quote.paymentMethod() && window.checkoutConfig.payment.defaultpaymentoption[this.item.method]){    
+                this._super();
+
+                var defaultPaymentMethod = window.checkoutConfig.payment.defaultpaymentoption;
+                if (!quote.paymentMethod() &&
+                    typeof defaultPaymentMethod !== 'undefined' &&
+                    typeof defaultPaymentMethod[this.item.method] !== 'undefined' &&
+                    defaultPaymentMethod[this.item.method])  {
                     this.selectPaymentMethod();
                 }
+
                 return this;
             },
             isVisible:function() {
@@ -38,10 +45,10 @@ define(
                         return false;
                     }
                 }
-                if(this.getforCompany() == 1 && this.getCompany().length != 0){
+                if (this.getforCompany() == 1 && this.getCompany().length != 0) {
                     return false;
                 }
-                if(this.getforCompany() == 2 && this.getCompany().length == 0){
+                if (this.getforCompany() == 2 && this.getCompany().length == 0) {
                     return false;
                 }
                 if (!this.currentIpIsValid()) {
@@ -60,16 +67,16 @@ define(
             },
             getDisallowedShipping: function () {
                 return window.checkoutConfig.payment.disallowedshipping[this.item.method];
-            },  
-            getCompany: function () {                
+            },
+            getCompany: function () {
                 if (typeof quote.billingAddress._latestValue.company !== 'undefined' && quote.billingAddress._latestValue.company !== null) {
                     return quote.billingAddress._latestValue.company;
                 }
-                return '';                
-            },    
+                return '';
+            },
             getforCompany   : function () {
                 return window.checkoutConfig.payment.showforcompany[this.item.method];
-            },  
+            },
             getInstructions: function () {
                 return window.checkoutConfig.payment.instructions[this.item.method];
             },
@@ -80,23 +87,26 @@ define(
                 return this.getKVK() > 0;
             },
             getKVK: function () {
-                return window.checkoutConfig.payment.showkvk[this.item.method];
+                return (typeof window.checkoutConfig.payment.showkvk !== 'undefined') ? window.checkoutConfig.payment.showkvk[this.item.method] : '';
+            },
+            useAdditionalValidation: function () {
+                return (typeof window.checkoutConfig.payment.useAdditionalValidation !== 'undefined') ? window.checkoutConfig.payment.useAdditionalValidation : false;
             },
             showDOB: function () {
                 return this.getDOB() > 0;
             },
             getDOB: function () {
-                return window.checkoutConfig.payment.showdob[this.item.method];
+                return (typeof window.checkoutConfig.payment.showdob !== 'undefined') ? window.checkoutConfig.payment.showdob[this.item.method] : '';
             },
             showKVKDOB: function () {
                 return this.getKVKDOB() > 0;
             },
             getKVKDOB: function () {
                 return (this.getDOB() > 0 && this.getKVK() > 0);
-            },  
+            },
             showBanks: function(){
                 return window.checkoutConfig.payment.banks[this.item.method].length > 0;
-            },     
+            },
             getBanks: function(){
                 return window.checkoutConfig.payment.banks[this.item.method];
             },
@@ -127,6 +137,12 @@ define(
                 };
             },
             placeOrder: function (data, event) {
+
+                if(this.useAdditionalValidation()) {
+                    this.validate();
+                    additionalValidators.validate();
+                }
+
                 var placeOrder;
                 var cocRequired = this.getKVK() == 2;
                 var dobRequired = this.getDOB() == 2;

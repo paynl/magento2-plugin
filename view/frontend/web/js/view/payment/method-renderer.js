@@ -14,6 +14,7 @@ define(
         var methods = [
             {type: 'paynl_payment_afterpay', component: defaultComponent},
             {type: 'paynl_payment_alipay', component: defaultComponent},
+            {type: 'paynl_payment_amazonpay', component: defaultComponent},
             {type: 'paynl_payment_amex', component: defaultComponent},
             {type: 'paynl_payment_billink', component: defaultComponent},
             {type: 'paynl_payment_capayable', component: defaultComponent},
@@ -33,6 +34,7 @@ define(
             {type: 'paynl_payment_giropay', component: defaultComponent},
             {type: 'paynl_payment_givacard', component: defaultComponent},
             {type: 'paynl_payment_good4fun', component: defaultComponent},
+            {type: 'paynl_payment_googlepay', component: defaultComponent},
             {type: 'paynl_payment_huisentuincadeau', component: defaultComponent},
             {type: 'paynl_payment_ideal', component: defaultComponent},
             {type: 'paynl_payment_instore', component: defaultComponent},
@@ -55,6 +57,7 @@ define(
             {type: 'paynl_payment_spraypay', component: defaultComponent},
             {type: 'paynl_payment_telefonischbetalen', component: defaultComponent},
             {type: 'paynl_payment_tikkie', component: defaultComponent},
+            {type: 'paynl_payment_trustly', component: defaultComponent},
             {type: 'paynl_payment_visamastercard', component: defaultComponent},
             {type: 'paynl_payment_vvvgiftcard', component: defaultComponent},
             {type: 'paynl_payment_webshopgiftcard', component: defaultComponent},

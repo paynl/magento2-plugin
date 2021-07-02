@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
-    <group id="paynl_payment_focum" sortOrder="650" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>Focum - Achteraf Betalen</label>
+    <group id="paynl_payment_googlepay" sortOrder="175" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Google Pay</label>
         <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1"
                showInStore="1">
             <label>Enabled</label>
-            <source_model>Paynl\Payment\Model\Config\Source\Available\Focum</source_model>
-            <config_path>payment/paynl_payment_focum/active</config_path>
+            <source_model>Paynl\Payment\Model\Config\Source\Available\Googlepay</source_model>
+            <config_path>payment/paynl_payment_googlepay/active</config_path>
         </field>
         <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1"
                showInStore="1">
             <label>Title</label>
-            <config_path>payment/paynl_payment_focum/title</config_path>
+            <config_path>payment/paynl_payment_googlepay/title</config_path>
             <depends>
                 <field id="active">1</field>
             </depends>
@@ -24,7 +24,7 @@
             <depends>
                 <field id="active">1</field>
             </depends>
-            <config_path>payment/paynl_payment_focum/order_status</config_path>
+            <config_path>payment/paynl_payment_googlepay/order_status</config_path>
         </field>
         <field id="order_status_authorized" translate="label" type="select" sortOrder="32" showInDefault="1" showInWebsite="1"
                showInStore="1">
@@ -33,7 +33,7 @@
             <depends>
                 <field id="active">1</field>
             </depends>
-            <config_path>payment/paynl_payment_focum/order_status_authorized</config_path>
+            <config_path>payment/paynl_payment_googlepay/order_status_authorized</config_path>
         </field>
         <field id="order_status_processing" translate="label" type="select" sortOrder="35" showInDefault="1" showInWebsite="1"
                showInStore="1">
@@ -42,13 +42,13 @@
             <depends>
                 <field id="active">1</field>
             </depends>
-            <config_path>payment/paynl_payment_focum/order_status_processing</config_path>
+            <config_path>payment/paynl_payment_googlepay/order_status_processing</config_path>
         </field>
         <field id="allowspecific" translate="label" type="allowspecific" sortOrder="40" showInDefault="1"
                showInWebsite="1" showInStore="1">
             <label>Payment from Applicable Countries</label>
             <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
-            <config_path>payment/paynl_payment_focum/allowspecific</config_path>
+            <config_path>payment/paynl_payment_googlepay/allowspecific</config_path>
             <depends>
                 <field id="active">1</field>
             </depends>
@@ -58,7 +58,7 @@
             <label>Payment from Specific Countries</label>
             <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
             <can_be_empty>1</can_be_empty>
-            <config_path>payment/paynl_payment_focum/specificcountry</config_path>
+            <config_path>payment/paynl_payment_googlepay/specificcountry</config_path>
             <depends>
                 <field id="allowspecific">1</field>
                 <field id="active">1</field>
@@ -69,21 +69,12 @@
             <depends>
                 <field id="active">1</field>
             </depends>
-            <config_path>payment/paynl_payment_focum/instructions</config_path>
-        </field>
-        <field id="showdob" translate="label" type="select" sortOrder="66" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Show Date of birth field</label>
-            <source_model>Paynl\Payment\Model\Config\Source\showDobOptions</source_model>
-            <depends>
-                <field id="active">1</field>
-            </depends>
-            <config_path>payment/paynl_payment_focum/showdob</config_path>
-            <comment><![CDATA[When choosen for Focum the customer can additionally enter his Date of Birth before continuing to Focum.]]></comment>
+            <config_path>payment/paynl_payment_googlepay/instructions</config_path>
         </field>
         <field id="min_order_total" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1"
                showInStore="1">
             <label>Minimum Order Total</label>
-            <config_path>payment/paynl_payment_focum/min_order_total</config_path>
+            <config_path>payment/paynl_payment_googlepay/min_order_total</config_path>
             <depends>
                 <field id="active">1</field>
             </depends>
@@ -91,7 +82,7 @@
         <field id="max_order_total" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1"
                showInStore="1">
             <label>Maximum Order Total</label>
-            <config_path>payment/paynl_payment_focum/max_order_total</config_path>
+            <config_path>payment/paynl_payment_googlepay/max_order_total</config_path>
             <depends>
                 <field id="active">1</field>
             </depends>
@@ -100,7 +91,7 @@
                showInStore="1">
             <label>Sort Order</label>
             <frontend_class>validate-number</frontend_class>
-            <config_path>payment/paynl_payment_focum/sort_order</config_path>
+            <config_path>payment/paynl_payment_googlepay/sort_order</config_path>
             <depends>
                 <field id="active">1</field>
             </depends>
@@ -110,7 +101,7 @@
                showInStore="1">
             <label>Send new order email</label>
             <source_model>Paynl\Payment\Model\Config\Source\SendNewOrderEmail</source_model>
-            <config_path>payment/paynl_payment_focum/send_new_order_email</config_path>
+            <config_path>payment/paynl_payment_googlepay/send_new_order_email</config_path>
             <depends>
                 <field id="active">1</field>
             </depends>
@@ -123,7 +114,7 @@
             <depends>
                 <field id="active">1</field>
             </depends>
-            <config_path>payment/paynl_payment_focum/disallowedshipping</config_path>
+            <config_path>payment/paynl_payment_googlepay/disallowedshipping</config_path>
             <comment><![CDATA[Hold CTRL button to select/deselect multiple]]></comment>
         </field>
         <field id="showforcompany" translate="label" type="select" sortOrder="150" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -132,17 +123,8 @@
             <depends>
                 <field id="active">1</field>
             </depends>
-            <config_path>payment/paynl_payment_focum/showforcompany</config_path>
+            <config_path>payment/paynl_payment_googlepay/showforcompany</config_path>
             <comment><![CDATA[Allow payment method to be used for companies, private, or both.]]></comment>
-        </field>
-        <field id="turn_off_invoices_b2b" translate="label" type="select" sortOrder="160" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Turn off invoices for B2B</label>
-            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-            <depends>
-                <field id="active">1</field>
-            </depends>
-            <config_path>payment/paynl_payment_focum/turn_off_invoices_b2b</config_path>
-            <comment><![CDATA[Set to `Yes` to disable creating invoices for business orders]]></comment>
         </field>
         <group id="advanced" translate="label" sortOrder="200" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Advanced</label>
@@ -151,9 +133,8 @@
                    showInStore="1">
                 <label>Payment option id</label>
                 <comment>The id of the payment method, only change this if you are told to do so</comment>
-                <config_path>payment/paynl_payment_focum/payment_option_id</config_path>
+                <config_path>payment/paynl_payment_googlepay/payment_option_id</config_path>
             </field>
         </group>
     </group>
 </include>
-                
