@@ -8,9 +8,10 @@ define(
         'Magento_Checkout/js/action/place-order',
         'Magento_Checkout/js/model/quote',
         'Magento_Ui/js/modal/alert',
-        'Magento_Checkout/js/model/payment/additional-validators'
+        'Magento_Checkout/js/model/payment/additional-validators',
+        'mage/translate'
     ],
-    function ($, Component, url, placeOrderAction, quote, alert, additionalValidators) {
+    function ($, Component, url, placeOrderAction, quote, alert, additionalValidators, translate) {
         'use strict';
         return Component.extend({
             redirectAfterPlaceOrder: false,
@@ -84,6 +85,12 @@ define(
             getPaymentIcon: function () {
                 return window.checkoutConfig.payment.icon[this.item.method];
             },
+            showKVKAgree: function(){
+                if(this.item.method == 'paynl_payment_billink' && this.getKVK() > 0){
+                    return true;
+                }
+                return false;
+            },
             showKVK: function () {
                 return this.getKVK() > 0;
             },
@@ -91,7 +98,6 @@ define(
                 return (typeof window.checkoutConfig.payment.showkvk !== 'undefined') ? window.checkoutConfig.payment.showkvk[this.item.method] : '';
             },
             showVAT: function () {
-                console.log(this.getVAT());
                 return this.getVAT() > 0;
             },
             getVAT: function () {
@@ -160,10 +166,10 @@ define(
                 var vatRequired = this.getVAT() == 2;
                 var dobRequired = this.getDOB() == 2;
                 if (cocRequired) {
-                    if (this.billink_agree != true) {
+                    if (this.billink_agree != true && this.item.method == 'paynl_payment_billink') {
                         alert({
-                            title: $.mage.__('Betalingsvoorwaarden'),
-                            content: $.mage.__('U dient eerst akkoord te gaan met de betalingsvoorwaarden.'),
+                            title: $.mage.__('Payment terms'),
+                            content: $.mage.__('You must first agree to the payment terms.'),
                             actions: {
                                 always: function(){}
                             }
@@ -172,8 +178,8 @@ define(
                     }
                     if (this.kvknummer == null || this.kvknummer.length < 8) {
                         alert({
-                            title: $.mage.__('Ongeldig KVK nummer'),
-                            content: $.mage.__('Voer een geldig KVK nummer in.'),
+                            title: $.mage.__('Invalid COC number'),
+                            content: $.mage.__('Enter a valid COC number'),
                             actions: {
                                 always: function(){}
                             }
@@ -184,8 +190,8 @@ define(
                 if (vatRequired) {
                     if (this.vatnumber == null || this.vatnumber.length < 8) {
                         alert({
-                            title: $.mage.__('Ongeldig VAT nummer'),
-                            content: $.mage.__('Voer een geldig VAT nummer in.'),
+                            title: $.mage.__('Invalid VAT-id'),
+                            content: $.mage.__('Enter a valid VAT-id'),
                             actions: {
                                 always: function(){}
                             }
@@ -196,8 +202,8 @@ define(
                 if (dobRequired) {
                     if (this.dateofbirth == null || this.dateofbirth.length < 1) {
                         alert({
-                            title: $.mage.__('Ongeldig geboortedatum'),
-                            content: $.mage.__('Voer een geldig geboortedatum in.'),
+                            title: $.mage.__('Invalid date of birth'),
+                            content: $.mage.__('Enter a valid date of birth'),
                             actions: {
                                 always: function(){}
                             }

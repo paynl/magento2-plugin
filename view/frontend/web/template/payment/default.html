@@ -25,22 +25,22 @@
             <select data-bind="options: getBanks(), optionsText: 'visibleName', optionsValue: 'id', value: selectedBank"></select>
         </div>
         <div data-bind="visible: showDOB()" class="field-select-billing">
-            <label for="dob">Geboortedatum</label>
+            <label for="dob" data-bind="i18n: 'Date of birth'"></label>
             <input type="date" data-bind="optionsValue: 'id', name: 'dateofbirth', value: dateofbirth" name="dateofbirth" placeholder="mm/dd/yyyy"/>
         </div>
         <div data-bind="visible: showKVKDOB()" class="field-select-billing">
             <br/>
         </div>
         <div data-bind="visible: showKVK()" class="field-select-billing">
-            <label for="kvknummer">KVK/COC nummer</label>
+            <label for="kvknummer" data-bind="i18n: 'COC number'"> </label>
             <input data-bind="optionsValue: 'id', name: 'kvknummer', value: kvknummer" name="kvknummer"/>
         </div>
         <div data-bind="visible: showVAT()" class="field-select-billing">
             <br/>
-            <label for="vatnumber">VAT-id</label>
+            <label for="vatnumber" data-bind="i18n: 'VAT-id'"></label>
             <input data-bind="optionsValue: 'id', name: 'vatnumber', value: vatnumber" name="vatnumber"/>
         </div>
-        <div data-bind="visible: showKVK()" class="field-select-billing">
+        <div data-bind="visible: showKVKAgree()" class="field-select-billing">
             <div style="padding-top:10px; padding-bottom:10px">
                 <input type="checkbox" data-bind="checked: billink_agree"/>
                 <label for="billink_agree">U dient akkoord te gaan met de</label> <a target="_blank" href="https://billink.nl/voorwaarden/gebruikersvoorwaarden.pdf">betalingsvoorwaarden</a>
