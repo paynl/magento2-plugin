@@ -19,6 +19,7 @@ define(
             },
             selectedBank: null,
             kvknummer: null,
+            vatnumber: null,
             dateofbirth: null,
             billink_agree: null,
             initialize: function () {
@@ -89,6 +90,16 @@ define(
             getKVK: function () {
                 return (typeof window.checkoutConfig.payment.showkvk !== 'undefined') ? window.checkoutConfig.payment.showkvk[this.item.method] : '';
             },
+            showVAT: function () {
+                console.log(this.getVAT());
+                return this.getVAT() > 0;
+            },
+            getVAT: function () {
+                if(this.getCompany().length == 0){
+                    return false;
+                }
+                return (typeof window.checkoutConfig.payment.showvat !== 'undefined') ? window.checkoutConfig.payment.showvat[this.item.method] : '';
+            },
             useAdditionalValidation: function () {
                 return (typeof window.checkoutConfig.payment.useAdditionalValidation !== 'undefined') ? window.checkoutConfig.payment.useAdditionalValidation : false;
             },
@@ -130,6 +141,7 @@ define(
                     'po_number': null,
                     'additional_data': {
                         "kvknummer": this.kvknummer,
+                        "vatnumber": this.vatnumber,
                         "dob": dob_format,
                         "billink_agree": this.billink_agree,
                         "bank_id": this.selectedBank
@@ -145,6 +157,7 @@ define(
 
                 var placeOrder;
                 var cocRequired = this.getKVK() == 2;
+                var vatRequired = this.getVAT() == 2;
                 var dobRequired = this.getDOB() == 2;
                 if (cocRequired) {
                     if (this.billink_agree != true) {
@@ -161,6 +174,18 @@ define(
                         alert({
                             title: $.mage.__('Ongeldig KVK nummer'),
                             content: $.mage.__('Voer een geldig KVK nummer in.'),
+                            actions: {
+                                always: function(){}
+                            }
+                        });
+                        return false;
+                    }
+                }
+                if (vatRequired) {
+                    if (this.vatnumber == null || this.vatnumber.length < 8) {
+                        alert({
+                            title: $.mage.__('Ongeldig VAT nummer'),
+                            content: $.mage.__('Voer een geldig VAT nummer in.'),
                             actions: {
                                 always: function(){}
                             }
