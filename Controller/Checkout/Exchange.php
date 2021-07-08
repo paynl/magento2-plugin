@@ -320,14 +320,6 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         $order->setState(Order::STATE_PROCESSING);
         $paymentMethod = $order->getPayment()->getMethod();
 
-        if ($transaction->isAuthorized()) {
-            $statusAuthorized = $this->config->getAuthorizedStatus($paymentMethod);
-            $order->setStatus(!empty($statusAuthorized) ? $statusAuthorized : Order::STATE_PROCESSING);
-        } else {
-            $statusPaid = $this->config->getPaidStatus($paymentMethod);
-            $order->setStatus(!empty($statusPaid) ? $statusPaid : Order::STATE_PROCESSING);
-        }
-
         # Notify customer
         if ($order && !$order->getEmailSent()) {
             $this->orderSender->send($order);
@@ -362,6 +354,14 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             $payment->registerAuthorizationNotification($authAmount);
         } else {
             $payment->registerCaptureNotification($paidAmount, $this->config->isSkipFraudDetection());
+        }
+
+        if ($transaction->isAuthorized()) {
+            $statusAuthorized = $this->config->getAuthorizedStatus($paymentMethod);
+            $order->setStatus(!empty($statusAuthorized) ? $statusAuthorized : Order::STATE_PROCESSING);
+        } else {
+            $statusPaid = $this->config->getPaidStatus($paymentMethod);
+            $order->setStatus(!empty($statusPaid) ? $statusPaid : Order::STATE_PROCESSING);
         }
 
         $this->orderRepository->save($order);
