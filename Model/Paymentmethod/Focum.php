@@ -12,4 +12,9 @@ class Focum extends PaymentMethod
     {
         return 1702;
     }
+
+    public function getDOB()
+    {
+        return $this->_scopeConfig->getValue('payment/paynl_payment_focum/showdob', 'store');
+    }
 }

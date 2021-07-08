@@ -13,4 +13,9 @@ class Klarna extends PaymentMethod
     {
         return 1717;
     }
+
+    public function getDOB()
+    {
+        return $this->_scopeConfig->getValue('payment/paynl_payment_klarna/showdob', 'store');
+    }
 }
