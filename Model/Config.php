@@ -163,7 +163,7 @@ class Config
         $serviceId = $this->getServiceId();
         $tokencode = $this->getTokencode();
 
-        $gateway = $this->getFailoverGateway();
+        $gateway = trim($this->getFailoverGateway());
 
         if(! empty($tokencode)) {
             \Paynl\Config::setTokenCode($tokencode);
