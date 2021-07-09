@@ -106,14 +106,32 @@
                 <field id="active">1</field>
             </depends>
         </field>
-        <field id="showdob" translate="label" type="select" sortOrder="66" showInDefault="1" showInWebsite="1" showInStore="1">
+        <field id="showkvk" translate="label" type="select" sortOrder="65" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Show KVK/COC field</label>
+            <source_model>Paynl\Payment\Model\Config\Source\showKvkOptions</source_model>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+            <config_path>payment/paynl_payment_afterpay/showkvk</config_path>
+            <comment><![CDATA[When chosen for this method the customer can additionally enter his KVK/COC before continuing.]]></comment>
+        </field>
+        <field id="showvat" translate="label" type="select" sortOrder="66" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Show VAT field</label>
+            <source_model>Paynl\Payment\Model\Config\Source\showNonPrivate</source_model>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+            <config_path>payment/paynl_payment_afterpay/showvat</config_path>
+            <comment><![CDATA[When chosen for this method the customer can additionally enter his VAT-id before continuing.]]></comment>
+        </field>
+        <field id="showdob" translate="label" type="select" sortOrder="67" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Show Date of birth field</label>
             <source_model>Paynl\Payment\Model\Config\Source\showDobOptions</source_model>
             <depends>
                 <field id="active">1</field>
             </depends>
             <config_path>payment/paynl_payment_afterpay/showdob</config_path>
-            <comment><![CDATA[When selecting AfterPay, a date of birth field will be visible. This might increase the chance for a successful payment.]]></comment>
+            <comment><![CDATA[When chosen for this method the customer can additionally enter his date of birth before continuing.]]></comment>
         </field>
         <field id="disallowedshipping" translate="label" type="multiselect" sortOrder="110" showInDefault="1"
                showInWebsite="1" showInStore="1">

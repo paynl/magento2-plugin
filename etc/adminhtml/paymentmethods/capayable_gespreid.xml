@@ -71,6 +71,33 @@
             </depends>
             <config_path>payment/paynl_payment_capayable_gespreid/instructions</config_path>
         </field>
+        <field id="showkvk" translate="label" type="select" sortOrder="65" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Show KVK/COC field</label>
+            <source_model>Paynl\Payment\Model\Config\Source\showKvkOptions</source_model>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+            <config_path>payment/paynl_payment_capayable_gespreid/showkvk</config_path>
+            <comment><![CDATA[When chosen for this method the customer can additionally enter his KVK/COC before continuing.]]></comment>
+        </field>
+        <field id="showvat" translate="label" type="select" sortOrder="66" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Show VAT field</label>
+            <source_model>Paynl\Payment\Model\Config\Source\showNonPrivate</source_model>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+            <config_path>payment/paynl_payment_capayable_gespreid/showvat</config_path>
+            <comment><![CDATA[When chosen for this method the customer can additionally enter his VAT-id before continuing.]]></comment>
+        </field>
+        <field id="showdob" translate="label" type="select" sortOrder="67" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Show Date of birth field</label>
+            <source_model>Paynl\Payment\Model\Config\Source\showDobOptions</source_model>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+            <config_path>payment/paynl_payment_capayable_gespreid/showdob</config_path>
+            <comment><![CDATA[When chosen for this method the customer can additionally enter his date of birth before continuing.]]></comment>
+        </field>
         <field id="min_order_total" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1"
                showInStore="1">
             <label>Minimum Order Total</label>
