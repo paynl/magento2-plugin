@@ -119,6 +119,7 @@ class ConfigProvider implements ConfigProviderInterface
                 $config['payment']['instructions'][$code] = $this->getInstructions($code);
                 $config['payment']['banks'][$code]        = $this->getBanks($code);
                 $config['payment']['icon'][$code]         = $this->getIcon($code);
+
                 $config['payment']['showkvk'][$code]      = $this->getKVK($code);
                 $config['payment']['showdob'][$code]      = $this->getDOB($code);
                 $config['payment']['showforcompany'][$code] = $this->getCompany($code);
@@ -131,6 +132,7 @@ class ConfigProvider implements ConfigProviderInterface
         }
 
         $config['payment']['useAdditionalValidation'] = $this->paynlConfig->getUseAdditionalValidation();
+        $config['payment']['iconsize']                = $this->paynlConfig->getIconSize();;
 
         return $config;
     }
@@ -181,7 +183,8 @@ class ConfigProvider implements ConfigProviderInterface
      */
     protected function getIcon($code)
     {
-        $url = $this->paynlConfig->getIconUrl();
-        return str_replace('#paymentOptionId#', $this->methods[$code]->getPaymentOptionId(), $url);
+        $url = $this->paynlConfig->getIconUrl($code, $this->methods[$code]->getPaymentOptionId());
+        return $url;
     }
+
 }
