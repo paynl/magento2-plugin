@@ -38,7 +38,7 @@ class Config
         "paynl_payment_cartasi" => "76",
         "paynl_payment_cartebleue" => "11",
         "paynl_payment_cashly" => "43",
-        "paynl_payment_clickandbuy" => "0",
+        "paynl_payment_clickandbuy" => "1",
         "paynl_payment_creditclick" => "99",
         "paynl_payment_dankort" => "58",
         "paynl_payment_decadeaukaart" => "189",
@@ -79,7 +79,7 @@ class Config
         "paynl_payment_webshopgiftcard" => "26",
         "paynl_payment_wechatpay" => "23",
         "paynl_payment_wijncadeau" => "135",
-        "paynl_payment_yehhpay" => "0",
+        "paynl_payment_yehhpay" => "1",
         "paynl_payment_yourgift" => "31"
     );
 
