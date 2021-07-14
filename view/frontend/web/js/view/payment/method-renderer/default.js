@@ -68,6 +68,13 @@ define(
             getDisallowedShipping: function () {
                 return window.checkoutConfig.payment.disallowedshipping[this.item.method];
             },
+            getIconSize: function(){
+                var size = window.checkoutConfig.payment.iconsize;
+                if(size){
+                    return 'pay_icon_size_' + size;
+                }
+                return '';                
+            },
             getCompany: function () {
                 if (typeof quote.billingAddress._latestValue.company !== 'undefined' && quote.billingAddress._latestValue.company !== null) {
                     return quote.billingAddress._latestValue.company;
