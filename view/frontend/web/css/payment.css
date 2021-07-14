@@ -1,3 +1,20 @@
-h2{
-    color:red !important;
+
+.checkout-payment-method .payment-method-title .payment-icon.pay_icon_size_small{
+    width: 50px;
+    height: 50px;
+}
+
+.checkout-payment-method .payment-method-title .payment-icon.pay_icon_size_medium{
+    width: 75px;
+    height: 75px;
+}
+
+.checkout-payment-method .payment-method-title .payment-icon.pay_icon_size_large{
+    width: 100px;
+    height: 100px;
+}
+
+.checkout-payment-method .payment-method-title .payment-icon.pay_icon_size_xlarge{
+    width: 125px;
+    height: 125px;
 }
