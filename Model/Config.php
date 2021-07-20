@@ -163,7 +163,7 @@ class Config
         $serviceId = $this->getServiceId();
         $tokencode = $this->getTokencode();
 
-        $gateway = trim($this->getFailoverGateway());
+        $gateway = $this->getFailoverGateway();
 
         if(! empty($tokencode)) {
             \Paynl\Config::setTokenCode($tokencode);
@@ -171,8 +171,8 @@ class Config
 
         if ( ! empty($apiToken) && ! empty($serviceId)) {
 
-            if ( ! empty($gateway)){
-                \Paynl\Config::setApiBase($gateway);
+            if ( ! empty(trim($gateway))){
+                \Paynl\Config::setApiBase(trim($gateway));
             }
             \Paynl\Config::setApiToken($apiToken);
             \Paynl\Config::setServiceId($serviceId);
@@ -200,7 +200,7 @@ class Config
 
     public function getFailoverGateway()
     {
-        return trim($this->store->getConfig('payment/paynl/failover_gateway'));
+        return $this->store->getConfig('payment/paynl/failover_gateway');
     }
 
     public function getIconUrl()
