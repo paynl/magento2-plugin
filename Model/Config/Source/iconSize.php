@@ -34,10 +34,11 @@ class iconSize implements ArrayInterface
   public function toArray()
   {
     return [
+      'xsmall' => __('Extra small'),
       'small' => __('Small'),
       'medium' => __('Medium'),
       'large' => __('Large'),
-      'xlarge' => __('XLarge'),
+      'xlarge' => __('Extra large'),
     ];
   }
 
