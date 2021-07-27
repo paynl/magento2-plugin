@@ -108,7 +108,7 @@ abstract class Available implements ArrayInterface
 
         if (!empty($apiToken) && !empty($serviceId)) {
 
-            if ( ! empty($gateway)){
+            if ( ! empty($gateway) && substr($gateway, 0, 4 ) === "http"){
                 \Paynl\Config::setApiBase($gateway);
             }
             \Paynl\Config::setApiToken($apiToken);
