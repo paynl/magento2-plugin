@@ -287,7 +287,7 @@ abstract class PaymentMethod extends AbstractMethod
         if (isset($additionalData['kvknummer']) && is_numeric($additionalData['kvknummer'])) {
             $kvknummer = $additionalData['kvknummer'];
         }
-        if (isset($additionalData['vatnumber']) && is_numeric($additionalData['vatnumber'])) {
+        if (isset($additionalData['vatnumber'])) {
             $vatnumber = $additionalData['vatnumber'];
         }
         if (isset($additionalData['bank_id']) && is_numeric($additionalData['bank_id'])) {
@@ -339,18 +339,21 @@ abstract class PaymentMethod extends AbstractMethod
             }
             $enduser['gender'] = $this->genderConversion((empty($enduser['gender'])) ? $order->getCustomerGender($order) : $enduser['gender']);
 
-            if (isset($arrBillingAddress['company']) && !empty($arrBillingAddress['company'])) {
+            if (!empty($arrBillingAddress['company'])) {
               $enduser['company']['name'] = $arrBillingAddress['company'];
-              $enduser['company']['countryCode'] =  $arrBillingAddress['country_id'];
             }
 
-            if (isset($kvknummer) && !empty($kvknummer)) {
+            if (!empty($arrBillingAddress['country_id'])) {
+                $enduser['company']['countryCode'] =  $arrBillingAddress['country_id'];
+            }  
+
+            if (!empty($kvknummer)) {
               $enduser['company']['cocNumber'] = $kvknummer;
             }
 
-            if ((isset($arrBillingAddress['vat_id']) && !empty($arrBillingAddress['vat_id']))) {
+            if (!empty($arrBillingAddress['vat_id'])) {
                 $enduser['company']['vatNumber'] = $arrBillingAddress['vat_id'];
-            } else if (isset($vatnumber) && !empty($vatnumber)) {
+            } else if (!empty($vatnumber)) {
                 $enduser['company']['vatNumber'] = $kvknummer;
             }
 
@@ -366,7 +369,7 @@ abstract class PaymentMethod extends AbstractMethod
             $invoiceAddress['city'] = $arrBillingAddress['city'];
             $invoiceAddress['country'] = $arrBillingAddress['country_id'];
 
-            if (isset($arrShippingAddress['vat_id']) && !empty($arrShippingAddress['vat_id'])) {
+            if (!empty($arrShippingAddress['vat_id'])) {
               $enduser['company']['vatNumber'] = $arrShippingAddress['vat_id'];
             }
         }
@@ -552,9 +555,15 @@ abstract class PaymentMethod extends AbstractMethod
         parent::assignData($data);
 
         if (is_array($data)) {
-            $this->getInfoInstance()->setAdditionalInformation('kvknummer', $data['kvknummer']);
-            $this->getInfoInstance()->setAdditionalInformation('vatnumber', $data['vatnumber']);
-            $this->getInfoInstance()->setAdditionalInformation('dob', $data['dob']);
+            if (isset($data['kvknummer'])) {
+                $this->getInfoInstance()->setAdditionalInformation('kvknummer', $data['kvknummer']);
+            }
+            if (isset($data['vatnumber'])) {
+                $this->getInfoInstance()->setAdditionalInformation('vatnumber', $data['vatnumber']);
+            }
+            if (isset($data['dob'])) {
+                $this->getInfoInstance()->setAdditionalInformation('dob', $data['dob']);
+            }
         } elseif ($data instanceof \Magento\Framework\DataObject) {
 
             $additional_data = $data->getAdditionalData();
