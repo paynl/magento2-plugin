@@ -75,6 +75,9 @@
         <method name="paynl_payment_givacard">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
+        <method name="paynl_payment_googlepay">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
         <method name="paynl_payment_huisentuincadeau">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
