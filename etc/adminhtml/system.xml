@@ -74,7 +74,7 @@
                     <label>Icon URL</label>
                     <depends>
                         <field id="image_style">classic</field>
-                    </depends>   
+                    </depends>
                     <comment><![CDATA[URL of the payment option icons. Default URL: https://static.pay.nl/payment_profiles/50x32/#paymentOptionId#.png]]></comment>
                 </field>
                 <field id="pay_style_checkout" translate="label" type="select" sortOrder="87" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -87,7 +87,7 @@
                     <source_model>Paynl\Payment\Model\Config\Source\iconSize</source_model>
                     <depends>
                         <field id="pay_style_checkout">1</field>
-                    </depends>                
+                    </depends>
                     <comment><![CDATA[Select which size you'd like the icons to be.]]></comment>
                 </field>
                 <field id="discount_tax" translate="label,comment" type="select" sortOrder="90" showInDefault="1"
@@ -125,6 +125,11 @@
                     <label>Register partial payments</label>
                     <comment><![CDATA[Register partial payments]]></comment>
                     <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
+                </field>
+                <field id="failover_gateway" translate="label" type="text" sortOrder="107" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Failover Gateway</label>
+                    <comment><![CDATA[Leave this empty unless advised otherwise by PAY.]]></comment>
                 </field>
                 <group id="paynl_paymentmethods" translate="label" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
                     <frontend_model>Paynl\Payment\Block\Adminhtml\System\Config\Fieldset\Expanded</frontend_model>
