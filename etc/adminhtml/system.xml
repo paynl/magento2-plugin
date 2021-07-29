@@ -103,7 +103,7 @@
                 <field id="failover_gateway" translate="label" type="text" sortOrder="107" showInDefault="1" showInWebsite="1"
                        showInStore="1">
                     <label>Failover Gateway</label>
-                    <comment><![CDATA[Leave this empty unless we at PAY. advice you to fill this in with a gateway we give to you.]]></comment>
+                    <comment><![CDATA[Leave this empty unless advised otherwise by PAY.]]></comment>
                 </field>
                 <group id="paynl_paymentmethods" translate="label" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
                     <frontend_model>Paynl\Payment\Block\Adminhtml\System\Config\Fieldset\Expanded</frontend_model>

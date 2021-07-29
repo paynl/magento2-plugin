@@ -162,16 +162,14 @@ class Config
         $apiToken  = $this->getApiToken();
         $serviceId = $this->getServiceId();
         $tokencode = $this->getTokencode();
-
         $gateway = $this->getFailoverGateway();
 
-        if(! empty($tokencode)) {
+        if (!empty($tokencode)) {
             \Paynl\Config::setTokenCode($tokencode);
         }
 
-        if ( ! empty($apiToken) && ! empty($serviceId)) {
-
-            if ( ! empty(trim($gateway)) && substr( trim($gateway), 0, 4 ) === "http"){
+        if (!empty($apiToken) && !empty($serviceId)) {
+            if (!empty(trim($gateway)) && substr(trim($gateway), 0, 4) === "http") {
                 \Paynl\Config::setApiBase(trim($gateway));
             }
             \Paynl\Config::setApiToken($apiToken);

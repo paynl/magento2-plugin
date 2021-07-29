@@ -98,17 +98,14 @@ abstract class Available implements ArrayInterface
         $apiToken = trim($this->getConfigValue('payment/paynl/apitoken'));
         $serviceId = trim($this->getConfigValue('payment/paynl/serviceid'));
         $tokencode = trim($this->getConfigValue('payment/paynl/tokencode'));
-
-
         $gateway = trim($this->getConfigValue('payment/paynl/failover_gateway'));
 
-        if(! empty($tokencode)) {
+        if (!empty($tokencode)) {
             \Paynl\Config::setTokenCode($tokencode);
         }
 
         if (!empty($apiToken) && !empty($serviceId)) {
-
-            if ( ! empty($gateway) && substr($gateway, 0, 4 ) === "http"){
+            if (!empty($gateway) && substr($gateway, 0, 4) === "http") {
                 \Paynl\Config::setApiBase($gateway);
             }
             \Paynl\Config::setApiToken($apiToken);
