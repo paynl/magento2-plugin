@@ -354,7 +354,7 @@ abstract class PaymentMethod extends AbstractMethod
             if (!empty($arrBillingAddress['vat_id'])) {
                 $enduser['company']['vatNumber'] = $arrBillingAddress['vat_id'];
             } else if (!empty($vatnumber)) {
-                $enduser['company']['vatNumber'] = $kvknummer;
+                $enduser['company']['vatNumber'] = $vatnumber;
             }
 
             $invoiceAddress = array(
