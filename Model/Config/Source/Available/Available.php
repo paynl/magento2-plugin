@@ -53,7 +53,6 @@ abstract class Available implements ArrayInterface
         $this->_paymentmethodFactory = $paymentMethodFactory;
     }
 
-
     /**
      * Options getter
      *
@@ -77,7 +76,7 @@ abstract class Available implements ArrayInterface
      */
     public function toArray()
     {
-        $configured = $this->configureSDK();
+        $configured = $this->_config->configureSDK();
         if (!$configured) {
             return [0 => __('Enter your API-token and ServiceId first')];
         }
@@ -93,30 +92,6 @@ abstract class Available implements ArrayInterface
 
     }
 
-    protected function configureSDK()
-    {
-        $apiToken = trim($this->getConfigValue('payment/paynl/apitoken'));
-        $serviceId = trim($this->getConfigValue('payment/paynl/serviceid'));
-        $tokencode = trim($this->getConfigValue('payment/paynl/tokencode'));
-        $gateway = trim($this->getConfigValue('payment/paynl/failover_gateway'));
-
-        if (!empty($tokencode)) {
-            \Paynl\Config::setTokenCode($tokencode);
-        }
-
-        if (!empty($apiToken) && !empty($serviceId)) {
-            if (!empty($gateway) && substr($gateway, 0, 4) === "http") {
-                \Paynl\Config::setApiBase($gateway);
-            }
-            \Paynl\Config::setApiToken($apiToken);
-            \Paynl\Config::setServiceId($serviceId);
-
-            return true;
-        }
-
-        return false;
-    }
-
     protected function getPaymentOptionId()
     {
         $method = $this->_paymentmethodFactory->create($this->_class);
@@ -125,7 +100,6 @@ abstract class Available implements ArrayInterface
         }
         return null;
     }
-
 
     protected function getConfigValue($path)
     {
@@ -148,7 +122,7 @@ abstract class Available implements ArrayInterface
 
     protected function _isAvailable()
     {
-        $configured = $this->configureSDK();
+        $configured = $this->_config->configureSDK();
         if ($configured) {
             $paymentOptionId = $this->getPaymentOptionId();
 
