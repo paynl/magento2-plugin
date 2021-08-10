@@ -72,13 +72,13 @@
             <config_path>payment/paynl_payment_klarnakp/instructions</config_path>
         </field>
         <field id="showkvk" translate="label" type="select" sortOrder="65" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Show KVK/COC field</label>
+            <label>Show COC field</label>
             <source_model>Paynl\Payment\Model\Config\Source\showKvkOptions</source_model>
             <depends>
                 <field id="active">1</field>
             </depends>
             <config_path>payment/paynl_payment_klarnakp/showkvk</config_path>
-            <comment><![CDATA[When chosen for this method the customer can additionally enter his KVK/COC before continuing.]]></comment>
+            <comment><![CDATA[When chosen for this method the customer can additionally enter his COC before continuing.]]></comment>
         </field>
         <field id="showvat" translate="label" type="select" sortOrder="66" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Show VAT field</label>
