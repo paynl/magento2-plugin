@@ -379,6 +379,8 @@ abstract class PaymentMethod extends AbstractMethod
         }
 
         $prefix = $this->_scopeConfig->getValue('payment/paynl/order_description_prefix', 'store');
+        $description = !empty($prefix) ? $prefix . $orderId : $orderId;
+
         $data = array(
             'amount' => $total,
             'returnUrl' => $returnUrl,
@@ -387,7 +389,7 @@ abstract class PaymentMethod extends AbstractMethod
             'bank' => $bankId,
             'expireDate' => $expireDate,
             'orderNumber' => $orderId,
-            'description' => $prefix . $orderId,
+            'description' => $description,
             'extra1' => $orderId,
             'extra2' => $quoteId,
             'extra3' => $order->getEntityId(),
