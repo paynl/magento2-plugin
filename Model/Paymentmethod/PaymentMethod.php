@@ -129,7 +129,12 @@ abstract class PaymentMethod extends AbstractMethod
 
     public function getKVK()
     {
-      return [];
+        return $this->_scopeConfig->getValue('payment/' . $this->_code . '/showkvk', 'store');
+    }
+
+    public function getVAT()
+    {
+        return $this->_scopeConfig->getValue('payment/' . $this->_code . '/showvat', 'store');
     }
 
     public function getDOB()
@@ -282,6 +287,9 @@ abstract class PaymentMethod extends AbstractMethod
         if (isset($additionalData['kvknummer']) && is_numeric($additionalData['kvknummer'])) {
             $kvknummer = $additionalData['kvknummer'];
         }
+        if (isset($additionalData['vatnumber'])) {
+            $vatnumber = $additionalData['vatnumber'];
+        }
         if (isset($additionalData['bank_id']) && is_numeric($additionalData['bank_id'])) {
             $bankId = $additionalData['bank_id'];
         }
@@ -331,17 +339,22 @@ abstract class PaymentMethod extends AbstractMethod
             }
             $enduser['gender'] = $this->genderConversion((empty($enduser['gender'])) ? $order->getCustomerGender($order) : $enduser['gender']);
 
-            if (isset($arrBillingAddress['company']) && !empty($arrBillingAddress['company'])) {
+            if (!empty($arrBillingAddress['company'])) {
               $enduser['company']['name'] = $arrBillingAddress['company'];
-              $enduser['company']['countryCode'] =  $arrBillingAddress['country_id'];
             }
 
-            if (isset($kvknummer) && !empty($kvknummer)) {
+            if (!empty($arrBillingAddress['country_id'])) {
+                $enduser['company']['countryCode'] =  $arrBillingAddress['country_id'];
+            }  
+
+            if (!empty($kvknummer)) {
               $enduser['company']['cocNumber'] = $kvknummer;
             }
 
-            if (isset($arrBillingAddress['vat_id']) && !empty($arrBillingAddress['vat_id'])) {
-              $enduser['company']['vatNumber'] = $arrBillingAddress['vat_id'];
+            if (!empty($arrBillingAddress['vat_id'])) {
+                $enduser['company']['vatNumber'] = $arrBillingAddress['vat_id'];
+            } else if (!empty($vatnumber)) {
+                $enduser['company']['vatNumber'] = $vatnumber;
             }
 
             $invoiceAddress = array(
@@ -356,7 +369,7 @@ abstract class PaymentMethod extends AbstractMethod
             $invoiceAddress['city'] = $arrBillingAddress['city'];
             $invoiceAddress['country'] = $arrBillingAddress['country_id'];
 
-            if (isset($arrShippingAddress['vat_id']) && !empty($arrShippingAddress['vat_id'])) {
+            if (!empty($arrShippingAddress['vat_id'])) {
               $enduser['company']['vatNumber'] = $arrShippingAddress['vat_id'];
             }
         }
@@ -539,6 +552,43 @@ abstract class PaymentMethod extends AbstractMethod
         if (empty($paymentOptionId)) $paymentOptionId = $this->getDefaultPaymentOptionId();
 
         return $paymentOptionId;
+    }
+
+    public function assignData(\Magento\Framework\DataObject $data)
+    {
+        parent::assignData($data);
+
+        if (is_array($data)) {
+            if (isset($data['kvknummer'])) {
+                $this->getInfoInstance()->setAdditionalInformation('kvknummer', $data['kvknummer']);
+            }
+            if (isset($data['vatnumber'])) {
+                $this->getInfoInstance()->setAdditionalInformation('vatnumber', $data['vatnumber']);
+            }
+            if (isset($data['dob'])) {
+                $this->getInfoInstance()->setAdditionalInformation('dob', $data['dob']);
+            }
+        } elseif ($data instanceof \Magento\Framework\DataObject) {
+
+            $additional_data = $data->getAdditionalData();
+
+            if (isset($additional_data['kvknummer'])) {
+                $this->getInfoInstance()->setAdditionalInformation('kvknummer', $additional_data['kvknummer']);
+            }
+
+            if (isset($additional_data['vatnumber'])) {
+                $this->getInfoInstance()->setAdditionalInformation('vatnumber', $additional_data['vatnumber']);
+            }
+
+            if (isset($additional_data['billink_agree'])) {
+                $this->getInfoInstance()->setAdditionalInformation('billink_agree', $additional_data['billink_agree']);
+            }
+
+            if (isset($additional_data['dob'])) {
+                $this->getInfoInstance()->setAdditionalInformation('dob', $additional_data['dob']);
+            }
+        }
+        return $this;
     }
 
     /**
