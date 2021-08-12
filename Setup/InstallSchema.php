@@ -48,6 +48,7 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
         $setup->startSetup();
 
         $this->logger->debug('PAY.: Installing module.');
+        $this->configWriter->save('payment/paynl/order_description_prefix', 'Order ');
 
         $this->configWriter->save('payment/paynl/image_style', 'newest');
         $this->configWriter->save('payment/paynl/pay_style_checkout', 1);
