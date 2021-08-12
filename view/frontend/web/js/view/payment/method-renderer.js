@@ -34,6 +34,7 @@ define(
             {type: 'paynl_payment_giropay', component: defaultComponent},
             {type: 'paynl_payment_givacard', component: defaultComponent},
             {type: 'paynl_payment_good4fun', component: defaultComponent},
+            {type: 'paynl_payment_googlepay', component: defaultComponent},
             {type: 'paynl_payment_huisentuincadeau', component: defaultComponent},
             {type: 'paynl_payment_ideal', component: defaultComponent},
             {type: 'paynl_payment_instore', component: defaultComponent},

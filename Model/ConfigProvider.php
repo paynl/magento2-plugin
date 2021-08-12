@@ -40,6 +40,7 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_giropay',
         'paynl_payment_givacard',
         'paynl_payment_good4fun',
+        'paynl_payment_googlepay',
         'paynl_payment_huisentuincadeau',
         'paynl_payment_ideal',
         'paynl_payment_instore',
@@ -130,6 +131,7 @@ class ConfigProvider implements ConfigProviderInterface
         }
 
         $config['payment']['useAdditionalValidation'] = $this->paynlConfig->getUseAdditionalValidation();
+        $config['payment']['iconsize']                = $this->paynlConfig->getIconSize();;
 
         return $config;
     }
@@ -180,7 +182,8 @@ class ConfigProvider implements ConfigProviderInterface
      */
     protected function getIcon($code)
     {
-        $url = $this->paynlConfig->getIconUrl();
-        return str_replace('#paymentOptionId#', $this->methods[$code]->getPaymentOptionId(), $url);
+        $url = $this->paynlConfig->getIconUrl($code, $this->methods[$code]->getPaymentOptionId());
+        return $url;
     }
+
 }

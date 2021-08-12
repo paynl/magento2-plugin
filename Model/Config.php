@@ -22,10 +22,73 @@ class Config
     /** @var  Store */
     private $store;
 
+    /** @var  Resources */
+    private $resources;
+
+    /** @array  Brands */
+    public $brands = array(
+        "paynl_payment_afterpay" => "14",
+        "paynl_payment_alipay" => "82",
+        "paynl_payment_amazonpay" => "22",
+        "paynl_payment_amex" => "9",
+        "paynl_payment_applepay" => "114",
+        "paynl_payment_billink" => "16",
+        "paynl_payment_capayable" => "18",
+        "paynl_payment_capayable_gespreid" => "19",
+        "paynl_payment_cartasi" => "76",
+        "paynl_payment_cartebleue" => "11",
+        "paynl_payment_cashly" => "43",
+        "paynl_payment_clickandbuy" => "1",
+        "paynl_payment_creditclick" => "99",
+        "paynl_payment_dankort" => "58",
+        "paynl_payment_decadeaukaart" => "189",
+        "paynl_payment_eps" => "79",
+        "paynl_payment_fashioncheque" => "27",
+        "paynl_payment_fashiongiftcard" => "28",
+        "paynl_payment_focum" => "17",
+        "paynl_payment_gezondheidsbon" => "30",
+        "paynl_payment_giropay" => "3",
+        "paynl_payment_givacard" => "61",
+        "paynl_payment_good4fun" => "207",
+        "paynl_payment_googlepay" => "176",
+        "paynl_payment_huisentuincadeau" => "117",
+        "paynl_payment_ideal" => "1",
+        "paynl_payment_instore" => "164",
+        "paynl_payment_klarna" => "15",
+        "paynl_payment_klarnakp" => "15",
+        "paynl_payment_maestro" => "33",
+        "paynl_payment_mistercash" => "2",
+        "paynl_payment_multibanco" => "141",
+        "paynl_payment_mybank" => "5",
+        "paynl_payment_overboeking" => "12",
+        "paynl_payment_payconiq" => "138",
+        "paynl_payment_paypal" => "21",
+        "paynl_payment_paysafecard" => "24",
+        "paynl_payment_podiumcadeaukaart" => "29",
+        "paynl_payment_postepay" => "10",
+        "paynl_payment_przelewy24" => "93",
+        "paynl_payment_sofortbanking" => "4",
+        "paynl_payment_sofortbanking_hr" => "4",
+        "paynl_payment_sofortbanking_ds" => "4",
+        "paynl_payment_spraypay" => "20",
+        "paynl_payment_telefonischbetalen" => "173",
+        "paynl_payment_tikkie" => "84",
+        "paynl_payment_trustly" => "213",
+        "paynl_payment_visamastercard" => "7",
+        "paynl_payment_vvvgiftcard" => "25",
+        "paynl_payment_webshopgiftcard" => "26",
+        "paynl_payment_wechatpay" => "23",
+        "paynl_payment_wijncadeau" => "135",
+        "paynl_payment_yehhpay" => "1",
+        "paynl_payment_yourgift" => "31"
+    );
+
     public function __construct(
-        Store $store
+        Store $store,
+        \Magento\Framework\View\Element\Template $resources
     ) {
         $this->store = $store;
+        $this->resources = $resources;
     }
 
     /**
@@ -162,12 +225,16 @@ class Config
         $apiToken  = $this->getApiToken();
         $serviceId = $this->getServiceId();
         $tokencode = $this->getTokencode();
+        $gateway = $this->getFailoverGateway();
 
-        if(! empty($tokencode)) {
+        if (!empty($tokencode)) {
             \Paynl\Config::setTokenCode($tokencode);
         }
 
-        if ( ! empty($apiToken) && ! empty($serviceId)) {
+        if (!empty($apiToken) && !empty($serviceId)) {
+            if (!empty(trim($gateway)) && substr(trim($gateway), 0, 4) === "http") {
+                \Paynl\Config::setApiBase(trim($gateway));
+            }
             \Paynl\Config::setApiToken($apiToken);
             \Paynl\Config::setServiceId($serviceId);
 
@@ -192,12 +259,42 @@ class Config
         return trim($this->store->getConfig('payment/paynl/serviceid'));
     }
 
-    public function getIconUrl()
+    public function getFailoverGateway()
     {
-        $url = 'https://static.pay.nl/payment_profiles/50x32/#paymentOptionId#.png';
-        $iconUrl = trim($this->store->getConfig('payment/paynl/iconurl'));
+        return $this->store->getConfig('payment/paynl/failover_gateway');
+    }
+    
+    public function getIconUrl($methodCode, $paymentOptionId)
+    {
+        if ($this->store->getConfig('payment/paynl/image_style') == 'newest') {
+            $brandId = $this->store->getConfig('payment/' . $methodCode . '/brand_id');
+            if (empty($brandId)) {
+                $brandId = $this->brands[$methodCode];
+            }
+            $iconUrl = $this->resources->getViewFileUrl("Paynl_Payment::logos/" . $brandId . ".png");
+        } else {
+            $iconsize = '50x32';
+            if($this->store->getConfig('payment/paynl/pay_style_checkout') == 1){
+                switch($this->store->getConfig('payment/paynl/icon_size')){
+                    case 'xlarge': $iconsize = '100x100'; break;
+                    case 'large':  $iconsize = '75x75';   break;
+                    case 'medium': $iconsize = '50x50';   break;                     
+                }          
+            }
+            $url = 'https://static.pay.nl/payment_profiles/'.$iconsize.'/' . $paymentOptionId . '.png';
+            $iconUrl = trim($this->store->getConfig('payment/paynl/iconurl'));
+            $iconUrl = empty($iconUrl) ? $url : $iconUrl;
+        }
 
-        return empty($iconUrl)?$url:$iconUrl;
+        return $iconUrl;
+    }
+
+    public function getIconSize()
+    {        
+        if($this->store->getConfig('payment/paynl/pay_style_checkout') == 1 && $this->store->getConfig('payment/paynl/image_style') == 'newest'){
+            return $this->store->getConfig('payment/paynl/icon_size');
+        }
+        return false;
     }
 
     public function getUseAdditionalValidation()
@@ -213,5 +310,27 @@ class Config
     public function getDefaultPaymentOption()
     {
         return $this->store->getConfig('payment/paynl/default_payment_option');
+    }
+
+    public function registerPartialPayments()
+    {
+        return $this->store->getConfig('payment/paynl/register_partial_payments');
+    }
+
+    public function getPaymentmethodCode($paymentProfileId){
+
+        //Get all PAY. methods
+        $objectManager =  \Magento\Framework\App\ObjectManager::getInstance();
+        $paymentHelper = $objectManager->get('Magento\Payment\Helper\Data');
+        $paymentMethodList = $paymentHelper->getPaymentMethods();
+        $pay_methods = array();
+        foreach ($paymentMethodList as $key => $value) {
+            if (strpos($key, 'paynl_') !== false && $key != 'paynl_payment_paylink') {
+                $code = $this->store->getConfig('payment/' . $key . '/payment_option_id');
+                if($code == $paymentProfileId){
+                    return $key;
+                }
+            }
+        }
     }
 }
