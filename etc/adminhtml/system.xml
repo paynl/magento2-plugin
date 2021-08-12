@@ -128,7 +128,7 @@
                 </field>
                 <field id="order_description_prefix" translate="label" type="text" sortOrder="107" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Order description prefix</label>
-                    <comment><![CDATA[Add an prefix to the order description sent to PAY.]]></comment>
+                    <comment><![CDATA[Prefix the order description with a custom word]]></comment>
                 </field>
                 <field id="failover_gateway" translate="label" type="text" sortOrder="108" showInDefault="1" showInWebsite="1"
                        showInStore="1">
