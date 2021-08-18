@@ -26,14 +26,16 @@ MyBank | Carte Bancaire | Podium Cadeaukaart | Capayable Achteraf Betalen | Cash
 SOFORT | PostePay | Gezondheidsbon | in3 keer betalen, 0% rente | Pay Fixed Price (phone) |
 Maestro | Dankort | Fashion Giftcard | Klarna | Instore Payments (POS) |
 Bank Transfer | Cartasi | GivaCard | SprayPay | Przelewy24 | 
-| Tikkie | De Cadeaukaart | YourGift | Creditclick | Apple Pay | 
+Trustly | Tikkie | De Cadeaukaart | YourGift | Creditclick | Apple Pay | 
 | Multibanco | | Paysafecard | | Payconiq
-| | | Huis en Tuin Cadeau 
+| | | Huis en Tuin Cadeau| | Google Pay |
+| | | Good4Fun
+
 
 # Requirements
 
     PHP 7.2 or higher
-    Tested up to Magento 2.4.1
+    Tested up to Magento 2.4.3
 
 
 # Installation

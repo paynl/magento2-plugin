@@ -13,7 +13,7 @@
                 <discount_tax>1</discount_tax>
             </paynl>
             <paynl_payment_paylink>
-                <active>1</active>
+                <active>0</active>
                 <title>PAY. paylink</title>
                 <payment_option_id>961</payment_option_id>
                 <order_status>pending</order_status>
@@ -27,7 +27,7 @@
                 <paylink_subject>Order Paylink #((order_id))#</paylink_subject>
                 <paylink_body>((customer_name)),
 Thank you for your order from ((store_name)).
-                
+
 If you have questions about your order, you can email us at ((support_email))
 
 In order to pay for your order click the link below
@@ -59,6 +59,18 @@ In order to pay for your order click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_alipay>
+            <paynl_payment_amazonpay>
+                <active>0</active>
+                <title>Amazon Pay</title>
+                <payment_option_id>1903</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Amazonpay</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_amazonpay>
             <paynl_payment_amex>
                 <active>0</active>
                 <title>American Express</title>
@@ -94,6 +106,7 @@ In order to pay for your order click the link below
                 <model>Paynl\Payment\Model\Paymentmethod\Billink</model>
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
+                <turn_off_invoices_b2b>No</turn_off_invoices_b2b>
             </paynl_payment_billink>
             <paynl_payment_capayable>
                 <active>0</active>
@@ -287,6 +300,30 @@ In order to pay for your order click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_givacard>
+            <paynl_payment_good4fun>
+                <active>0</active>
+                <title>Good4Fun</title>
+                <payment_option_id>2628</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Good4fun</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_good4fun>
+            <paynl_payment_googlepay>
+                <active>0</active>
+                <title>Google Pay</title>
+                <payment_option_id>2558</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Googlepay</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_googlepay>
             <paynl_payment_huisentuincadeau>
                 <active>0</active>
                 <title>Huis en Tuin Cadeau</title>
@@ -494,6 +531,32 @@ In order to pay for your order click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>before_payment</send_new_order_email>
             </paynl_payment_sofortbanking>
+            <paynl_payment_sofortbanking_hr>
+                <active>0</active>
+                <title>Sofortbanking HighRisk</title>
+                <payment_option_id>595</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <holded>1</holded>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\SofortbankingHighRisk</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>before_payment</send_new_order_email>
+            </paynl_payment_sofortbanking_hr>
+            <paynl_payment_sofortbanking_ds>
+                <active>0</active>
+                <title>Sofortbanking Digital Services</title>
+                <payment_option_id>577</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <holded>1</holded>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\SofortbankingDigitalServices</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>before_payment</send_new_order_email>
+            </paynl_payment_sofortbanking_ds>
             <paynl_payment_spraypay>
                 <active>0</active>
                 <title>SprayPay</title>
@@ -530,6 +593,18 @@ In order to pay for your order click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_tikkie>
+            <paynl_payment_trustly>
+                <active>0</active>
+                <title>Trustly</title>
+                <payment_option_id>2718</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Trustly</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_trustly>
             <paynl_payment_visamastercard>
                 <active>0</active>
                 <title>Visa / Mastercard</title>

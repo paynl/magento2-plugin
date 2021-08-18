@@ -17,4 +17,5 @@ class Afterpay extends PaymentMethod
     {
         return 739;
     }
+
 }

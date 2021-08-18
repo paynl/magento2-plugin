@@ -31,7 +31,6 @@ abstract class PaymentMethod extends AbstractMethod
 {
     protected $_code = 'paynl_payment_base';
 
-
     protected $_isInitializeNeeded = true;
 
     protected $_canRefund = true;
@@ -41,6 +40,11 @@ abstract class PaymentMethod extends AbstractMethod
 
     protected $_canVoid = true;
 
+    /**
+     *
+     * @var Psr\Log\LoggerInterface
+     */
+    protected $logger;
 
     /**
      * @var Config
@@ -58,6 +62,11 @@ abstract class PaymentMethod extends AbstractMethod
 
     protected $helper;
 
+    /**
+     * @var Magento\Framework\Message\ManagerInterface
+     */
+    protected $messageManager;
+
     public function __construct(
         Context $context,
         Registry $registry,
@@ -65,7 +74,7 @@ abstract class PaymentMethod extends AbstractMethod
         AttributeValueFactory $customAttributeFactory,
         Data $paymentData,
         ScopeConfigInterface $scopeConfig,
-        Logger $logger,
+        Logger $methodLogger,
         \Magento\Sales\Model\Order\Config $orderConfig,
         OrderRepository $orderRepository,
         Config $paynlConfig,
@@ -76,14 +85,16 @@ abstract class PaymentMethod extends AbstractMethod
     {
         parent::__construct(
             $context, $registry, $extensionFactory, $customAttributeFactory,
-            $paymentData, $scopeConfig, $logger, $resource, $resourceCollection, $data);
+            $paymentData, $scopeConfig, $methodLogger, $resource, $resourceCollection, $data);
 
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
 
+        $this->messageManager = $objectManager->get(\Magento\Framework\Message\ManagerInterface::class);
         $this->helper = $objectManager->create('Paynl\Payment\Helper\PayHelper');
         $this->paynlConfig = $paynlConfig;
         $this->orderRepository = $orderRepository;
         $this->orderConfig = $orderConfig;
+        $this->logger = $objectManager->get(\Psr\Log\LoggerInterface::class);
     }
 
     protected function getState($status)
@@ -118,12 +129,17 @@ abstract class PaymentMethod extends AbstractMethod
 
     public function getKVK()
     {
-      return [];
+        return $this->_scopeConfig->getValue('payment/' . $this->_code . '/showkvk', 'store');
+    }
+
+    public function getVAT()
+    {
+        return $this->_scopeConfig->getValue('payment/' . $this->_code . '/showvat', 'store');
     }
 
     public function getDOB()
     {
-      return [];
+        return $this->_scopeConfig->getValue('payment/' . $this->_code . '/showdob', 'store');
     }
 
     public function getDisallowedShippingMethods()
@@ -145,6 +161,12 @@ abstract class PaymentMethod extends AbstractMethod
     public function isCurrentAgentValid()
     {
         return true;
+    }
+
+    public function isDefaultPaymentOption()
+    {
+        $default_payment_option = $this->paynlConfig->getDefaultPaymentOption();
+        return ($default_payment_option == $this->_code);
     }
 
     public function genderConversion($gender)
@@ -242,6 +264,7 @@ abstract class PaymentMethod extends AbstractMethod
     public function startTransaction(Order $order)
     {
         $transaction = $this->doStartTransaction($order);
+        $order->getPayment()->setAdditionalInformation('transactionId', $transaction->getTransactionId());
         $this->paynlConfig->setStore($order->getStore());
 
         $holded = $this->_scopeConfig->getValue('payment/' . $this->_code . '/holded', 'store');
@@ -263,6 +286,9 @@ abstract class PaymentMethod extends AbstractMethod
 
         if (isset($additionalData['kvknummer']) && is_numeric($additionalData['kvknummer'])) {
             $kvknummer = $additionalData['kvknummer'];
+        }
+        if (isset($additionalData['vatnumber'])) {
+            $vatnumber = $additionalData['vatnumber'];
         }
         if (isset($additionalData['bank_id']) && is_numeric($additionalData['bank_id'])) {
             $bankId = $additionalData['bank_id'];
@@ -287,8 +313,8 @@ abstract class PaymentMethod extends AbstractMethod
 
         $store = $order->getStore();
         $baseUrl = $store->getBaseUrl();
-        // i want to use the url builder here, but that doenst work from admin, even if the store is supplied
-        $returnUrl = $baseUrl . 'paynl/checkout/finish/';
+
+        $returnUrl = $baseUrl . 'paynl/checkout/finish/?entityid=' . $order->getEntityId();
         $exchangeUrl = $baseUrl . 'paynl/checkout/exchange/';
 
         $paymentOptionId = $this->getPaymentOptionId();
@@ -313,17 +339,22 @@ abstract class PaymentMethod extends AbstractMethod
             }
             $enduser['gender'] = $this->genderConversion((empty($enduser['gender'])) ? $order->getCustomerGender($order) : $enduser['gender']);
 
-            if (isset($arrBillingAddress['company']) && !empty($arrBillingAddress['company'])) {
+            if (!empty($arrBillingAddress['company'])) {
               $enduser['company']['name'] = $arrBillingAddress['company'];
-              $enduser['company']['countryCode'] =  $arrBillingAddress['country_id'];
             }
 
-            if (isset($kvknummer) && !empty($kvknummer)) {
+            if (!empty($arrBillingAddress['country_id'])) {
+                $enduser['company']['countryCode'] =  $arrBillingAddress['country_id'];
+            }  
+
+            if (!empty($kvknummer)) {
               $enduser['company']['cocNumber'] = $kvknummer;
             }
 
-            if (isset($arrBillingAddress['vat_id']) && !empty($arrBillingAddress['vat_id'])) {
-              $enduser['company']['vatNumber'] = $arrBillingAddress['vat_id'];
+            if (!empty($arrBillingAddress['vat_id'])) {
+                $enduser['company']['vatNumber'] = $arrBillingAddress['vat_id'];
+            } else if (!empty($vatnumber)) {
+                $enduser['company']['vatNumber'] = $vatnumber;
             }
 
             $invoiceAddress = array(
@@ -338,7 +369,7 @@ abstract class PaymentMethod extends AbstractMethod
             $invoiceAddress['city'] = $arrBillingAddress['city'];
             $invoiceAddress['country'] = $arrBillingAddress['country_id'];
 
-            if (isset($arrShippingAddress['vat_id']) && !empty($arrShippingAddress['vat_id'])) {
+            if (!empty($arrShippingAddress['vat_id'])) {
               $enduser['company']['vatNumber'] = $arrShippingAddress['vat_id'];
             }
         }
@@ -359,6 +390,10 @@ abstract class PaymentMethod extends AbstractMethod
             $shippingAddress['country'] = $arrShippingAddress['country_id'];
 
         }
+
+        $prefix = $this->_scopeConfig->getValue('payment/paynl/order_description_prefix', 'store');
+        $description = !empty($prefix) ? $prefix . $orderId : $orderId;
+
         $data = array(
             'amount' => $total,
             'returnUrl' => $returnUrl,
@@ -367,7 +402,7 @@ abstract class PaymentMethod extends AbstractMethod
             'bank' => $bankId,
             'expireDate' => $expireDate,
             'orderNumber' => $orderId,
-            'description' => $orderId,
+            'description' => $description,
             'extra1' => $orderId,
             'extra2' => $quoteId,
             'extra3' => $order->getEntityId(),
@@ -517,6 +552,43 @@ abstract class PaymentMethod extends AbstractMethod
         if (empty($paymentOptionId)) $paymentOptionId = $this->getDefaultPaymentOptionId();
 
         return $paymentOptionId;
+    }
+
+    public function assignData(\Magento\Framework\DataObject $data)
+    {
+        parent::assignData($data);
+
+        if (is_array($data)) {
+            if (isset($data['kvknummer'])) {
+                $this->getInfoInstance()->setAdditionalInformation('kvknummer', $data['kvknummer']);
+            }
+            if (isset($data['vatnumber'])) {
+                $this->getInfoInstance()->setAdditionalInformation('vatnumber', $data['vatnumber']);
+            }
+            if (isset($data['dob'])) {
+                $this->getInfoInstance()->setAdditionalInformation('dob', $data['dob']);
+            }
+        } elseif ($data instanceof \Magento\Framework\DataObject) {
+
+            $additional_data = $data->getAdditionalData();
+
+            if (isset($additional_data['kvknummer'])) {
+                $this->getInfoInstance()->setAdditionalInformation('kvknummer', $additional_data['kvknummer']);
+            }
+
+            if (isset($additional_data['vatnumber'])) {
+                $this->getInfoInstance()->setAdditionalInformation('vatnumber', $additional_data['vatnumber']);
+            }
+
+            if (isset($additional_data['billink_agree'])) {
+                $this->getInfoInstance()->setAdditionalInformation('billink_agree', $additional_data['billink_agree']);
+            }
+
+            if (isset($additional_data['dob'])) {
+                $this->getInfoInstance()->setAdditionalInformation('dob', $additional_data['dob']);
+            }
+        }
+        return $this;
     }
 
     /**
