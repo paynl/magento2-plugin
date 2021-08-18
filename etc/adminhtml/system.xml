@@ -11,6 +11,10 @@
             <group id="paynl" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1"
                    showInStore="1">
                 <label>PAY. Settings</label>
+                <field id="errors" translate="label" type="text" sortOrder="0" showInDefault="1" showInWebsite="1"
+                       showInStore="1">                                     
+                    <frontend_model>Paynl\Payment\Block\Adminhtml\Render\Errors</frontend_model>
+                </field>
                 <field id="version" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1"
                        showInStore="1">
                     <label>Version</label>
@@ -140,11 +144,6 @@
                     <label>Paymentmethods</label>
                     <include path="Paynl_Payment::paymentmethods.xml"/>
                 </group>
-                <field id="errors" translate="label" type="hidden" sortOrder="120" showInDefault="1" showInWebsite="1"
-                       showInStore="1">                    
-                    <source_model>Paynl\Payment\Model\Config\Source\Errors</source_model>
-                    <frontend_model>Paynl\Payment\Block\Adminhtml\Render\Hidden</frontend_model>
-                </field> 
             </group>
         </section>
     </system>
