@@ -80,7 +80,8 @@ class Instore extends PaymentMethod
     public function getBanks()
     {
         $cache = $this->getCache();
-        $storeId = $this->storeManager->getStore()->getId();
+        $store = $this->storeManager->getStore();
+        $storeId = $store->getId();
         $cacheName = 'paynl_terminals_' . $this->getPaymentOptionId() . '_' . $storeId;
         $banksJson = $cache->load($cacheName);
         if ($banksJson) {
@@ -88,6 +89,7 @@ class Instore extends PaymentMethod
         } else {
             $banks = [];
             try {
+                $this->paynlConfig->setStore($store);
                 $this->paynlConfig->configureSDK();
 
                 $terminals = \Paynl\Instore::getAllTerminals();

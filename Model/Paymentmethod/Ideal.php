@@ -39,16 +39,20 @@ class Ideal extends PaymentMethod
     public function getBanks()
     {
         $show_banks = $this->_scopeConfig->getValue('payment/' . $this->_code . '/bank_selection', 'store');
-        if (!$show_banks) return [];
+        if (!$show_banks) {
+            return [];
+        }
 
         $cache = $this->getCache();
-        $storeId = $this->storeManager->getStore()->getId();
+        $store = $this->storeManager->getStore();
+        $storeId = $store->getId();
         $cacheName = 'paynl_banks_' . $this->getPaymentOptionId() . '_' . $storeId;
 
         $banksJson = $cache->load($cacheName);
         if ($banksJson) {
             $banks = json_decode($banksJson);
         } else {
+            $this->paynlConfig->setStore($store);
             $this->paynlConfig->configureSDK();
 
             $banks = \Paynl\Paymentmethods::getBanks($this->getPaymentOptionId());
