@@ -281,9 +281,11 @@ class Config
                     case 'medium': $iconsize = '50x50';   break;                     
                 }          
             }
-            $url = 'https://static.pay.nl/payment_profiles/'.$iconsize.'/' . $paymentOptionId . '.png';
-            $iconUrl = trim($this->store->getConfig('payment/paynl/iconurl'));
-            $iconUrl = empty($iconUrl) ? $url : $iconUrl;
+            $iconUrl = 'https://static.pay.nl/payment_profiles/' . $iconsize . '/' . $paymentOptionId . '.png';
+            $customUrl = trim($this->store->getConfig('payment/paynl/iconurl'));
+            if (!empty($customUrl)) {
+                $iconUrl = str_replace('#paymentOptionId#', $paymentOptionId, $customUrl);
+            }
         }
 
         return $iconUrl;
