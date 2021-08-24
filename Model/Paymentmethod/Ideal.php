@@ -42,7 +42,8 @@ class Ideal extends PaymentMethod
         if (!$show_banks) return [];
 
         $cache = $this->getCache();
-        $cacheName = 'paynl_banks_' . $this->getPaymentOptionId();
+        $storeId = $this->storeManager->getStore()->getId();
+        $cacheName = 'paynl_banks_' . $this->getPaymentOptionId() . '_' . $storeId;
 
         $banksJson = $cache->load($cacheName);
         if ($banksJson) {
