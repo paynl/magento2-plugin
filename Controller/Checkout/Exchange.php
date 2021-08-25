@@ -326,6 +326,8 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             $order->addStatusHistoryComment(__('New order email sent'))->setIsCustomerNotified(true)->save();
         }
 
+        $newStatus = ($transaction->isAuthorized()) ? $this->config->getAuthorizedStatus($paymentMethod) : $this->config->getPaidStatus($paymentMethod);
+
         # Skip creation of invoice for B2B if enabled
         if ($this->config->ignoreB2BInvoice($paymentMethod)) {
             $orderCompany = $order->getBillingAddress()->getCompany();
@@ -342,8 +344,6 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
                 # Change amount paid manually
                 $order->setTotalPaid($order->getGrandTotal());
                 $order->setBaseTotalPaid($order->getBaseGrandTotal());
-
-                $newStatus = ($transaction->isAuthorized()) ? $this->config->getAuthorizedStatus($paymentMethod) : $this->config->getPaidStatus($paymentMethod);
                 $order->setStatus(!empty($newStatus) ? $newStatus : Order::STATE_PROCESSING);
                 $order->addStatusHistoryComment(__('B2B Setting: Skipped creating invoice'));
                 $this->orderRepository->save($order);
@@ -358,7 +358,6 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             $payment->registerCaptureNotification($paidAmount, $this->config->isSkipFraudDetection());
         }
 
-        $newStatus = ($transaction->isAuthorized()) ? $this->config->getAuthorizedStatus($paymentMethod) : $this->config->getPaidStatus($paymentMethod);
         $order->setStatus(!empty($newStatus) ? $newStatus : Order::STATE_PROCESSING);
 
         $this->orderRepository->save($order);
