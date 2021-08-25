@@ -36,7 +36,7 @@ class showNonPrivate implements ArrayInterface
     return [
       '0' => __('Off'),
       '1' => __('Optional for business customers'),
-      '2' => __('Required for business-customers'),
+      '2' => __('Required for business customers'),
     ];
   }
 
