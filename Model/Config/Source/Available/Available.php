@@ -40,17 +40,24 @@ abstract class Available implements ArrayInterface
      */
     protected $_config;
 
+    /**
+     * @var \Magento\Store\Model\StoreManagerInterface
+     */
+    protected $_storeManager;
+
     public function __construct(
         Config $config,
         RequestInterface $request,
         ScopeConfigInterface $scopeConfig,
-        PaymentMethodFactory $paymentMethodFactory
+        PaymentMethodFactory $paymentMethodFactory,
+        \Magento\Store\Model\StoreManagerInterface $storeManager
     )
     {
         $this->_config = $config;
         $this->_request = $request;
         $this->_scopeConfig = $scopeConfig;
         $this->_paymentmethodFactory = $paymentMethodFactory;
+        $this->_storeManager = $storeManager;
     }
 
     /**
@@ -76,6 +83,11 @@ abstract class Available implements ArrayInterface
      */
     public function toArray()
     {
+        $storeId = $this->_request->getParam('store');
+        if ($storeId) {
+            $store = $this->_storeManager->getStore($storeId);
+            $this->_config->setStore($store);
+        }
         $configured = $this->_config->configureSDK();
         if (!$configured) {
             return [0 => __('Enter your API-token and ServiceId first')];
@@ -122,6 +134,11 @@ abstract class Available implements ArrayInterface
 
     protected function _isAvailable()
     {
+        $storeId = $this->_request->getParam('store');
+        if ($storeId) {
+            $store = $this->_storeManager->getStore($storeId);
+            $this->_config->setStore($store);
+        }
         $configured = $this->_config->configureSDK();
         if ($configured) {
             $paymentOptionId = $this->getPaymentOptionId();

@@ -67,6 +67,11 @@ abstract class PaymentMethod extends AbstractMethod
      */
     protected $messageManager;
 
+    /**
+     * @var \Magento\Store\Model\StoreManagerInterface
+     */
+    protected $storeManager;
+
     public function __construct(
         Context $context,
         Registry $registry,
@@ -95,6 +100,7 @@ abstract class PaymentMethod extends AbstractMethod
         $this->orderRepository = $orderRepository;
         $this->orderConfig = $orderConfig;
         $this->logger = $objectManager->get(\Psr\Log\LoggerInterface::class);
+        $this->storeManager = $objectManager->create('\Magento\Store\Model\StoreManagerInterface');
     }
 
     protected function getState($status)
@@ -211,6 +217,8 @@ abstract class PaymentMethod extends AbstractMethod
 
     public function refund(InfoInterface $payment, $amount)
     {
+        $order = $payment->getOrder();
+        $this->paynlConfig->setStore($order->getStore());
         $this->paynlConfig->configureSDK();
 
         $transactionId = $payment->getParentTransactionId();
@@ -237,11 +245,11 @@ abstract class PaymentMethod extends AbstractMethod
 
     public function capture(InfoInterface $payment, $amount)
     {
-        $this->paynlConfig->configureSDK();
-
         $payment->setAdditionalInformation('manual_capture', 'true');
         $order = $payment->getOrder();
         $order->save();
+        $this->paynlConfig->setStore($order->getStore());
+        $this->paynlConfig->configureSDK();
 
         $transactionId = $payment->getParentTransactionId();
 
@@ -252,6 +260,8 @@ abstract class PaymentMethod extends AbstractMethod
 
     public function void(InfoInterface $payment)
     {
+        $order = $payment->getOrder();
+        $this->paynlConfig->setStore($order->getStore());
         $this->paynlConfig->configureSDK();
 
         $transactionId = $payment->getParentTransactionId();
