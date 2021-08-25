@@ -343,6 +343,8 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
                 $order->setTotalPaid($order->getGrandTotal());
                 $order->setBaseTotalPaid($order->getBaseGrandTotal());
 
+                $newStatus = ($transaction->isAuthorized()) ? $this->config->getAuthorizedStatus($paymentMethod) : $this->config->getPaidStatus($paymentMethod);
+                $order->setStatus(!empty($newStatus) ? $newStatus : Order::STATE_PROCESSING);
                 $order->addStatusHistoryComment(__('B2B Setting: Skipped creating invoice'));
                 $this->orderRepository->save($order);
                 return $this->result->setContents("TRUE| " . $message . " (B2B: No invoice created)");
@@ -356,13 +358,8 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             $payment->registerCaptureNotification($paidAmount, $this->config->isSkipFraudDetection());
         }
 
-        if ($transaction->isAuthorized()) {
-            $statusAuthorized = $this->config->getAuthorizedStatus($paymentMethod);
-            $order->setStatus(!empty($statusAuthorized) ? $statusAuthorized : Order::STATE_PROCESSING);
-        } else {
-            $statusPaid = $this->config->getPaidStatus($paymentMethod);
-            $order->setStatus(!empty($statusPaid) ? $statusPaid : Order::STATE_PROCESSING);
-        }
+        $newStatus = ($transaction->isAuthorized()) ? $this->config->getAuthorizedStatus($paymentMethod) : $this->config->getPaidStatus($paymentMethod);
+        $order->setStatus(!empty($newStatus) ? $newStatus : Order::STATE_PROCESSING);
 
         $this->orderRepository->save($order);
 
