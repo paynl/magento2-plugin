@@ -42,8 +42,10 @@ class OrderSaveCommitAfter implements ObserverInterface
 
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
-        if ($this->config->autoCaptureEnabled()) {
-            $order = $observer->getEvent()->getOrder();
+        $order = $observer->getEvent()->getOrder(); 
+        $this->config->setStore($order->getStore());
+
+        if ($this->config->autoCaptureEnabled()) {            
             if ($order->getState() == Order::STATE_PROCESSING && !$order->hasInvoices() && $order->hasShipments()) {
                 $data = $order->getPayment()->getData();
 
