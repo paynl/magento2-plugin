@@ -72,6 +72,11 @@ abstract class PaymentMethod extends AbstractMethod
      */
     protected $storeManager;
 
+    /**
+     * @var \Magento\Framework\Stdlib\CookieManagerInterface
+     */
+    protected $cookieManager;
+
     public function __construct(
         Context $context,
         Registry $registry,
@@ -101,6 +106,7 @@ abstract class PaymentMethod extends AbstractMethod
         $this->orderConfig = $orderConfig;
         $this->logger = $objectManager->get(\Psr\Log\LoggerInterface::class);
         $this->storeManager = $objectManager->create('\Magento\Store\Model\StoreManagerInterface');
+        $this->cookieManager = $objectManager->create('\Magento\Framework\Stdlib\CookieManagerInterface');
     }
 
     protected function getState($status)
@@ -158,6 +164,23 @@ abstract class PaymentMethod extends AbstractMethod
         return $this->_scopeConfig->getValue('payment/' . $this->_code . '/showforcompany', 'store');
     }
 
+    public function getTransferData()
+    {
+        $transferData = array();
+
+        //Get Google Analytics _ga
+        if($this->paynlConfig->sendEcommerceAnalytics()){
+            $_gaCookie = $this->cookieManager->getCookie('_ga');
+            if (!empty($_gaCookie)) {
+                $_gaSplit = explode('.', $_gaCookie);
+                if (isset($_gaSplit[2]) && isset($_gaSplit[3])) {
+                    $transferData['gaClientId'] = $_gaSplit[2] . '.' . $_gaSplit[3];
+                }
+            }
+        }
+
+        return $transferData;
+    }
 
     public function isCurrentIpValid()
     {
@@ -313,13 +336,12 @@ abstract class PaymentMethod extends AbstractMethod
         } else {
             $total = $order->getGrandTotal();
             $currency = $order->getOrderCurrencyCode();
-        }
+        }        
 
         $items = $order->getAllVisibleItems();
 
         $orderId = $order->getIncrementId();
         $quoteId = $order->getQuoteId();
-
 
         $store = $order->getStore();
         $baseUrl = $store->getBaseUrl();
@@ -416,6 +438,7 @@ abstract class PaymentMethod extends AbstractMethod
             'extra1' => $orderId,
             'extra2' => $quoteId,
             'extra3' => $order->getEntityId(),
+            'transferData' => $this->getTransferData(),
             'exchangeUrl' => $exchangeUrl,
             'currency' => $currency,
             'object' => substr('magento2 ' . $this->paynlConfig->getVersion() . ' | ' . $this->paynlConfig->getMagentoVersion() . ' | ' . $this->paynlConfig->getPHPVersion(), 0, 64),
