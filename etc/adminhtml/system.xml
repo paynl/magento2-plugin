@@ -24,17 +24,17 @@
                 <field id="tokencode" translate="label, comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1"
                        showInStore="1">
                     <label>Tokencode</label>
-                    <comment><![CDATA[The AT-code of your token, you can find your tokens <a target='_blank' href='https://admin.pay.nl/company/tokens'>here</a> <br/>Not registered at PAY? Sign up <a target='_blank' href='https://www.pay.nl/en?register'>here</a>!]]></comment>
+                    <comment><![CDATA[Get your AT-code <a target='_blank' href='https://admin.pay.nl/company/tokens'>here</a>. Not registered at PAY? Sign up <a target='_blank' href='https://www.pay.nl/en?register'>here</a>!]]></comment>
                 </field>
                 <field id="apitoken" translate="label, comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="1"
                        showInStore="1">
                     <label>API-token</label>
-                    <comment><![CDATA[Your API-token, you can find your tokens <a target='_blank' href='https://admin.pay.nl/company/tokens'>here</a> <br/>Not registered at PAY? Sign up <a target='_blank' href='https://www.pay.nl/en?register'>here</a>!]]></comment>
+                    <comment><![CDATA[Your API-token, you can find your tokens <a target='_blank' href='https://admin.pay.nl/company/tokens'>here</a>]]></comment>
                 </field>
                 <field id="serviceid" translate="label, comment" type="text" sortOrder="51" showInDefault="1" showInWebsite="1"
                        showInStore="1">
                     <label>ServiceId</label>
-                    <comment><![CDATA[The SL-code of your service, you can find your services <a target='_blank' href='https://admin.pay.nl/programs/programs'>here</a> <br/>Not registered at PAY? Sign up <a target='_blank' href='https://www.pay.nl/en?register'>here</a>!]]></comment>
+                    <comment><![CDATA[The SL-code of your service, you can find your services <a target='_blank' href='https://admin.pay.nl/programs/programs'>here</a>]]></comment>
                 </field>
                 <field id="language" translate="label" type="select" sortOrder="52" showInDefault="1" showInStore="1"
                        showInWebsite="1">
