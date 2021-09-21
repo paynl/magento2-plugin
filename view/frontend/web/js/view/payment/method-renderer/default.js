@@ -224,6 +224,9 @@ define(
 
                 var objButton = $(event.target);
                 if (objButton.length > 0) {
+                    if (objButton.is('span')) {
+                        objButton = objButton.parent();
+                    }
                     var curText = objButton.text();
                     objButton.text($.mage.__('Processing')).prop('disabled', true);
                 }
