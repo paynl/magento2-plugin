@@ -24,7 +24,7 @@
                 <field id="tokencode" translate="label, comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1"
                        showInStore="1">
                     <label>Tokencode</label>
-                    <comment><![CDATA[The AT-code of your token, you can find your tokens <a target='_blank' href='https://admin.pay.nl/company/tokens'>here</a>]]></comment>
+                    <comment><![CDATA[Get your AT-code <a target='_blank' href='https://admin.pay.nl/company/tokens'>here</a>. Not registered at PAY? Sign up <a target='_blank' href='https://www.pay.nl/en?register'>here</a>!]]></comment>
                 </field>
                 <field id="apitoken" translate="label, comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="1"
                        showInStore="1">
@@ -110,7 +110,7 @@
                 <field id="default_payment_option" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Select default payment option</label>
                     <source_model>Paynl\Payment\Model\Config\Source\DefaultPaymentOption</source_model>
-              </field>
+                </field>
                 <field id="use_additional_validation" translate="label" type="select" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enable additional validation</label>
                     <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
