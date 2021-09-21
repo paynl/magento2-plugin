@@ -117,13 +117,15 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
     }
 
     public function execute()
-    {
-        \Paynl\Config::setApiToken($this->config->getApiToken());
-
+    {       
         $params = $this->getRequest()->getParams();
         $action = !empty($params['action']) ? strtolower($params['action']) : '';
         $payOrderId = isset($params['order_id']) ? $params['order_id'] : null;
         $orderEntityId = isset($params['extra3']) ? $params['extra3'] : null;
+
+        $order = $this->orderRepository->get($orderEntityId);
+        $this->config->setStore($order->getStore());
+        \Paynl\Config::setApiToken($this->config->getApiToken());
 
         if ($action == 'pending') {
             return $this->result->setContents('TRUE| Ignore pending');
@@ -148,8 +150,6 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             }
             return $this->result->setContents("TRUE| Ignoring pending");
         }
-
-        $order = $this->orderRepository->get($orderEntityId);
 
         if (method_exists($transaction, 'isPartialPayment')) {
             if ($transaction->isPartialPayment()) {
