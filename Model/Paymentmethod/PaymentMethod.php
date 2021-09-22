@@ -324,8 +324,8 @@ abstract class PaymentMethod extends AbstractMethod
         $store = $order->getStore();
         $baseUrl = $store->getBaseUrl();
 
-        $returnUrl = $baseUrl . 'paynl/checkout/finish/?entityid=' . $order->getEntityId();
-        $exchangeUrl = $baseUrl . 'paynl/checkout/exchange/';
+        $returnUrl = $additionalData['returnUrl'] ?? $baseUrl . 'paynl/checkout/finish/?entityid=' . $order->getEntityId();
+        $exchangeUrl = $additionalData['exchangeUrl'] ?? $baseUrl . 'paynl/checkout/exchange/';
 
         $paymentOptionId = $this->getPaymentOptionId();
 
