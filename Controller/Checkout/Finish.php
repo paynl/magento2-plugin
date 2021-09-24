@@ -113,7 +113,10 @@ class Finish extends PayAction
 
             if (!empty($information['terminal_hash']) && !$bSuccess) {
                 $isPinTransaction = true;
-                $this->handlePin($information['terminal_hash'], $order);
+                $pinStatus = $this->handlePin($information['terminal_hash'], $order);
+                if (!empty($pinStatus)){
+                    $bSuccess = true;
+                }
             }
 
             if (empty($bSuccess) && !$isPinTransaction) {
@@ -130,6 +133,10 @@ class Finish extends PayAction
                 }
 
                 $resultRedirect->setPath($successUrl, ['_query' => ['utm_nooverride' => '1']]);
+
+                if ($isPinTransaction && $pinStatus->getTransactionState() !== 'approved'){
+                    $this->messageManager->addNoticeMessage(__('Order has been made and is the payment is pending.'));
+                }
 
                 # Make the cart inactive
                 $session = $this->checkoutSession;
@@ -174,6 +181,8 @@ class Finish extends PayAction
             # Instore does not send a canceled exchange message, so cancel it here
             $order->cancel();
             $this->orderRepository->save($order);
+            return false;
         }
+        return $status;
     }
 }
