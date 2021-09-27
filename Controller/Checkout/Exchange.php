@@ -121,11 +121,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         $params = $this->getRequest()->getParams();
         $action = !empty($params['action']) ? strtolower($params['action']) : '';
         $payOrderId = isset($params['order_id']) ? $params['order_id'] : null;
-        $orderEntityId = isset($params['extra3']) ? $params['extra3'] : null;
-
-        $order = $this->orderRepository->get($orderEntityId);
-        $this->config->setStore($order->getStore());
-        \Paynl\Config::setApiToken($this->config->getApiToken());
+        $orderEntityId = isset($params['extra3']) ? $params['extra3'] : null;        
 
         if ($action == 'pending') {
             return $this->result->setContents('TRUE| Ignore pending');
@@ -137,12 +133,26 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         }
 
         try {
+            $order = $this->orderRepository->get($orderEntityId);
+            if (empty($order)) {
+                $this->logger->critical('Cannot load order: ' . $orderEntityId);
+                throw new Exception('Cannot load order: ' . $orderEntityId);
+            }            
+        } catch (\Exception $e) {
+            $this->logger->critical($e, $params);
+            return $this->result->setContents('FALSE| Error loading order. ' . $e->getMessage());
+        }
+       
+        $this->config->setStore($order->getStore());  
+        \Paynl\Config::setApiToken($this->config->getApiToken());
+
+        try {
             $transaction = \Paynl\Transaction::get($payOrderId);
         } catch (\Exception $e) {
             $this->logger->critical($e, $params);
 
             return $this->result->setContents('FALSE| Error fetching transaction. ' . $e->getMessage());
-        }
+        }     
 
         if ($transaction->isPending()) {
             if ($action == 'new_ppt') {
@@ -158,11 +168,6 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
                 }
                 return $this->result->setContents("TRUE| Partial payment");
             }
-        }
-
-        if (empty($order)) {
-            $this->logger->critical('Cannot load order: ' . $orderEntityId);
-            return $this->result->setContents('FALSE| Cannot load order');
         }
 
         $payment = $order->getPayment();
