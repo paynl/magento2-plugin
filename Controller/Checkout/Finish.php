@@ -114,7 +114,7 @@ class Finish extends PayAction
             if (!empty($information['terminal_hash']) && !$bSuccess) {
                 $isPinTransaction = true;
                 $pinStatus = $this->handlePin($information['terminal_hash'], $order);
-                if (!empty($pinStatus)){
+                if (!empty($pinStatus)) {
                     $bSuccess = true;
                 }
             }
@@ -135,7 +135,7 @@ class Finish extends PayAction
                 $resultRedirect->setPath($successUrl, ['_query' => ['utm_nooverride' => '1']]);
 
                 if ($isPinTransaction && $pinStatus->getTransactionState() !== 'approved'){
-                    $this->messageManager->addNoticeMessage(__('Order has been made and is the payment is pending.'));
+                    $this->messageManager->addNoticeMessage(__('Order has been made and the payment is pending.'));
                 }
 
                 # Make the cart inactive
