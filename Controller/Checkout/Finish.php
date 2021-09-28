@@ -89,8 +89,6 @@ class Finish extends PayAction
     public function execute()
     {
         $resultRedirect = $this->resultRedirectFactory->create();
-
-        \Paynl\Config::setApiToken($this->config->getApiToken());
         $params = $this->getRequest()->getParams();
         $payOrderId = empty($params['orderId']) ? (empty($params['orderid']) ? null : $params['orderid']) : $params['orderId'];
         $orderStatusId = empty($params['orderStatusId']) ? null : intval($params['orderStatusId']);
@@ -105,6 +103,9 @@ class Finish extends PayAction
 
             $order = $this->orderRepository->get($magOrderId);
             $this->checkEmpty($order, 'order', 1013);
+
+            $this->config->setStore($order->getStore());
+            \Paynl\Config::setApiToken($this->config->getApiToken());
 
             $payment = $order->getPayment();
             $information = $payment->getAdditionalInformation();
