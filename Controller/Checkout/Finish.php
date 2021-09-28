@@ -134,7 +134,7 @@ class Finish extends PayAction
 
                 $resultRedirect->setPath($successUrl, ['_query' => ['utm_nooverride' => '1']]);
 
-                if ($isPinTransaction && $pinStatus->getTransactionState() !== 'approved'){
+                if ($isPinTransaction && $pinStatus->getTransactionState() !== 'approved') {
                     $this->messageManager->addNoticeMessage(__('Order has been made and the payment is pending.'));
                 }
 
