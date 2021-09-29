@@ -5,6 +5,7 @@
 "We cannot un-cancel this order.","Kan annulering niet ongedaan maken"
 "Invalid return, no transactionId specified","Ongeldige return, geen transactieId meegegeven"
 "There was an error checking the transaction status","Fout bij het controleren van de transactie status"
+"Order has been made and the payment is pending.","Order is aangemaakt en de transactie is pending."
 "Payment canceled","Betaling geannuleerd"
 "Payment denied","Betaling afgewezen"
 "Something went wrong, please try again later","Er is iet mis gegaan, probeer het later nogmaals"
