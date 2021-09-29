@@ -1,7 +1,4 @@
 <?php
-/**
- * Copyright © 2020 PAY. All rights reserved.
- */
 
 namespace Paynl\Payment\Controller\Checkout;
 
@@ -12,7 +9,7 @@ use Paynl\Error\Error;
 use Paynl\Payment\Controller\PayAction;
 
 /**
- * Description of Redirect
+ * Redirects the user.
  *
  * @author Andy Pieters <andy@pay.nl>
  */
@@ -21,33 +18,32 @@ class Redirect extends PayAction
     /**
      * @var \Paynl\Payment\Model\Config
      */
-	private $config;
+    private $config;
 
     /**
      * @var \Magento\Checkout\Model\Session
      */
-	private $checkoutSession;
+    private $checkoutSession;
 
     /**
      * @var \Psr\Log\LoggerInterface
      */
-	private $_logger;
+    private $_logger;
 
     /**
      * @var PaymentHelper
      */
-	private $paymentHelper;
+    private $paymentHelper;
 
-	/**
-	 * @var QuoteRepository
-	 */
-	private $quoteRepository;
+    /**
+     * @var QuoteRepository
+     */
+    private $quoteRepository;
 
-
-	/**
-	 * @var OrderRepository
-	 */
-	private $orderRepository;
+    /**
+     * @var OrderRepository
+     */
+    private $orderRepository;
 
     /**
      * @param \Magento\Framework\App\Action\Context $context
@@ -60,16 +56,15 @@ class Redirect extends PayAction
         \Magento\Checkout\Model\Session $checkoutSession,
         \Psr\Log\LoggerInterface $logger,
         PaymentHelper $paymentHelper,
-		QuoteRepository $quoteRepository,
-		OrderRepository $orderRepository
-    )
-    {
+        QuoteRepository $quoteRepository,
+        OrderRepository $orderRepository
+    ) {
         $this->config          = $config; // PAY. config helper
         $this->checkoutSession = $checkoutSession;
         $this->_logger         = $logger;
         $this->paymentHelper   = $paymentHelper;
-		$this->quoteRepository = $quoteRepository;
-		$this->orderRepository = $orderRepository;
+        $this->quoteRepository = $quoteRepository;
+        $this->orderRepository = $orderRepository;
 
         parent::__construct($context);
     }
@@ -79,22 +74,22 @@ class Redirect extends PayAction
         try {
             $order = $this->checkoutSession->getLastRealOrder();
 
-            if(empty($order)){
+            if (empty($order)) {
                 throw new Error('No order found in session, please try again');
             }
 
           # Restore the quote
-          $quote = $this->quoteRepository->get($order->getQuoteId());
-          $quote->setIsActive(true)->setReservedOrderId(null);
-          $this->checkoutSession->replaceQuote($quote);
-          $this->quoteRepository->save($quote);
+            $quote = $this->quoteRepository->get($order->getQuoteId());
+            $quote->setIsActive(true)->setReservedOrderId(null);
+            $this->checkoutSession->replaceQuote($quote);
+            $this->quoteRepository->save($quote);
 
-          $payment = $order->getPayment();
+            $payment = $order->getPayment();
 
-          if (empty($payment)) {
-            $this->_redirect('checkout/cart');
-            return;
-          }
+            if (empty($payment)) {
+                $this->_redirect('checkout/cart');
+                return;
+            }
 
             $methodInstance = $this->paymentHelper->getMethodInstance($payment->getMethod());
             if ($methodInstance instanceof \Paynl\Payment\Model\Paymentmethod\Paymentmethod) {
@@ -103,7 +98,7 @@ class Redirect extends PayAction
                 $this->getResponse()->setNoCacheHeaders();
                 $this->getResponse()->setRedirect($redirectUrl);
             } else {
-              throw new Error('PAY.: Method is not a paynl payment method');
+                throw new Error('PAY.: Method is not a paynl payment method');
             }
 
         } catch (\Exception $e) {

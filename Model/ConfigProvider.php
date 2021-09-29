@@ -1,15 +1,10 @@
 <?php
 
-/**
- * Copyright © 2015 Pay.nl All rights reserved.
- */
-
 namespace Paynl\Payment\Model;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Framework\Escaper;
 use Magento\Payment\Helper\Data as PaymentHelper;
-
 
 class ConfigProvider implements ConfigProviderInterface
 {
@@ -73,7 +68,6 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_yourgift'
     ];
 
-
     /**
      * @var \Magento\Payment\Model\Method\AbstractMethod[]
      */
@@ -132,7 +126,8 @@ class ConfigProvider implements ConfigProviderInterface
         }
 
         $config['payment']['useAdditionalValidation'] = $this->paynlConfig->getUseAdditionalValidation();
-        $config['payment']['iconsize']                = $this->paynlConfig->getIconSize();;
+        $config['payment']['iconsize']                = $this->paynlConfig->getIconSize();
+        ;
 
         return $config;
     }
@@ -191,5 +186,4 @@ class ConfigProvider implements ConfigProviderInterface
         $url = $this->paynlConfig->getIconUrl($code, $this->methods[$code]->getPaymentOptionId());
         return $url;
     }
-
 }

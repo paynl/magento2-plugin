@@ -1,7 +1,4 @@
 <?php
-/**
- * Copyright © 2020 PAY. All rights reserved.
- */
 
 namespace Paynl\Payment\Model\Config\Source;
 
@@ -9,7 +6,6 @@ use \Magento\Framework\Option\ArrayInterface;
 
 class Languages implements ArrayInterface
 {
-
 
     /**
      * Options getter
@@ -43,5 +39,4 @@ class Languages implements ArrayInterface
             'es' => __('Spanish')
         ];
     }
-
 }

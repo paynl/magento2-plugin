@@ -116,7 +116,7 @@
         </field>
         <field id="useragent" translate="label" type="select" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Only available with useragent</label>
-            <source_model>Paynl\Payment\Model\Config\Source\showUseragentOptions</source_model>
+            <source_model>Paynl\Payment\Model\Config\Source\ShowUseragentOptions</source_model>
             <depends>
                 <field id="active">1</field>
             </depends>

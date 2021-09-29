@@ -1,8 +1,5 @@
 <?xml version="1.0"?>
 <!--
-/**
- * Copyright © 2020 PAY. All rights reserved.
- */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
     <module name="Paynl_Payment" schema_version="0.0.1" setup_version="2.0.1">

@@ -44,8 +44,8 @@ class ShipmentSaveAfter implements ObserverInterface
     {
         $order = $observer->getEvent()->getShipment()->getOrder();
         $this->config->setStore($order->getStore());
-        
-        if ($this->config->autoCaptureEnabled()) {            
+
+        if ($this->config->autoCaptureEnabled()) {
             if ($order->getState() == Order::STATE_PROCESSING && !$order->hasInvoices()) {
                 $data = $order->getPayment()->getData();
 
@@ -54,7 +54,7 @@ class ShipmentSaveAfter implements ObserverInterface
                     $amountPaid = isset($data['amount_paid']) ? $data['amount_paid'] : null;
                     $amountRefunded = isset($data['amount_refunded']) ? $data['amount_refunded'] : null;
 
-                    if ($bHasAmountAuthorized && is_null($amountPaid) && is_null($amountRefunded)) {
+                    if ($bHasAmountAuthorized && $amountPaid === null && $amountRefunded === null) {
                         $this->logger->debug('PAY.: AUTO-CAPTURING (rest)' . $data['last_trans_id']);
                         try {
                             \Paynl\Config::setApiToken($this->config->getApiToken());

@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-/**
- * Copyright © 2020 PAY. All rights reserved.
- */
 -->
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
@@ -133,7 +130,7 @@
         </field>
         <field id="showforcompany" translate="label" type="select" sortOrder="150" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Show for companies</label>
-            <source_model>Paynl\Payment\Model\Config\Source\showCompanyOptions</source_model>
+            <source_model>Paynl\Payment\Model\Config\Source\ShowCompanyOptions</source_model>
             <depends>
                 <field id="active">1</field>
             </depends>

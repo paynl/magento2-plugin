@@ -1,7 +1,4 @@
 <?php
-/**
- * Copyright © 2020 PAY. All rights reserved.
- */
 
 namespace Paynl\Payment\Controller\Checkout;
 
@@ -16,7 +13,7 @@ use Paynl\Payment\Model\Config;
 use Psr\Log\LoggerInterface;
 
 /**
- * Description of Redirect
+ * Finishes up the payment and redirects the user to the thank you page.
  *
  * @author PAY. <webshop@pay.nl>
  */
@@ -93,7 +90,7 @@ class Finish extends PayAction
         \Paynl\Config::setApiToken($this->config->getApiToken());
         $params = $this->getRequest()->getParams();
         $payOrderId = empty($params['orderId']) ? (empty($params['orderid']) ? null : $params['orderid']) : $params['orderId'];
-        $orderStatusId = empty($params['orderStatusId']) ? null : intval($params['orderStatusId']);
+        $orderStatusId = empty($params['orderStatusId']) ? null : (int)$params['orderStatusId'];
         $magOrderId = empty($params['entityid']) ? null : $params['entityid'];
         $bSuccess = $orderStatusId === Config::ORDERSTATUS_PAID;
         $bDenied = $orderStatusId === Config::ORDERSTATUS_DENIED;

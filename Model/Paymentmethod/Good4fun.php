@@ -1,14 +1,7 @@
 <?php
-/**
- * Copyright © 2020 PAY. All rights reserved.
- */
 
 namespace Paynl\Payment\Model\Paymentmethod;
 
-/**
- * Class Good4fun
- * @package Paynl\Payment\Model\Paymentmethod
- */
 class Good4fun extends PaymentMethod
 {
     protected $_code = 'paynl_payment_good4fun';

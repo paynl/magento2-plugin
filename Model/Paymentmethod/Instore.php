@@ -1,16 +1,9 @@
 <?php
-/**
- * Copyright © 2020 PAY. All rights reserved.
- */
 
 namespace Paynl\Payment\Model\Paymentmethod;
 
 use Magento\Sales\Model\Order;
 
-/**
- * Class Instore
- * @package Paynl\Payment\Model\Paymentmethod
- */
 class Instore extends PaymentMethod
 {
     protected $_code = 'paynl_payment_instore';
@@ -49,7 +42,7 @@ class Instore extends PaymentMethod
             $url = $instorePayment->getRedirectUrl();
 
         } catch (\Exception $e) {
-            $this->logger->critical($e->getMessage(), array());
+            $this->logger->critical($e->getMessage(), []);
 
             if ($e->getCode() == 201) {
                 $this->messageManager->addNoticeMessage($e->getMessage());
@@ -101,14 +94,14 @@ class Instore extends PaymentMethod
                 }
                 $cache->save(json_encode($banks), $cacheName);
             } catch (\Paynl\Error\Error $e) {
-                // Probably instore is not activated, no terminals present
+                return false;
             }
         }
-        array_unshift($banks, array(
+        array_unshift($banks, [
             'id' => '',
             'name' => __('Choose the pin terminal'),
             'visibleName' => __('Choose the pin terminal')
-        ));
+        ]);
         return $banks;
     }
 
@@ -120,7 +113,7 @@ class Instore extends PaymentMethod
         /** @var \Magento\Framework\ObjectManagerInterface $om */
         $om = \Magento\Framework\App\ObjectManager::getInstance();
         /** @var \Magento\Framework\App\CacheInterface $cache */
-        $cache = $om->get('Magento\Framework\App\CacheInterface');
+        $cache = $om->get(\Magento\Framework\App\CacheInterface::class);
         return $cache;
     }
 
@@ -172,5 +165,4 @@ class Instore extends PaymentMethod
 
         return false;
     }
-
 }
