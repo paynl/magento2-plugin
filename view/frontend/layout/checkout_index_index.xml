@@ -24,6 +24,9 @@
                                                                         <item name="paynl_payment_afterpay" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
+                                                                        <item name="paynl_payment_afterpay_international" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                                                        </item>
                                                                         <item name="paynl_payment_alipay" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
