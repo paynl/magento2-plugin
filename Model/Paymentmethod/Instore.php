@@ -112,6 +112,11 @@ class Instore extends PaymentMethod
         return $banks;
     }
 
+    public function getDefaultBank()
+    {
+        return $this->_scopeConfig->getValue('payment/' . $this->_code . '/default_terminal', 'store');       
+    }
+
     /**
      * @return \Magento\Framework\App\CacheInterface
      */

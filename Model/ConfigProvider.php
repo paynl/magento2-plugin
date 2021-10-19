@@ -119,6 +119,7 @@ class ConfigProvider implements ConfigProviderInterface
             if ($this->methods[$code]->isAvailable()) {
                 $config['payment']['instructions'][$code] = $this->getInstructions($code);
                 $config['payment']['banks'][$code]        = $this->getBanks($code);
+                $config['payment']['defaultbank'][$code]  = $this->getDefaultBank($code);
                 $config['payment']['icon'][$code]         = $this->getIcon($code);
                 $config['payment']['showkvk'][$code]      = $this->getKVK($code);
                 $config['payment']['showvat'][$code]      = $this->getVAT($code);
@@ -153,6 +154,11 @@ class ConfigProvider implements ConfigProviderInterface
     protected function getBanks($code)
     {
         return $this->methods[$code]->getBanks();
+    }
+
+    protected function getDefaultBank($code)
+    {
+        return $this->methods[$code]->getDefaultBank();
     }
 
     protected function getKVK($code)

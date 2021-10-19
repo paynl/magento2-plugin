@@ -134,6 +134,9 @@ define(
             getBanks: function(){
                 return window.checkoutConfig.payment.banks[this.item.method];
             },
+            getDefaultBank: function(){               
+                return window.checkoutConfig.payment.defaultbank[this.item.method];
+            },
             afterPlaceOrder: function () {
                 window.location.replace(url.build('paynl/checkout/redirect?nocache='+ (new Date().getTime())));
             },
