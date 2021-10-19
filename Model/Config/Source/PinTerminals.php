@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright © 2020 PAY. All rights reserved.
  */
@@ -39,9 +40,8 @@ class PinTerminals implements ArrayInterface
         Config $config,
         RequestInterface $request,
         ScopeConfigInterface $scopeConfig,
-        \Magento\Store\Model\StoreManagerInterface $storeManager     
-    )
-    {
+        \Magento\Store\Model\StoreManagerInterface $storeManager
+    ) {
         $this->_config = $config;
         $this->_request = $request;
         $this->_scopeConfig = $scopeConfig;
@@ -72,17 +72,17 @@ class PinTerminals implements ArrayInterface
     public function toArray()
     {
         $terminalArr = [];
-        if($this->_isConfigured()){
+        if ($this->_isConfigured()) {
             $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
 
-            $cache = $objectManager->get(\Magento\Framework\App\CacheInterface::class);         
+            $cache = $objectManager->get(\Magento\Framework\App\CacheInterface::class);
             $storeId = $this->_request->getParam('store');
             $cacheName = 'paynl_terminals_' . $this->getConfigValue('payment/paynl_payment_instore/payment_option_id') . '_' . $storeId;
             $terminalJson = $cache->load($cacheName);
             if ($terminalJson) {
                 $terminalArr = json_decode($terminalJson);
-            } else {          
-                try {         
+            } else {
+                try {
                     $terminals = \Paynl\Instore::getAllTerminals();
                     $terminals = $terminals->getList();
 
@@ -98,13 +98,13 @@ class PinTerminals implements ArrayInterface
         }
         $optionArr = [];
         $optionArr[0] = __('Choose the pin terminal');
-        foreach($terminalArr as $terminal){    
-            $arr = (array)$terminal;        
+        foreach ($terminalArr as $terminal) {
+            $arr = (array)$terminal;
             $optionArr[$arr['id']] = $arr['visibleName'];
         }
 
         return $optionArr;
-    }    
+    }
 
     protected function _isConfigured()
     {
@@ -114,10 +114,10 @@ class PinTerminals implements ArrayInterface
             $this->_config->setStore($store);
         }
         $configured = $this->_config->configureSDK();
-        if ($configured) {            
-            return true;            
+        if ($configured) {
+            return true;
         }
-        
+
         return false;
     }
 
