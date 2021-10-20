@@ -21,8 +21,8 @@
             <!--/ko-->
         </div>
         <p data-bind="html: getInstructions();"></p>
-        <div data-bind="visible: showSubOptions()" class="field-select-billing">
-            <select data-bind="options: getSubOptions(), optionsText: 'visibleName', optionsValue: 'id', value: subOption"></select>
+        <div data-bind="visible: showPaymentOptions()" class="field-select-billing">
+            <select data-bind="options: getPaymentOptions(), optionsText: 'visibleName', optionsValue: 'id', value: paymentOption"></select>
         </div>
         <div data-bind="visible: showDOB()" class="field-select-billing">
             <label for="dob" data-bind="i18n: 'Date of birth'"></label>

@@ -29,14 +29,14 @@ class Ideal extends PaymentMethod
         } elseif ($data instanceof \Magento\Framework\DataObject) {
             $additional_data = $data->getAdditionalData();
             if (isset($additional_data['sub_option_id'])) {
-                $subOption = $additional_data['sub_option_id'];
-                $this->getInfoInstance()->setAdditionalInformation('sub_option_id', $subOption);
+                $paymentOption = $additional_data['sub_option_id'];
+                $this->getInfoInstance()->setAdditionalInformation('sub_option_id', $paymentOption);
             }
         }
         return $this;
     }
 
-    public function getSubOptions()
+    public function getPaymentOptions()
     {
         $show_banks = $this->_scopeConfig->getValue('payment/' . $this->_code . '/bank_selection', 'store');
         if (!$show_banks) {
@@ -55,7 +55,7 @@ class Ideal extends PaymentMethod
             $this->paynlConfig->setStore($store);
             $this->paynlConfig->configureSDK();
 
-            $banks = \Paynl\Paymentmethods::getSubOptions($this->getPaymentOptionId());
+            $banks = \Paynl\Paymentmethods::getBanks($this->getPaymentOptionId());
             $cache->save(json_encode($banks), $cacheName);
         }
         array_unshift($banks, array(

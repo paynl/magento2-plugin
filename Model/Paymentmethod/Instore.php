@@ -27,10 +27,10 @@ class Instore extends PaymentMethod
 
         $additionalData = $order->getPayment()->getAdditionalInformation();
         $terminalId = null;
-        if (isset($additionalData['sub_option_id'])) {
-            $terminalId = $additionalData['sub_option_id'];
+        if (isset($additionalData['payment_option'])) {
+            $terminalId = $additionalData['payment_option'];
         }
-        unset($additionalData['sub_option_id']);
+        unset($additionalData['payment_option']);
 
         try {
             if (empty($terminalId)) {
@@ -66,18 +66,18 @@ class Instore extends PaymentMethod
         parent::assignData($data);
 
         if (is_array($data)) {
-            $this->getInfoInstance()->setAdditionalInformation('sub_option_id', $data['sub_option_id']);
+            $this->getInfoInstance()->setAdditionalInformation('payment_option', $data['payment_option']);
         } elseif ($data instanceof \Magento\Framework\DataObject) {
             $additional_data = $data->getAdditionalData();
-            if (isset($additional_data['sub_option_id'])) {
-                $subOption = $additional_data['sub_option_id'];
-                $this->getInfoInstance()->setAdditionalInformation('sub_option_id', $subOption);
+            if (isset($additional_data['payment_option'])) {
+                $paymentOption = $additional_data['payment_option'];
+                $this->getInfoInstance()->setAdditionalInformation('payment_option', $paymentOption);
             }
         }
         return $this;
     }
 
-    public function getSubOptions()
+    public function getPaymentOptions()
     {
         $cache = $this->getCache();
         $store = $this->storeManager->getStore();
@@ -112,7 +112,7 @@ class Instore extends PaymentMethod
         return $terminalsArr;
     }
 
-    public function getDefaultSubOption()
+    public function getDefaultPaymentOption()
     {
         return $this->_scopeConfig->getValue('payment/' . $this->_code . '/default_terminal', 'store');       
     }
