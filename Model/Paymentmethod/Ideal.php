@@ -25,12 +25,12 @@ class Ideal extends PaymentMethod
         parent::assignData($data);
 
         if (is_array($data)) {
-            $this->getInfoInstance()->setAdditionalInformation('sub_option_id', $data['sub_option_id']);
+            $this->getInfoInstance()->setAdditionalInformation('payment_option', $data['payment_option']);
         } elseif ($data instanceof \Magento\Framework\DataObject) {
             $additional_data = $data->getAdditionalData();
-            if (isset($additional_data['sub_option_id'])) {
-                $paymentOption = $additional_data['sub_option_id'];
-                $this->getInfoInstance()->setAdditionalInformation('sub_option_id', $paymentOption);
+            if (isset($additional_data['payment_option'])) {
+                $paymentOption = $additional_data['payment_option'];
+                $this->getInfoInstance()->setAdditionalInformation('payment_option', $paymentOption);
             }
         }
         return $this;
