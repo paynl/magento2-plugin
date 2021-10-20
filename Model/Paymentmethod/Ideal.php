@@ -25,18 +25,18 @@ class Ideal extends PaymentMethod
         parent::assignData($data);
 
         if (is_array($data)) {
-            $this->getInfoInstance()->setAdditionalInformation('bank_id', $data['bank_id']);
+            $this->getInfoInstance()->setAdditionalInformation('sub_option_id', $data['sub_option_id']);
         } elseif ($data instanceof \Magento\Framework\DataObject) {
             $additional_data = $data->getAdditionalData();
-            if (isset($additional_data['bank_id'])) {
-                $bankId = $additional_data['bank_id'];
-                $this->getInfoInstance()->setAdditionalInformation('bank_id', $bankId);
+            if (isset($additional_data['sub_option_id'])) {
+                $subOption = $additional_data['sub_option_id'];
+                $this->getInfoInstance()->setAdditionalInformation('sub_option_id', $subOption);
             }
         }
         return $this;
     }
 
-    public function getBanks()
+    public function getSubOptions()
     {
         $show_banks = $this->_scopeConfig->getValue('payment/' . $this->_code . '/bank_selection', 'store');
         if (!$show_banks) {
@@ -55,7 +55,7 @@ class Ideal extends PaymentMethod
             $this->paynlConfig->setStore($store);
             $this->paynlConfig->configureSDK();
 
-            $banks = \Paynl\Paymentmethods::getBanks($this->getPaymentOptionId());
+            $banks = \Paynl\Paymentmethods::getSubOptions($this->getPaymentOptionId());
             $cache->save(json_encode($banks), $cacheName);
         }
         array_unshift($banks, array(

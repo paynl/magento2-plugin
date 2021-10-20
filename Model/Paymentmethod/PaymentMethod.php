@@ -128,7 +128,7 @@ abstract class PaymentMethod extends AbstractMethod
         return trim($this->getConfigData('instructions'));
     }
 
-    public function getBanks()
+    public function getSubOptions()
     {
         return [];
     }
@@ -291,7 +291,7 @@ abstract class PaymentMethod extends AbstractMethod
         $this->paynlConfig->setStore($order->getStore());
         $this->paynlConfig->configureSDK();
         $additionalData = $order->getPayment()->getAdditionalInformation();
-        $bankId = null;
+        $subOption = null;
         $expireDate = null;
 
         if (isset($additionalData['kvknummer']) && is_numeric($additionalData['kvknummer'])) {
@@ -300,8 +300,8 @@ abstract class PaymentMethod extends AbstractMethod
         if (isset($additionalData['vatnumber'])) {
             $vatnumber = $additionalData['vatnumber'];
         }
-        if (isset($additionalData['bank_id']) && is_numeric($additionalData['bank_id'])) {
-            $bankId = $additionalData['bank_id'];
+        if (isset($additionalData['sub_option_id']) && is_numeric($additionalData['sub_option_id'])) {
+            $subOption = $additionalData['sub_option_id'];
         }
         if (isset($additionalData['valid_days']) && is_numeric($additionalData['valid_days'])) {
             $expireDate = new \DateTime('+' . $additionalData['valid_days'] . ' days');
@@ -409,7 +409,7 @@ abstract class PaymentMethod extends AbstractMethod
             'returnUrl' => $returnUrl,
             'paymentMethod' => $paymentOptionId,
             'language' => $this->paynlConfig->getLanguage(),
-            'bank' => $bankId,
+            'bank' => $subOption,
             'expireDate' => $expireDate,
             'orderNumber' => $orderId,
             'description' => $description,

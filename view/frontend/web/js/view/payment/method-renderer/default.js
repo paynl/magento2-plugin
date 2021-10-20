@@ -18,13 +18,17 @@ define(
             defaults: {
                 template: 'Paynl_Payment/payment/default'
             },
-            selectedBank: null,
+            subOption: null,
             kvknummer: null,
             vatnumber: null,
             dateofbirth: null,
             billink_agree: null,
             initialize: function () {
                 this._super();
+
+                if(this.subOption == null){
+                    this.subOption = this.getDefaultSubOption();
+                }
 
                 var defaultPaymentMethod = window.checkoutConfig.payment.defaultpaymentoption;
                 if (!quote.paymentMethod() &&
@@ -128,14 +132,14 @@ define(
             getKVKDOB: function () {
                 return (this.getDOB() > 0 && this.getKVK() > 0);
             },
-            showBanks: function(){
-                return window.checkoutConfig.payment.banks[this.item.method].length > 0;
+            showSubOptions: function(){
+                return window.checkoutConfig.payment.suboptions[this.item.method].length > 0;
             },
-            getBanks: function(){
-                return window.checkoutConfig.payment.banks[this.item.method];
+            getSubOptions: function(){
+                return window.checkoutConfig.payment.suboptions[this.item.method];
             },
-            getDefaultBank: function(){               
-                return window.checkoutConfig.payment.defaultbank[this.item.method];
+            getDefaultSubOption: function(){               
+                return window.checkoutConfig.payment.defaultsuboption[this.item.method];
             },
             afterPlaceOrder: function () {
                 window.location.replace(url.build('paynl/checkout/redirect?nocache='+ (new Date().getTime())));
@@ -160,7 +164,7 @@ define(
                         "vatnumber": this.vatnumber,
                         "dob": dob_format,
                         "billink_agree": this.billink_agree,
-                        "bank_id": this.selectedBank
+                        "sub_option_id": this.subOption
                     }
                 };
             },

@@ -118,8 +118,8 @@ class ConfigProvider implements ConfigProviderInterface
         foreach ($this->methodCodes as $code) {
             if ($this->methods[$code]->isAvailable()) {
                 $config['payment']['instructions'][$code] = $this->getInstructions($code);
-                $config['payment']['banks'][$code]        = $this->getBanks($code);
-                $config['payment']['defaultbank'][$code]  = $this->getDefaultBank($code);
+                $config['payment']['suboptions'][$code]        = $this->getSubOptions($code);
+                $config['payment']['defaultsuboption'][$code]  = $this->getDefaultSubOption($code);
                 $config['payment']['icon'][$code]         = $this->getIcon($code);
                 $config['payment']['showkvk'][$code]      = $this->getKVK($code);
                 $config['payment']['showvat'][$code]      = $this->getVAT($code);
@@ -151,14 +151,14 @@ class ConfigProvider implements ConfigProviderInterface
         return nl2br($this->escaper->escapeHtml($this->methods[$code]->getInstructions()));
     }
 
-    protected function getBanks($code)
+    protected function getSubOptions($code)
     {
-        return $this->methods[$code]->getBanks();
+        return $this->methods[$code]->getSubOptions();
     }
 
-    protected function getDefaultBank($code)
+    protected function getDefaultSubOption($code)
     {
-        return $this->methods[$code]->getDefaultBank();
+        return $this->methods[$code]->getDefaultSubOption();
     }
 
     protected function getKVK($code)
