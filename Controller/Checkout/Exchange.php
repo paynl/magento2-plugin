@@ -117,11 +117,11 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
     }
 
     public function execute()
-    {       
+    {
         $params = $this->getRequest()->getParams();
         $action = !empty($params['action']) ? strtolower($params['action']) : '';
         $payOrderId = isset($params['order_id']) ? $params['order_id'] : null;
-        $orderEntityId = isset($params['extra3']) ? $params['extra3'] : null;        
+        $orderEntityId = isset($params['extra3']) ? $params['extra3'] : null;
 
         if ($action == 'pending') {
             return $this->result->setContents('TRUE| Ignore pending');
@@ -137,13 +137,13 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             if (empty($order)) {
                 $this->logger->critical('Cannot load order: ' . $orderEntityId);
                 throw new Exception('Cannot load order: ' . $orderEntityId);
-            }            
+            }
         } catch (\Exception $e) {
             $this->logger->critical($e, $params);
             return $this->result->setContents('FALSE| Error loading order. ' . $e->getMessage());
         }
-       
-        $this->config->setStore($order->getStore());  
+
+        $this->config->setStore($order->getStore());
         \Paynl\Config::setApiToken($this->config->getApiToken());
 
         try {
@@ -152,7 +152,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             $this->logger->critical($e, $params);
 
             return $this->result->setContents('FALSE| Error fetching transaction. ' . $e->getMessage());
-        }     
+        }
 
         if ($transaction->isPending()) {
             if ($action == 'new_ppt') {
@@ -171,15 +171,11 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         }
 
         $payment = $order->getPayment();
-        $info = $payment->getAdditionalInformation();
-        if (!empty($info['transactionId'])) {
-            if ($info['transactionId'] != $payOrderId) {
-                $this->logger->critical('Transaction not equal');
-                return $this->result->setContents('FALSE| Cannot load order');
-            }
-        } else {
-            $this->logger->critical('Transaction not set in order');
-            return $this->result->setContents('TRUE| Failed. Transaction not set.');
+        $orderEntityIdTransaction = $transaction->getExtra3();
+
+        if ($orderEntityId != $orderEntityIdTransaction) {
+            $this->logger->critical('Transaction mismatch ' . $orderEntityId . ' / ' . $orderEntityIdTransaction);
+            return $this->result->setContents('FALSE|Transaction mismatch');
         }
 
         if ($order->getTotalDue() <= 0) {
