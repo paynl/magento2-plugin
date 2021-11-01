@@ -171,16 +171,12 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         }
 
         $payment = $order->getPayment();
-        $info = $payment->getAdditionalInformation();
-        if (!empty($info['transactionId'])) {
-            if ($info['transactionId'] != $payOrderId) {
-                $this->logger->critical('Transaction not equal');
-                return $this->result->setContents('FALSE| Cannot load order');
-            }
-        } else {
-            $this->logger->critical('Transaction not set in order');
-            return $this->result->setContents('TRUE| Failed. Transaction not set.');
-        }
+        $orderEntityIdTransaction = $transaction->getExtra3();
+        
+        if ($orderEntityId !== $orderEntityIdTransaction) {
+            $this->logger->critical('Transaction not equal');
+            return $this->result->setContents('FALSE| Transaction not equal');
+        } 
 
         if ($order->getTotalDue() <= 0) {
             $this->logger->debug($action . '. Ignoring - already paid: ' . $orderEntityId);
