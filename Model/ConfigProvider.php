@@ -118,7 +118,8 @@ class ConfigProvider implements ConfigProviderInterface
         foreach ($this->methodCodes as $code) {
             if ($this->methods[$code]->isAvailable()) {
                 $config['payment']['instructions'][$code] = $this->getInstructions($code);
-                $config['payment']['banks'][$code]        = $this->getBanks($code);
+                $config['payment']['paymentoptions'][$code]        = $this->getPaymentOptions($code);
+                $config['payment']['defaultpaymentoption'][$code]  = $this->getDefaultPaymentOption($code);
                 $config['payment']['icon'][$code]         = $this->getIcon($code);
                 $config['payment']['showkvk'][$code]      = $this->getKVK($code);
                 $config['payment']['showvat'][$code]      = $this->getVAT($code);
@@ -128,7 +129,7 @@ class ConfigProvider implements ConfigProviderInterface
                 $config['payment']['disallowedshipping'][$code] = $this->getDisallowedShippingMethods($code);
                 $config['payment']['currentipisvalid'][$code]    = $this->methods[$code]->isCurrentIpValid();
                 $config['payment']['currentagentisvalid'][$code] = $this->methods[$code]->isCurrentAgentValid();
-                $config['payment']['defaultpaymentoption'][$code] = $this->methods[$code]->isDefaultPaymentOption();
+                $config['payment']['defaultpaymentmethod'][$code] = $this->methods[$code]->isDefaultPaymentOption();
             }
         }
 
@@ -150,9 +151,14 @@ class ConfigProvider implements ConfigProviderInterface
         return nl2br($this->escaper->escapeHtml($this->methods[$code]->getInstructions()));
     }
 
-    protected function getBanks($code)
+    protected function getPaymentOptions($code)
     {
-        return $this->methods[$code]->getBanks();
+        return $this->methods[$code]->getPaymentOptions();
+    }
+
+    protected function getDefaultPaymentOption($code)
+    {
+        return $this->methods[$code]->getDefaultPaymentOption();
     }
 
     protected function getKVK($code)

@@ -18,7 +18,7 @@ define(
             defaults: {
                 template: 'Paynl_Payment/payment/default'
             },
-            selectedBank: null,
+            paymentOption: null,
             kvknummer: null,
             vatnumber: null,
             dateofbirth: null,
@@ -26,7 +26,11 @@ define(
             initialize: function () {
                 this._super();
 
-                var defaultPaymentMethod = window.checkoutConfig.payment.defaultpaymentoption;
+                if(this.paymentOption == null){
+                    this.paymentOption = this.getDefaultPaymentOption();
+                }
+
+                var defaultPaymentMethod = window.checkoutConfig.payment.defaultpaymentmethod;
                 if (!quote.paymentMethod() &&
                     typeof defaultPaymentMethod !== 'undefined' &&
                     typeof defaultPaymentMethod[this.item.method] !== 'undefined' &&
@@ -128,11 +132,14 @@ define(
             getKVKDOB: function () {
                 return (this.getDOB() > 0 && this.getKVK() > 0);
             },
-            showBanks: function(){
-                return window.checkoutConfig.payment.banks[this.item.method].length > 0;
+            showPaymentOptions: function(){
+                return window.checkoutConfig.payment.paymentoptions[this.item.method].length > 0;
             },
-            getBanks: function(){
-                return window.checkoutConfig.payment.banks[this.item.method];
+            getPaymentOptions: function(){
+                return window.checkoutConfig.payment.paymentoptions[this.item.method];
+            },
+            getDefaultPaymentOption: function(){           
+                return window.checkoutConfig.payment.defaultpaymentoption[this.item.method];
             },
             afterPlaceOrder: function () {
                 window.location.replace(url.build('paynl/checkout/redirect?nocache='+ (new Date().getTime())));
@@ -157,7 +164,7 @@ define(
                         "vatnumber": this.vatnumber,
                         "dob": dob_format,
                         "billink_agree": this.billink_agree,
-                        "bank_id": this.selectedBank
+                        "payment_option": this.paymentOption
                     }
                 };
             },

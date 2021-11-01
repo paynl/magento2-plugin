@@ -25,18 +25,18 @@ class Ideal extends PaymentMethod
         parent::assignData($data);
 
         if (is_array($data)) {
-            $this->getInfoInstance()->setAdditionalInformation('bank_id', $data['bank_id']);
+            $this->getInfoInstance()->setAdditionalInformation('payment_option', $data['payment_option']);
         } elseif ($data instanceof \Magento\Framework\DataObject) {
             $additional_data = $data->getAdditionalData();
-            if (isset($additional_data['bank_id'])) {
-                $bankId = $additional_data['bank_id'];
-                $this->getInfoInstance()->setAdditionalInformation('bank_id', $bankId);
+            if (isset($additional_data['payment_option'])) {
+                $paymentOption = $additional_data['payment_option'];
+                $this->getInfoInstance()->setAdditionalInformation('payment_option', $paymentOption);
             }
         }
         return $this;
     }
 
-    public function getBanks()
+    public function getPaymentOptions()
     {
         $show_banks = $this->_scopeConfig->getValue('payment/' . $this->_code . '/bank_selection', 'store');
         if (!$show_banks) {
