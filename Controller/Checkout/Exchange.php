@@ -174,7 +174,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         $orderEntityIdTransaction = $transaction->getExtra3();
 
         if ($orderEntityId != $orderEntityIdTransaction) {
-            $this->logger->critical('Transaction mismatch ' . $orderEntityId . ' / .' . $orderEntityIdTransaction);
+            $this->logger->critical('Transaction mismatch ' . $orderEntityId . ' / ' . $orderEntityIdTransaction);
             return $this->result->setContents('FALSE|Transaction mismatch');
         }
 
