@@ -5,6 +5,7 @@
 "We cannot un-cancel this order.","We cannot un-cancel this order."
 "Invalid return, no transactionId specified","Invalid return, no transactionId specified"
 "There was an error checking the transaction status","There was an error checking the transaction status"
+"Order has been made and the payment is pending.", "Order has been made and the payment is pending."
 "Payment canceled","Payment canceled"
 "Something went wrong, please try again later","Something went wrong, please try again later"
 "Enter your API-token and ServiceId first","Enter your API-token and ServiceId first"

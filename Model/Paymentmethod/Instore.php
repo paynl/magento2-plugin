@@ -20,10 +20,10 @@ class Instore extends PaymentMethod
 
         $additionalData = $order->getPayment()->getAdditionalInformation();
         $terminalId = null;
-        if (isset($additionalData['bank_id'])) {
-            $terminalId = $additionalData['bank_id'];
+        if (isset($additionalData['payment_option'])) {
+            $terminalId = $additionalData['payment_option'];
         }
-        unset($additionalData['bank_id']);
+        unset($additionalData['payment_option']);
 
         try {
             if (empty($terminalId)) {
@@ -59,28 +59,28 @@ class Instore extends PaymentMethod
         parent::assignData($data);
 
         if (is_array($data)) {
-            $this->getInfoInstance()->setAdditionalInformation('bank_id', $data['bank_id']);
+            $this->getInfoInstance()->setAdditionalInformation('payment_option', $data['payment_option']);
         } elseif ($data instanceof \Magento\Framework\DataObject) {
             $additional_data = $data->getAdditionalData();
-            if (isset($additional_data['bank_id'])) {
-                $bankId = $additional_data['bank_id'];
-                $this->getInfoInstance()->setAdditionalInformation('bank_id', $bankId);
+            if (isset($additional_data['payment_option'])) {
+                $paymentOption = $additional_data['payment_option'];
+                $this->getInfoInstance()->setAdditionalInformation('payment_option', $paymentOption);
             }
         }
         return $this;
     }
 
-    public function getBanks()
+    public function getPaymentOptions()
     {
         $cache = $this->getCache();
         $store = $this->storeManager->getStore();
         $storeId = $store->getId();
         $cacheName = 'paynl_terminals_' . $this->getPaymentOptionId() . '_' . $storeId;
-        $banksJson = $cache->load($cacheName);
-        if ($banksJson) {
-            $banks = json_decode($banksJson);
+        $terminalsJson = $cache->load($cacheName);
+        if ($terminalsJson) {
+            $terminalsArr = json_decode($terminalsJson);
         } else {
-            $banks = [];
+            $terminalsArr = [];
             try {
                 $this->paynlConfig->setStore($store);
                 $this->paynlConfig->configureSDK();
@@ -90,19 +90,24 @@ class Instore extends PaymentMethod
 
                 foreach ($terminals as $terminal) {
                     $terminal['visibleName'] = $terminal['name'];
-                    array_push($banks, $terminal);
+                    array_push($terminalsArr, $terminal);
                 }
-                $cache->save(json_encode($banks), $cacheName);
+                $cache->save(json_encode($terminalsArr), $cacheName);
             } catch (\Paynl\Error\Error $e) {
                 return false;
             }
         }
-        array_unshift($banks, [
+        array_unshift($terminalsArr, [
             'id' => '',
             'name' => __('Choose the pin terminal'),
             'visibleName' => __('Choose the pin terminal')
         ]);
-        return $banks;
+        return $terminalsArr;
+    }
+
+    public function getDefaultPaymentOption()
+    {
+        return $this->_scopeConfig->getValue('payment/' . $this->_code . '/default_terminal', 'store');       
     }
 
     /**

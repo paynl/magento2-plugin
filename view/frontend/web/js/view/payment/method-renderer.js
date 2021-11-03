@@ -13,6 +13,7 @@ define(
 
         var methods = [
             {type: 'paynl_payment_afterpay', component: defaultComponent},
+            {type: 'paynl_payment_afterpay_international', component: defaultComponent},
             {type: 'paynl_payment_alipay', component: defaultComponent},
             {type: 'paynl_payment_amazonpay', component: defaultComponent},
             {type: 'paynl_payment_amex', component: defaultComponent},

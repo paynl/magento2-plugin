@@ -86,8 +86,6 @@ class Finish extends PayAction
     public function execute()
     {
         $resultRedirect = $this->resultRedirectFactory->create();
-
-        \Paynl\Config::setApiToken($this->config->getApiToken());
         $params = $this->getRequest()->getParams();
         $payOrderId = empty($params['orderId']) ? (empty($params['orderid']) ? null : $params['orderid']) : $params['orderId'];
         $orderStatusId = empty($params['orderStatusId']) ? null : (int)$params['orderStatusId'];
@@ -103,6 +101,9 @@ class Finish extends PayAction
             $order = $this->orderRepository->get($magOrderId);
             $this->checkEmpty($order, 'order', 1013);
 
+            $this->config->setStore($order->getStore());
+            \Paynl\Config::setApiToken($this->config->getApiToken());
+
             $payment = $order->getPayment();
             $information = $payment->getAdditionalInformation();
 
@@ -110,7 +111,10 @@ class Finish extends PayAction
 
             if (!empty($information['terminal_hash']) && !$bSuccess) {
                 $isPinTransaction = true;
-                $this->handlePin($information['terminal_hash'], $order);
+                $pinStatus = $this->handlePin($information['terminal_hash'], $order);
+                if (!empty($pinStatus)) {
+                    $bSuccess = true;
+                }
             }
 
             if (empty($bSuccess) && !$isPinTransaction) {
@@ -127,6 +131,10 @@ class Finish extends PayAction
                 }
 
                 $resultRedirect->setPath($successUrl, ['_query' => ['utm_nooverride' => '1']]);
+
+                if ($isPinTransaction && $pinStatus->getTransactionState() !== 'approved') {
+                    $this->messageManager->addNoticeMessage(__('Order has been made and the payment is pending.'));
+                }
 
                 # Make the cart inactive
                 $session = $this->checkoutSession;
@@ -171,6 +179,8 @@ class Finish extends PayAction
             # Instore does not send a canceled exchange message, so cancel it here
             $order->cancel();
             $this->orderRepository->save($order);
+            return false;
         }
+        return $status;
     }
 }
