@@ -79,7 +79,7 @@
         <field id="bank_selection" translate="label" type="select" sortOrder="65" showInDefault="1" showInWebsite="1"
                showInStore="1">
             <label>Show bankselection</label>
-            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <source_model>Paynl\Payment\Model\Config\Source\ShowPaymentOptions</source_model>
             <depends>
                 <field id="active">1</field>
             </depends>

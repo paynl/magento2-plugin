@@ -119,6 +119,7 @@ class ConfigProvider implements ConfigProviderInterface
             if ($this->methods[$code]->isAvailable()) {
                 $config['payment']['instructions'][$code] = $this->getInstructions($code);
                 $config['payment']['paymentoptions'][$code]        = $this->getPaymentOptions($code);
+                $config['payment']['showpaymentoptions'][$code]    = $this->showPaymentOptions($code);
                 $config['payment']['defaultpaymentoption'][$code]  = $this->getDefaultPaymentOption($code);
                 $config['payment']['icon'][$code]         = $this->getIcon($code);
                 $config['payment']['showkvk'][$code]      = $this->getKVK($code);
@@ -154,6 +155,11 @@ class ConfigProvider implements ConfigProviderInterface
     protected function getPaymentOptions($code)
     {
         return $this->methods[$code]->getPaymentOptions();
+    }
+
+    protected function showPaymentOptions($code)
+    {
+        return $this->methods[$code]->showPaymentOptions();
     }
 
     protected function getDefaultPaymentOption($code)

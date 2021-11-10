@@ -24,6 +24,17 @@
         <div data-bind="visible: showPaymentOptions()" class="field-select-billing">
             <select data-bind="options: getPaymentOptions(), optionsText: 'visibleName', optionsValue: 'id', value: paymentOption"></select>
         </div>
+        <div data-bind="visible: showPaymentOptionsList()" class="field-select-billing">
+            <ul class="paymentOptionsList" data-bind="foreach: getPaymentOptionsList()">
+                <li>
+                    <input type="radio" data-bind="value: id, checked: $parent.paymentOption, attr: {'id': uniqueId, 'name': radioName}">
+                    <label data-bind="attr: {'for': uniqueId}">
+                        <img data-bind="visible: showLogo, attr: {src: logo, alt: name, class: 'payment-icon ' + $parent.getIconSize()}" class="payment-option-icon" />
+                        <span data-bind="text: name"></span>
+                    </label>                    
+                </li>    
+            </ul>
+        </div>
         <div data-bind="visible: showDOB()" class="field-select-billing">
             <label for="dob" data-bind="i18n: 'Date of birth'"></label>
             <input type="date" data-bind="optionsValue: 'id', name: 'dateofbirth', value: dateofbirth" name="dateofbirth" placeholder="mm/dd/yyyy"/>

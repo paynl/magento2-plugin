@@ -36,6 +36,11 @@ class Ideal extends PaymentMethod
         return $this;
     }
 
+    public function showPaymentOptions()
+    {
+        return $this->_scopeConfig->getValue('payment/' . $this->_code . '/bank_selection', 'store');
+    }
+
     public function getPaymentOptions()
     {
         $show_banks = $this->_scopeConfig->getValue('payment/' . $this->_code . '/bank_selection', 'store');
@@ -50,7 +55,7 @@ class Ideal extends PaymentMethod
 
         $banksJson = $cache->load($cacheName);
         if ($banksJson) {
-            $banks = json_decode($banksJson);
+            $banks = json_decode($banksJson, true);
         } else {
             $this->paynlConfig->setStore($store);
             $this->paynlConfig->configureSDK();
@@ -63,6 +68,11 @@ class Ideal extends PaymentMethod
             'name' => __('Choose your bank'),
             'visibleName' => __('Choose your bank')
         ));
+
+        foreach ($banks as $key => $bank) {
+            $banks[$key]['logo'] = $this->paynlConfig->getIconUrlIssuer($bank['id']);
+        }
+
         return $banks;
     }
 
