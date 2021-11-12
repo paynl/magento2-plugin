@@ -25,11 +25,13 @@
             <select data-bind="options: getPaymentOptions(), optionsText: 'visibleName', optionsValue: 'id', value: paymentOption"></select>
         </div>
         <div data-bind="visible: showPaymentOptionsList()" class="field-select-billing">
+            <br/>
+            <span class="paymentOptionsListTest" data-bind="i18n: 'Choose your bank'"></span>
             <ul class="paymentOptionsList" data-bind="foreach: getPaymentOptionsList()">
                 <li>
                     <input type="radio" data-bind="value: id, checked: $parent.paymentOption, attr: {'id': uniqueId, 'name': radioName}">
                     <label data-bind="attr: {'for': uniqueId}">
-                        <img data-bind="visible: showLogo, attr: {src: logo, alt: name, class: 'payment-icon ' + $parent.getIconSize()}" class="payment-option-icon" />
+                        <img height="50px" width="50px" data-bind="visible: showLogo, attr: {src: logo, alt: name, class: 'payment-icon ' + $parent.getIconSize()}" class="payment-option-icon" />
                         <span data-bind="text: name"></span>
                     </label>                    
                 </li>    
