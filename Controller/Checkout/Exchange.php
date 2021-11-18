@@ -1,7 +1,4 @@
 <?php
-/**
- * Copyright © 2020 PAY. All rights reserved.
- */
 
 namespace Paynl\Payment\Controller\Checkout;
 
@@ -16,7 +13,7 @@ use Paynl\Payment\Controller\PayAction;
 use Paynl\Result\Transaction\Transaction;
 
 /**
- * Description of Index
+ * Communicates with PAY. in order to update payment statuses in magento
  *
  * @author Andy Pieters <andy@pay.nl>
  */
@@ -101,8 +98,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         OrderRepository $orderRepository,
         \Paynl\Payment\Model\Config $paynlConfig,
         \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $builderInterface
-    )
-    {
+    ) {
         $this->result = $result;
         $this->config = $config;
         $this->orderFactory = $orderFactory;
@@ -203,7 +199,6 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
                 return $this->cancelOrder($order);
             }
         }
-
     }
 
     private function cancelOrder(Order $order)
@@ -332,7 +327,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         # Skip creation of invoice for B2B if enabled
         if ($this->config->ignoreB2BInvoice($paymentMethod)) {
             $orderCompany = $order->getBillingAddress()->getCompany();
-            if(!empty($orderCompany)) {
+            if (!empty($orderCompany)) {
                 # Create transaction
                 $formatedPrice = $order->getBaseCurrency()->formatTxt($order->getGrandTotal());
                 $transactionMessage = __('PAY. - Captured amount of %1.', $formatedPrice);
@@ -420,8 +415,10 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
                 ->setTransactionId($subProfile)
                 ->setFailSafe(true)
                 ->build('capture')
-                ->setAdditionalInformation(\Magento\Sales\Model\Order\Payment\Transaction::RAW_DETAILS,
-                    array("Paymentmethod" => $method, "Amount" => $amount, "Currency" => $currency));
+                ->setAdditionalInformation(
+                    \Magento\Sales\Model\Order\Payment\Transaction::RAW_DETAILS,
+                    ["Paymentmethod" => $method, "Amount" => $amount, "Currency" => $currency]
+                );
             $transactionBuilder->save();
 
             $order->addStatusHistoryComment(__('PAY.: Partial payment received: '.$subProfile.' - Amount ' . $currency . ' ' . $amount . ' Method: ' . $method));

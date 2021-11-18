@@ -1,7 +1,4 @@
 <?php
-/**
- * Copyright © 2020 PAY. All rights reserved.
- */
 
 namespace Paynl\Payment\Model\Config\Source;
 
@@ -9,8 +6,6 @@ use \Magento\Framework\Option\ArrayInterface;
 
 class CancelURL implements ArrayInterface
 {
-
-
     /**
      * Options getter
      *
@@ -39,5 +34,4 @@ class CancelURL implements ArrayInterface
             'checkout' => __('checkout')
         ];
     }
-
 }

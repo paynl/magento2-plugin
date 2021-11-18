@@ -1,7 +1,4 @@
 <?php
-/**
- * Copyright © 2015 Pay.nl All rights reserved.
- */
 
 namespace Paynl\Payment\Model\Paymentmethod;
 
@@ -22,11 +19,6 @@ use Magento\Sales\Model\OrderRepository;
 use Paynl\Payment\Model\Config;
 use Paynl\Transaction;
 
-
-/**
- * Class PaymentMethod
- * @package Paynl\Payment\Model\Paymentmethod
- */
 abstract class PaymentMethod extends AbstractMethod
 {
     protected $_code = 'paynl_payment_base';
@@ -86,21 +78,29 @@ abstract class PaymentMethod extends AbstractMethod
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = []
-    )
-    {
+    ) {
         parent::__construct(
-            $context, $registry, $extensionFactory, $customAttributeFactory,
-            $paymentData, $scopeConfig, $methodLogger, $resource, $resourceCollection, $data);
+            $context,
+            $registry,
+            $extensionFactory,
+            $customAttributeFactory,
+            $paymentData,
+            $scopeConfig,
+            $methodLogger,
+            $resource,
+            $resourceCollection,
+            $data
+        );
 
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
 
         $this->messageManager = $objectManager->get(\Magento\Framework\Message\ManagerInterface::class);
-        $this->helper = $objectManager->create('Paynl\Payment\Helper\PayHelper');
+        $this->helper = $objectManager->create(\Paynl\Payment\Helper\PayHelper::class);
         $this->paynlConfig = $paynlConfig;
         $this->orderRepository = $orderRepository;
         $this->orderConfig = $orderConfig;
         $this->logger = $objectManager->get(\Psr\Log\LoggerInterface::class);
-        $this->storeManager = $objectManager->create('\Magento\Store\Model\StoreManagerInterface');
+        $this->storeManager = $objectManager->create(\Magento\Store\Model\StoreManagerInterface::class);
     }
 
     protected function getState($status)
@@ -113,7 +113,9 @@ abstract class PaymentMethod extends AbstractMethod
 
         foreach ($validStates as $state) {
             $statusses = $this->orderConfig->getStateStatuses($state, false);
-            if (in_array($status, $statusses)) return $state;
+            if (in_array($status, $statusses)) {
+                return $state;
+            }
         }
         return false;
     }
@@ -162,7 +164,6 @@ abstract class PaymentMethod extends AbstractMethod
     {
         return $this->_scopeConfig->getValue('payment/' . $this->_code . '/showforcompany', 'store');
     }
-
 
     public function isCurrentIpValid()
     {
@@ -325,7 +326,6 @@ abstract class PaymentMethod extends AbstractMethod
         $orderId = $order->getIncrementId();
         $quoteId = $order->getQuoteId();
 
-
         $store = $order->getStore();
         $baseUrl = $store->getBaseUrl();
 
@@ -338,12 +338,12 @@ abstract class PaymentMethod extends AbstractMethod
         if ($arrBillingAddress) {
             $arrBillingAddress = $arrBillingAddress->toArray();
 
-            $enduser = array(
+            $enduser = [
                 'initials' => $arrBillingAddress['firstname'],
                 'lastName' => $arrBillingAddress['lastname'],
                 'phoneNumber' => $arrBillingAddress['telephone'],
                 'emailAddress' => $arrBillingAddress['email'],
-            );
+            ];
 
             if (isset($additionalData['dob'])) {
                 $enduser['dob'] = $additionalData['dob'];
@@ -355,27 +355,27 @@ abstract class PaymentMethod extends AbstractMethod
             $enduser['gender'] = $this->genderConversion((empty($enduser['gender'])) ? $order->getCustomerGender($order) : $enduser['gender']);
 
             if (!empty($arrBillingAddress['company'])) {
-              $enduser['company']['name'] = $arrBillingAddress['company'];
+                $enduser['company']['name'] = $arrBillingAddress['company'];
             }
 
             if (!empty($arrBillingAddress['country_id'])) {
                 $enduser['company']['countryCode'] =  $arrBillingAddress['country_id'];
-            }  
+            }
 
             if (!empty($kvknummer)) {
-              $enduser['company']['cocNumber'] = $kvknummer;
+                $enduser['company']['cocNumber'] = $kvknummer;
             }
 
             if (!empty($arrBillingAddress['vat_id'])) {
                 $enduser['company']['vatNumber'] = $arrBillingAddress['vat_id'];
-            } else if (!empty($vatnumber)) {
+            } elseif (!empty($vatnumber)) {
                 $enduser['company']['vatNumber'] = $vatnumber;
             }
 
-            $invoiceAddress = array(
+            $invoiceAddress = [
                 'initials' => $arrBillingAddress['firstname'],
                 'lastName' => $arrBillingAddress['lastname']
-            );
+            ];
 
             $arrAddress = \Paynl\Helper::splitAddress($arrBillingAddress['street']);
             $invoiceAddress['streetName'] = $arrAddress[0];
@@ -385,7 +385,7 @@ abstract class PaymentMethod extends AbstractMethod
             $invoiceAddress['country'] = $arrBillingAddress['country_id'];
 
             if (!empty($arrShippingAddress['vat_id'])) {
-              $enduser['company']['vatNumber'] = $arrShippingAddress['vat_id'];
+                $enduser['company']['vatNumber'] = $arrShippingAddress['vat_id'];
             }
         }
 
@@ -393,10 +393,10 @@ abstract class PaymentMethod extends AbstractMethod
         if ($arrShippingAddress) {
             $arrShippingAddress = $arrShippingAddress->toArray();
 
-            $shippingAddress = array(
+            $shippingAddress = [
                 'initials' => $arrShippingAddress['firstname'],
                 'lastName' => $arrShippingAddress['lastname']
-            );
+            ];
             $arrAddress2 = \Paynl\Helper::splitAddress($arrShippingAddress['street']);
             $shippingAddress['streetName'] = $arrAddress2[0];
             $shippingAddress['houseNumber'] = $arrAddress2[1];
@@ -409,7 +409,7 @@ abstract class PaymentMethod extends AbstractMethod
         $prefix = $this->_scopeConfig->getValue('payment/paynl/order_description_prefix', 'store');
         $description = !empty($prefix) ? $prefix . $orderId : $orderId;
 
-        $data = array(
+        $data = [
             'amount' => $total,
             'returnUrl' => $returnUrl,
             'paymentMethod' => $paymentOptionId,
@@ -424,7 +424,7 @@ abstract class PaymentMethod extends AbstractMethod
             'exchangeUrl' => $exchangeUrl,
             'currency' => $currency,
             'object' => substr('magento2 ' . $this->paynlConfig->getVersion() . ' | ' . $this->paynlConfig->getMagentoVersion() . ' | ' . $this->paynlConfig->getPHPVersion(), 0, 64),
-        );
+        ];
         if (isset($shippingAddress)) {
             $data['address'] = $shippingAddress;
         }
@@ -434,7 +434,7 @@ abstract class PaymentMethod extends AbstractMethod
         if (isset($enduser)) {
             $data['enduser'] = $enduser;
         }
-        $arrProducts = array();
+        $arrProducts = [];
         foreach ($items as $item) {
             $arrItem = $item->toArray();
             if ($arrItem['price_incl_tax'] != null) {
@@ -447,14 +447,14 @@ abstract class PaymentMethod extends AbstractMethod
                     $price = $arrItem['base_price_incl_tax'];
                 }
 
-                $product = array(
+                $product = [
                     'id' => $arrItem['product_id'],
                     'name' => $arrItem['name'],
                     'price' => $price,
                     'qty' => $arrItem['qty_ordered'],
                     'tax' => $taxAmount,
                     'type' => \Paynl\Transaction::PRODUCT_TYPE_ARTICLE
-                );
+                ];
 
                 # Product id's must be unique. Combinations of a "Configurable products" share the same product id.
                 # Each combination of a "configurable product" can be represented by a "simple product".
@@ -464,9 +464,9 @@ abstract class PaymentMethod extends AbstractMethod
                     $children = $item->getChildrenItems();
                     $child = array_shift($children);
 
-                  if (!empty($child) && $child instanceof \Magento\Sales\Model\Order\Item && method_exists($child, 'getProductId')) {
-                    $product['id'] = $child->getProductId();
-                  }
+                    if (!empty($child) && $child instanceof \Magento\Sales\Model\Order\Item && method_exists($child, 'getProductId')) {
+                        $product['id'] = $child->getProductId();
+                    }
                 }
 
                 $arrProducts[] = $product;
@@ -485,14 +485,14 @@ abstract class PaymentMethod extends AbstractMethod
         $shippingDescription = $order->getShippingDescription();
 
         if ($shippingCost != 0) {
-            $arrProducts[] = array(
+            $arrProducts[] = [
                 'id' => 'shipping',
                 'name' => $shippingDescription,
                 'price' => $shippingCost,
                 'qty' => 1,
                 'tax' => $shippingTax,
                 'type' => \Paynl\Transaction::PRODUCT_TYPE_SHIPPING
-            );
+            ];
         }
 
         // Gift Wrapping
@@ -505,14 +505,14 @@ abstract class PaymentMethod extends AbstractMethod
         }
 
         if ($gwCost != 0) {
-            $arrProducts[] = array(
+            $arrProducts[] = [
                 'id' => $order->getGwId(),
                 'name' => 'Gift Wrapping',
                 'price' => $gwCost,
                 'qty' => 1,
                 'tax' => $gwTax,
                 'type' => \Paynl\Transaction::PRODUCT_TYPE_HANDLING
-            );
+            ];
         }
 
         // kortingen
@@ -531,14 +531,14 @@ abstract class PaymentMethod extends AbstractMethod
         $discountDescription = __('Discount');
 
         if ($discount != 0) {
-            $arrProducts[] = array(
+            $arrProducts[] = [
                 'id' => 'discount',
                 'name' => $discountDescription,
                 'price' => $discount,
                 'qty' => 1,
                 'tax' => $discountTax,
                 'type' => \Paynl\Transaction::PRODUCT_TYPE_DISCOUNT
-            );
+            ];
         }
 
         $data['products'] = $arrProducts;
@@ -553,8 +553,6 @@ abstract class PaymentMethod extends AbstractMethod
         }
         $data['ipaddress'] = $ipAddress;
 
-
-
         $transaction = \Paynl\Transaction::start($data);
 
         return $transaction;
@@ -564,7 +562,9 @@ abstract class PaymentMethod extends AbstractMethod
     {
         $paymentOptionId = $this->getConfigData('payment_option_id');
 
-        if (empty($paymentOptionId)) $paymentOptionId = $this->getDefaultPaymentOptionId();
+        if (empty($paymentOptionId)) {
+            $paymentOptionId = $this->getDefaultPaymentOptionId();
+        }
 
         return $paymentOptionId;
     }

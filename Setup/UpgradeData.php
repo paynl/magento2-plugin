@@ -13,11 +13,6 @@ use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Psr\Log\LoggerInterface;
 
-/**
- * Class UpgradeData
- *
- * @package Paynl\Payment\Setup
- */
 class UpgradeData implements UpgradeDataInterface
 {
     /**
@@ -107,5 +102,4 @@ class UpgradeData implements UpgradeDataInterface
             $this->resourceConfig->saveConfig($path, '1669', 'default', 0);
         }
     }
-
 }

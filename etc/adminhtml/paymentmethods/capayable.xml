@@ -73,7 +73,7 @@
         </field>
         <field id="showkvk" translate="label" type="select" sortOrder="65" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Show COC field</label>
-            <source_model>Paynl\Payment\Model\Config\Source\showKvkOptions</source_model>
+            <source_model>Paynl\Payment\Model\Config\Source\ShowKvkOptions</source_model>
             <depends>
                 <field id="active">1</field>
             </depends>
@@ -82,7 +82,7 @@
         </field>
         <field id="showvat" translate="label" type="select" sortOrder="66" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Show VAT field</label>
-            <source_model>Paynl\Payment\Model\Config\Source\showNonPrivate</source_model>
+            <source_model>Paynl\Payment\Model\Config\Source\ShowNonPrivate</source_model>
             <depends>
                 <field id="active">1</field>
             </depends>
@@ -91,7 +91,7 @@
         </field>
         <field id="showdob" translate="label" type="select" sortOrder="67" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Show Date of birth field</label>
-            <source_model>Paynl\Payment\Model\Config\Source\showDobOptions</source_model>
+            <source_model>Paynl\Payment\Model\Config\Source\ShowDobOptions</source_model>
             <depends>
                 <field id="active">1</field>
             </depends>
@@ -146,7 +146,7 @@
         </field>
         <field id="showforcompany" translate="label" type="select" sortOrder="150" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Show for companies</label>
-            <source_model>Paynl\Payment\Model\Config\Source\showCompanyOptions</source_model>
+            <source_model>Paynl\Payment\Model\Config\Source\ShowCompanyOptions</source_model>
             <depends>
                 <field id="active">1</field>
             </depends>

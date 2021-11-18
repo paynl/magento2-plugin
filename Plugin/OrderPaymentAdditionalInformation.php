@@ -4,10 +4,6 @@ namespace Paynl\Payment\Plugin;
 
 use Magento\Sales\Model\Order\Payment;
 
-/**
- * Class OrderPaymentAdditionalInformation
- * @package Paynl\Payment\Plugin
- */
 class OrderPaymentAdditionalInformation
 {
     /**

@@ -8,11 +8,6 @@ use Magento\Framework\App\Config\Storage\WriterInterface;
 use Magento\Store\Model\Store;
 use Psr\Log\LoggerInterface;
 
-/**
- * Class InstallSchema
- *
- * @package Paynl\Payment\Setup
- */
 class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
 {
     /**
@@ -52,9 +47,8 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
 
         $this->configWriter->save('payment/paynl/image_style', 'newest');
         $this->configWriter->save('payment/paynl/pay_style_checkout', 1);
-        $this->configWriter->save('payment/paynl/icon_size', 'small');      
+        $this->configWriter->save('payment/paynl/icon_size', 'small');
         
         $setup->endSetup();
     }
-
 }

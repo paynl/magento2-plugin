@@ -1,16 +1,9 @@
 <?php
-/**
- * Copyright © 2020 PAY. All rights reserved.
- */
 
 namespace Paynl\Payment\Model\Paymentmethod;
 
 use Paynl\Payment\Model\Config;
 
-/**
- * Class Ideal
- * @package Paynl\Payment\Model\Paymentmethod
- */
 class Ideal extends PaymentMethod
 {
     protected $_code = 'paynl_payment_ideal';
@@ -63,16 +56,16 @@ class Ideal extends PaymentMethod
             $banks = \Paynl\Paymentmethods::getBanks($this->getPaymentOptionId());
             $cache->save(json_encode($banks), $cacheName);
         }
-        array_unshift($banks, array(
+        array_unshift($banks, [
             'id' => '',
             'name' => __('Choose your bank'),
             'visibleName' => __('Choose your bank')
-        ));
+        ]);
 
         foreach ($banks as $key => $bank) {
             $banks[$key]['logo'] = $this->paynlConfig->getIconUrlIssuer($bank['id']);
         }
-
+        
         return $banks;
     }
 
@@ -84,7 +77,7 @@ class Ideal extends PaymentMethod
         /** @var \Magento\Framework\ObjectManagerInterface $om */
         $om = \Magento\Framework\App\ObjectManager::getInstance();
         /** @var \Magento\Framework\App\CacheInterface $cache */
-        $cache = $om->get('Magento\Framework\App\CacheInterface');
+        $cache = $om->get(\Magento\Framework\App\CacheInterface::class);
         return $cache;
     }
 }

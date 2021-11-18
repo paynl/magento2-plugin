@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-/**
- * Copyright © 2020 PAY. All rights reserved.
- */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
@@ -67,7 +64,7 @@
                 <field id="image_style" translate="label" type="select" sortOrder="85" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Image style</label>
                     <comment><![CDATA[Select whether you want to use classic icons, or the newest up-to-date icons.]]></comment>
-                    <source_model>Paynl\Payment\Model\Config\Source\imageStyle</source_model>
+                    <source_model>Paynl\Payment\Model\Config\Source\ImageStyle</source_model>
                 </field>
                 <field id="iconurl" translate="label,comment" type="text" sortOrder="86" showInDefault="1"
                        showInWebsite="1" showInStore="1">
@@ -84,7 +81,7 @@
                 </field>
                 <field id="icon_size" translate="label" type="select" sortOrder="88" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Icon size</label>
-                    <source_model>Paynl\Payment\Model\Config\Source\iconSize</source_model>
+                    <source_model>Paynl\Payment\Model\Config\Source\IconSize</source_model>
                     <depends>
                         <field id="pay_style_checkout">1</field>
                     </depends>
