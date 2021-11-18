@@ -1,25 +1,20 @@
 <?php
-/**
- * Copyright © 2020 PAY. All rights reserved.
- */
 
 namespace Paynl\Payment\Controller\Checkout;
 
 class Paylink extends \Magento\Framework\App\Action\Action
 {
-	protected $_pageFactory;
-	public function __construct(
-		\Magento\Framework\App\Action\Context $context,
-		\Magento\Framework\View\Result\PageFactory $pageFactory)
-	{
- 
+    protected $_pageFactory;
+    public function __construct(
+        \Magento\Framework\App\Action\Context $context,
+        \Magento\Framework\View\Result\PageFactory $pageFactory
+    ) {
+        $this->_pageFactory = $pageFactory;
+        return parent::__construct($context);
+    }
 
-		$this->_pageFactory = $pageFactory;
-		return parent::__construct($context);
-	}
-
-	public function execute()
-	{
-		return $this->_pageFactory->create();
-	}
+    public function execute()
+    {
+        return $this->_pageFactory->create();
+    }
 }

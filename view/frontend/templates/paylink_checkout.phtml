@@ -15,7 +15,7 @@
             if ($cancel == 1) {
                 $message = __('The payment has been canceled.');
             }
-            echo $message;
+            echo $block->escapeHtml($message);
             ?>
         </span>
     </h1>

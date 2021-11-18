@@ -7,10 +7,6 @@ use Magento\Backend\Block\Template\Context;
 use Magento\Framework\Data\Form\Element\AbstractElement;
 use Paynl\Payment\Model\Config;
 
-/**
- * Class Version
- *
- */
 class Version extends Field
 {
     protected $paynlConfig;

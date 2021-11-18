@@ -130,7 +130,7 @@
         </field>
         <field id="showforcompany" translate="label" type="select" sortOrder="150" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Show for companies</label>
-            <source_model>Paynl\Payment\Model\Config\Source\showCompanyOptions</source_model>
+            <source_model>Paynl\Payment\Model\Config\Source\ShowCompanyOptions</source_model>
             <depends>
                 <field id="active">1</field>
             </depends>

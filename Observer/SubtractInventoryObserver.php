@@ -1,4 +1,5 @@
 <?php
+
 namespace Paynl\Payment\Observer;
 
 use Magento\CatalogInventory\Api\StockManagementInterface;
@@ -34,8 +35,7 @@ class SubtractInventoryObserver implements ObserverInterface
         StockManagementInterface $stockManagement,
         StockProcessor $stockIndexerProcessor,
         LoggerInterface $logger
-    )
-    {
+    ) {
         $this->stockManagement = $stockManagement;
         $this->stockIndexerProcessor = $stockIndexerProcessor;
         $this->logger = $logger;
@@ -63,8 +63,7 @@ class SubtractInventoryObserver implements ObserverInterface
             $productQty,
             $order->getStore()->getWebsiteId()
         );
-
-
+        
         $productIds = [];
         foreach ($itemsForReindex as $item) {
             $item->save();

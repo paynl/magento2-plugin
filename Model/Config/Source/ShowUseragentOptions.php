@@ -1,13 +1,10 @@
 <?php
-/**
- * Copyright © 2020 Pay.nl All rights reserved.
- */
 
 namespace Paynl\Payment\Model\Config\Source;
 
 use \Magento\Framework\Option\ArrayInterface;
 
-class showUseragentOptions implements ArrayInterface
+class ShowUseragentOptions implements ArrayInterface
 {
 
     /**
@@ -32,7 +29,6 @@ class showUseragentOptions implements ArrayInterface
      * @return array
      */
 
-
     public function toArray()
     {
         return [
@@ -46,5 +42,4 @@ class showUseragentOptions implements ArrayInterface
             'Custom' => __('Custom')
         ];
     }
-
 }

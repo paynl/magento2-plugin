@@ -1,7 +1,4 @@
 <?php
-/**
- * Copyright © 2020 PAY. All rights reserved.
- */
 
 namespace Paynl\Payment\Model\Config\Source\Available;
 
@@ -51,8 +48,7 @@ abstract class Available implements ArrayInterface
         ScopeConfigInterface $scopeConfig,
         PaymentMethodFactory $paymentMethodFactory,
         \Magento\Store\Model\StoreManagerInterface $storeManager
-    )
-    {
+    ) {
         $this->_config = $config;
         $this->_request = $request;
         $this->_scopeConfig = $scopeConfig;
@@ -101,13 +97,12 @@ abstract class Available implements ArrayInterface
         } catch (\Exception $e) {
             return [0 => 'Error: ' . $e->getMessage()];
         }
-
     }
 
     protected function getPaymentOptionId()
     {
         $method = $this->_paymentmethodFactory->create($this->_class);
-        if($method instanceof PaymentMethod){
+        if ($method instanceof PaymentMethod) {
             return $method->getPaymentOptionId();
         }
         return null;
@@ -127,7 +122,6 @@ abstract class Available implements ArrayInterface
             $scopeValue = $website;
             $scopeType = ScopeInterface::SCOPE_WEBSITE;
         }
-
 
         return $this->_scopeConfig->getValue($path, $scopeType, $scopeValue);
     }

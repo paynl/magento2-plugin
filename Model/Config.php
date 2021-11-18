@@ -1,14 +1,11 @@
 <?php
-/**
- * Copyright © 2020 PAY. All rights reserved.
- */
 
 namespace Paynl\Payment\Model;
 
 use Magento\Store\Model\Store;
 
 /**
- * Description of Config
+ * Get / Set configuration for the PAY api and Magento settings.
  *
  * @author Andy Pieters <andy@pay.nl>
  */
@@ -26,7 +23,7 @@ class Config
     private $resources;
 
     /** @array  Brands */
-    public $brands = array(
+    public $brands = [
         "paynl_payment_afterpay" => "14",
         "paynl_payment_afterpay_international" => "14",
         "paynl_payment_alipay" => "82",
@@ -82,7 +79,7 @@ class Config
         "paynl_payment_wijncadeau" => "135",
         "paynl_payment_yehhpay" => "1",
         "paynl_payment_yourgift" => "31"
-    );
+    ];
 
     public function __construct(
         Store $store,
@@ -113,7 +110,7 @@ class Config
     public function getMagentoVersion()
     {
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $productMetadata = $objectManager->get('Magento\Framework\App\ProductMetadataInterface');
+        $productMetadata = $objectManager->get(\Magento\Framework\App\ProductMetadataInterface::class);
         $version = $productMetadata->getVersion();
 
         return $version;
@@ -144,7 +141,7 @@ class Config
 
         $ipconfig = $this->store->getConfig('payment/paynl/testipaddress');
         $allowed_ips = explode(',', $ipconfig);
-        if(in_array($ip, $allowed_ips) && filter_var($ip, FILTER_VALIDATE_IP) && strlen($ip) > 0 && count($allowed_ips) > 0){
+        if (in_array($ip, $allowed_ips) && filter_var($ip, FILTER_VALIDATE_IP) && strlen($ip) > 0 && count($allowed_ips) > 0) {
             return true;
         }
         return $this->store->getConfig('payment/paynl/testmode') == 1;
@@ -204,7 +201,7 @@ class Config
 
     public function autoCaptureEnabled()
     {
-       return $this->store->getConfig('payment/paynl/auto_capture') == 1;
+        return $this->store->getConfig('payment/paynl/auto_capture') == 1;
     }
 
     /**
@@ -275,12 +272,18 @@ class Config
             $iconUrl = $this->resources->getViewFileUrl("Paynl_Payment::logos/" . $brandId . ".png");
         } else {
             $iconsize = '50x32';
-            if($this->store->getConfig('payment/paynl/pay_style_checkout') == 1){
-                switch($this->store->getConfig('payment/paynl/icon_size')){
-                    case 'xlarge': $iconsize = '100x100'; break;
-                    case 'large':  $iconsize = '75x75';   break;
-                    case 'medium': $iconsize = '50x50';   break;                     
-                }          
+            if ($this->store->getConfig('payment/paynl/pay_style_checkout') == 1) {
+                switch ($this->store->getConfig('payment/paynl/icon_size')) {
+                    case 'xlarge':
+                        $iconsize = '100x100';
+                        break;
+                    case 'large':
+                        $iconsize = '75x75';
+                        break;
+                    case 'medium':
+                        $iconsize = '50x50';
+                        break;
+                }
             }
             $iconUrl = 'https://static.pay.nl/payment_profiles/' . $iconsize . '/' . $paymentOptionId . '.png';
             $customUrl = trim($this->store->getConfig('payment/paynl/iconurl'));
@@ -293,8 +296,8 @@ class Config
     }
 
     public function getIconSize()
-    {        
-        if($this->store->getConfig('payment/paynl/pay_style_checkout') == 1 && $this->store->getConfig('payment/paynl/image_style') == 'newest'){
+    {
+        if ($this->store->getConfig('payment/paynl/pay_style_checkout') == 1 && $this->store->getConfig('payment/paynl/image_style') == 'newest') {
             return $this->store->getConfig('payment/paynl/icon_size');
         }
         return false;
@@ -320,17 +323,18 @@ class Config
         return $this->store->getConfig('payment/paynl/register_partial_payments');
     }
 
-    public function getPaymentmethodCode($paymentProfileId){
+    public function getPaymentmethodCode($paymentProfileId)
+    {
 
         //Get all PAY. methods
         $objectManager =  \Magento\Framework\App\ObjectManager::getInstance();
-        $paymentHelper = $objectManager->get('Magento\Payment\Helper\Data');
+        $paymentHelper = $objectManager->get(\Magento\Payment\Helper\Data::class);
         $paymentMethodList = $paymentHelper->getPaymentMethods();
-        $pay_methods = array();
+        $pay_methods = [];
         foreach ($paymentMethodList as $key => $value) {
             if (strpos($key, 'paynl_') !== false && $key != 'paynl_payment_paylink') {
                 $code = $this->store->getConfig('payment/' . $key . '/payment_option_id');
-                if($code == $paymentProfileId){
+                if ($code == $paymentProfileId) {
                     return $key;
                 }
             }

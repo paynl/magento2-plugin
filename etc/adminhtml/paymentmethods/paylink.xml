@@ -109,7 +109,7 @@
         </field>
         <field id="show_order_in_mail" translate="label" type="select" sortOrder="150" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Show order in Paylink email</label>
-            <source_model>Paynl\Payment\Model\Config\Source\showPaylinkOptions</source_model>
+            <source_model>Paynl\Payment\Model\Config\Source\ShowPaylinkOptions</source_model>
             <depends>
                 <field id="active">1</field>
             </depends>

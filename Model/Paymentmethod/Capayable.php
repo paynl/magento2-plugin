@@ -1,14 +1,7 @@
 <?php
-/**
- * Copyright © 2020 PAY. All rights reserved.
- */
 
 namespace Paynl\Payment\Model\Paymentmethod;
 
-/**
- * Class Capayable
- * @package Paynl\Payment\Model\Paymentmethod
- */
 class Capayable extends PaymentMethod
 {
     protected $_code = 'paynl_payment_capayable';
@@ -17,5 +10,4 @@ class Capayable extends PaymentMethod
     {
         return 1744;
     }
-
 }

@@ -1,7 +1,4 @@
 <?php
-/**
- * Copyright © 2020 PAY. All rights reserved.
- */
 
 namespace Paynl\Payment\Model\Config\Source;
 
@@ -32,19 +29,18 @@ class DefaultPaymentOption implements ArrayInterface
      */
     public function toArray()
     {
-        $objectManager =  \Magento\Framework\App\ObjectManager::getInstance();        
-        $paymentConfig = $objectManager->get('Magento\Payment\Model\Config');
+        $objectManager =  \Magento\Framework\App\ObjectManager::getInstance();
+        $paymentConfig = $objectManager->get(\Magento\Payment\Model\Config::class);
         $activePaymentMethods = $paymentConfig->getActiveMethods();
-        $scopeConfigInterface = $objectManager->get('Magento\Framework\App\Config\ScopeConfigInterface');
+        $scopeConfigInterface = $objectManager->get(\Magento\Framework\App\Config\ScopeConfigInterface::class);
         //get only PAY. Methods
-        $active_paynl_methods = array();
+        $active_paynl_methods = [];
         $active_paynl_methods[0] = 'None';
         foreach ($activePaymentMethods as $key => $value) {
-            if(strpos($key, 'paynl') !== false && $key != 'paynl_payment_paylink'){
+            if (strpos($key, 'paynl') !== false && $key != 'paynl_payment_paylink') {
                 $active_paynl_methods[$key] = $scopeConfigInterface->getValue('payment/' . $key . '/title');
             }
         }
         return $active_paynl_methods;
     }
-
 }
