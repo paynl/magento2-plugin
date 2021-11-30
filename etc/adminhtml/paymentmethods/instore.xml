@@ -26,6 +26,14 @@
             </depends>
             <config_path>payment/paynl_payment_instore/default_terminal</config_path>
         </field>
+        <field id="hide_terminal_selection" translate="label" type="select" sortOrder="26" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Hide terminal selection</label>
+            <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
+            <depends>
+                <field id="default_terminal" negative="1">0</field>
+            </depends>
+            <config_path>payment/paynl_payment_instore/hide_terminal_selection</config_path>
+        </field>
         <field id="order_status" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1"
                showInStore="1">
             <label>New Order Status</label>

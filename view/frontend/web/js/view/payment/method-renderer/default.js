@@ -133,6 +133,9 @@ define(
                 return (this.getDOB() > 0 && this.getKVK() > 0);
             },
             showPaymentOptions: function(){
+                if(window.checkoutConfig.payment.hidepaymentoptions[this.item.method] == 1){
+                    return false;
+                } 
                 return window.checkoutConfig.payment.paymentoptions[this.item.method].length > 0;
             },
             getPaymentOptions: function(){

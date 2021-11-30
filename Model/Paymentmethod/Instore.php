@@ -105,6 +105,14 @@ class Instore extends PaymentMethod
         return $terminalsArr;
     }
 
+    public function hidePaymentOptions()
+    {
+        if(!empty($this->getDefaultPaymentOption()) && $this->getDefaultPaymentOption() != '0'){
+            return $this->_scopeConfig->getValue('payment/' . $this->_code . '/hide_terminal_selection', 'store');        
+        }
+        return 0;
+    }
+
     public function getDefaultPaymentOption()
     {
         return $this->_scopeConfig->getValue('payment/' . $this->_code . '/default_terminal', 'store');       
