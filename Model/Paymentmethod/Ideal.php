@@ -56,11 +56,13 @@ class Ideal extends PaymentMethod
             $banks = \Paynl\Paymentmethods::getBanks($this->getPaymentOptionId());
             $cache->save(json_encode($banks), $cacheName);
         }
-        array_unshift($banks, [
-            'id' => '',
-            'name' => __('Choose your bank'),
-            'visibleName' => __('Choose your bank')
-        ]);
+        if ($this->showPaymentOptions() != 2) {
+            array_unshift($banks, array(
+                'id' => '',
+                'name' => __('Choose your bank'),
+                'visibleName' => __('Choose your bank')
+            ));
+        }
 
         foreach ($banks as $key => $bank) {
             $banks[$key]['logo'] = $this->paynlConfig->getIconUrlIssuer($bank['id']);

@@ -148,22 +148,17 @@ define(
                 }
                 if (!(this.item.method in this.paymentOptionsList)){
                     var list = window.checkoutConfig.payment.paymentoptions[this.item.method];
-                    var name = 'paymentOptionsList_' + this.item.method;                      
-                    var list = _.filter(_.uniq(list, function(item, key, a) {
-                        return item.id;
-                    }), function(element) {
-                        return element.id
-                    });
-                    $.each( list, function( i, l ){                 
+                    var name = 'paymentOptionsList_' + this.item.method;
+                    $.each(list, function (i, l) {
                         list[i].radioName = name;
-                        list[i].uniqueId = name + '_' + list[i].id;                        
-                        list[i].showLogo = true;                   
-                        if (!('logo' in list[i])){
+                        list[i].uniqueId = name + '_' + list[i].id;
+                        list[i].showLogo = true;
+                        if (!('logo' in list[i])) {
                             list[i].showLogo = false;
-                            list[i].logo = '';                        
-                        }   
-                    });                       
-                    this.paymentOptionsList[this.item.method] = list;   
+                            list[i].logo = '';
+                        }
+                    });
+                    this.paymentOptionsList[this.item.method] = list;
                     return list;
                 }
                 return this.paymentOptionsList[this.item.method];
