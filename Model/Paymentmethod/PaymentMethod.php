@@ -135,6 +135,11 @@ abstract class PaymentMethod extends AbstractMethod
         return [];
     }
 
+    public function hidePaymentOptions()
+    {
+        return 0;
+    }
+
     public function getKVK()
     {
         return $this->_scopeConfig->getValue('payment/' . $this->_code . '/showkvk', 'store');
