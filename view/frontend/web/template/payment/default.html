@@ -27,7 +27,7 @@
         <div data-bind="visible: showPaymentOptionsList()" class="field-select-billing">
             <br/>
             <span class="paymentOptionsListTest" data-bind="i18n: 'Choose your bank'"></span>
-            <ul class="paymentOptionsList" data-bind="foreach: getPaymentOptionsList()">
+            <ul class="paymentOptionsList" data-bind="foreach: getPaymentOptionsList()" style="list-style-type: none;">
                 <li>
                     <input type="radio" data-bind="value: id, checked: $parent.paymentOption, attr: {'id': uniqueId, 'name': radioName}">
                     <label data-bind="attr: {'for': uniqueId}">
