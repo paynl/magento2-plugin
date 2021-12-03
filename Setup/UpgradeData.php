@@ -11,7 +11,7 @@ use Magento\Framework\App\Config\Storage\WriterInterface;
 use Magento\Framework\Setup\UpgradeDataInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
-use Psr\Log\LoggerInterface;
+use \Paynl\Payment\Helper\PayHelper;
 
 class UpgradeData implements UpgradeDataInterface
 {
@@ -41,7 +41,6 @@ class UpgradeData implements UpgradeDataInterface
      * @var StoreManagerInterface
      */
     private $storeManager;
-    private $logger;
 
     /**
      * UpgradeData constructor.
@@ -51,15 +50,13 @@ class UpgradeData implements UpgradeDataInterface
      * @param Config $resourceConfig
      * @param WriterInterface $configWriter
      * @param StoreManagerInterface $storeManager
-     * @param LoggerInterface $logger
      */
-    public function __construct(SalesSetupFactory $salesSetupFactory, ResourceConnection $resourceConnection, Config $resourceConfig, WriterInterface $configWriter, StoreManagerInterface $storeManager, LoggerInterface $logger)
+    public function __construct(SalesSetupFactory $salesSetupFactory, ResourceConnection $resourceConnection, Config $resourceConfig, WriterInterface $configWriter, StoreManagerInterface $storeManager)
     {
         $this->salesSetupFactory = $salesSetupFactory;
         $this->resourceConnection = $resourceConnection;
         $this->resourceConfig = $resourceConfig;
         $this->configWriter = $configWriter;
-        $this->logger = $logger;
         $this->storeManager = $storeManager;
     }
 
@@ -71,7 +68,7 @@ class UpgradeData implements UpgradeDataInterface
     {
         $setup->startSetup();
 
-        $this->logger->debug('PAY.: Upgrade. Module version: ' . $context->getVersion());
+        payHelper::log('Upgrade. Module version: ' . $context->getVersion(), payHelper::LOG_TYPE_DEBUG);
 
         # Update fashiongiftcard when current install is lower then 2.0.1
         if (version_compare($context->getVersion(), '2.0.1', '<')) {
@@ -84,7 +81,7 @@ class UpgradeData implements UpgradeDataInterface
 
     private function updateFashionGiftcard()
     {
-        $this->logger->debug('PAY.: updateFashionGiftcard');
+        payHelper::log('updateFashionGiftcard', payHelper::LOG_TYPE_DEBUG);
 
         $connection = $this->resourceConnection->getConnection();
         $tableName = $this->resourceConnection->getTableName('core_config_data');
@@ -96,7 +93,7 @@ class UpgradeData implements UpgradeDataInterface
         if (!$result) {
             return;
         }
-        $this->logger->debug('PAY.: updateFashionGiftcard result ' . $result);
+        payHelper::log('updateFashionGiftcard result ' . $result, payHelper::LOG_TYPE_DEBUG);
         if ($result == '1699') {
             # Update the incorrect profileid.
             $this->resourceConfig->saveConfig($path, '1669', 'default', 0);

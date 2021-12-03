@@ -10,7 +10,7 @@ use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderRepository;
 use Paynl\Payment\Controller\PayAction;
 use Paynl\Payment\Model\Config;
-use Psr\Log\LoggerInterface;
+use \Paynl\Payment\Helper\PayHelper;
 
 /**
  * Finishes up the payment and redirects the user to the thank you page.
@@ -31,11 +31,6 @@ class Finish extends PayAction
     private $checkoutSession;
 
     /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
      * @var OrderRepository
      */
     private $orderRepository;
@@ -50,14 +45,12 @@ class Finish extends PayAction
      * @param Context $context
      * @param Config $config
      * @param Session $checkoutSession
-     * @param LoggerInterface $logger
      * @param OrderRepository $orderRepository
      */
-    public function __construct(Context $context, Config $config, Session $checkoutSession, LoggerInterface $logger, OrderRepository $orderRepository, QuoteRepository $quoteRepository)
+    public function __construct(Context $context, Config $config, Session $checkoutSession, OrderRepository $orderRepository, QuoteRepository $quoteRepository)
     {
         $this->config = $config;
         $this->checkoutSession = $checkoutSession;
-        $this->logger = $logger;
         $this->orderRepository = $orderRepository;
         $this->quoteRepository = $quoteRepository;
 
@@ -151,8 +144,8 @@ class Finish extends PayAction
                 $this->messageManager->addNoticeMessage($cancelMessage);
                 $resultRedirect->setPath($payment->getMethod() == 'paynl_payment_paylink' ? Config::FINISH_PAYLINK . '?cancel=1' : $this->config->getCancelURL());
             }
-        } catch (\Exception $e) {
-            $this->logger->critical($e->getCode() . ': ' . $e->getMessage(), $params);
+        } catch (\Exception $e) { 
+            payHelper::log($e->getCode() . ': ' . $e->getMessage(), payHelper::LOG_TYPE_CRITICAL, $params, $order->getStore());
 
             if ($e->getCode() == 101) {
                 $this->messageManager->addNoticeMessage(__('Invalid return, no transactionId specified'));

@@ -18,6 +18,7 @@ use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderRepository;
 use Paynl\Payment\Model\Config;
 use Paynl\Transaction;
+use \Paynl\Payment\Helper\PayHelper;
 
 abstract class PaymentMethod extends AbstractMethod
 {
@@ -31,12 +32,6 @@ abstract class PaymentMethod extends AbstractMethod
     protected $_canCapture = true;
 
     protected $_canVoid = true;
-
-    /**
-     *
-     * @var Psr\Log\LoggerInterface
-     */
-    protected $logger;
 
     /**
      * @var Config
@@ -99,7 +94,6 @@ abstract class PaymentMethod extends AbstractMethod
         $this->paynlConfig = $paynlConfig;
         $this->orderRepository = $orderRepository;
         $this->orderConfig = $orderConfig;
-        $this->logger = $objectManager->get(\Psr\Log\LoggerInterface::class);
         $this->storeManager = $objectManager->create(\Magento\Store\Model\StoreManagerInterface::class);
     }
 

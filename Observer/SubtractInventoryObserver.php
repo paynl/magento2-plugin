@@ -6,7 +6,7 @@ use Magento\CatalogInventory\Api\StockManagementInterface;
 use Magento\CatalogInventory\Model\Indexer\Stock\Processor as StockProcessor;
 use Magento\Framework\Event\Observer as EventObserver;
 use Magento\Framework\Event\ObserverInterface;
-use Psr\Log\LoggerInterface;
+use \Paynl\Payment\Helper\PayHelper;
 
 class SubtractInventoryObserver implements ObserverInterface
 {
@@ -21,24 +21,16 @@ class SubtractInventoryObserver implements ObserverInterface
     protected $itemsForReindex;
 
     /**
-     * @var LoggerInterface
-     */
-    protected $logger;
-
-    /**
      * SubtractInventoryObserver constructor.
      * @param StockManagementInterface $stockManagement
      * @param StockProcessor $stockIndexerProcessor
-     * @param LoggerInterface $logger
      */
     public function __construct(
         StockManagementInterface $stockManagement,
-        StockProcessor $stockIndexerProcessor,
-        LoggerInterface $logger
+        StockProcessor $stockIndexerProcessor
     ) {
         $this->stockManagement = $stockManagement;
         $this->stockIndexerProcessor = $stockIndexerProcessor;
-        $this->logger = $logger;
     }
 
     /**
