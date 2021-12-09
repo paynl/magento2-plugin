@@ -92,7 +92,7 @@ class Finish extends PayAction
         $magOrderId = empty($params['entityid']) ? null : $params['entityid'];
         $bSuccess = $orderStatusId === Config::ORDERSTATUS_PAID;
         $bDenied = $orderStatusId === Config::ORDERSTATUS_DENIED;
-        $bCanceled = $orderStatusId === Config::ORDERSTATUS_CANCELLED;
+        $bCanceled = $orderStatusId === Config::ORDERSTATUS_CANCELED;
         $isPinTransaction = false;
 
         try {

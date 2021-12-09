@@ -15,7 +15,7 @@ class Config
     const FINISH_STANDARD = 'checkout/onepage/success';
     const ORDERSTATUS_PAID = 100;
     const ORDERSTATUS_DENIED = -63;
-    const ORDERSTATUS_CANCELLED = -90;
+    const ORDERSTATUS_CANCELED = -90;
 
     /** @var  Store */
     private $store;
