@@ -139,6 +139,11 @@ abstract class PaymentMethod extends AbstractMethod
     {
         return false;
     }
+    
+    public function hidePaymentOptions()
+    {
+        return 0;
+    }
 
     public function getKVK()
     {

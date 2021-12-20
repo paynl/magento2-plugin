@@ -17,6 +17,7 @@ define(
             {type: 'paynl_payment_alipay', component: defaultComponent},
             {type: 'paynl_payment_amazonpay', component: defaultComponent},
             {type: 'paynl_payment_amex', component: defaultComponent},
+            {type: 'paynl_payment_biercheque', component: defaultComponent},
             {type: 'paynl_payment_billink', component: defaultComponent},
             {type: 'paynl_payment_capayable', component: defaultComponent},
             {type: 'paynl_payment_capayable_gespreid', component: defaultComponent},

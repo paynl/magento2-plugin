@@ -133,8 +133,11 @@ define(
             getKVKDOB: function () {
                 return (this.getDOB() > 0 && this.getKVK() > 0);
             },
-            showPaymentOptions: function(){
-                return window.checkoutConfig.payment.paymentoptions[this.item.method].length >= 1 && window.checkoutConfig.payment.showpaymentoptions[this.item.method] != 2;
+            showPaymentOptions: function(){               
+                if(window.checkoutConfig.payment.hidepaymentoptions[this.item.method] == 1){
+                    return false;
+                } 
+                return window.checkoutConfig.payment.paymentoptions[this.item.method].length > 0 && window.checkoutConfig.payment.showpaymentoptions[this.item.method] != 2;
             },
             showPaymentOptionsList: function(){         
                 return window.checkoutConfig.payment.paymentoptions[this.item.method].length >= 1 && window.checkoutConfig.payment.showpaymentoptions[this.item.method] == 2;

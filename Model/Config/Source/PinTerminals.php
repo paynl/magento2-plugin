@@ -1,13 +1,10 @@
 <?php
 
-/**
- * Copyright © 2020 PAY. All rights reserved.
- */
-
 namespace Paynl\Payment\Model\Config\Source;
 
 use \Magento\Framework\Option\ArrayInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Store\Model\ScopeInterface;
 use Magento\Framework\App\RequestInterface;
 use \Paynl\Payment\Model\Config;
 use Paynl\Payment\Model\Paymentmethod\PaymentMethod;
