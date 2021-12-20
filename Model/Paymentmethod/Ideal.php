@@ -6,6 +6,8 @@ use Paynl\Payment\Model\Config;
 
 class Ideal extends PaymentMethod
 {
+
+    const list = 2;
     protected $_code = 'paynl_payment_ideal';
 
     protected function getDefaultPaymentOptionId()
@@ -56,7 +58,7 @@ class Ideal extends PaymentMethod
             $banks = \Paynl\Paymentmethods::getBanks($this->getPaymentOptionId());
             $cache->save(json_encode($banks), $cacheName);
         }
-        if ($this->showPaymentOptions() != 2) {
+        if ($this->showPaymentOptions() != self::list) {
             array_unshift($banks, array(
                 'id' => '',
                 'name' => __('Choose your bank'),
