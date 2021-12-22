@@ -135,6 +135,11 @@ abstract class PaymentMethod extends AbstractMethod
         return [];
     }
 
+    public function showPaymentOptions()
+    {
+        return false;
+    }
+    
     public function hidePaymentOptions()
     {
         return 0;

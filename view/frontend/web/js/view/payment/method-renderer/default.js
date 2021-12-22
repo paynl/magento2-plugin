@@ -19,6 +19,7 @@ define(
                 template: 'Paynl_Payment/payment/default'
             },
             paymentOption: null,
+            paymentOptionsList: [],
             kvknummer: null,
             vatnumber: null,
             dateofbirth: null,
@@ -132,15 +133,39 @@ define(
             getKVKDOB: function () {
                 return (this.getDOB() > 0 && this.getKVK() > 0);
             },
-            showPaymentOptions: function(){
+            showPaymentOptions: function(){               
                 if(window.checkoutConfig.payment.hidepaymentoptions[this.item.method] == 1){
                     return false;
                 } 
-                return window.checkoutConfig.payment.paymentoptions[this.item.method].length > 0;
+                return window.checkoutConfig.payment.paymentoptions[this.item.method].length > 0 && window.checkoutConfig.payment.showpaymentoptions[this.item.method] != 2;
+            },
+            showPaymentOptionsList: function(){         
+                return window.checkoutConfig.payment.paymentoptions[this.item.method].length >= 1 && window.checkoutConfig.payment.showpaymentoptions[this.item.method] == 2;
             },
             getPaymentOptions: function(){
                 return window.checkoutConfig.payment.paymentoptions[this.item.method];
             },
+            getPaymentOptionsList: function(){
+                if(!this.showPaymentOptionsList){
+                    return false;
+                }
+                if (!(this.item.method in this.paymentOptionsList)){
+                    var list = window.checkoutConfig.payment.paymentoptions[this.item.method];
+                    var name = 'paymentOptionsList_' + this.item.method;
+                    $.each(list, function (i, l) {
+                        list[i].radioName = name;
+                        list[i].uniqueId = name + '_' + list[i].id;
+                        list[i].showLogo = true;
+                        if (!('logo' in list[i])) {
+                            list[i].showLogo = false;
+                            list[i].logo = '';
+                        }
+                    });
+                    this.paymentOptionsList[this.item.method] = list;
+                    return list;
+                }
+                return this.paymentOptionsList[this.item.method];
+            },            
             getDefaultPaymentOption: function(){           
                 return window.checkoutConfig.payment.defaultpaymentoption[this.item.method];
             },
