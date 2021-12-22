@@ -79,18 +79,13 @@ class PinTerminals implements ArrayInterface
             if ($terminalJson) {
                 $terminalArr = json_decode($terminalJson);
             } else {
-                try {
-                    $terminals = \Paynl\Instore::getAllTerminals();
-                    $terminals = $terminals->getList();
-
-                    foreach ($terminals as $terminal) {
-                        $terminal['visibleName'] = $terminal['name'];
-                        array_push($terminalArr, $terminal);
-                    }
-                    $cache->save(json_encode($terminalArr), $cacheName);
-                } catch (\Paynl\Error\Error $e) {
-                    // Probably instore is not activated, no terminals present
+                $terminals = \Paynl\Instore::getAllTerminals();
+                $terminals = $terminals->getList();
+                foreach ($terminals as $terminal) {
+                    $terminal['visibleName'] = $terminal['name'];
+                    array_push($terminalArr, $terminal);
                 }
+                $cache->save(json_encode($terminalArr), $cacheName);
             }
         }
         $optionArr = [];
