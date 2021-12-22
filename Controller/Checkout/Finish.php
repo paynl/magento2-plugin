@@ -92,6 +92,7 @@ class Finish extends PayAction
         $magOrderId = empty($params['entityid']) ? null : $params['entityid'];
         $bSuccess = $orderStatusId === Config::ORDERSTATUS_PAID;
         $bDenied = $orderStatusId === Config::ORDERSTATUS_DENIED;
+        $bCanceled = $orderStatusId === Config::ORDERSTATUS_CANCELED;
         $isPinTransaction = false;
 
         try {
@@ -121,7 +122,7 @@ class Finish extends PayAction
                 $transaction = \Paynl\Transaction::status($payOrderId);
                 $orderNumber = $transaction->getOrderNumber();
                 $this->checkEmpty($order->getIncrementId() == $orderNumber, '', 104, 'order mismatch');
-                $bSuccess = ($transaction->isPaid() || $transaction->isAuthorized() || $transaction->isPending());
+                $bSuccess = ($transaction->isPaid() || $transaction->isAuthorized() || ($transaction->isPending() && !$bCanceled));
             }
 
             if ($bSuccess) {
