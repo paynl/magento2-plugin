@@ -122,7 +122,7 @@ class ConfigProvider implements ConfigProviderInterface
                 $config['payment']['showvat'][$code]      = $this->getVAT($code);
                 $config['payment']['showdob'][$code]      = $this->getDOB($code);
                 $config['payment']['showforcompany'][$code] = $this->getCompany($code);
-                $config['payment']['showforgroup'][$code] = $this->getGroup($code);
+                $config['payment']['showforgroup'][$code] = $this->getCustomerGroup($code);
 
                 $config['payment']['disallowedshipping'][$code] = $this->getDisallowedShippingMethods($code);
                 $config['payment']['currentipisvalid'][$code]    = $this->methods[$code]->isCurrentIpValid();
@@ -195,9 +195,9 @@ class ConfigProvider implements ConfigProviderInterface
         return $this->methods[$code]->getCompany();
     }
 
-    protected function getGroup($code)
+    protected function getCustomerGroup($code)
     {
-        return $this->methods[$code]->getGroup();
+        return $this->methods[$code]->getCustomerGroup();
     }
 
     /**

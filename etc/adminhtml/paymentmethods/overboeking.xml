@@ -137,7 +137,7 @@
             <comment><![CDATA[Allow payment method to be used for companies, private, or both.]]></comment>
         </field>
         <field id="showforgroup" translate="label" type="select" sortOrder="160" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Show for groups</label>
+            <label>Customer Group</label>
             <source_model>Paynl\Payment\Model\Config\Source\UserGroups</source_model>
             <depends>
                 <field id="active">1</field>
