@@ -170,6 +170,11 @@ abstract class PaymentMethod extends AbstractMethod
         return $this->_scopeConfig->getValue('payment/' . $this->_code . '/showforcompany', 'store');
     }
 
+    public function getGroup()
+    {
+        return $this->_scopeConfig->getValue('payment/' . $this->_code . '/showforgroup', 'store');
+    }
+
     public function isCurrentIpValid()
     {
         return true;

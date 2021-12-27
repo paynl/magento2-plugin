@@ -153,6 +153,15 @@
             <config_path>payment/paynl_payment_billink/showforcompany</config_path>
             <comment><![CDATA[Allow payment method to be used for companies, private, or both.]]></comment>
         </field>
+        <field id="showforgroup" translate="label" type="select" sortOrder="160" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Show for groups</label>
+            <source_model>Paynl\Payment\Model\Config\Source\UserGroups</source_model>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+            <config_path>payment/paynl_payment_billink/showforgroup</config_path>
+            <comment><![CDATA[Show payment method only to specific customer groups.]]></comment>
+        </field>
         <field id="turn_off_invoices_b2b" translate="label" type="select" sortOrder="160" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Turn off invoices for B2B</label>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
