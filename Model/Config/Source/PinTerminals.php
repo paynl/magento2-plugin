@@ -97,7 +97,7 @@ class PinTerminals implements ArrayInterface
                     }
                     $cache->save(json_encode($terminalArr), $cacheName);
                 } catch (\Paynl\Error\Error $e) {
-                    $this->logger->critical('PAY.: Pinterminal error, ' . $e->getMessage());
+                    $this->_logger->critical('PAY.: Pinterminal error, ' . $e->getMessage());
                 }
             }
         }
