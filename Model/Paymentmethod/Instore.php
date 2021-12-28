@@ -43,7 +43,7 @@ class Instore extends PaymentMethod
             $url = $instorePayment->getRedirectUrl();
 
         } catch (\Exception $e) {           
-            payHelper::log($e->getMessage(), payHelper::LOG_TYPE_CRITICAL, [], $store);
+            payHelper::logCritical($e->getMessage(), [], $store);
 
             if ($e->getCode() == 201) {
                 $this->messageManager->addNoticeMessage($e->getMessage());

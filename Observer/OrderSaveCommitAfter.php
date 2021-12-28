@@ -47,13 +47,13 @@ class OrderSaveCommitAfter implements ObserverInterface
                     $amountRefunded = isset($data['amount_refunded']) ? $data['amount_refunded'] : null;
 
                     if ($bHasAmountAuthorized && $amountPaid === null && $amountRefunded === null) {
-                        payHelper::log('AUTO-CAPTURING ' . $data['last_trans_id'], payHelper::LOG_TYPE_DEBUG, [], $order->getStore());
+                        payHelper::logDebug('AUTO-CAPTURING ' . $data['last_trans_id'], [], $order->getStore());
                         try {
                             \Paynl\Config::setApiToken($this->config->getApiToken());
                             $result = \Paynl\Transaction::capture($data['last_trans_id']);
                             $strResult = 'Success';
                         } catch (\Exception $e) {
-                            payHelper::log('Order PAY error: ' . $e->getMessage() . ' EntityId: ' . $order->getEntityId(), payHelper::LOG_TYPE_DEBUG, [], $order->getStore());
+                            payHelper::logDebug('Order PAY error: ' . $e->getMessage() . ' EntityId: ' . $order->getEntityId(), [], $order->getStore());
                             $strResult = 'Failed. Errorcode: PAY-MAGENTO2-003. See docs.pay.nl for more information';
                         }
 

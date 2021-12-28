@@ -145,7 +145,7 @@ class Finish extends PayAction
                 $resultRedirect->setPath($payment->getMethod() == 'paynl_payment_paylink' ? Config::FINISH_PAYLINK . '?cancel=1' : $this->config->getCancelURL());
             }
         } catch (\Exception $e) { 
-            payHelper::log($e->getCode() . ': ' . $e->getMessage(), payHelper::LOG_TYPE_CRITICAL, $params, $order->getStore());
+            payHelper::logCritical($e->getCode() . ': ' . $e->getMessage(), $params, $order->getStore());
 
             if ($e->getCode() == 101) {
                 $this->messageManager->addNoticeMessage(__('Invalid return, no transactionId specified'));

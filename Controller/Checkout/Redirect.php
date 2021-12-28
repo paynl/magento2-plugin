@@ -87,7 +87,7 @@ class Redirect extends PayAction
 
             $methodInstance = $this->paymentHelper->getMethodInstance($payment->getMethod());
             if ($methodInstance instanceof \Paynl\Payment\Model\Paymentmethod\Paymentmethod) {
-                payHelper::log('Start new payment for order ' . $order->getId(), payHelper::LOG_TYPE_NOTICE, array(), $order->getStore());
+                payHelper::logNotice('Start new payment for order ' . $order->getId(), array(), $order->getStore());
                 $redirectUrl = $methodInstance->startTransaction($order);
                 $this->getResponse()->setNoCacheHeaders();
                 $this->getResponse()->setRedirect($redirectUrl);
@@ -99,7 +99,7 @@ class Redirect extends PayAction
             $this->_getCheckoutSession()->restoreQuote();
             $this->messageManager->addExceptionMessage($e, __('Something went wrong, please try again later'));
             $this->messageManager->addExceptionMessage($e, $e->getMessage());
-            payHelper::log($e, payHelper::LOG_TYPE_CRITICAL, array(), $order->getStore());
+            payHelper::logCritical($e, array(), $order->getStore());
 
             $this->_redirect('checkout/cart');
         }

@@ -68,7 +68,7 @@ class UpgradeData implements UpgradeDataInterface
     {
         $setup->startSetup();
 
-        payHelper::log('Upgrade. Module version: ' . $context->getVersion(), payHelper::LOG_TYPE_DEBUG);
+        payHelper::logDebug('Upgrade. Module version: ' . $context->getVersion());
 
         # Update fashiongiftcard when current install is lower then 2.0.1
         if (version_compare($context->getVersion(), '2.0.1', '<')) {
@@ -81,7 +81,7 @@ class UpgradeData implements UpgradeDataInterface
 
     private function updateFashionGiftcard()
     {
-        payHelper::log('updateFashionGiftcard', payHelper::LOG_TYPE_DEBUG);
+        payHelper::logDebug('updateFashionGiftcard');
 
         $connection = $this->resourceConnection->getConnection();
         $tableName = $this->resourceConnection->getTableName('core_config_data');
@@ -93,7 +93,7 @@ class UpgradeData implements UpgradeDataInterface
         if (!$result) {
             return;
         }
-        payHelper::log('updateFashionGiftcard result ' . $result, payHelper::LOG_TYPE_DEBUG);
+        payHelper::logDebug('updateFashionGiftcard result ' . $result);
         if ($result == '1699') {
             # Update the incorrect profileid.
             $this->resourceConfig->saveConfig($path, '1669', 'default', 0);

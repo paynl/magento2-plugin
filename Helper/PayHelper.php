@@ -7,12 +7,7 @@ use Psr\Log\LoggerInterface;
 class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
 {
     private static $objectManager;
-    private static $store;
-
-    const LOG_TYPE_CRITICAL = 'CRITICAL';
-    const LOG_TYPE_DEBUG = 'DEBUG';
-    const LOG_TYPE_INFO = 'INFO';
-    const LOG_TYPE_NOTICE = 'NOTICE';
+    private static $store;    
 
     public static function getObjectManager()
     {
@@ -38,10 +33,10 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
     public static function hasCorrectLevel($level, $type)
     {
-        if($level == 2 && $type == self::LOG_TYPE_CRITICAL){
+        if($level == 2 && $type == 'critical'){
             return true;
         }
-        if($level == 1 && ($type == self::LOG_TYPE_CRITICAL || $type == self::LOG_TYPE_NOTICE)){
+        if($level == 1 && ($type == 'critical' || $type == 'notice')){
             return true;
         }
         if($level == 0){
@@ -51,7 +46,27 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
         return false;
     }
 
-    public static function log($text, $type, $params = array(), $store = null)
+    public static function logCritical($text, $params = array(), $store = null)
+    {
+        self::writeLog($text, 'critical', $params, $store);
+    }
+
+    public static function logNotice($text, $params = array(), $store = null)
+    {
+        self::writeLog($text, 'notice', $params, $store);
+    }
+
+    public static function logInfo($text, $params = array(), $store = null)
+    {
+        self::writeLog($text, 'info', $params, $store);
+    }
+
+    public static function logDebug($text, $params = array(), $store = null)
+    {
+        self::writeLog($text, 'debug', $params, $store);
+    }
+
+    public static function writeLog($text, $type, $params, $store)
     {
         $objectManager = self::getObjectManager();
         $logger = $objectManager->get(\Psr\Log\LoggerInterface::class);
@@ -66,22 +81,21 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
                 $params = array();
             }
             switch ($type) {
-                case self::LOG_TYPE_CRITICAL:
+                case 'critical':
                     $logger->critical($text, $params);
                     break;
-                case self::LOG_TYPE_NOTICE:
+                case 'notice':
                     $logger->notice($text, $params);
                     break;
-                case self::LOG_TYPE_INFO:
-                    $logger->alert($text, $params);
+                case 'info':
+                    $logger->info($text, $params);
                     break;
-                case self::LOG_TYPE_DEBUG:
+                case 'debug':
                     $logger->debug($text, $params);
                     break;
             }
         }
     }
-
 
     public function getClientIp()
     {

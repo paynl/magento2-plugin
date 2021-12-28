@@ -35,7 +35,7 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
     {
         $setup->startSetup();
 
-        payHelper::log('Installing module.', payHelper::LOG_TYPE_DEBUG);
+        payHelper::logDebug('Installing module.');
         $this->configWriter->save('payment/paynl/order_description_prefix', 'Order ');
 
         $this->configWriter->save('payment/paynl/image_style', 'newest');

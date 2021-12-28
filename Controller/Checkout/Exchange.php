@@ -117,18 +117,18 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         }
 
         if (empty($payOrderId) || empty($orderEntityId)) {            
-            payHelper::log('Exchange: order_id or orderEntity is not set', payHelper::LOG_TYPE_CRITICAL, $params);
+            payHelper::logCritical('Exchange: order_id or orderEntity is not set', $params);
             return $this->result->setContents('FALSE| order_id is not set in the request');
         }
 
         try {
             $order = $this->orderRepository->get($orderEntityId);
             if (empty($order)) {              
-                payHelper::log('Cannot load order: ' . $orderEntityId, payHelper::LOG_TYPE_CRITICAL);                
+                payHelper::logCritical('Cannot load order: ' . $orderEntityId);                
                 throw new Exception('Cannot load order: ' . $orderEntityId);
             }
         } catch (\Exception $e) {
-            payHelper::log($e, payHelper::LOG_TYPE_CRITICAL, $params);
+            payHelper::logCritical($e, $params);
             return $this->result->setContents('FALSE| Error loading order. ' . $e->getMessage());
         }
 
@@ -138,7 +138,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         try {
             $transaction = \Paynl\Transaction::get($payOrderId);
         } catch (\Exception $e) {   
-            payHelper::log($e, payHelper::LOG_TYPE_CRITICAL, $params, $order->getStore());
+            payHelper::logCritical($e, $params, $order->getStore());
 
             return $this->result->setContents('FALSE| Error fetching transaction. ' . $e->getMessage());
         }
@@ -163,12 +163,12 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         $orderEntityIdTransaction = $transaction->getExtra3();
 
         if ($orderEntityId != $orderEntityIdTransaction) {            
-            payHelper::log('Transaction mismatch ' . $orderEntityId . ' / ' . $orderEntityIdTransaction, payHelper::LOG_TYPE_CRITICAL, $params, $order->getStore());
+            payHelper::logCritical('Transaction mismatch ' . $orderEntityId . ' / ' . $orderEntityIdTransaction, $params, $order->getStore());
             return $this->result->setContents('FALSE|Transaction mismatch');
         }
 
         if ($order->getTotalDue() <= 0) {
-            payHelper::log($action . '. Ignoring - already paid: ' . $orderEntityId, payHelper::LOG_TYPE_DEBUG);
+            payHelper::logDebug($action . '. Ignoring - already paid: ' . $orderEntityId);
             if (!$this->config->registerPartialPayments()) {
                 return $this->result->setContents('TRUE| Ignoring: order has already been paid');
             }
@@ -176,7 +176,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
 
         if ($action == 'capture') {
             if (!empty($payment) && $payment->getAdditionalInformation('manual_capture')) {
-                payHelper::log('Already captured.', payHelper::LOG_TYPE_DEBUG);
+                payHelper::logDebug('Already captured.');
                 return $this->result->setContents('TRUE| Already captured.');
             }
         }
