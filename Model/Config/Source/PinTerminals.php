@@ -9,6 +9,7 @@ use Magento\Framework\App\RequestInterface;
 use \Paynl\Payment\Model\Config;
 use Paynl\Payment\Model\Paymentmethod\PaymentMethod;
 use \Paynl\Paymentmethods;
+use Psr\Log\LoggerInterface;
 
 class PinTerminals implements ArrayInterface
 {
@@ -33,16 +34,23 @@ class PinTerminals implements ArrayInterface
      */
     protected $_config;
 
+    /**
+     * @var LoggerInterface
+     */
+    private $_logger;
+
     public function __construct(
         Config $config,
         RequestInterface $request,
         ScopeConfigInterface $scopeConfig,
-        \Magento\Store\Model\StoreManagerInterface $storeManager
+        \Magento\Store\Model\StoreManagerInterface $storeManager, 
+        LoggerInterface $logger
     ) {
         $this->_config = $config;
         $this->_request = $request;
         $this->_scopeConfig = $scopeConfig;
         $this->_storeManager = $storeManager;
+        $this->_logger = $logger;
     }
 
     /**
@@ -79,13 +87,18 @@ class PinTerminals implements ArrayInterface
             if ($terminalJson) {
                 $terminalArr = json_decode($terminalJson);
             } else {
-                $terminals = \Paynl\Instore::getAllTerminals();
-                $terminals = $terminals->getList();
-                foreach ($terminals as $terminal) {
-                    $terminal['visibleName'] = $terminal['name'];
-                    array_push($terminalArr, $terminal);
+                try {
+                    $terminals = \Paynl\Instore::getAllTerminals();
+                    $terminals = $terminals->getList();
+
+                    foreach ($terminals as $terminal) {
+                        $terminal['visibleName'] = $terminal['name'];
+                        array_push($terminalArr, $terminal);
+                    }
+                    $cache->save(json_encode($terminalArr), $cacheName);
+                } catch (\Paynl\Error\Error $e) {
+                    $this->logger->critical('PAY.: Pinterminal error, ' . $e->getMessage());
                 }
-                $cache->save(json_encode($terminalArr), $cacheName);
             }
         }
         $optionArr = [];
