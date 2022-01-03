@@ -9,9 +9,10 @@ define(
         'Magento_Checkout/js/model/quote',
         'Magento_Ui/js/modal/alert',
         'Magento_Checkout/js/model/payment/additional-validators',
-        'mage/translate'
+        'mage/translate',
+        'Magento_Customer/js/model/customer'
     ],
-    function ($, Component, url, placeOrderAction, quote, alert, additionalValidators, translate) {
+    function ($, Component, url, placeOrderAction, quote, alert, additionalValidators, translate, customer) {
         'use strict';
         return Component.extend({
             redirectAfterPlaceOrder: false,
@@ -42,6 +43,18 @@ define(
                 return this;
             },
             isVisible:function() {
+                var group = window.checkoutConfig.payment.showforgroup[this.item.method];               
+                if(group){
+                    if(group == 0 && customer.isLoggedIn){
+                        return false;
+                    }
+                    if(group > 0 && !customer.isLoggedIn){
+                        return false;
+                    }
+                    if(group != customer.customerData.group_id){
+                        return false;
+                    }
+                }
                 var disallowedShippingMethods = this.getDisallowedShipping();
                 if (disallowedShippingMethods) {
                     var carrier_code = typeof quote.shippingMethod().carrier_code !== 'undefined' ? quote.shippingMethod().carrier_code + '_' : '';
