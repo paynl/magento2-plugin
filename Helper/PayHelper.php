@@ -3,6 +3,8 @@
 namespace Paynl\Payment\Helper;
 
 use Psr\Log\LoggerInterface;
+use \Paynl\Payment\Model\Config\Source\LogOptions;
+
 
 class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
 {
@@ -33,13 +35,13 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
     public static function hasCorrectLevel($level, $type)
     {
-        if ($level == 2 && $type == 'critical') {
+        if ($level == LogOptions::LOG_ONLY_CRITICAL && $type == 'critical') {
             return true;
         }
-        if ($level == 1 && ($type == 'critical' || $type == 'notice')) {
+        if ($level == LogOptions::LOG_CRITICAL_NOTICE && ($type == 'critical' || $type == 'notice')) {
             return true;
         }
-        if ($level == 0) {
+        if ($level == LogOptions::LOG_ALL) {
             return true;
         }
 

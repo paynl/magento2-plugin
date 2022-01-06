@@ -7,11 +7,16 @@ use \Magento\Framework\Option\ArrayInterface;
 class LogOptions implements ArrayInterface
 {
 
-  /**
-   * Options getter
-   *
-   * @return array
-   */
+    const LOG_ALL = 0;
+    const LOG_CRITICAL_NOTICE = 1;
+    const LOG_ONLY_CRITICAL = 2;
+    const LOG_NONE = 3;
+
+    /**
+     * Options getter
+     *
+     * @return array
+     */
     public function toOptionArray()
     {
         $arrOptions = $this->toArray();
@@ -23,18 +28,18 @@ class LogOptions implements ArrayInterface
         return $arrResult;
     }
 
-  /**
-   * Get options in "key-value" format
-   *
-   * @return array
-   */
+    /**
+     * Get options in "key-value" format
+     *
+     * @return array
+     */
     public function toArray()
     {
         return [
-        '3' => __('None'),
-        '2' => __('Only critical'),
-        '1' => __('Critical + Notice'),
-        '0' => __('All'),
+            self::LOG_NONE => __('None'),
+            self::LOG_ONLY_CRITICAL => __('Only critical'),
+            self::LOG_CRITICAL_NOTICE => __('Critical + Notice'),
+            self::LOG_ALL => __('All'),
         ];
     }
 }

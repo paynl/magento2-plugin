@@ -125,7 +125,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             $order = $this->orderRepository->get($orderEntityId);
             if (empty($order)) {              
                 payHelper::logCritical('Cannot load order: ' . $orderEntityId);                
-                throw new Exception('Cannot load order: ' . $orderEntityId);
+                throw new \Exception('Cannot load order: ' . $orderEntityId);
             }
         } catch (\Exception $e) {
             payHelper::logCritical($e, $params);
