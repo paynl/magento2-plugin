@@ -6,7 +6,6 @@ use Magento\CatalogInventory\Api\StockManagementInterface;
 use Magento\CatalogInventory\Model\Indexer\Stock\Processor as StockProcessor;
 use Magento\Framework\Event\Observer as EventObserver;
 use Magento\Framework\Event\ObserverInterface;
-use \Paynl\Payment\Helper\PayHelper;
 
 class SubtractInventoryObserver implements ObserverInterface
 {

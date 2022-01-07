@@ -18,7 +18,6 @@ use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderRepository;
 use Paynl\Payment\Model\Config;
 use Paynl\Transaction;
-use \Paynl\Payment\Helper\PayHelper;
 
 abstract class PaymentMethod extends AbstractMethod
 {
