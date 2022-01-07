@@ -33,12 +33,6 @@ abstract class PaymentMethod extends AbstractMethod
     protected $_canVoid = true;
 
     /**
-     *
-     * @var Psr\Log\LoggerInterface
-     */
-    protected $logger;
-
-    /**
      * @var Config
      */
     protected $paynlConfig;
@@ -99,7 +93,6 @@ abstract class PaymentMethod extends AbstractMethod
         $this->paynlConfig = $paynlConfig;
         $this->orderRepository = $orderRepository;
         $this->orderConfig = $orderConfig;
-        $this->logger = $objectManager->get(\Psr\Log\LoggerInterface::class);
         $this->storeManager = $objectManager->create(\Magento\Store\Model\StoreManagerInterface::class);
     }
 

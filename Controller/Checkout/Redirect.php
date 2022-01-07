@@ -7,6 +7,7 @@ use Magento\Quote\Model\QuoteRepository;
 use Magento\Sales\Model\OrderRepository;
 use Paynl\Error\Error;
 use Paynl\Payment\Controller\PayAction;
+use \Paynl\Payment\Helper\PayHelper;
 
 /**
  * Redirects the user.
@@ -24,11 +25,6 @@ class Redirect extends PayAction
      * @var \Magento\Checkout\Model\Session
      */
     private $checkoutSession;
-
-    /**
-     * @var \Psr\Log\LoggerInterface
-     */
-    private $_logger;
 
     /**
      * @var PaymentHelper
@@ -54,14 +50,12 @@ class Redirect extends PayAction
         \Magento\Framework\App\Action\Context $context,
         \Paynl\Payment\Model\Config $config,
         \Magento\Checkout\Model\Session $checkoutSession,
-        \Psr\Log\LoggerInterface $logger,
         PaymentHelper $paymentHelper,
         QuoteRepository $quoteRepository,
         OrderRepository $orderRepository
     ) {
         $this->config          = $config; // PAY. config helper
         $this->checkoutSession = $checkoutSession;
-        $this->_logger         = $logger;
         $this->paymentHelper   = $paymentHelper;
         $this->quoteRepository = $quoteRepository;
         $this->orderRepository = $orderRepository;
@@ -93,7 +87,7 @@ class Redirect extends PayAction
 
             $methodInstance = $this->paymentHelper->getMethodInstance($payment->getMethod());
             if ($methodInstance instanceof \Paynl\Payment\Model\Paymentmethod\Paymentmethod) {
-                $this->_logger->notice('PAY.: Start new payment for order ' . $order->getId());
+                payHelper::logNotice('Start new payment for order ' . $order->getId(), array(), $order->getStore());
                 $redirectUrl = $methodInstance->startTransaction($order);
                 $this->getResponse()->setNoCacheHeaders();
                 $this->getResponse()->setRedirect($redirectUrl);
@@ -105,7 +99,7 @@ class Redirect extends PayAction
             $this->_getCheckoutSession()->restoreQuote();
             $this->messageManager->addExceptionMessage($e, __('Something went wrong, please try again later'));
             $this->messageManager->addExceptionMessage($e, $e->getMessage());
-            $this->_logger->critical($e);
+            payHelper::logCritical($e, array(), $order->getStore());
 
             $this->_redirect('checkout/cart');
         }

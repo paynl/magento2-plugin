@@ -127,6 +127,12 @@
                     <label>Order description prefix</label>
                     <comment><![CDATA[Prefix the order description with a custom word]]></comment>
                 </field>
+                <field id="logging_level" translate="label" type="select" sortOrder="107" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Loglevel</label>
+                    <source_model>Paynl\Payment\Model\Config\Source\LogOptions</source_model>
+                    <comment><![CDATA[Set PAY. loglevel]]></comment>
+                </field>
                 <field id="failover_gateway" translate="label" type="text" sortOrder="108" showInDefault="1" showInWebsite="1"
                        showInStore="1">
                     <label>Failover Gateway</label>
