@@ -126,6 +126,15 @@
             <config_path>payment/paynl_payment_mistercash/showforcompany</config_path>
             <comment><![CDATA[Allow payment method to be used for companies, private, or both.]]></comment>
         </field>
+        <field id="showforgroup" translate="label" type="select" sortOrder="160" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Customer Group</label>
+            <source_model>Paynl\Payment\Model\Config\Source\UserGroups</source_model>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+            <config_path>payment/paynl_payment_applepay/showforgroup</config_path>
+            <comment><![CDATA[Show payment method only to specific customer groups.]]></comment>
+        </field>
         <group id="advanced" translate="label" sortOrder="200" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Advanced</label>
             <field id="payment_option_id" translate="label comment" type="text" sortOrder="10" showInDefault="1"

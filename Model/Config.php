@@ -15,6 +15,7 @@ class Config
     const FINISH_STANDARD = 'checkout/onepage/success';
     const ORDERSTATUS_PAID = 100;
     const ORDERSTATUS_DENIED = -63;
+    const ORDERSTATUS_CANCELED = -90;
 
     /** @var  Store */
     private $store;
@@ -262,7 +263,7 @@ class Config
     {
         return $this->store->getConfig('payment/paynl/failover_gateway');
     }
-    
+
     public function getIconUrl($methodCode, $paymentOptionId)
     {
         if ($this->store->getConfig('payment/paynl/image_style') == 'newest') {
@@ -294,6 +295,11 @@ class Config
         }
 
         return $iconUrl;
+    }
+
+    public function getIconUrlIssuer($issuerId)
+    {
+        return $this->resources->getViewFileUrl("Paynl_Payment::logos_issuers/qr-" . $issuerId . ".svg");
     }
 
     public function getIconSize()

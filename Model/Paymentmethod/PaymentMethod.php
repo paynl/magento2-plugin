@@ -33,12 +33,6 @@ abstract class PaymentMethod extends AbstractMethod
     protected $_canVoid = true;
 
     /**
-     *
-     * @var Psr\Log\LoggerInterface
-     */
-    protected $logger;
-
-    /**
      * @var Config
      */
     protected $paynlConfig;
@@ -99,7 +93,6 @@ abstract class PaymentMethod extends AbstractMethod
         $this->paynlConfig = $paynlConfig;
         $this->orderRepository = $orderRepository;
         $this->orderConfig = $orderConfig;
-        $this->logger = $objectManager->get(\Psr\Log\LoggerInterface::class);
         $this->storeManager = $objectManager->create(\Magento\Store\Model\StoreManagerInterface::class);
     }
 
@@ -135,6 +128,11 @@ abstract class PaymentMethod extends AbstractMethod
         return [];
     }
 
+    public function showPaymentOptions()
+    {
+        return false;
+    }
+    
     public function hidePaymentOptions()
     {
         return 0;
@@ -163,6 +161,11 @@ abstract class PaymentMethod extends AbstractMethod
     public function getCompany()
     {
         return $this->_scopeConfig->getValue('payment/' . $this->_code . '/showforcompany', 'store');
+    }
+
+    public function getCustomerGroup()
+    {
+        return $this->_scopeConfig->getValue('payment/' . $this->_code . '/showforgroup', 'store');
     }
 
     public function isCurrentIpValid()

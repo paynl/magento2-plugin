@@ -3,6 +3,7 @@
 namespace Paynl\Payment\Model\Paymentmethod;
 
 use Magento\Sales\Model\Order;
+use \Paynl\Payment\Helper\PayHelper;
 
 class Instore extends PaymentMethod
 {
@@ -41,8 +42,8 @@ class Instore extends PaymentMethod
 
             $url = $instorePayment->getRedirectUrl();
 
-        } catch (\Exception $e) {
-            $this->logger->critical($e->getMessage(), []);
+        } catch (\Exception $e) {           
+            payHelper::logCritical($e->getMessage(), [], $store);
 
             if ($e->getCode() == 201) {
                 $this->messageManager->addNoticeMessage($e->getMessage());

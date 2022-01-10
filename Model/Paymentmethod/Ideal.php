@@ -6,6 +6,9 @@ use Paynl\Payment\Model\Config;
 
 class Ideal extends PaymentMethod
 {
+
+    const BANKSDISPLAYTYPE_DROPDOWN = 1;
+    const BANKSDISPLAYTYPE_LIST = 2;
     protected $_code = 'paynl_payment_ideal';
 
     protected function getDefaultPaymentOptionId()
@@ -29,6 +32,11 @@ class Ideal extends PaymentMethod
         return $this;
     }
 
+    public function showPaymentOptions()
+    {
+        return $this->_scopeConfig->getValue('payment/' . $this->_code . '/bank_selection', 'store');
+    }
+
     public function getPaymentOptions()
     {
         $show_banks = $this->_scopeConfig->getValue('payment/' . $this->_code . '/bank_selection', 'store');
@@ -43,7 +51,7 @@ class Ideal extends PaymentMethod
 
         $banksJson = $cache->load($cacheName);
         if ($banksJson) {
-            $banks = json_decode($banksJson);
+            $banks = json_decode($banksJson, true);
         } else {
             $this->paynlConfig->setStore($store);
             $this->paynlConfig->configureSDK();
@@ -51,11 +59,18 @@ class Ideal extends PaymentMethod
             $banks = \Paynl\Paymentmethods::getBanks($this->getPaymentOptionId());
             $cache->save(json_encode($banks), $cacheName);
         }
-        array_unshift($banks, [
-            'id' => '',
-            'name' => __('Choose your bank'),
-            'visibleName' => __('Choose your bank')
-        ]);
+        if ($this->showPaymentOptions() != self::BANKSDISPLAYTYPE_LIST) {
+            array_unshift($banks, array(
+                'id' => '',
+                'name' => __('Choose your bank'),
+                'visibleName' => __('Choose your bank')
+            ));
+        }
+
+        foreach ($banks as $key => $bank) {
+            $banks[$key]['logo'] = $this->paynlConfig->getIconUrlIssuer($bank['id']);
+        }
+        
         return $banks;
     }
 

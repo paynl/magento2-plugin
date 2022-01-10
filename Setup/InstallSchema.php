@@ -6,7 +6,7 @@ use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\App\Config\Storage\WriterInterface;
 
 use Magento\Store\Model\Store;
-use Psr\Log\LoggerInterface;
+use \Paynl\Payment\Helper\PayHelper;
 
 class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
 {
@@ -21,20 +21,13 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
     private $store;
 
     /**
-     * @var  Logger
-     * */
-    private $logger;
-
-    /**
      * Installschema constructor.
      *
      * @param WriterInterface $configWriter
-     * @param LoggerInterface $logger
      */
-    public function __construct(WriterInterface $configWriter, LoggerInterface $logger, Store $store)
+    public function __construct(WriterInterface $configWriter, Store $store)
     {
         $this->configWriter = $configWriter;
-        $this->logger = $logger;
         $this->store = $store;
     }
 
@@ -42,7 +35,7 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
     {
         $setup->startSetup();
 
-        $this->logger->debug('PAY.: Installing module.');
+        payHelper::logDebug('Installing module.');
         $this->configWriter->save('payment/paynl/order_description_prefix', 'Order ');
 
         $this->configWriter->save('payment/paynl/image_style', 'newest');

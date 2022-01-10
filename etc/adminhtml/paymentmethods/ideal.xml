@@ -76,7 +76,7 @@
         <field id="bank_selection" translate="label" type="select" sortOrder="65" showInDefault="1" showInWebsite="1"
                showInStore="1">
             <label>Show bankselection</label>
-            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <source_model>Paynl\Payment\Model\Config\Source\ShowPaymentOptions</source_model>
             <depends>
                 <field id="active">1</field>
             </depends>
@@ -136,6 +136,15 @@
             </depends>
             <config_path>payment/paynl_payment_ideal/showforcompany</config_path>
             <comment><![CDATA[Allow payment method to be used for companies, private, or both.]]></comment>
+        </field>
+        <field id="showforgroup" translate="label" type="select" sortOrder="160" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Customer Group</label>
+            <source_model>Paynl\Payment\Model\Config\Source\UserGroups</source_model>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+            <config_path>payment/paynl_payment_ideal/showforgroup</config_path>
+            <comment><![CDATA[Show payment method only to specific customer groups.]]></comment>
         </field>
         <group id="advanced" translate="label" sortOrder="200" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Advanced</label>
