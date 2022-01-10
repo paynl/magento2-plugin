@@ -9,6 +9,7 @@ use Magento\Framework\App\RequestInterface;
 use \Paynl\Payment\Model\Config;
 use Paynl\Payment\Model\Paymentmethod\PaymentMethod;
 use \Paynl\Paymentmethods;
+use \Paynl\Payment\Helper\PayHelper;
 
 class PinTerminals implements ArrayInterface
 {
@@ -89,7 +90,7 @@ class PinTerminals implements ArrayInterface
                     }
                     $cache->save(json_encode($terminalArr), $cacheName);
                 } catch (\Paynl\Error\Error $e) {
-                    // Probably instore is not activated, no terminals present
+                    payHelper::logCritical('PAY.: Pinterminal error, ' . $e->getMessage());
                 }
             }
         }

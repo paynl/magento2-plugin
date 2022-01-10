@@ -116,7 +116,7 @@ class Instore extends PaymentMethod
 
     public function getDefaultPaymentOption()
     {
-        return $this->_scopeConfig->getValue('payment/' . $this->_code . '/default_terminal', 'store');       
+        return $this->_scopeConfig->getValue('payment/' . $this->_code . '/default_terminal', 'store');
     }
 
     /**
