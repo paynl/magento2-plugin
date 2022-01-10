@@ -9,7 +9,7 @@ use Magento\Framework\App\RequestInterface;
 use \Paynl\Payment\Model\Config;
 use Paynl\Payment\Model\Paymentmethod\PaymentMethod;
 use \Paynl\Paymentmethods;
-use Psr\Log\LoggerInterface;
+use \Paynl\Payment\Helper\PayHelper;
 
 class PinTerminals implements ArrayInterface
 {
@@ -34,23 +34,16 @@ class PinTerminals implements ArrayInterface
      */
     protected $_config;
 
-    /**
-     * @var LoggerInterface
-     */
-    private $_logger;
-
     public function __construct(
         Config $config,
         RequestInterface $request,
         ScopeConfigInterface $scopeConfig,
-        \Magento\Store\Model\StoreManagerInterface $storeManager, 
-        LoggerInterface $logger
+        \Magento\Store\Model\StoreManagerInterface $storeManager
     ) {
         $this->_config = $config;
         $this->_request = $request;
         $this->_scopeConfig = $scopeConfig;
         $this->_storeManager = $storeManager;
-        $this->_logger = $logger;
     }
 
     /**
@@ -97,7 +90,7 @@ class PinTerminals implements ArrayInterface
                     }
                     $cache->save(json_encode($terminalArr), $cacheName);
                 } catch (\Paynl\Error\Error $e) {
-                    $this->_logger->critical('PAY.: Pinterminal error, ' . $e->getMessage());
+                    payHelper::logCritical('PAY.: Pinterminal error, ' . $e->getMessage());
                 }
             }
         }
