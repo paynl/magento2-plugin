@@ -65,8 +65,7 @@ class Ideal extends PaymentMethod
                 'name' => __('Choose your bank'),
                 'visibleName' => __('Choose your bank')
             ));
-        }
-        if ($this->showPaymentOptions() == self::BANKSDISPLAYTYPE_LIST) {
+        } else {
             foreach ($banks as $key => $bank) {
                 $banks[$key]['logo'] = $this->paynlConfig->getIconUrlIssuer($bank['id']);
             }
