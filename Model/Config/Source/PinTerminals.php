@@ -83,6 +83,10 @@ class PinTerminals implements ArrayInterface
                     $terminals = \Paynl\Instore::getAllTerminals();
                     $terminals = $terminals->getList();
 
+                    if (!is_array($terminals)) {
+                        $terminals = [];
+                    }
+                    
                     foreach ($terminals as $terminal) {
                         $terminal['visibleName'] = $terminal['name'];
                         array_push($terminalArr, $terminal);
