@@ -43,15 +43,15 @@ define(
                 return this;
             },
             isVisible:function() {
-                var group = window.checkoutConfig.payment.showforgroup[this.item.method];               
-                if(group){
-                    if(group == 0 && customer.isLoggedIn._latestValue){                        
+                var group = window.checkoutConfig.payment.showforgroup[this.item.method];
+                if (group) {
+                    if (group == 0 && customer.isLoggedIn) {
                         return false;
                     }
-                    if(group > 0 && !customer.isLoggedIn._latestValue){
+                    if (group > 0 && !customer.isLoggedIn) {
                         return false;
                     }
-                    if(group > 0 && group != customer.customerData.group_id){
+                    if (group != customer.customerData.group_id) {
                         return false;
                     }
                 }
