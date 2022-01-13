@@ -45,13 +45,13 @@ define(
             isVisible:function() {
                 var group = window.checkoutConfig.payment.showforgroup[this.item.method];               
                 if(group){
-                    if(group == 0 && customer.isLoggedIn){
+                    if(group == 0 && customer.isLoggedIn._latestValue){                        
                         return false;
                     }
-                    if(group > 0 && !customer.isLoggedIn){
+                    if(group > 0 && !customer.isLoggedIn._latestValue){
                         return false;
                     }
-                    if(group != customer.customerData.group_id){
+                    if(group > 0 && group != customer.customerData.group_id){
                         return false;
                     }
                 }
