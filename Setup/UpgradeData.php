@@ -93,7 +93,7 @@ class UpgradeData implements UpgradeDataInterface
         if (!$result) {
             return;
         }
-        payHelper::logDebug('updateFashionGiftcard result ' . $result);
+        
         if ($result == '1699') {
             # Update the incorrect profileid.
             $this->resourceConfig->saveConfig($path, '1669', 'default', 0);
