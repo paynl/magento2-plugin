@@ -43,7 +43,7 @@ class UpdateFashionGiftcard implements DataPatchInterface, PatchVersionInterface
     {
         $this->moduleDataSetup->startSetup();
 
-        payHelper::logDebug('Apply patch: updateFashionGiftcard.');
+        payHelper::log('Apply patch: updateFashionGiftcard.');
 
         $connection = $this->resourceConnection->getConnection();
         $tableName = $this->resourceConnection->getTableName('core_config_data');
