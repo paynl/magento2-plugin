@@ -43,11 +43,13 @@ class Install implements DataPatchInterface
         $this->moduleDataSetup->startSetup();
 
         if (empty($this->store->getConfig('payment/paynl/apitoken')) && empty($this->store->getConfig('payment/paynl/serviceid'))) {
-            payHelper::logDebug('Installing module.');
+            payHelper::log('Installing module');
             $this->configWriter->save('payment/paynl/order_description_prefix', 'Order ');
             $this->configWriter->save('payment/paynl/image_style', 'newest');
             $this->configWriter->save('payment/paynl/pay_style_checkout', 1);
             $this->configWriter->save('payment/paynl/icon_size', 'small');
+        } else {
+            payHelper::logInfo('Installing, keeping defaults.');
         }
 
         $this->moduleDataSetup->endSetup();

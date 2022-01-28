@@ -8,6 +8,8 @@ use \Paynl\Payment\Model\Config\Source\LogOptions;
 
 class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
 {
+    const PAY_LOG_PREFIX = 'PAY.: ';
+
     private static $objectManager;
     private static $store;
 
@@ -68,6 +70,20 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
         self::writeLog($text, 'debug', $params, $store);
     }
 
+    /**
+     * Logs while bypassing the loglevel setting.
+     *
+     * @param $text
+     * @param array $params
+     * @param null $store
+     */
+    public static function log($text, $params = array(), $store = null)
+    {
+        $objectManager = self::getObjectManager();
+        $logger = $objectManager->get(\Psr\Log\LoggerInterface::class);
+        $logger->notice(PayHelper::PAY_LOG_PREFIX . $text, $params);
+    }
+
     public static function writeLog($text, $type, $params, $store)
     {
         $objectManager = self::getObjectManager();
@@ -77,8 +93,7 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $level = $store->getConfig('payment/paynl/logging_level');
 
         if (self::hasCorrectLevel($level, $type)) {
-            $prefix = 'PAY.: ';
-            $text = $prefix . $text;
+            $text = PayHelper::PAY_LOG_PREFIX . $text;
             if (!is_array($params)) {
                 $params = array();
             }

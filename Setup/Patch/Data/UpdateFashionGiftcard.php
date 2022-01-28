@@ -42,7 +42,7 @@ class UpdateFashionGiftcard implements DataPatchInterface
     {
         $this->moduleDataSetup->startSetup();
 
-        payHelper::logDebug('Apply patch: updateFashionGiftcard.');
+        payHelper::log('Apply patch: updateFashionGiftcard.');
 
         $connection = $this->resourceConnection->getConnection();
         $tableName = $this->resourceConnection->getTableName('core_config_data');
@@ -54,7 +54,7 @@ class UpdateFashionGiftcard implements DataPatchInterface
         if (!$result) {
             return;
         }
-        payHelper::logDebug('updateFashionGiftcard result ' . $result);
+        payHelper::log('updateFashionGiftcard result ' . $result);
         if ($result == '1699') {
             # Update the incorrect profileid.
             $this->resourceConfig->saveConfig($path, '1669', 'default', 0);
