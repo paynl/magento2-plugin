@@ -4,12 +4,11 @@ namespace Paynl\Payment\Setup\Patch\Data;
 
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\Patch\DataPatchInterface;
-use Magento\Framework\Setup\Patch\PatchVersionInterface;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Config\Model\ResourceModel\Config;
 use \Paynl\Payment\Helper\PayHelper;
 
-class UpdateFashionGiftcard implements DataPatchInterface, PatchVersionInterface
+class UpdateFashionGiftcard implements DataPatchInterface
 {
     /**
      * @var ModuleDataSetupInterface
@@ -62,11 +61,6 @@ class UpdateFashionGiftcard implements DataPatchInterface, PatchVersionInterface
         }
 
         $this->moduleDataSetup->endSetup();
-    }
-
-    public static function getVersion()
-    {
-        return '2.0.1';
     }
 
     public static function getDependencies()
