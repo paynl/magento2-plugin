@@ -47,13 +47,13 @@ class ShipmentSaveAfter implements ObserverInterface
                     $amountRefunded = isset($data['amount_refunded']) ? $data['amount_refunded'] : null;
 
                     if ($bHasAmountAuthorized && $amountPaid === null && $amountRefunded === null) {
-                        payHelper::logDebug('AUTO-CAPTURING (rest)' . $data['last_trans_id'], [], $order->getStore());
+                        payHelper::logNotice('AUTO-CAPTURING (rest)' . $data['last_trans_id'], [], $order->getStore());
                         try {
                             \Paynl\Config::setApiToken($this->config->getApiToken());
                             $result = \Paynl\Transaction::capture($data['last_trans_id']);
                             $strResult = 'Success';
                         } catch (\Exception $e) {
-                            payHelper::logDebug('Order PAY error (rest): ' . $e->getMessage() . ' EntityId: ' . $order->getEntityId(), [], $order->getStore());
+                            payHelper::logCritical('Order PAY error (rest): ' . $e->getMessage() . ' EntityId: ' . $order->getEntityId(), [], $order->getStore());
                             $strResult = 'Failed. Errorcode: PAY-MAGENTO2-004. See docs.pay.nl for more information';
                         }
 
