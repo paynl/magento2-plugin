@@ -186,17 +186,22 @@ define(
                 window.location.replace(url.build('paynl/checkout/redirect?nocache='+ (new Date().getTime())));
             },
             getData: function () {
-                var dob = new Date(this.dateofbirth);
-                var dd = dob.getDate();
-                var mm = dob.getMonth() + 1;
-                var yyyy = dob.getFullYear();
-                if (dd < 10) {
-                    dd = '0' + dd;
+                if (this.dateofbirth) {
+                    var dob = new Date(this.dateofbirth);
+                    var dd = dob.getDate();
+                    var mm = dob.getMonth() + 1;
+                    var yyyy = dob.getFullYear();
+                    if (dd < 10) {
+                        dd = '0' + dd;
+                    }
+                    if (mm < 10) {
+                        mm = '0' + mm;
+                    }
+                    var dob_format = dd + '-' + mm + '-' + yyyy;
                 }
-                if (mm < 10) {
-                    mm = '0' + mm;
+                else {
+                    var dob_format = '';
                 }
-                var dob_format = dd + '-' + mm + '-' + yyyy;
                 return {
                     'method': this.item.method,
                     'po_number': null,
