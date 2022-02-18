@@ -3,7 +3,7 @@
 {"store url=\"\"":"Store Url",
 "skin url=\"images/logo_email.gif\" _area='frontend'":"Email Logo Image"},
 "var formattedBillingAddress|raw":"Billing Address",
-"var order_data.email_customer_note|escape|nl2br":"Email Order Note",
+"var email_customer_note|escape|nl2br":"Email Order Note",
 "var order.increment_id":"Order Id",
 "layout handle=\"sales_email_order_items\" order=$order area=\"frontend\"":"Order Items Grid",
 "var payment_html|raw":"Payment Details",
@@ -16,10 +16,10 @@
 "var store_email":"Store Email",
 "var store_hours":"Store Hours",
 "var this.getUrl($store,'customer/account/',[_nosid:1])":"Customer Account URL",
-"var order_data.is_not_virtual":"Order Type",
+"var is_not_virtual":"Order Type",
 "var order":"Order",
-"var order_data.customer_name":"Customer Name"
-"var order_data.show_order_in_mail":"show Order",
+"var customer_name":"Customer Name"
+"var show_order_in_mail":"show Order",
 @-->
 <!--@styles
 body,td {
@@ -37,7 +37,7 @@ body,td {
 <br/>
 {{var body|raw}}
 
-{{if order_data.show_order_in_mail}}
+{{if show_order_in_mail}}
 <br/>
 <table style="width:100%;">    
     <tr class="email-summary">
@@ -48,11 +48,11 @@ body,td {
     </tr>
     <tr class="email-information">
         <td>
-            {{depend order_data.email_customer_note}}
+            {{depend email_customer_note}}
             <table class="message-info">
                 <tr>
                     <td>
-                        {{var order_data.email_customer_note|escape|nl2br}}
+                        {{var email_customer_note|escape|nl2br}}
                     </td>
                 </tr>
             </table>
@@ -63,7 +63,7 @@ body,td {
                         <h3>{{trans "Billing Info"}}</h3>
                         <p>{{var formattedBillingAddress|raw}}</p>
                     </td>
-                    {{depend order_data.is_not_virtual}}
+                    {{depend is_not_virtual}}
                     <td class="address-details">
                         <h3>{{trans "Shipping Info"}}</h3>
                         <p>{{var formattedShippingAddress|raw}}</p>
@@ -75,13 +75,11 @@ body,td {
                         <h3>{{trans "Payment Method"}}</h3>
                         {{var payment_html|raw}}
                     </td>
-                    {{depend order_data.is_not_virtual}}
+                    {{depend is_not_virtual}}
                     <td class="method-info">
                         <h3>{{trans "Shipping Method"}}</h3>
-                        <p>{{var order.shipping_description}}</p>
-                        {{if shipping_msg}}
-                        <p>{{var shipping_msg}}</p>
-                        {{/if}}
+                        <p>{{var order.shipping_description}}</p>                        
+                        <p>{{var shipping_msg}}</p>                        
                     </td>
                     {{/depend}}
                 </tr>

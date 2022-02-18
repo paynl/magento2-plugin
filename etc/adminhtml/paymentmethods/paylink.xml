@@ -107,6 +107,15 @@
                 <field id="active">1</field>
             </depends>
         </field>
+        <field id="send_paylink_email" translate="label" type="select" sortOrder="140" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Send a Paylink email</label>
+            <source_model>Paynl\Payment\Model\Config\Source\ShowPaylinkOptions</source_model>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+            <config_path>payment/paynl_payment_paylink/send_paylink_email</config_path>
+            <comment><![CDATA[Send an email containing the paylink.]]></comment>
+        </field>   
         <field id="show_order_in_mail" translate="label" type="select" sortOrder="150" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Show order in Paylink email</label>
             <source_model>Paynl\Payment\Model\Config\Source\ShowPaylinkOptions</source_model>
