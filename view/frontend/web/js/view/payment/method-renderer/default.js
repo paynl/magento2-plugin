@@ -93,7 +93,7 @@ define(
                 if(size){
                     return 'pay_icon_size_' + size;
                 }
-                return '';                
+                return '';
             },
             getCompany: function () {
                 if (typeof quote.billingAddress._latestValue.company !== 'undefined' && quote.billingAddress._latestValue.company !== null) {
@@ -146,16 +146,16 @@ define(
             getKVKDOB: function () {
                 return (this.getDOB() > 0 && this.getKVK() > 0);
             },
-            showPaymentOptions: function(){               
-                if(window.checkoutConfig.payment.hidepaymentoptions[this.item.method] == 1){
+            showPaymentOptions: function () {
+                if (window.checkoutConfig.payment.hidepaymentoptions[this.item.method] == 1) {
                     return false;
-                } 
+                }
                 return window.checkoutConfig.payment.paymentoptions[this.item.method].length > 0 && window.checkoutConfig.payment.showpaymentoptions[this.item.method] != 2;
             },
-            showPaymentOptionsList: function(){         
+            showPaymentOptionsList: function () {
                 return window.checkoutConfig.payment.paymentoptions[this.item.method].length >= 1 && window.checkoutConfig.payment.showpaymentoptions[this.item.method] == 2;
             },
-            getPaymentOptions: function(){
+            getPaymentOptions: function () {
                 return window.checkoutConfig.payment.paymentoptions[this.item.method];
             },
             getPaymentOptionsList: function(){
@@ -178,25 +178,22 @@ define(
                     return list;
                 }
                 return this.paymentOptionsList[this.item.method];
-            },            
-            getDefaultPaymentOption: function(){           
+            },
+            getDefaultPaymentOption: function () {
                 return window.checkoutConfig.payment.defaultpaymentoption[this.item.method];
             },
             afterPlaceOrder: function () {
-                window.location.replace(url.build('paynl/checkout/redirect?nocache='+ (new Date().getTime())));
+                window.location.replace(url.build('paynl/checkout/redirect?nocache=' + (new Date().getTime())));
             },
             getData: function () {
-                var dob = new Date(this.dateofbirth);
-                var dd = dob.getDate();
-                var mm = dob.getMonth() + 1;
-                var yyyy = dob.getFullYear();
-                if (dd < 10) {
-                    dd = '0' + dd;
+                var dob_format = '';
+                if (this.dateofbirth != null) {
+                    var dob = new Date(this.dateofbirth);
+                    var dd = dob.getDate(), mm = dob.getMonth() + 1, yyyy = dob.getFullYear();
+                    dd = (dd < 10) ? '0' + dd : dd;
+                    mm = (mm < 10) ? '0' + mm : mm;
+                    dob_format = dd + '-' + mm + '-' + yyyy;
                 }
-                if (mm < 10) {
-                    mm = '0' + mm;
-                }
-                var dob_format = dd + '-' + mm + '-' + yyyy;
                 return {
                     'method': this.item.method,
                     'po_number': null,
