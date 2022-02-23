@@ -286,7 +286,18 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         $payment->setPreparedMessage('PAY. - ');
         $payment->setIsTransactionClosed(0);
 
-        $paidAmount = $transaction->getPaidCurrencyAmount();
+        $transactionPaid = [
+            $transaction->getCurrencyAmount(),
+            $transaction->getPaidCurrencyAmount(),
+            $transaction->getPaidAmount(),
+        ];
+
+        if (!in_array($order->getGrandTotal(), $transactionPaid)) {
+            $this->logger->debug('Validation error: Paid amount does not match order amount. paidAmount: ' . implode(' / ', $transactionPaid) . ', orderAmount:' . $order->getGrandTotal());
+            return $this->result->setContents('FALSE| Validation error: Paid amount does not match order amount.');
+        }
+
+        $paidAmount = $order->getGrandTotal();
 
         if (!$this->paynlConfig->isAlwaysBaseCurrency()) {
             if ($order->getBaseCurrencyCode() != $order->getOrderCurrencyCode()) {
