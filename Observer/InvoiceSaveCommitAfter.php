@@ -50,7 +50,7 @@ class InvoiceSaveCommitAfter implements ObserverInterface
             $paymentMethod = $order->getPayment()->getMethod();
             $customStatus = $this->config->getPaidStatus($paymentMethod);
             if (!empty($customStatus)) {
-                payHelper::logNotice('PAY.: Fixing order status from ' . $order->getStatus() . ' to ' . $customStatus, [], $order->getStore());
+                payHelper::logNotice('PAY.: Updating order status from ' . $order->getStatus() . ' to ' . $customStatus, [], $order->getStore());
                 $order->setStatus($customStatus)->save();
             }
         }
