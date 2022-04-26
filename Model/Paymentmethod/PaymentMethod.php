@@ -169,9 +169,12 @@ abstract class PaymentMethod extends AbstractMethod
         return $this->_scopeConfig->getValue('payment/' . $this->_code . '/showforgroup', 'store');
     }
 
+    /**
+     * @return bool
+     */
     public function useBillingAddressInstorePickup()
     {
-        return $this->_scopeConfig->getValue('payment/' . $this->_code . '/useBillingAddressInstorePickup', 'store');
+        return $this->_scopeConfig->getValue('payment/' . $this->_code . '/useBillingAddressInstorePickup', 'store') == 1;
     }
 
     public function isCurrentIpValid()
@@ -399,7 +402,7 @@ abstract class PaymentMethod extends AbstractMethod
         }
 
         $arrShippingAddress = $order->getShippingAddress();
-        if ($arrShippingAddress) {
+        if (!empty($arrShippingAddress)) {
             $arrShippingAddress = $arrShippingAddress->toArray();
 
             if ($this->useBillingAddressInstorePickup() && $order->getShippingMethod() === InStorePickup::DELIVERY_METHOD) {
