@@ -18,6 +18,7 @@ use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderRepository;
 use Paynl\Payment\Model\Config;
 use Paynl\Transaction;
+use Magento\InventoryInStorePickupShippingApi\Model\Carrier\InStorePickup;
 
 abstract class PaymentMethod extends AbstractMethod
 {
@@ -58,11 +59,6 @@ abstract class PaymentMethod extends AbstractMethod
      */
     protected $storeManager;
 
-    /**
-     * @var \Magento\InventoryApi\Api\SourceRepositoryInterface
-     */
-    protected $sourceRepository;
-
     public function __construct(
         Context $context,
         Registry $registry,
@@ -99,7 +95,6 @@ abstract class PaymentMethod extends AbstractMethod
         $this->orderRepository = $orderRepository;
         $this->orderConfig = $orderConfig;
         $this->storeManager = $objectManager->create(\Magento\Store\Model\StoreManagerInterface::class);
-        $this->sourceRepository = $objectManager->get(\Magento\InventoryApi\Api\SourceRepositoryInterface::class);
     }
 
     protected function getState($status)
@@ -407,30 +402,12 @@ abstract class PaymentMethod extends AbstractMethod
         if ($arrShippingAddress) {
             $arrShippingAddress = $arrShippingAddress->toArray();
 
-            if ($this->useBillingAddressInstorePickup()) {
-
-                $zipCode = $arrShippingAddress['postcode'];
-                $street = $arrShippingAddress['street'];
-                $city = $arrShippingAddress['city'];
-                $region = $arrShippingAddress['region'];
-
-                $sources = $this->sourceRepository->getList()->getItems();
-                foreach ($sources as $source) {
-                    $sourceData = $source->getData();
-
-                    $sourceZipCode = $sourceData['postcode'];
-                    $sourceStreet = $sourceData['street'];
-                    $sourceCity = $sourceData['city'];
-                    $sourceRegion = $sourceData['region'];
-
-                    if ($sourceZipCode == $zipCode && $sourceStreet == $street && $sourceCity == $city && $sourceRegion == $region) {
-                        $arrBillingAddress = $order->getBillingAddress();
-                        if ($arrBillingAddress) {
-                            $arrShippingAddress = $arrBillingAddress->toArray();
-                        }
-                    }
-                }
-            }
+            if($this->useBillingAddressInstorePickup() && $order->getShippingMethod() === InStorePickup::DELIVERY_METHOD){
+                $arrBillingAddress = $order->getBillingAddress();
+                if ($arrBillingAddress) {
+                    $arrShippingAddress = $arrBillingAddress->toArray();
+                }                          
+            } 
 
             $shippingAddress = [
                 'initials' => $arrShippingAddress['firstname'],
