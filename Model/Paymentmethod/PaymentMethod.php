@@ -133,7 +133,7 @@ abstract class PaymentMethod extends AbstractMethod
     {
         return false;
     }
-    
+
     public function hidePaymentOptions()
     {
         return 0;
@@ -402,12 +402,12 @@ abstract class PaymentMethod extends AbstractMethod
         if ($arrShippingAddress) {
             $arrShippingAddress = $arrShippingAddress->toArray();
 
-            if($this->useBillingAddressInstorePickup() && $order->getShippingMethod() === InStorePickup::DELIVERY_METHOD){
+            if ($this->useBillingAddressInstorePickup() && $order->getShippingMethod() === InStorePickup::DELIVERY_METHOD) {
                 $arrBillingAddress = $order->getBillingAddress();
-                if ($arrBillingAddress) {
+                if (!empty($arrBillingAddress)) {
                     $arrShippingAddress = $arrBillingAddress->toArray();
-                }                          
-            } 
+                }
+            }
 
             $shippingAddress = [
                 'initials' => $arrShippingAddress['firstname'],
