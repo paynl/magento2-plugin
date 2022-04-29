@@ -96,8 +96,10 @@ define(
                 return '';
             },
             getCompany: function () {
-                if (typeof quote.billingAddress._latestValue.company !== 'undefined' && quote.billingAddress._latestValue.company !== null) {
-                    return quote.billingAddress._latestValue.company;
+                if (quote.billingAddress.hasOwnProperty('_latestValue') && typeof quote.billingAddress._latestValue !== 'undefined' && quote.billingAddress._latestValue !== null) {
+                    if (quote.billingAddress._latestValue.hasOwnProperty('company') && typeof quote.billingAddress._latestValue.company !== 'undefined' && quote.billingAddress._latestValue.company !== null) {                        
+                        return quote.billingAddress._latestValue.company;
+                    }
                 }
                 return '';
             },
