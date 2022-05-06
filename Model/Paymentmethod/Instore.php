@@ -135,7 +135,7 @@ class Instore extends PaymentMethod
     {
         $onlyAllowedIPs = $this->_scopeConfig->getValue('payment/' . $this->_code . '/exclusiveforipaddress', 'store');
 
-        if (empty(trim($onlyAllowedIPs))) {
+        if (empty($onlyAllowedIPs)) {
             return true; # No IP is given, so all ips are valid
         }
 
@@ -146,7 +146,7 @@ class Instore extends PaymentMethod
     {
         $specifiedUserAgent = $this->_scopeConfig->getValue('payment/' . $this->_code . '/exclusiveforuseragent', 'store');
 
-        if (empty(trim($specifiedUserAgent)) || $specifiedUserAgent == 'No') {
+        if (empty($specifiedUserAgent) || $specifiedUserAgent == 'No') {
             return true;
         }
         $currentUserAgent = $_SERVER['HTTP_USER_AGENT'];
@@ -165,7 +165,7 @@ class Instore extends PaymentMethod
             return $specifiedUserAgent == $user_browser;
         } else {
             $custom_useragents = $this->_scopeConfig->getValue('payment/' . $this->_code . '/exclusiveforuseragent_custom', 'store');
-            if (empty(trim($custom_useragents))) {
+            if (empty($custom_useragents)) {
                 return true;
             }
 

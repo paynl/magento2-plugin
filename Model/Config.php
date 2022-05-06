@@ -142,9 +142,12 @@ class Config
         $ip = isset($_SERVER['HTTP_CLIENT_IP']) ? $_SERVER['HTTP_CLIENT_IP'] : $remoteIP;
 
         $ipconfig = $this->store->getConfig('payment/paynl/testipaddress');
-        $allowed_ips = explode(',', $ipconfig);
-        if (in_array($ip, $allowed_ips) && filter_var($ip, FILTER_VALIDATE_IP) && strlen($ip) > 0 && count($allowed_ips) > 0) {
-            return true;
+
+        if(!empty($ipconfig)) {
+            $allowed_ips = explode(',', $ipconfig);
+            if (in_array($ip, $allowed_ips) && filter_var($ip, FILTER_VALIDATE_IP) && strlen($ip) > 0 && count($allowed_ips) > 0) {
+                return true;
+            }
         }
         return $this->store->getConfig('payment/paynl/testmode') == 1;
     }
@@ -232,7 +235,7 @@ class Config
         }
 
         if (!empty($apiToken) && !empty($serviceId)) {
-            if (!empty(trim($gateway)) && substr(trim($gateway), 0, 4) === "http") {
+            if (!empty($gateway) && substr(trim($gateway), 0, 4) === "http") {
                 \Paynl\Config::setApiBase(trim($gateway));
             }
             \Paynl\Config::setApiToken($apiToken);
@@ -246,17 +249,17 @@ class Config
 
     public function getApiToken()
     {
-        return trim($this->store->getConfig('payment/paynl/apitoken'));
+        return $this->store->getConfig('payment/paynl/apitoken');
     }
 
     public function getTokencode()
     {
-        return trim($this->store->getConfig('payment/paynl/tokencode'));
+        return $this->store->getConfig('payment/paynl/tokencode');
     }
 
     public function getServiceId()
     {
-        return trim($this->store->getConfig('payment/paynl/serviceid'));
+        return $this->store->getConfig('payment/paynl/serviceid');
     }
 
     public function getFailoverGateway()
@@ -288,7 +291,7 @@ class Config
                 }
             }
             $iconUrl = 'https://static.pay.nl/payment_profiles/' . $iconsize . '/' . $paymentOptionId . '.png';
-            $customUrl = trim($this->store->getConfig('payment/paynl/iconurl'));
+            $customUrl = $this->store->getConfig('payment/paynl/iconurl');
             if (!empty($customUrl)) {
                 $iconUrl = str_replace('#paymentOptionId#', $paymentOptionId, $customUrl);
             }
@@ -312,7 +315,7 @@ class Config
 
     public function getUseAdditionalValidation()
     {
-        return trim($this->store->getConfig('payment/paynl/use_additional_validation'));
+        return $this->store->getConfig('payment/paynl/use_additional_validation');
     }
 
     public function getCancelURL()

@@ -121,7 +121,7 @@ abstract class PaymentMethod extends AbstractMethod
      */
     public function getInstructions()
     {
-        return trim($this->getConfigData('instructions'));
+        return $this->getConfigData('instructions');
     }
 
     public function getPaymentOptions()
