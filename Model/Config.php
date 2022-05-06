@@ -142,9 +142,12 @@ class Config
         $ip = isset($_SERVER['HTTP_CLIENT_IP']) ? $_SERVER['HTTP_CLIENT_IP'] : $remoteIP;
 
         $ipconfig = $this->store->getConfig('payment/paynl/testipaddress');
-        $allowed_ips = explode(',', $ipconfig);
-        if (in_array($ip, $allowed_ips) && filter_var($ip, FILTER_VALIDATE_IP) && strlen($ip) > 0 && count($allowed_ips) > 0) {
-            return true;
+
+        if(!empty($ipconfig)) {
+            $allowed_ips = explode(',', $ipconfig);
+            if (in_array($ip, $allowed_ips) && filter_var($ip, FILTER_VALIDATE_IP) && strlen($ip) > 0 && count($allowed_ips) > 0) {
+                return true;
+            }
         }
         return $this->store->getConfig('payment/paynl/testmode') == 1;
     }
