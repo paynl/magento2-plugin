@@ -232,7 +232,7 @@ class Config
         }
 
         if (!empty($apiToken) && !empty($serviceId)) {
-            if (!empty(trim($gateway)) && substr(trim($gateway), 0, 4) === "http") {
+            if (!empty($gateway) && substr(trim($gateway), 0, 4) === "http") {
                 \Paynl\Config::setApiBase(trim($gateway));
             }
             \Paynl\Config::setApiToken($apiToken);
@@ -246,17 +246,17 @@ class Config
 
     public function getApiToken()
     {
-        return trim($this->store->getConfig('payment/paynl/apitoken'));
+        return $this->store->getConfig('payment/paynl/apitoken');
     }
 
     public function getTokencode()
     {
-        return trim($this->store->getConfig('payment/paynl/tokencode'));
+        return $this->store->getConfig('payment/paynl/tokencode');
     }
 
     public function getServiceId()
     {
-        return trim($this->store->getConfig('payment/paynl/serviceid'));
+        return $this->store->getConfig('payment/paynl/serviceid');
     }
 
     public function getFailoverGateway()
@@ -288,7 +288,7 @@ class Config
                 }
             }
             $iconUrl = 'https://static.pay.nl/payment_profiles/' . $iconsize . '/' . $paymentOptionId . '.png';
-            $customUrl = trim($this->store->getConfig('payment/paynl/iconurl'));
+            $customUrl = $this->store->getConfig('payment/paynl/iconurl');
             if (!empty($customUrl)) {
                 $iconUrl = str_replace('#paymentOptionId#', $paymentOptionId, $customUrl);
             }
@@ -312,7 +312,7 @@ class Config
 
     public function getUseAdditionalValidation()
     {
-        return trim($this->store->getConfig('payment/paynl/use_additional_validation'));
+        return $this->store->getConfig('payment/paynl/use_additional_validation');
     }
 
     public function getCancelURL()
