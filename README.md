@@ -35,8 +35,8 @@ Trustly | Tikkie | De Cadeaukaart | YourGift | Creditclick | Apple Pay |
 # Requirements
 
     PHP 7.2 or higher
-    PHP Tested up to 8.1
-    Tested up to Magento 2.4.4
+    PHP tested up to 8.1
+    Magento tested up to 2.4.4
 
 
 # Installation
