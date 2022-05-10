@@ -171,7 +171,7 @@
                 <comment><![CDATA[When the modal is enabled the user will be informed a payment failed and has to close the window themselves, otherwise an error will be presented below the credit card input fields.]]></comment>
             </field>
             <field id="cse_hold_verify_payments" translate="label" type="select" sortOrder="250" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Hold Oder on Verify</label>
+                <label>Hold Order on Verify</label>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 <depends>
                     <field id="cse_enabled">1</field>
