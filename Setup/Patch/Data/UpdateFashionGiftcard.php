@@ -48,7 +48,7 @@ class UpdateFashionGiftcard implements DataPatchInterface
         $tableName = $this->resourceConnection->getTableName('core_config_data');
 
         $path = 'payment/paynl_payment_fashiongiftcard/payment_option_id';
-        $query = "SELECT `value` FROM " . $tableName . " WHERE scope = 'default' AND `path`= '" . $path . "'";
+        $query = "SELECT `value` FROM " . $tableName . " WHERE scope = 'default' AND `path`= :path ";
 
         $result = $connection->fetchOne($query, ['path' => $path]);
         if (!$result) {

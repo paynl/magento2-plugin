@@ -17,8 +17,8 @@ use Magento\Payment\Model\Method\Logger;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderRepository;
 use Paynl\Payment\Model\Config;
-use Paynl\Payment\Model\Helper\PublicKeysHelper;
 use Paynl\Transaction;
+use Magento\InventoryInStorePickupShippingApi\Model\Carrier\InStorePickup;
 use Paynl\Payment;
 use Paynl\Api\Payment\Model;
 
@@ -138,7 +138,7 @@ abstract class PaymentMethod extends AbstractMethod
      */
     public function getInstructions()
     {
-        return trim($this->getConfigData('instructions'));
+        return $this->getConfigData('instructions');
     }
 
     public function getPaymentOptions()
@@ -189,6 +189,14 @@ abstract class PaymentMethod extends AbstractMethod
     public function shouldHoldOrder()
     {
         return $this->_scopeConfig->getValue('payment/' . $this->_code . '/holded', 'store') == 1;
+    }
+
+    /**
+     * @return bool
+     */
+    public function useBillingAddressInstorePickup()
+    {
+        return $this->_scopeConfig->getValue('payment/' . $this->_code . '/useBillingAddressInstorePickup', 'store') == 1;
     }
 
     public function isCurrentIpValid()
@@ -518,8 +526,15 @@ abstract class PaymentMethod extends AbstractMethod
         }
 
         $arrShippingAddress = $order->getShippingAddress();
-        if ($arrShippingAddress) {
+        if (!empty($arrShippingAddress)) {
             $arrShippingAddress = $arrShippingAddress->toArray();
+
+            if ($this->useBillingAddressInstorePickup() && $order->getShippingMethod() === InStorePickup::DELIVERY_METHOD) {
+                $arrBillingAddress = $order->getBillingAddress();
+                if (!empty($arrBillingAddress)) {
+                    $arrShippingAddress = $arrBillingAddress->toArray();
+                }
+            }
 
             $shippingAddress = [
                 'initials' => $arrShippingAddress['firstname'],

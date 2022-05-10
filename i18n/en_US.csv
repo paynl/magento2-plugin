@@ -123,6 +123,8 @@
 "You must first agree to the payment terms.","You must first agree to the payment terms."
 "Yes, as dropdown","Yes, as dropdown"
 "Yes, as list","Yes, as list"
+"Force Billing Address for Instore Pickups","Force Billing Address for Instore Pickups"
+"Use the Billing address as Shipping address for instore pickups.","Use the Billing address as Shipping address for instore pickups."
 "Credit card payment","Credit card payment"
 "Name on card","Name on card"
 "Name as shown on card","Name as shown on card"
