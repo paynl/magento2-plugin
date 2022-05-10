@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <route url="/V1/paynl/cse" method="POST">
+        <service class="Paynl\Payment\Cse\Cse" method="execute"/>
+        <resources><resource ref="anonymous" /></resources>
+    </route>
+    <route url="/V1/paynl/cse/status" method="GET">
+        <service class="Paynl\Payment\Cse\Cse" method="status"/>
+        <resources><resource ref="anonymous" /></resources>
+    </route>
+    <route url="/V1/paynl/cse/authorization" method="POST">
+        <service class="Paynl\Payment\Cse\Cse" method="authorization"/>
+        <resources><resource ref="anonymous" /></resources>
+    </route>
+    <route url="/V1/paynl/cse/authentication" method="POST">
+        <service class="Paynl\Payment\Cse\Cse" method="authentication"/>
+        <resources><resource ref="anonymous" /></resources>
+    </route>
+</routes>

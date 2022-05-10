@@ -17,7 +17,10 @@ use Magento\Payment\Model\Method\Logger;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderRepository;
 use Paynl\Payment\Model\Config;
+use Paynl\Payment\Model\Helper\PublicKeysHelper;
 use Paynl\Transaction;
+use Paynl\Payment;
+use Paynl\Api\Payment\Model;
 
 abstract class PaymentMethod extends AbstractMethod
 {
@@ -58,6 +61,17 @@ abstract class PaymentMethod extends AbstractMethod
      */
     protected $storeManager;
 
+    /**
+     * @var PublicKeysHelper
+     */
+    protected $publicKeysHelper;
+
+    /**
+     * @var \Magento\Framework\Json\Helper\Data
+     */
+    protected $jsonHelper;
+
+
     public function __construct(
         Context $context,
         Registry $registry,
@@ -71,6 +85,8 @@ abstract class PaymentMethod extends AbstractMethod
         Config $paynlConfig,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
+        PublicKeysHelper $publicKeysHelper,
+        \Magento\Framework\Json\Helper\Data $jsonHelper,
         array $data = []
     ) {
         parent::__construct(
@@ -94,6 +110,8 @@ abstract class PaymentMethod extends AbstractMethod
         $this->orderRepository = $orderRepository;
         $this->orderConfig = $orderConfig;
         $this->storeManager = $objectManager->create(\Magento\Store\Model\StoreManagerInterface::class);
+        $this->publicKeysHelper = $publicKeysHelper;
+        $this->jsonHelper = $jsonHelper;
     }
 
     protected function getState($status)
@@ -132,7 +150,7 @@ abstract class PaymentMethod extends AbstractMethod
     {
         return false;
     }
-    
+
     public function hidePaymentOptions()
     {
         return 0;
@@ -166,6 +184,11 @@ abstract class PaymentMethod extends AbstractMethod
     public function getCustomerGroup()
     {
         return $this->_scopeConfig->getValue('payment/' . $this->_code . '/showforgroup', 'store');
+    }
+
+    public function shouldHoldOrder()
+    {
+        return $this->_scopeConfig->getValue('payment/' . $this->_code . '/holded', 'store') == 1;
     }
 
     public function isCurrentIpValid()
@@ -280,22 +303,124 @@ abstract class PaymentMethod extends AbstractMethod
         return $this;
     }
 
+
+    /**
+     * Return the public encryption keys used for CSE.
+     *
+     * @return false|string
+     */
+    public function getPublicEncryptionKeys()
+    {
+        $keys = $this->publicKeysHelper->getKeys();
+        return $this->jsonHelper->jsonEncode($keys);
+    }
+
     public function startTransaction(Order $order)
     {
         $transaction = $this->doStartTransaction($order);
         $order->getPayment()->setAdditionalInformation('transactionId', $transaction->getTransactionId());
         $this->paynlConfig->setStore($order->getStore());
 
-        $holded = $this->_scopeConfig->getValue('payment/' . $this->_code . '/holded', 'store');
-        if ($holded) {
+        if ($this->shouldHoldOrder()) {
             $order->hold();
         }
+
         $this->orderRepository->save($order);
 
         return $transaction->getRedirectUrl();
     }
 
-    protected function doStartTransaction(Order $order)
+
+    public function startEncryptedTransaction(Order $order, $payload, $returnUrl)
+    {
+        $transaction = (array) $this->doStartTransaction($order, true);
+
+        $this->paynlConfig->setStore($order->getStore());
+
+        $baseUrl = $order->getStore()->getBaseUrl();
+
+        $this->_logger->debug('startEncryptedTransaction. Baseurl: ' . $baseUrl);
+
+        if ($this->shouldHoldOrder()) {
+            $order->hold();
+        }
+
+        $payload = json_decode($payload, true);
+        $this->orderRepository->save($order);
+
+        try
+        {
+            $objTransaction = new Model\Authenticate\Transaction();
+            $objTransaction
+                ->setServiceId(\Paynl\Config::getServiceId())
+                ->setDescription($transaction['description'])
+                ->setExchangeUrl($transaction['exchangeUrl'])
+                ->setReference($transaction['orderNumber'])
+                ->setAmount($transaction['amount'] * 100)
+                ->setCurrency($transaction['currency'])
+                ->setIpAddress($transaction['ipaddress'])
+                ->setLanguage($transaction['address']['country']);
+
+            $address = new Model\Address();
+            $address
+                ->setStreetName($transaction['invoiceAddress']['streetName'])
+                ->setStreetNumber($transaction['invoiceAddress']['houseNumber'])
+                ->setZipCode($transaction['invoiceAddress']['zipCode'])
+                ->setCity($transaction['invoiceAddress']['city'])
+                ->setCountryCode($transaction['invoiceAddress']['country']);
+
+            $invoice = new Model\Invoice();
+            $invoice
+                ->setFirstName($transaction['invoiceAddress']['initials'])
+                ->setLastName($transaction['invoiceAddress']['lastName'])
+                ->setGender( $transaction['enduser']['gender'] ?? null )
+                ->setAddress($address);
+
+            $customer = new Model\Customer();
+            $customer
+                ->setFirstName($transaction['enduser']['initials'])
+                ->setLastName($transaction['enduser']['lastName'])
+                ->setAddress($address)
+                ->setInvoice($invoice);
+
+            $cse = new Model\CSE();
+            $cse->setIdentifier($payload['identifier']);
+            $cse->setData($payload['data']);
+
+            $statistics = new Model\Statistics();
+            $statistics->setObject($transaction['object']);
+            $statistics->setExtra3($transaction['extra3']);
+
+            $browser = new Model\Browser();
+            $paymentOrder = new Model\Order();
+
+            if(!empty($transaction['products']) && is_array($transaction['products'])) {
+                foreach ($transaction['products'] as $arrProduct) {
+                    $product = new Model\Product();
+                    $product->setId($arrProduct['id']);
+                    $product->setType($arrProduct['type']);
+                    $product->setDescription($arrProduct['name']);
+                    $product->setAmount($arrProduct['price'] * 100);
+                    $product->setQuantity($arrProduct['qty']);
+                    $product->setVat($arrProduct['tax']);
+                    $paymentOrder->addProduct($product);
+                }
+            }
+
+            $result = \Paynl\Payment::authenticate($objTransaction, $customer, $cse, $browser, $statistics, $paymentOrder)->getData();
+
+            $order->getPayment()->setAdditionalInformation('transactionId', $result['orderId']);
+
+            $order->save();
+
+        } catch (\Exception $e) {
+            $result = array('result' => 0, 'errorMessage' => $e->getMessage());
+        }
+
+        return $result;
+    }
+
+    protected function doStartTransaction(Order $order,  $overwriteParameters = false)
     {
         $this->paynlConfig->setStore($order->getStore());
         $this->paynlConfig->configureSDK();
@@ -556,9 +681,11 @@ abstract class PaymentMethod extends AbstractMethod
         }
         $data['ipaddress'] = $ipAddress;
 
-        $transaction = \Paynl\Transaction::start($data);
+        if (!empty($overwriteParameters)) {
+            return $data;
+        }
 
-        return $transaction;
+        return \Paynl\Transaction::start($data);
     }
 
     public function getPaymentOptionId()

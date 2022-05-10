@@ -17,8 +17,7 @@
                 <field id="active">1</field>
             </depends>
         </field>
-        <field id="order_status" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1"
-               showInStore="1">
+        <field id="order_status" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>New Order Status</label>
             <source_model>Paynl\Payment\Model\Config\Source\Order\Status\PendingPayment</source_model>
             <depends>
@@ -26,7 +25,7 @@
             </depends>
             <config_path>payment/paynl_payment_visamastercard/order_status</config_path>
         </field>
-        <field id="order_status_authorized" translate="label" type="select" sortOrder="32" showInDefault="1" showInWebsite="1"
+        <field id="order_status_authorized" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1"
                showInStore="1">
             <label>Authorized Order Status</label>
             <source_model>Paynl\Payment\Model\Config\Source\Order\Status\Processing</source_model>
@@ -35,8 +34,7 @@
             </depends>
             <config_path>payment/paynl_payment_visamastercard/order_status_authorized</config_path>
         </field>
-        <field id="order_status_processing" translate="label" type="select" sortOrder="35" showInDefault="1" showInWebsite="1"
-               showInStore="1">
+        <field id="order_status_processing" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Paid Order Status</label>
             <source_model>Paynl\Payment\Model\Config\Source\Order\Status\Processing</source_model>
             <depends>
@@ -44,8 +42,7 @@
             </depends>
             <config_path>payment/paynl_payment_visamastercard/order_status_processing</config_path>
         </field>
-        <field id="allowspecific" translate="label" type="allowspecific" sortOrder="40" showInDefault="1"
-               showInWebsite="1" showInStore="1">
+        <field id="allowspecific" translate="label" type="allowspecific" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Payment from Applicable Countries</label>
             <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
             <config_path>payment/paynl_payment_visamastercard/allowspecific</config_path>
@@ -53,8 +50,7 @@
                 <field id="active">1</field>
             </depends>
         </field>
-        <field id="specificcountry" translate="label" type="multiselect" sortOrder="50" showInDefault="1"
-               showInWebsite="1" showInStore="1">
+        <field id="specificcountry" translate="label" type="multiselect" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Payment from Specific Countries</label>
             <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
             <can_be_empty>1</can_be_empty>
@@ -64,14 +60,14 @@
                 <field id="active">1</field>
             </depends>
         </field>
-        <field id="instructions" translate="label" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+        <field id="instructions" translate="label" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Instructions</label>
             <depends>
                 <field id="active">1</field>
             </depends>
             <config_path>payment/paynl_payment_visamastercard/instructions</config_path>
         </field>
-        <field id="min_order_total" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1"
+        <field id="min_order_total" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1"
                showInStore="1">
             <label>Minimum Order Total</label>
             <config_path>payment/paynl_payment_visamastercard/min_order_total</config_path>
@@ -79,7 +75,7 @@
                 <field id="active">1</field>
             </depends>
         </field>
-        <field id="max_order_total" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1"
+        <field id="max_order_total" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1"
                showInStore="1">
             <label>Maximum Order Total</label>
             <config_path>payment/paynl_payment_visamastercard/max_order_total</config_path>
@@ -87,7 +83,7 @@
                 <field id="active">1</field>
             </depends>
         </field>
-        <field id="sort_order" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1"
+        <field id="sort_order" translate="label" type="text" sortOrder="110" showInDefault="1" showInWebsite="1"
                showInStore="1">
             <label>Sort Order</label>
             <frontend_class>validate-number</frontend_class>
@@ -96,7 +92,7 @@
                 <field id="active">1</field>
             </depends>
         </field>
-        <field id="send_new_order_email" translate="label" type="select" sortOrder="100" showInDefault="1"
+        <field id="send_new_order_email" translate="label" type="select" sortOrder="120" showInDefault="1"
                showInWebsite="1"
                showInStore="1">
             <label>Send new order email</label>
@@ -106,7 +102,7 @@
                 <field id="active">1</field>
             </depends>
         </field>
-        <field id="disallowedshipping" translate="label" type="multiselect" sortOrder="110" showInDefault="1"
+        <field id="disallowedshipping" translate="label" type="multiselect" sortOrder="130" showInDefault="1"
                showInWebsite="1" showInStore="1">
             <label>Disallowed Shipping Methods</label>
             <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
@@ -117,7 +113,7 @@
             <config_path>payment/paynl_payment_visamastercard/disallowedshipping</config_path>
             <comment><![CDATA[Hold CTRL button to select/deselect multiple]]></comment>
         </field>
-        <field id="showforcompany" translate="label" type="select" sortOrder="150" showInDefault="1" showInWebsite="1" showInStore="1">
+        <field id="showforcompany" translate="label" type="select" sortOrder="140" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Show for companies</label>
             <source_model>Paynl\Payment\Model\Config\Source\ShowCompanyOptions</source_model>
             <depends>
@@ -126,7 +122,7 @@
             <config_path>payment/paynl_payment_visamastercard/showforcompany</config_path>
             <comment><![CDATA[Allow payment method to be used for companies, private, or both.]]></comment>
         </field>
-        <field id="showforgroup" translate="label" type="select" sortOrder="160" showInDefault="1" showInWebsite="1" showInStore="1">
+        <field id="showforgroup" translate="label" type="select" sortOrder="150" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Customer Group</label>
             <source_model>Paynl\Payment\Model\Config\Source\UserGroups</source_model>
             <depends>
@@ -135,11 +131,60 @@
             <config_path>payment/paynl_payment_visamastercard/showforgroup</config_path>
             <comment><![CDATA[Show payment method only to specific customer groups.]]></comment>
         </field>
-        <group id="advanced" translate="label" sortOrder="200" showInDefault="1" showInWebsite="1" showInStore="1">
+
+        <group id="csegroup" translate="label" sortOrder="200" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Client Side Encryption</label>
+            <field id="cse_enabled"                 translate="label" type="select" sortOrder="210" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Enable clientside encryption</label>
+                <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                <depends>
+                    <field id="active">1</field>
+                </depends>
+                <config_path>payment/paynl_payment_visamastercard/cse_enabled</config_path>
+                <comment><![CDATA[Credit card data will be encrypted clientside, before being sent to the server.]]></comment>
+            </field>
+            <field id="cse_modal_payment_complete"  translate="label" type="select" sortOrder="220" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Enable the payment complete modal.</label>
+                <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                <depends>
+                    <field id="cse_enabled">1</field>
+                </depends>
+                <config_path>payment/paynl_payment_visamastercard/cse_modal_payment_complete</config_path>
+                <comment><![CDATA[When enabled the user will be presented with a payment complete modal, after which we will redirect after set amount of milliseconds.]]></comment>
+            </field>
+            <field id="cse_modal_payment_complete_redirection_timeout" translate="label" type="text" sortOrder="230" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Redirection timeout</label>
+                <depends>
+                    <field id="cse_modal_payment_complete">1</field>
+                </depends>
+                <config_path>payment/paynl_payment_visamastercard/cse_modal_payment_complete_redirection_timeout</config_path>
+                <comment><![CDATA[Please specify the amount of milliseconds to wait for the redirect to occur after the payment complete message was shown.]]></comment>
+                <validate>validate-number validate-zero-or-greater</validate>
+            </field>
+            <field id="cse_modal_payment_failure"   translate="label" type="select" sortOrder="240" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Enable the Payment Failure Modal.</label>
+                <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                <depends>
+                    <field id="cse_enabled">1</field>
+                </depends>
+                <config_path>payment/paynl_payment_visamastercard/cse_modal_payment_failure</config_path>
+                <comment><![CDATA[When the modal is enabled the user will be informed a payment failed and has to close the window themselves, otherwise an error will be presented below the credit card input fields.]]></comment>
+            </field>
+            <field id="cse_hold_verify_payments" translate="label" type="select" sortOrder="250" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Hold Oder on Verify</label>
+                <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                <depends>
+                    <field id="cse_enabled">1</field>
+                </depends>
+                <config_path>payment/paynl_payment_visamastercard/cse_hold_verify_payments</config_path>
+                <comment><![CDATA[Enable this setting to set an order to `Hold` when a payment has yet to be verified by you or PAY. .]]></comment>
+            </field>
+
+        </group>
+
+        <group id="advanced" translate="label" sortOrder="300" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Advanced</label>
-            <field id="payment_option_id" translate="label comment" type="text" sortOrder="10" showInDefault="1"
-                   showInWebsite="1"
-                   showInStore="1">
+            <field id="payment_option_id" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Payment option id</label>
                 <comment>The id of the payment method, only change this if you are told to do so</comment>
                 <config_path>payment/paynl_payment_visamastercard/payment_option_id</config_path>
@@ -147,4 +192,3 @@
         </group>
     </group>
 </include>
-                

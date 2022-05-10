@@ -119,4 +119,19 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $ipforward = !empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'];
         return !empty($_SERVER['HTTP_CLIENT_IP']) ? $_SERVER['HTTP_CLIENT_IP'] : $ipforward;
     }
+
+    /**
+     * @param $field
+     * @param $name
+     * @param $errorCode
+     * @param null $desc
+     * @throws \Exception
+     */
+    public function checkEmpty($field, $name, $errorCode, $desc = null)
+    {
+        if (empty($field)) {
+            $desc = empty($desc) ? $name . ' is empty' : $desc;
+            throw new \Exception('Finish: ' . $desc, $errorCode);
+        }
+    }
 }

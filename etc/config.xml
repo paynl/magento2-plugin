@@ -638,6 +638,11 @@ In order to pay for your order click the link below
                 <model>Paynl\Payment\Model\Paymentmethod\Visamastercard</model>
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
+                <cse_enabled>0</cse_enabled>
+                <cse_modal_payment_complete>0</cse_modal_payment_complete>
+                <cse_modal_payment_complete_redirect_timeout>0</cse_modal_payment_complete_redirect_timeout>
+                <cse_modal_payment_failure>0</cse_modal_payment_failure>
+                <cse_hold_verify_payments>1</cse_hold_verify_payments>
             </paynl_payment_visamastercard>
             <paynl_payment_vvvgiftcard>
                 <active>0</active>

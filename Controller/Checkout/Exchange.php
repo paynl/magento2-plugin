@@ -116,15 +116,15 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             return $this->result->setContents('TRUE| Ignore pending');
         }
 
-        if (empty($payOrderId) || empty($orderEntityId)) {            
+        if (empty($payOrderId) || empty($orderEntityId)) {
             payHelper::logCritical('Exchange: order_id or orderEntity is not set', $params);
             return $this->result->setContents('FALSE| order_id is not set in the request');
         }
 
         try {
             $order = $this->orderRepository->get($orderEntityId);
-            if (empty($order)) {              
-                payHelper::logCritical('Cannot load order: ' . $orderEntityId);                
+            if (empty($order)) {
+                payHelper::logCritical('Cannot load order: ' . $orderEntityId);
                 throw new \Exception('Cannot load order: ' . $orderEntityId);
             }
         } catch (\Exception $e) {
@@ -137,13 +137,20 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
 
         try {
             $transaction = \Paynl\Transaction::get($payOrderId);
-        } catch (\Exception $e) {   
+        } catch (\Exception $e) {
             payHelper::logCritical($e, $params, $order->getStore());
 
             return $this->result->setContents('FALSE| Error fetching transaction. ' . $e->getMessage());
         }
 
         if ($transaction->isPending()) {
+            if ($transaction->isBeingVerified()) {
+                if ($this->config->holdOnVerify()) {
+                    $order->hold();
+                    $order->addStatusHistoryComment(__('PAY. - Please verify this payment in your PAY.-admin. PAY. Order-ID: ' . $payOrderId));
+                    $order->save();
+                }
+            }
             if ($action == 'new_ppt') {
                 return $this->result->setContents("FALSE| Payment is pending");
             }
@@ -159,10 +166,9 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             }
         }
 
-        $payment = $order->getPayment();
         $orderEntityIdTransaction = $transaction->getExtra3();
 
-        if ($orderEntityId != $orderEntityIdTransaction) {            
+        if ($orderEntityId != $orderEntityIdTransaction) {
             payHelper::logCritical('Transaction mismatch ' . $orderEntityId . ' / ' . $orderEntityIdTransaction, $params, $order->getStore());
             return $this->result->setContents('FALSE|Transaction mismatch');
         }
@@ -175,6 +181,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         }
 
         if ($action == 'capture') {
+            $payment = $order->getPayment();
             if (!empty($payment) && $payment->getAdditionalInformation('manual_capture')) {
                 payHelper::logDebug('Already captured.');
                 return $this->result->setContents('TRUE| Already captured.');
@@ -317,6 +324,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
 
         # Force order state to processing
         $order->setState(Order::STATE_PROCESSING);
+
         $paymentMethod = $order->getPayment()->getMethod();
 
         # Notify customer

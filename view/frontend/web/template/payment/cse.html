@@ -1,0 +1,141 @@
+<div class="payment-method paynl payment-method-cse" data-bind="css: {'_active': (getCode() == isChecked())}" afterRender="initializePaymentForm">
+
+    <div class="payment-method-title field choice">
+        <input type="radio" name="payment[method]" class="radio"
+               data-bind="attr: {'id': getCode()}, value: getCode(), checked: isChecked, click: selectPaymentMethod, visible: isRadioButtonVisible()"/>
+        <label data-bind="attr: {'for': getCode()}" class="label">
+            <img data-bind="attr: {src: getPaymentIcon(), alt: getTitle(), class: 'payment-icon ' + getIconSize()}"/>
+
+            <span data-bind="text: getTitle()"></span></label>
+    </div>
+    <div class="payment-method-content">
+        <div class="payment-method-billing-address">
+            <!-- ko foreach: $parent.getRegion(getBillingAddressFormName()) -->
+            <!-- ko template: getTemplate() --><!-- /ko -->
+            <!--/ko-->
+        </div>
+        <div class="checkout-agreements-block">
+            <!-- ko foreach: $parent.getRegion('before-place-order') -->
+            <!-- ko template: getTemplate() --><!-- /ko -->
+            <!--/ko-->
+        </div>
+
+        <fieldset>
+            <div class="container-wrap">
+                <legend><!-- ko i18n: 'Credit card payment'--><!-- /ko --></legend>
+            </div>
+
+            <div class="container-wrap">
+                <div class="form-element-container container-cardholder">
+                    <label for="card-holder"><!-- ko i18n: 'Name on card'--><!-- /ko --></label>
+                    <input id="card-holder"
+                           type="text"
+                           name="cardholder"
+                           required
+                           data-pay-encrypt-field
+                           data-bind="attr: {placeholder: $t('Name as shown on card')}"
+                    />
+                </div>
+            </div>
+
+            <div class="container-wrap">
+                <div class="form-element-container has-icon-container container-creditcard">
+                    <label for="cardnumber"><!-- ko i18n: 'Credit card number'--><!-- /ko --></label>
+                    <div class="has-icon-wrap">
+                        <span class="input-container">
+                            <input id="cardnumber"
+                                   type="text"
+                                   name="cardnumber"
+                                   required
+                                   data-pay-encrypt-field
+                                   data-bind="attr: {placeholder: $t('Enter your credit card number here')}"
+                            />
+                        </span>
+
+                        <div class="icon-container">
+                            <img src="" data-credit-card-type alt="Card type" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-element-container container-cvc">
+                    <label for="cvc" data-cvc-label><!-- ko i18n: 'CVC'--><!-- /ko --></label>
+                    <input id="cvc"
+                           type="text"
+                           name="cardcvc"
+                           required
+                           data-pay-encrypt-field
+                           data-bind="attr: {placeholder: $t('CVC')}"
+                    />
+                </div>
+            </div>
+
+            <div class="container-wrap">
+                <div class="form-element-container container-exp-month">
+                    <label for="month"><!-- ko i18n: 'Month'--><!-- /ko --></label>
+                    <select name="valid_thru_month"
+                            id="month"
+                            data-pay-encrypt-field
+                            class="select select-month"
+                            data-bind="options: getCcMonthsValues(),
+                                       optionsValue: 'value',
+                                       optionsText: 'month',
+                                       optionsAfterRender: setEmptyValuesDisabled,
+                                       value: ''
+                                       ">
+                    </select>
+                </div>
+
+                <div class="form-element-container container-exp-year">
+                    <label for="year"><!-- ko i18n: 'Year'--><!-- /ko --></label>
+                    <select name="valid_thru_year"
+                            id="year"
+                            class="select select-year"
+                            data-pay-encrypt-field
+                            data-bind="options: getCcYearsValues(),
+                                           optionsValue: 'value',
+                                           optionsText: 'year',
+                                           optionsAfterRender: setEmptyValuesDisabled,
+                                           value: ''
+                                           ">
+                    </select>
+                    </select>
+                </div>
+            </div>
+            <p data-bind="html: getInstructions();"></p>
+
+            <div class="checkout-payment-errors" data-bind="html: paymentErrorMessage"></div>
+            <div id="cse-status"></div>
+
+            <div class="actions-toolbar">
+                <div class="primary">
+                    <button id="cse_place_order" class="action primary checkout"
+                            type="submit"
+                            data-bind="
+                        click: placeOrder,
+                        attr: {title: $t('Place Order')},
+                        css: {disabled: !isCreditCardFormIsReadyForSubmission() || !isPlaceOrderActionAllowed() },
+                        enable: (getCode() == isChecked())
+                        "
+                            disabled>
+                        <span data-bind="text: $t('Place Order')"></span>
+                    </button>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</div>
+
+<div id="checkout-payment-modal" data-bind="afterRender: initPaymentModal" style="display: none">
+    <div class="checkout-payment-item-content" data-bind="html: paymentModalContent, style: {height: contentHeight, overflow:'auto' }"></div>
+</div>
+<!--
+<div id="checkout-payment-complete-modal" data-bind="afterRender: initPaymentCompleteModal" style="display: none">
+    <div class="checkout-payment-item-content" data-bind="html: paymentCompleteModalContent, style: {height: contentHeight, overflow:'auto' }"></div>
+</div>
+<div id="checkout-failure-modal" data-bind="afterRender: initErrorModal" style="display: none">
+    <div class="checkout-payment-item-content" data-bind="html: paymentErrorModalContent, style: {height: contentHeight, overflow:'auto' }"></div>
+</div>
+-->
+
+<div id="wouter"></div>

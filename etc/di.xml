@@ -10,8 +10,9 @@
         </arguments>
     </virtualType>
     <type name="Magento\Sales\Model\Order\Payment">
-        <plugin name="paynl_payment_order_payment_additional_information"
-                type="Paynl\Payment\Plugin\OrderPaymentAdditionalInformation"
-        />
+        <plugin name="paynl_payment_order_payment_additional_information" type="Paynl\Payment\Plugin\OrderPaymentAdditionalInformation"/>
+    </type>
+    <type name="Magento\Framework\Webapi\Rest\Response\Renderer\Json">
+        <plugin name="paynl_payment_renderer_json_plugin" type="Paynl\Payment\Plugin\Webapi\RestResponse\JsonPlugin" sortOrder="100" disabled="false" />
     </type>
 </config>

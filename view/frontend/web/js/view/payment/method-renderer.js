@@ -9,7 +9,8 @@ define(
               rendererList) {
         'use strict';
 
-        var defaultComponent = 'Paynl_Payment/js/view/payment/method-renderer/default';       
+        var cseComponent     = 'Paynl_Payment/js/view/payment/method-renderer/cse';
+        var defaultComponent = 'Paynl_Payment/js/view/payment/method-renderer/default';
 
         var methods = [
             {type: 'paynl_payment_afterpay', component: defaultComponent},
@@ -60,7 +61,7 @@ define(
             {type: 'paynl_payment_telefonischbetalen', component: defaultComponent},
             {type: 'paynl_payment_tikkie', component: defaultComponent},
             {type: 'paynl_payment_trustly', component: defaultComponent},
-            {type: 'paynl_payment_visamastercard', component: defaultComponent},
+            {type: 'paynl_payment_visamastercard', component: cseComponent},
             {type: 'paynl_payment_vvvgiftcard', component: defaultComponent},
             {type: 'paynl_payment_webshopgiftcard', component: defaultComponent},
             {type: 'paynl_payment_wechatpay', component: defaultComponent},

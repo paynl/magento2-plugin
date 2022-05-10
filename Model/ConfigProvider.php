@@ -86,19 +86,33 @@ class ConfigProvider implements ConfigProviderInterface
     protected $paynlConfig;
 
     /**
+     * @var \Magento\Payment\Model\Config|Magento\Payment\Model\Config
+     */
+    protected $paymentConfig;
+    protected $resolver;
+
+
+    /**
      * ConfigProvider constructor.
      * @param PaymentHelper $paymentHelper
      * @param Escaper $escaper
      * @param Config $paynlConfig
+     * @param Magento\Payment\Model\Config $paymentConfig
+     * @param Magento\Framework\Locale\Resolver $resolver
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function __construct(
         PaymentHelper $paymentHelper,
         Escaper $escaper,
-        Config $paynlConfig
+        Config $paynlConfig,
+        \Magento\Payment\Model\Config $paymentConfig,
+        \Magento\Framework\Locale\Resolver $resolver
     ) {
         $this->paynlConfig = $paynlConfig;
         $this->escaper = $escaper;
+        $this->paymentConfig = $paymentConfig;
+        $this->resolver = $resolver;
+
         foreach ($this->methodCodes as $code) {
             $this->methods[$code] = $paymentHelper->getMethodInstance($code);
         }
@@ -110,6 +124,11 @@ class ConfigProvider implements ConfigProviderInterface
     public function getConfig()
     {
         $config = [];
+
+        $locale = $this->resolver->getLocale();
+        $localeParts = explode('_', $locale);
+        $language = mb_strtoupper($localeParts[0]);
+
         foreach ($this->methodCodes as $code) {
             if ($this->methods[$code]->isAvailable()) {
                 $config['payment']['instructions'][$code] = $this->getInstructions($code);
@@ -128,6 +147,12 @@ class ConfigProvider implements ConfigProviderInterface
                 $config['payment']['currentipisvalid'][$code]    = $this->methods[$code]->isCurrentIpValid();
                 $config['payment']['currentagentisvalid'][$code] = $this->methods[$code]->isCurrentAgentValid();
                 $config['payment']['defaultpaymentmethod'][$code] = $this->methods[$code]->isDefaultPaymentOption();
+
+                $config['payment']['public_encryption_keys'][$code] = $this->getPublicEncryptionKeys($code);
+                $config['payment']['cc_months'][$code] = $this->paymentConfig->getMonths();
+                $config['payment']['cc_years'][$code] = $this->paymentConfig->getYears();
+                $config['payment']['language'][$code] = $language;
+
             }
         }
 
@@ -136,6 +161,11 @@ class ConfigProvider implements ConfigProviderInterface
         ;
 
         return $config;
+    }
+
+    protected function getPublicEncryptionKeys($code)
+    {
+        return $this->methods[$code]->getPublicEncryptionKeys();
     }
 
     /**

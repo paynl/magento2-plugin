@@ -330,6 +330,11 @@ class Config
         return $this->store->getConfig('payment/paynl/register_partial_payments');
     }
 
+    public function holdOnVerify()
+    {
+        return $this->store->getConfig('payment/paynl/cse_hold_verify_payments') == 1;
+    }
+
     public function getPaymentmethodCode($paymentProfileId)
     {
 
