@@ -17,6 +17,7 @@ use Magento\Payment\Model\Method\Logger;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderRepository;
 use Paynl\Payment\Model\Config;
+use Paynl\Payment\Model\Helper\PublicKeysHelper;
 use Paynl\Transaction;
 use Magento\InventoryInStorePickupShippingApi\Model\Carrier\InStorePickup;
 use Paynl\Payment;
