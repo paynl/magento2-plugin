@@ -145,11 +145,12 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
 
         if ($transaction->isPending()) {
             if ($transaction->isBeingVerified()) {
-                if ($this->config->holdOnVerify()) {
+                $paymentMethod = $order->getPayment()->getMethod();
+                if ($this->config->holdOnVerify($paymentMethod)) {
                     $order->hold();
-                    $order->addStatusHistoryComment(__('PAY. - Please verify this payment in your PAY.-admin. PAY. Order-ID: ' . $payOrderId));
-                    $order->save();
                 }
+                $order->addStatusHistoryComment(__('PAY. - Please verify this payment in your PAY.-admin. PAY. Order-ID: ' . $payOrderId));
+                $order->save();
             }
             if ($action == 'new_ppt') {
                 return $this->result->setContents("FALSE| Payment is pending");

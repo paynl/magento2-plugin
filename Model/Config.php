@@ -333,15 +333,22 @@ class Config
         return $this->store->getConfig('payment/paynl/register_partial_payments');
     }
 
-    public function holdOnVerify()
+    /**
+     * @param $strMethod
+     * @return bool
+     */
+    public function holdOnVerify($strMethod)
     {
-        return $this->store->getConfig('payment/paynl/cse_hold_verify_payments') == 1;
+        return $this->store->getConfig('payment/' . $strMethod . '/cse_hold_verify_payments') == 1;
     }
 
+    /**
+     * @param $paymentProfileId
+     * @return int|string
+     */
     public function getPaymentmethodCode($paymentProfileId)
     {
-
-        //Get all PAY. methods
+        # Get all PAY. methods
         $objectManager =  \Magento\Framework\App\ObjectManager::getInstance();
         $paymentHelper = $objectManager->get(\Magento\Payment\Helper\Data::class);
         $paymentMethodList = $paymentHelper->getPaymentMethods();
