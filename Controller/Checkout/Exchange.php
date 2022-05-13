@@ -212,7 +212,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
 
     private function uncancelOrder(Order $order)
     {
-        if ($order->isCanceled()) {
+        if ($order->isCanceled() || $order->getTotalCanceled() == $order->getGrandTotal()) {
             $state = Order::STATE_PENDING_PAYMENT;
             $productStockQty = [];
             foreach ($order->getAllVisibleItems() as $item) {
@@ -271,7 +271,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             $message = "AUTHORIZED";
         }
 
-        if ($order->isCanceled()) {
+        if ($order->isCanceled() || $order->getTotalCanceled() == $order->getGrandTotal()) {
             try {
                 $this->uncancelOrder($order);
             } catch (LocalizedException $e) {
