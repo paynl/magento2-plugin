@@ -138,6 +138,12 @@
                     <label>Failover Gateway</label>
                     <comment><![CDATA[Leave this empty unless advised otherwise by PAY.]]></comment>
                 </field>
+                <field id="google_analytics_ecommerce" translate="label,comment" type="select" sortOrder="109" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Send e-commerce analyatics trough PAY.</label>
+                    <comment><![CDATA[Enable this to send the e-commerce analytics to google analytics trough PAY. instead of magento2 default.]]></comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
                 <group id="paynl_paymentmethods" translate="label" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
                     <frontend_model>Paynl\Payment\Block\Adminhtml\System\Config\Fieldset\Expanded</frontend_model>
                     <label>Paymentmethods</label>

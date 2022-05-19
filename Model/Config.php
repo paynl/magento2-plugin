@@ -209,6 +209,11 @@ class Config
         return $this->store->getConfig('payment/paynl/auto_capture') == 1;
     }
 
+    public function sendEcommerceAnalytics()
+    {
+        return $this->store->getConfig('payment/paynl/google_analytics_ecommerce') == 1;
+    }
+
     /**
      * @param $methodCode string
      * @return string
