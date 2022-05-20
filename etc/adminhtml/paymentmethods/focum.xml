@@ -156,15 +156,7 @@
         <field id="showforgroup" translate="label" type="select" sortOrder="160" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Customer Group</label>
             <source_model>Paynl\Payment\Model\Config\Source\UserGroups</source_model>
-            <depends><field id="forcebilling" translate="label" type="select" sortOrder="160" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Force Billing Address for Instore Pickups</label>
             <depends>
-                <field id="active">1</field>
-            </depends>
-            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-            <config_path>payment/paynl_payment_capayable/useBillingAddressInstorePickup</config_path>
-            <comment><![CDATA[Use the Billing address as Shipping address for instore pickups.]]></comment>
-        </field>
                 <field id="active">1</field>
             </depends>
             <config_path>payment/paynl_payment_focum/showforgroup</config_path>
@@ -185,7 +177,7 @@
                 <field id="active">1</field>
             </depends>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-            <config_path>payment/paynl_payment_afterpay_international/useBillingAddressInstorePickup</config_path>
+            <config_path>payment/paynl_payment_focum/useBillingAddressInstorePickup</config_path>
             <comment><![CDATA[Use the Billing address as Shipping address for instore pickups.]]></comment>
         </field>
         <group id="advanced" translate="label" sortOrder="200" showInDefault="1" showInWebsite="1" showInStore="1">
