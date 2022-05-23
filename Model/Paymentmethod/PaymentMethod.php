@@ -566,8 +566,8 @@ abstract class PaymentMethod extends AbstractMethod
             $data['testmode'] = 1;
         }
         $ipAddress = $order->getRemoteIp();
-        //The ip address field in magento is too short, if the ip is invalid, get the ip myself
-        if (!filter_var($ipAddress, FILTER_VALIDATE_IP)) {
+        //The ip address field in magento is too short, if the ip is invalid or ip is localhost get the ip myself
+        if (!filter_var($ipAddress, FILTER_VALIDATE_IP) || $ipAddress == '127.0.0.1') {
             $ipAddress = \Paynl\Helper::getIp();
         }
         $data['ipaddress'] = $ipAddress;
