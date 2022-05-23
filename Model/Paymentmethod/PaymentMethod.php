@@ -454,6 +454,7 @@ abstract class PaymentMethod extends AbstractMethod
             $data['enduser'] = $enduser;
         }
         $arrProducts = [];
+        $arrWEEETax = [];
         foreach ($items as $item) {
             $arrItem = $item->toArray();
             if ($arrItem['price_incl_tax'] != null) {
@@ -489,6 +490,40 @@ abstract class PaymentMethod extends AbstractMethod
                 }
 
                 $arrProducts[] = $product;
+
+                # WEEE
+                if (!empty($arrItem['weee_tax_applied'])) {
+                    $weeeArr = json_decode($arrItem['weee_tax_applied']);
+                    if (is_array($weeeArr)) {
+                        foreach ($weeeArr as $weee) {
+                            if (!empty($weee) && is_object($weee)) {
+
+                                $weee_title = $weee->title;
+                                $weee_price = $weee->row_amount_incl_tax;
+                                $weee_taxAmount = $weee->row_amount_incl_tax - $weee->row_amount;
+
+                                if ($this->paynlConfig->isAlwaysBaseCurrency()) {
+                                    $weee_price = $weee->base_row_amount_incl_tax;
+                                    $weee_taxAmount = $weee->base_row_amount_incl_tax - $weee->base_row_amount;
+                                }
+
+                                if (isset($arrWEEETax[$weee_title])) {
+                                    $arrWEEETax[$weee_title]['price'] += $weee_price;
+                                    $arrWEEETax[$weee_title]['tax'] += $weee_taxAmount;
+                                } else {
+                                    $arrWEEETax[$weee_title] = array(
+                                        'id' => 'weee',
+                                        'name' => $weee_title,
+                                        'price' => $weee_price,
+                                        'tax' => $weee_taxAmount,
+                                        'qty' => 1,
+                                        'type' => \Paynl\Transaction::PRODUCT_TYPE_HANDLING
+                                    );
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -558,6 +593,11 @@ abstract class PaymentMethod extends AbstractMethod
                 'tax' => $discountTax,
                 'type' => \Paynl\Transaction::PRODUCT_TYPE_DISCOUNT
             ];
+        }
+
+        // WEEE
+        if (!empty($arrWEEETax)) {
+            $arrProducts = array_merge($arrProducts, $arrWEEETax);
         }
 
         $data['products'] = $arrProducts;
