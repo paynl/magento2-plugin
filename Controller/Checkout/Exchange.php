@@ -294,8 +294,8 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
 
         $orderAmount = round($order->getGrandTotal(), 2);
         if (!in_array($orderAmount, $transactionPaid)) {
-            payHelper::logCritical('Validation error: Paid amount does not match order amount.', array($transactionPaid, $orderAmount, $order->getGrandTotal()));
-            return $this->result->setContents('FALSE| Validation error, order amount: ' . print_r(array($transactionPaid, $orderAmount, $order->getGrandTotal()), true));
+            payHelper::logCritical('Amount validation error.', array($transactionPaid, $orderAmount, $order->getGrandTotal()));
+            return $this->result->setContents('FALSE| Amount validation error. Amounts: ' . print_r(array($transactionPaid, $orderAmount, $order->getGrandTotal()), true));
         }
 
         $paidAmount = $order->getGrandTotal();
