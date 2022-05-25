@@ -153,14 +153,34 @@ class ConfigProvider implements ConfigProviderInterface
                 $config['payment']['cc_years'][$code] = $this->paymentConfig->getYears();
                 $config['payment']['language'][$code] = $language;
 
+                if ($code == 'paynl_payment_visamastercard') {
+                    $config['payment']['cse_success_popup'] = $this->getConfigItem('cse_success_popup', 'visamastercard');
+                    $config['payment']['cse_error_popup'] = $this->getConfigItem('cse_error_popup', 'visamastercard');
+                    $config['payment']['cse_payment_popup'] = $this->getConfigItem('cse_payment_popup', 'visamastercard');
+                    $config['payment']['cse_color'] = $this->getConfigItem('cse_colored_fields', 'visamastercard');
+                    $config['payment']['cse_debug'] = $this->getConfigItem('cse_pay_debug', 'visamastercard');
+                    $config['payment']['cse_finish_delay'] = $this->getConfigItem('cse_modal_payment_complete_redirection_timeout', 'visamastercard');
+                }
             }
         }
 
         $config['payment']['useAdditionalValidation'] = $this->paynlConfig->getUseAdditionalValidation();
         $config['payment']['iconsize']                = $this->paynlConfig->getIconSize();
-        ;
 
         return $config;
+    }
+
+
+    private $_store = null;
+
+    protected function getConfigItem($item, $method)
+    {
+        if (empty($this->_store)) {
+            $om = \Magento\Framework\App\ObjectManager::getInstance();
+            $this->_store = $om->get(\Magento\Store\Model\Store::class);
+        }
+
+        return $this->_store->getConfig('payment/paynl_payment_' . $method . '/' . $item);
     }
 
     protected function getPublicEncryptionKeys($code)

@@ -21,8 +21,16 @@ define(
         'Paynl_Payment/js/modal/error-modal',
 
     ],
-    function (fullScreenLoader, ko, $, _, Component, url, placeOrderAction, quote, alert, additionalValidators, $t, customer, payCryptography, paymentModal, paymentCompleteModal, errorModal) {
+    function (fullScreenLoader, ko, $, _, Component, url, placeOrderAction, quote, alert, additionalValidators, $t, customer, payCryptography, paymentModal, paymentCompleteModal, errorModal)
+    {
         'use strict';
+
+        const orderButtonText = 'Place Order';
+        const MODAL_POPUP_CUSTOM = 'popup_custom';
+        const MODAL_POPUP_NATIVE = 'popup_native';
+        const MODAL_POPUP_INLINE = 'inline';
+        const MODAL_NONE = 'none';
+
         return Component.extend({
             redirectAfterPlaceOrder: false,
             defaults: { template: 'Paynl_Payment/payment/cse' },
@@ -33,8 +41,7 @@ define(
             contentHeight: ko.observable(null),
             modalWindow: null,
             activeModal: null,
-
-            paymentErrorMessage: ko.observable(null),
+            paymentInlineMessage: ko.observable(null),
             isCreditCardFormIsReadyForSubmission: ko.observable(false),
             paymentOption: null,
             paymentOptionsList: [],
@@ -42,26 +49,26 @@ define(
             vatnumber: null,
             dateofbirth: null,
             billink_agree: null,
+            payDebugEnabled: false,
+
             initialize: function () {
                 this._super();
-                /*
-                                if(this.paymentOption == null){
-                                    this.paymentOption = this.getDefaultPaymentOption();
-                                }
 
-                                console.log('testtest');
+                if(this.paymentOption == null){
+                    this.paymentOption = this.getDefaultPaymentOption();
+                }
 
-                                var defaultPaymentMethod = window.checkoutConfig.payment.defaultpaymentmethod;
-                                if (!quote.paymentMethod() &&
-                                    typeof defaultPaymentMethod !== 'undefined' &&
-                                    typeof defaultPaymentMethod[this.item.method] !== 'undefined' &&
-                                    defaultPaymentMethod[this.item.method])  {
-                                    this.selectPaymentMethod();
-                                }
-                */
+                var defaultPaymentMethod = window.checkoutConfig.payment.defaultpaymentmethod;
+                if (!quote.paymentMethod() &&
+                    typeof defaultPaymentMethod !== 'undefined' &&
+                    typeof defaultPaymentMethod[this.item.method] !== 'undefined' &&
+                    defaultPaymentMethod[this.item.method])  {
+                    this.selectPaymentMethod();
+                }
+
+
+                let self = this;
                 let baseUrl = require.toUrl('Paynl_Payment');
-
-
                 let el = document.querySelector('#co-payment-form');
                 el.setAttribute('data-pay-encrypt-form', '');
 
@@ -77,7 +84,7 @@ define(
                     'status_url':           url.build('rest/V1/paynl/cse/status?transaction_id=%transaction_id%'),
                     'authorization_url':    url.build('rest/V1/paynl/cse/authorization'),
                     'authentication_url':   url.build('rest/V1/paynl/cse/authentication'),
-                    'payment_complete_url': 'https://demo.pay.nl/cse/complete.php', //url.build('paynl/checkout/finish'),
+                    'payment_complete_url': '',
                     'refresh_url':          url.build('paynl/checkout/publicKeys'),
                     'form_input_payload_name': 'pay_encrypted_data',
                     'form_selector': 'data-pay-encrypt-form', // attribute to look for to identify the target form
@@ -106,85 +113,37 @@ define(
                         'cvc': baseUrl + '/images/creditcard/cc-back.svg',
                     }
                 });
-
-                console.log('debug X1');
-
                 let eventDispatcher = this.encryptedForm.getEventDispatcher();
-                let self = this;
+                self.payDebug('debug X4');
 
-                let paymentCompleteModalEnabled = 1; //this.getPaymentCompleteModalEnabled();
-                let paymentFailureModalEnabled = 0; //this.getPaymentFailureModalEnabled();
-                let paymentCompleteRedirectionTimeout = 10000; //this.getPaymentCompleteModalRedirectionTimeout();
+                /* Retrieve settings */
+                let successPopup = this.getCseConfig('cse_success_popup');
+                let paymentPopup = this.getCseConfig('cse_payment_popup');
+                let errorPopup = this.getCseConfig('cse_error_popup');
+                let cseColor = this.getCseConfig('cse_color');
+                this.payDebugEnabled = this.getCseConfig('cse_debug') == '1';
+                let redirectTimeout = this.getCseConfig('cse_finish_delay') * 1000;
 
-                console.log('paymentCompleteModalEnabled: ' + paymentCompleteModalEnabled);
-                console.log('paymentFailureModalEnabled: ' + paymentFailureModalEnabled);
-                console.log('paymentCompleteRedirectionTimeout: ' + paymentCompleteRedirectionTimeout);
+                /* cse_pay_debug */
+                self.payDebug('successPopup: ' + successPopup);
+                self.payDebug('paymentPopup: ' + paymentPopup);
+                self.payDebug('errorPopup: ' + errorPopup);
+                self.payDebug('cseColor: ' + cseColor);
+                self.payDebug('redirectTimeout: ' + redirectTimeout);
 
-                console.log('cancled - doint nothin in custom');
-
-                //let elr = document.querySelector('#cse_place_order');
-//                let elr = document.getElementById('cse_place_order');
-
-
-                //elr.value = 'fewfewfefwfw';
-
-
-                eventDispatcher.addListener(payCryptography.Events.onPaymentCanceledEvent, function(event)
-                {
-                    console.log('cancled - doint nothin in custom');
-                    self.setBitton('Place order - CSE', false);
-                    return;
-                        //let tekst = event.getSubject().render();
-/*
-                        alert({
-                            title: $.mage.__('titel tekst'),
-                            content: $.mage.__('canceled'),
-                            actions: {
-                                always: function(){}
-                            }
-                        });*/
+                eventDispatcher.addListener(payCryptography.Events.onPaymentCanceledEvent, function (event) {
+                        self.payDebug('Cancel Event - reset button');
+                        self.setPlaceOrderButton($t(orderButtonText), false);
                     },
                     10
                 );
 
-
-                eventDispatcher.addListener(payCryptography.Events.onStateChangeEvent, function(event) {
-                        // skip this function if the current event does not change the loading state.
-                        if (event.hasParameter('state') && 'loading' in event.getParameter('state'))
-                        {
-                            //event.getCurrentState().isLoading() ? self.setBitton('aant goan', true) : self.setBitton('Place order', false);
-
-                //            event.getCurrentState().isLoading() ? fullScreenLoader.startLoader() : fullScreenLoader.stopLoader();
-                            event.getCurrentState().isLoading() ? console.log('startLoader') : console.log('stoploader');
-
-
-
-
+                eventDispatcher.addListener(payCryptography.Events.onStateChangeEvent, function (event) {
+                        self.payDebug('StateChangeEvent');
+                        /* Skip this function if the current event does not change the loading state. */
+                        if (event.hasParameter('state') && 'loading' in event.getParameter('state')) {
+                            event.getCurrentState().isLoading() ? fullScreenLoader.startLoader() : fullScreenLoader.stopLoader();
                         }
-
-                        // skip this function if the current event does not change the loading state.
-                        if (event.hasParameter('state')) {
-                            if(event.getCurrentState().isPolling() & event.getCurrentState().isModalClosed())
-                            {
-/*
-                                console.log('stopping polling');
-                                //let pollingResponse = event.subject();
-
-
-                                let poller = self.encryptedForm.getPoller();
-                                poller.clear();
-*/
-                                //E/ventDispatcher.getInstance().dispatch(new PaymentCanceledEvent(pollingResponse), Events.onPaymentCanceledEvent);
-                                //
-                                //eventDispatcher.dispatch(new payCryptography.PaymentCanceledEvent(pollingResponse), payCryptography.Events.onPaymentCanceledEvent);
-
-
-                            }
-                        }
-
-                    if (event.getCurrentState().isLoading()) {
-                        console.log('lading');
-                    }
                         if (event.getCurrentState().isFormReadyForSubmission()) {
                             self.isCreditCardFormIsReadyForSubmission(event.getCurrentState().isFormReadyForSubmission());
                         }
@@ -192,198 +151,135 @@ define(
                     100
                 );
 
-                /*
-                eventDispatcher.addListener(payCryptography.Events.onPaymentRequiresTdsMethodEvent, function(event) {
-                    console.log('event.onPaymentRequiresTdsMethodEvent');
-                    let ent =  event.subject.data.entityId;
-                    let transid = event.subject.data.orderId;
-                    let newurl = url.build('paynl/checkout/finish/?entityid=' + ent);
-                    console.log('transid: '  + transid);
-//                    self.encryptedForm.setPaymentCompleteUrl(newurl);
-                });*/
-
-                eventDispatcher.addListener(payCryptography.Events.onActionableResponseEvent, function(event)
-                {
-                    console.log('event.onActionableResponseEvent');
-
+                eventDispatcher.addListener(payCryptography.Events.onActionableResponseEvent, function(event) {
+                    self.payDebug('event.onActionableResponseEvent');
                     let enty    = event.subject.data.entityId;
                     let transid = event.subject.data.orderId;
                     let newurl = url.build('paynl/checkout/finish/?entityid=' + enty + '&orderid=' + transid);
 
                     if (enty != 'undefined' && enty != undefined)
                     {
-                        console.log('New complete url: ' + newurl);
+                        self.payDebug('New complete url: ' + newurl);
                         self.encryptedForm.setPaymentCompleteUrl(newurl);
                     }
                 });
 
-
-                eventDispatcher.addListener(payCryptography.Events.onModalCloseEvent, function (event)
-                {
+                eventDispatcher.addListener(payCryptography.Events.onModalCloseEvent, function (event) {
                     event.stopPropagation(); // this halts our internals from handling the event
 
-                    console.log('onModalCloseEvent. Hiding wouter, hiding activeModal');
-                    $('#wouter').hide();
+                    self.payDebug('onModalCloseEvent. Hiding pay-cse-custom-modal, hiding activeModal');
+                    $('#pay-cse-custom-modal').hide();
 
                     if (self.activeModal !== null) {
-                        console.log('Closing modal');
-                        console.log(self.activeModal);
+                        self.payDebug('Closing modal');
+                        self.payDebug(self.activeModal);
                         self.activeModal.closeModal();
                         self.activeModal = null;
 
                     } else {
-                        console.log('NOT closing modal cause none active');
+                        self.payDebug('NOT closing modal cause none active');
                     }
                 }, 10);
-
 
                 eventDispatcher.addListener(payCryptography.Events.onPaymentFailedEvent, function (event)
                 {
-                    //  event.stopPropagation(); // this halts our internals from handling the event
-                    // custom logic here
-                    console.log('onPaymentFailedEvent');
-
-                    self.setBitton($t('Place Order'), false);
-
+                    self.payDebug('onPaymentFailedEvent');
+                    self.setPlaceOrderButton($t(orderButtonText), false);
                 }, 10);
-
-
-                eventDispatcher.addListener(payCryptography.Events.onSubmitDataEvent, function (event) {
-                        console.log('event.onSubmitDataEvent');
-                        // self.paymentErrorMessage('');
-                        // event.subject.set('form_key', el.querySelector('input[name="form_key"]').value);
-
-                        //self.setBitton('Processing payment', true);
-                    }
-                );
 
                 eventDispatcher.addListener(payCryptography.Events.onModalOpenEvent, function(event) {
 
-                        console.log(event);
-                        console.log(event.subject);
-                        console.log('onModalOpenEvent 2');
+                        let eventSubject = event.getSubject()
+                        self.payDebug('onModalOpenEvent-Custom');
                         event.stopPropagation();
+                        self.paymentModalContent('');
 
-
-
-                        //self.paymentModalContent('zo ff legen');
-
-                        if (self.activeModal !== null)
-                        {
-                            console.log('Closing modal');
-                            console.log(self.activeModal);
+                        if (self.activeModal !== null) {
+                            self.payDebug('Closing modal');
+                            self.payDebug(self.activeModal);
                             self.activeModal.closeModal();
-
-
-                        } else {
-                            console.log('NOT closing modal cause none active');
                         }
-
 
                         if (event.subject instanceof payCryptography.PaymentCompleteModal)
                         {
+                            self.payDebug('instanceof payCryptography.PaymentCompleteModal');
+                            self.payDebug('succsssPopup: '.succsssPopup);
                             fullScreenLoader.stopLoader();
+                            self.hidePlaceOrderButton();
 
+                            switch (successPopup) {
+                                case MODAL_POPUP_INLINE:
+                                    let succesHtml = '<b>Betaling gelukt.</b><br>U wordt automatisch doorgeschakeld.';
+                                    self.paymentInlineMessage('<div class="message success"><div>' + succesHtml + '</div></div>');
+                                    break;
 
-                            let useNativeModals = false;
+                                case MODAL_POPUP_CUSTOM:
+                                    let sj1 = event.getSubject();
+                                    let tessies = sj1.render();
+                                    $('#pay-cse-custom-modal').text('Betaling geut').show();
+                                    break;
 
-                                if (!paymentCompleteModalEnabled)
-                                {
-                                    console.log('payment completed, modal disabled');
-                                    return;
-                                }
-                                else
-                                {
-                                    if(useNativeModals)
-                                    {
-                                        $('#cse-status').text(sj.render());
-                                    } else {
-                                        console.log("PaymentCompleteModal ");
-                                        self.activeModal = paymentCompleteModal;
-                                        self.paymentCompleteModalContent(`<p>${$t('Thanks for your order. We\'ll email you order details and tracking information.')}</p>`);
-                                        paymentCompleteModal.showModal();
-                                        return;
-                                    }
-                                }
+                                case MODAL_POPUP_NATIVE:
+                                    self.activeModal = paymentCompleteModal;
+                                    self.paymentCompleteModalContent(`<p>${$t('Bedankt! for your order. We\'ll email you order details and tracking information.')}</p>`);
+                                    paymentCompleteModal.showModal();
+                                    break;
+
+                                default:
+                                    //just redirect?
+                                break;
+                            }
+                            return;
                         }
 
-
-                            if (event.subject instanceof payCryptography.ErrorModal && !paymentFailureModalEnabled)
+                        if (event.subject instanceof payCryptography.ErrorModal)
+                        {
+                            self.payDebug('payCryptography.ErrorModal');
+                            if (errorPopup == MODAL_POPUP_NATIVE)
                             {
-                                console.log('payCryptography.ErrorModal');
-                                self.paymentErrorMessage(`<div class="message error"><div>${event.getSubject().render()}</div></div>`);
-                                return;
-                            }
-
-
-                            if (event.subject instanceof payCryptography.ErrorModal)
-                            {
-                                //errorModal.closeModal();
-                                console.log('Event ErrorModal');
                                 self.activeModal = errorModal;
                                 self.paymentErrorModalContent(event.getSubject().render());
-                                errorModal.setTitle('deTitel');
+                                //errorModal.setTitle('deTitel');
                                 errorModal.showModal();
-                                return;
+                            } else {
+                                self.paymentInlineMessage(`<div class="message error"><div>${event.getSubject().render()}</div></div>`);
                             }
-
-
-
-                    //setTimeout(function()
-                    //{
-                        let sj = event.getSubject()
-
-                        self.activeModal = paymentModal;
-                        if (sj != null) {
-
-                            $('#wouter').html(sj.render());
-
-                        } else {
-                            self.paymentModalContent('Geen content');
+                            return;
                         }
 
-                        $('#wouter').show();
+                        /* we're still here.. we're assuming paymentmodal then */
 
-                        console.log('showing modal');
+                        self.activeModal = paymentModal;
+
+                        if (eventSubject != null) {
+                            if (paymentPopup == MODAL_POPUP_NATIVE) {
+                                $('#pay-cse-custom-modal').html(eventSubject.render()).show();
+                            } else {
+                                self.paymentModalContent(eventSubject.render());
+                                paymentModal.showModal();
+                            }
+                        }
+
+                        self.payDebug('showing modal');
+
                         fullScreenLoader.stopLoader();
-
-                        //paymentModal.showModal();
-                    //}, 5000);
-
                     },
                     10
                 );
 
-
-                eventDispatcher.addListener(payCryptography.Events.onPaymentCompleteEvent, function (event)
-                {
-                    console.log('onPaymentCompleteEvent custom');
-
+                eventDispatcher.addListener(payCryptography.Events.onPaymentCompleteEvent, function (event) {
+                    self.payDebug('onPaymentCompleteEvent custom');
                     let pol = self.encryptedForm.getPoller();
                     pol.clear();
-
-                    //self.setBitton($t('Payment completed succesfully'));
-                    self.hideBitton();
-
-                    //                    self.encryptedForm.setPaymentCompleteUrl(newurl);
-
-                    console.log(event)
-                    console.log(event.getParameter('paymentCompleteUrl'));
-
-
-                    $('#cse-status').html('<a href="'+event.getParameter('paymentCompleteUrl')+'"><b>Betaling gelukt.</b><br>U wordt automatisch doorgeschakeld (Of klik hier).</a>').show();
-
-                    event.setParameter('redirection_timeout', paymentCompleteModalEnabled ?
-                        paymentCompleteRedirectionTimeout > 0 ? paymentCompleteRedirectionTimeout : 2500 :
+                    event.setParameter('redirection_timeout', successPopup == MODAL_NONE ?
+                        redirectTimeout > 0 ? redirectTimeout : 2500 :
                         0)},
                     10
                 );
 
-                                // custom event that launches when the modal closes, allows for better control
-
-                window.addEventListener('pay-trigger-modal-close', function (event)
-                {
-                    console.log('pay-trigger-modal-close');
+                /* Custom event that launches when the modal closes, allows for better control */
+                window.addEventListener('pay-trigger-modal-close', function (event) {
+                    self.payDebug('pay-trigger-modal-close');
 
                     eventDispatcher.dispatch(new payCryptography.StateChangeEvent(event, {
                         'state': {modalOpen: false, formSubmitted: false}
@@ -391,49 +287,45 @@ define(
 
                     self.activeModal = null;
 
+                    /* Making sure any content/polling from this content will stop working */
+                    self.paymentModalContent('');
+
                     let isPolling = self.encryptedForm.state.isPolling();
-                    let isPolling2 = self.encryptedForm.state.isFormSubmitted();
 
-//                    console.log(isPolling2);
-
-                    if(isPolling)
-                    {
-                        //console.log('Clearing polling cause of modal-exit');
+                    if (isPolling) {
                         let pol = self.encryptedForm.getPoller();
                         pol.clear();
-                        self.setBitton('Place Order -cse', false);
-                    } else {
-                      //  console.log('Polling already stopped');
+                        self.setPlaceOrderButton(orderButtonText, false);
                     }
 
-                    console.log('Calose!');
-
+                    self.payDebug('Calose!');
                 });
 
                 return this;
             },
-            setBitton: function (tekst, setLoadingImage)
-            {
-
+            getCseConfig: function (item) {
+                return window.checkoutConfig.payment[item];
+            },
+            payDebug: function (text) {
+                if (this.payDebugEnabled) {
+                    console.log('PAY.: ' + text);
+                }
+            },
+            setPlaceOrderButton: function (tekst, setLoadingImage) {
                 let objButton = $('#cse_place_order');
-
-                if(objButton)
-                {
+                if(objButton) {
                     if(setLoadingImage === true) {
-                        $('#cse_place_order').addClass('tessi');
+                        $('#cse_place_order').addClass('loaderImage');
                     } else
                     {
-                        objButton.removeClass('tessi');
+                        objButton.removeClass('loaderImage');
                     }
-
-                    objButton.html(tekst); //.prop('disabled', true);
-
-                } else
-                {
-                    console.log('cant find button');
+                    objButton.html(tekst);
+                } else {
+                    self.payDebug('cant find button');
                 }
-
-            }, hideBitton: function () {
+            },
+            hidePlaceOrderButton: function () {
 
                 let objButton = $('#cse_place_order');
                 if (objButton) {
@@ -441,39 +333,13 @@ define(
                 }
             },
             initPaymentModal: function (element) {
-                //console.log('initPaymentModal');
                 paymentModal.createModal(element);
-/*
-                paymentModal.on('modalclosed', function () {
-
-                    console.log('cant find button');
-                    console.log('cant find button2');
-                    console.log('cant find button3');
-
-
-                });*/
             },
-            initializePaymentForm: function()
-            {
-                console.log('test disable init');
+            initErrorModal: function (element) {
+                errorModal.createModal(element);
+            },
+            initializePaymentForm: function()  {
                 this.encryptedForm.init();
-
-                //this.setBitton('gooow!');
-
-
-                //eventDispatcher.dispatch(new payCryptography.StateChangeEvent(event, {'state': {formSubmitted: true}}), payCryptography.Events.onStateChangeEvent);
-
-
-                ///this.activeModal = paymentModal; this.paymentModalContent('de content'); paymentModal.showModal();
-
-
-
-
-                //    console.log('onERrort' );
-
-                //   this.paymentErrorModalContent('<span>tekst</span>');
-                //  errorModal.showModal();
-
             },
             getLanguage: function(){
                 return window.checkoutConfig.payment.language[this.item.method];
@@ -716,18 +582,17 @@ define(
             },*/
             placeOrder: function(e){
                 let self = this;
-                self.setBitton($t('Processing Payment'), true);
+                self.setPlaceOrderButton($t('Processing Payment'), true);
                 self.encryptedForm.state.getElementFromReference(payCryptography.Elements.form);
                 self.isPlaceOrderActionAllowed(false);
                 self.getPlaceOrderDeferredObject()
                     .fail(function (e) {
-                            self.setBitton('Place ordert', false);
+                            self.setPlaceOrderButton($t(orderButtonText), false);
                             self.isPlaceOrderActionAllowed(true);
                         }
                     )
                     .done(function (orderId) {
                             self.afterPlaceOrder();
-
                             self.encryptedForm.handleFormSubmission(
                                 self.encryptedForm.state.getElementFromReference(payCryptography.Elements.form)
                             );
@@ -735,7 +600,6 @@ define(
                     ).always(function(){
                     self.isPlaceOrderActionAllowed(true);
                 });
-
                 return false;
             }
         });

@@ -9327,9 +9327,8 @@ define(['exports'], (function (exports) { 'use strict';
         static onPaymentCompleteEvent(event)
         {
 
-            let resolveEvent = new ResolveModalEvent(new PaymentCompleteResponse({
-                'body': '<p>Your payment was successfully received!</p>',
-            }));
+            let resolveEvent = new ResolveModalEvent(new PaymentCompleteResponse({'body': '<p>Your payment was successfully received!</p>'}));
+
             EventDispatcher.getInstance().dispatch(resolveEvent, Events.onResolveModalEvent);
 
             /////
@@ -9339,9 +9338,8 @@ define(['exports'], (function (exports) { 'use strict';
             }), Events.onStateChangeEvent);
 
 
-            let modalOpenEvent = new ModalOpenEvent(
-                resolveEvent.getResolvedModal(), resolveEvent.getParameters()
-            );
+            let modalOpenEvent = new ModalOpenEvent(resolveEvent.getResolvedModal(), resolveEvent.getParameters());
+
             EventDispatcher.getInstance().dispatch(modalOpenEvent, Events.onModalOpenEvent);
 
             let url = event.getParameter('paymentCompleteUrl');
@@ -9760,12 +9758,10 @@ define(['exports'], (function (exports) { 'use strict';
 
                 console.log('kees code:  ' + statusCode);
 
-                if(currentState.isPaid)
-                {
+                if (currentState.isPaid) {
                     console.log('TIS BEtAAAALD');
                     return;
-                } else
-                {
+                } else {
                     console.log('TIS niet betaald');
                 }
 

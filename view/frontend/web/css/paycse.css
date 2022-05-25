@@ -46,9 +46,12 @@ form[data-pay-encrypt-form] .has-icon-container .input-container input {
 .checkout-index-index .modal-popup.pay-error-modal .modal-inner-wrap,
 .checkout-index-index .modal-popup.pay-payment-modal .modal-inner-wrap,
 .checkout-index-index .modal-popup.pay-payment-complete-modal .modal-inner-wrap {
-    margin-left:-300px;
-    width:600px;
-    z-index: 901;
+    width: fit-content;
+    min-width: 30%;
+    top: 42%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin-left:0;
 }
 
 .checkout-index-index .modal-popup.pay-payment-modal .modal-content {
@@ -130,6 +133,10 @@ form[data-pay-encrypt-form] select option[value=""] {
     opacity:1;
 }
 
+#checkout-payment-modal
+{
+    text-align: center;
+}
 .payment-method-cse #card-holder{
     text-transform: uppercase;
 }
@@ -187,8 +194,43 @@ form[data-pay-encrypt-form] select option[value=""] {
     display: none;
 }
 
-
 div#cse-status A {
     color: white;
     text-decoration: none;
+}
+
+.payment-method-cse .checkout-payment-errors div.message.success A {
+    color: white;
+    text-decoration: none;
+}
+
+.paynl.payment-method-cse #pay-cse-custom-modal
+{
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: fit-content;
+    z-index: 1234;
+    padding: 21px;
+    color: #333;
+    min-width: 30%;
+    border: 1px solid #CCC;
+    box-shadow: 1px 1px 14px 4px #979797;
+    text-align: center;
+}
+
+#challenge-iframe
+{
+    height: 500px;
+    border: 0;
+    overflow-y: hidden !important;
+}
+
+button.action.primary.loaderImage  {
+    background-image: url(../images/ajax-loader-trans.gif) !important;
+    background-repeat: no-repeat;
+    background-position: 8px 8px;
+    padding-left: 30px;
 }

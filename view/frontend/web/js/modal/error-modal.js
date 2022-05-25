@@ -7,7 +7,7 @@ define([
 
     return {
         modalWindow: null,
-        theTitle:'Standaard title',
+        theTitle: 'Notice',
 
         /**
          * Create popUp window for provided element.

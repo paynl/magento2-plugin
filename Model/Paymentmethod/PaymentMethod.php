@@ -16,6 +16,7 @@ use Magento\Payment\Model\Method\AbstractMethod;
 use Magento\Payment\Model\Method\Logger;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderRepository;
+use Paynl\Payment\Helper\PayHelper;
 use Paynl\Payment\Model\Config;
 use Paynl\Payment\Model\Helper\PublicKeysHelper;
 use Paynl\Transaction;
@@ -326,7 +327,24 @@ abstract class PaymentMethod extends AbstractMethod
 
     public function startTransaction(Order $order)
     {
-        $transaction = $this->doStartTransaction($order);
+        try {
+            $transaction = $this->doStartTransaction($order);
+            payHelper::logDebug('Transaction: ' . $transaction->getTransactionId());
+
+        } catch(\Exception $e) {
+            payHelper::logDebug('Transactie start mislukt: ' . $e->getMessage().' // '. $e->getCode());
+//todo
+            if (1 == 1) {
+                $this->messageManager->addNoticeMessage(__('Unfortunately the order amount is not suitable for this payment method.'));
+            } else {
+                $this->messageManager->addNoticeMessage(__('Unfortunately something went wrong'));
+            }
+
+            $store = $order->getStore();
+
+            return $store->getBaseUrl() . 'checkout/cart/index';
+        }
+
         $order->getPayment()->setAdditionalInformation('transactionId', $transaction->getTransactionId());
         $this->paynlConfig->setStore($order->getStore());
 
@@ -690,8 +708,9 @@ abstract class PaymentMethod extends AbstractMethod
         if ($this->paynlConfig->isTestMode()) {
             $data['testmode'] = 1;
         }
+
         $ipAddress = $order->getRemoteIp();
-        //The ip address field in magento is too short, if the ip is invalid, get the ip myself
+        # The ip address field in magento is too short, if the ip is invalid, get the ip myself
         if (!filter_var($ipAddress, FILTER_VALIDATE_IP)) {
             $ipAddress = \Paynl\Helper::getIp();
         }

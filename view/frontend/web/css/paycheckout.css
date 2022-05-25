@@ -61,28 +61,3 @@
 .checkout-payment-method .paynl .paymentOptionsList li label .payment-icon{
     margin-right: 5px;
 }
-#challenge-iframe
-{
-    width: 100%;
-    height: 500px;
-    color: red;
-    border: 0;
-    overflow-y: hidden !important;
-}
-
-button.action.primary.tessi  {
-    background-image: url(../images/ajax-loader-trans.gif) !important;
-    background-repeat: no-repeat;
-    background-position: 8px 8px;
-    padding-left: 30px;
-}
-
-#wouter
-{
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 50%;
-    z-index: 1234;
-}

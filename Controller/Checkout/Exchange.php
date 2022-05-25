@@ -295,9 +295,9 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         $payment->setIsTransactionClosed(0);
 
         $transactionPaid = [
-            $transaction->getCurrencyAmount(),
-            $transaction->getPaidCurrencyAmount(),
-            $transaction->getPaidAmount(),
+            $transaction->getAmountOriginal(),
+            $transaction->getAmountPaidOriginal(),
+            $transaction->getAmountPaid(),
         ];
 
         if (!in_array($order->getGrandTotal(), $transactionPaid)) {
@@ -360,7 +360,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         }
 
         if ($transaction->isAuthorized()) {
-            $authAmount = $this->config->useMagOrderAmountForAuth() ? $order->getBaseGrandTotal() : $transaction->getCurrencyAmount();
+            $authAmount = $this->config->useMagOrderAmountForAuth() ? $order->getBaseGrandTotal() : $transaction->getAmountOriginal();
             $payment->registerAuthorizationNotification($authAmount);
         } else {
             $payment->registerCaptureNotification($paidAmount, $this->config->isSkipFraudDetection());

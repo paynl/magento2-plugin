@@ -156,13 +156,11 @@ class Cse
                 $pay_encrypted_data = $this->request->getParam('pay_encrypted_data');
 
                 $arrEncryptedTransactionResult = $methodInstance->startEncryptedTransaction($order, $pay_encrypted_data, $returnUrl);
-
                 $arrEncryptedTransactionResult['entityId'] = $order->getEntityId();
 
                 $this->_logger->debug('PAY.: return:  ' . print_r($arrEncryptedTransactionResult, true) );
 
                 return $this->jsonHelper->jsonEncode($arrEncryptedTransactionResult);
-
             } else {
                 throw new Error('PAY.: Method is not compatible for CSE');
             }

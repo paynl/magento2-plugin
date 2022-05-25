@@ -104,7 +104,7 @@
             </div>
             <p data-bind="html: getInstructions();"></p>
 
-            <div class="checkout-payment-errors" data-bind="html: paymentErrorMessage"></div>
+            <div class="checkout-payment-errors" data-bind="html: paymentInlineMessage"></div>
             <div id="cse-status"></div>
 
             <div class="actions-toolbar">
@@ -124,18 +124,19 @@
             </div>
         </fieldset>
     </div>
+    <div id="pay-cse-custom-modal"></div>
+
 </div>
 
 <div id="checkout-payment-modal" data-bind="afterRender: initPaymentModal" style="display: none">
     <div class="checkout-payment-item-content" data-bind="html: paymentModalContent, style: {height: contentHeight, overflow:'auto' }"></div>
 </div>
-<!--
+
 <div id="checkout-payment-complete-modal" data-bind="afterRender: initPaymentCompleteModal" style="display: none">
     <div class="checkout-payment-item-content" data-bind="html: paymentCompleteModalContent, style: {height: contentHeight, overflow:'auto' }"></div>
 </div>
+
 <div id="checkout-failure-modal" data-bind="afterRender: initErrorModal" style="display: none">
     <div class="checkout-payment-item-content" data-bind="html: paymentErrorModalContent, style: {height: contentHeight, overflow:'auto' }"></div>
 </div>
--->
 
-<div id="wouter"></div>
