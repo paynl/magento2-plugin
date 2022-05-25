@@ -116,15 +116,15 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             return $this->result->setContents('TRUE| Ignore pending');
         }
 
-        if (empty($payOrderId) || empty($orderEntityId)) {            
+        if (empty($payOrderId) || empty($orderEntityId)) {
             payHelper::logCritical('Exchange: order_id or orderEntity is not set', $params);
             return $this->result->setContents('FALSE| order_id is not set in the request');
         }
 
         try {
             $order = $this->orderRepository->get($orderEntityId);
-            if (empty($order)) {              
-                payHelper::logCritical('Cannot load order: ' . $orderEntityId);                
+            if (empty($order)) {
+                payHelper::logCritical('Cannot load order: ' . $orderEntityId);
                 throw new \Exception('Cannot load order: ' . $orderEntityId);
             }
         } catch (\Exception $e) {
@@ -137,7 +137,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
 
         try {
             $transaction = \Paynl\Transaction::get($payOrderId);
-        } catch (\Exception $e) {   
+        } catch (\Exception $e) {
             payHelper::logCritical($e, $params, $order->getStore());
 
             return $this->result->setContents('FALSE| Error fetching transaction. ' . $e->getMessage());
@@ -162,7 +162,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         $payment = $order->getPayment();
         $orderEntityIdTransaction = $transaction->getExtra3();
 
-        if ($orderEntityId != $orderEntityIdTransaction) {            
+        if ($orderEntityId != $orderEntityIdTransaction) {
             payHelper::logCritical('Transaction mismatch ' . $orderEntityId . ' / ' . $orderEntityIdTransaction, $params, $order->getStore());
             return $this->result->setContents('FALSE|Transaction mismatch');
         }
@@ -292,8 +292,10 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             $transaction->getPaidAmount(),
         ];
 
-        if (!in_array($order->getGrandTotal(), $transactionPaid)) {
-            $this->logger->debug('Validation error: Paid amount does not match order amount. paidAmount: ' . implode(' / ', $transactionPaid) . ', orderAmount:' . $order->getGrandTotal());
+        $orderAmount = round($order->getGrandTotal(), 2);
+        if (!in_array($orderAmount, $transactionPaid)) {
+            payHelper::logCritical('Amount validation error.', array($transactionPaid, $orderAmount, $order->getGrandTotal()));
+            return $this->result->setContents('FALSE| Amount validation error. Amounts: ' . print_r(array($transactionPaid, $orderAmount, $order->getGrandTotal()), true));
         }
 
         $paidAmount = $order->getGrandTotal();
