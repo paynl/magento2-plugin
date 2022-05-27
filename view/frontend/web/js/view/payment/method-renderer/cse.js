@@ -139,7 +139,6 @@ define(
                         event.getCurrentState().isLoading() ? fullScreenLoader.startLoader() : fullScreenLoader.stopLoader();
                     }
                     if (event.getCurrentState().isFormReadyForSubmission()) {
-                        console.log('isFormReadyForSubmission');
                         if (self.testMode) {
                             let cardHolder = $('#card-holder').val();
                             self.encryptedForm.setPaymentPostUrl(url.build('rest/V1/paynl/cse?mode=' + cardHolder));
