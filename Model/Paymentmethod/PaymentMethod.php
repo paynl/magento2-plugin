@@ -375,8 +375,7 @@ abstract class PaymentMethod extends AbstractMethod
         $payload = json_decode($payload, true);
         $this->orderRepository->save($order);
 
-        try
-        {
+        try {
             $objTransaction = new Model\Authenticate\Transaction();
             $objTransaction
                 ->setServiceId(\Paynl\Config::getServiceId())

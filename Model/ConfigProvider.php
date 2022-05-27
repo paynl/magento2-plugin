@@ -164,6 +164,7 @@ class ConfigProvider implements ConfigProviderInterface
             }
         }
 
+        $config['payment']['testMode'] = $this->paynlConfig->isTestMode();
         $config['payment']['useAdditionalValidation'] = $this->paynlConfig->getUseAdditionalValidation();
         $config['payment']['iconsize']                = $this->paynlConfig->getIconSize();
 

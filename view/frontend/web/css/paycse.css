@@ -133,28 +133,22 @@ form[data-pay-encrypt-form] select option[value=""] {
     opacity:1;
 }
 
-#checkout-payment-modal
-{
+#checkout-payment-modal {
     text-align: center;
 }
 .payment-method-cse #card-holder{
     text-transform: uppercase;
 }
+.payment-method-cse.fieldStyle_borders [data-validation="invalid"]           { border: 1px solid red; }
+.payment-method-cse.fieldStyle_borders [data-validation="valid"]             { border: 1px solid green; }
+.payment-method-cse.fieldStyle_borders [data-validation="potentially-valid"] { border: 1px solid orange;}
 
-.payment-method-cse [data-validation="invalid"] {
-    border: 1px solid red;
-}
-
-.payment-method-cse [data-validation="valid"] {
-    border: 1px solid green;
-}
-
-.payment-method-cse [data-validation="potentially-valid"] {
-    border: 1px solid orange;
-}
+.payment-method-cse.fieldStyle_background [data-validation="invalid"]           { background-color:#da7979; border: none; }
+.payment-method-cse.fieldStyle_background [data-validation="valid"]             { background-color: #cfe7c2; border: none; }
+.payment-method-cse.fieldStyle_background [data-validation="potentially-valid"] { background-color: #f0c684; border: none; }
 
 .checkout-payment-method .payment-method-cse .payment-method-content {
-    width:420px;
+    width: 420px;
 }
 
 .checkout-payment-method .payment-method-cse label {

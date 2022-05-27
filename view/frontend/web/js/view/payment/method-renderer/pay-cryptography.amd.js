@@ -9345,10 +9345,6 @@ define(['exports'], (function (exports) { 'use strict';
             let url = event.getParameter('paymentCompleteUrl');
             let urlHelper = new UrlHelper();
 
-            console.log('GESTOPT REDIRET NAAR: ' + url);
-
-
-            return;
             event.setParameter('paymentCompleteUrl', urlHelper.ensureAbsoluteUrl(url));
 
             return PaymentListener.handleRedirection(event, PaymentListener.createReturnUrl(event));
@@ -9657,6 +9653,7 @@ define(['exports'], (function (exports) { 'use strict';
                         event.getParameter('redirection_url'):
                         passedUrl;
                     window.location.replace(finalUrl);
+                   // window.open(finalUrl, '_blank').focus();
                 }, event.getParameter('redirection_timeout'));
             }
         }
@@ -11006,6 +11003,10 @@ define(['exports'], (function (exports) { 'use strict';
         setPaymentCompleteUrl(url)
         {
             this.config.payment_complete_url = this.urlHelper.ensureAbsoluteUrl(url);
+        }
+        setPaymentPostUrl(url)
+        {
+            this.config.post_url = this.urlHelper.ensureAbsoluteUrl(url);
         }
 
 

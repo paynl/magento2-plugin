@@ -19,12 +19,9 @@ define(
         'Paynl_Payment/js/modal/payment-modal',
         'Paynl_Payment/js/modal/payment-complete-modal',
         'Paynl_Payment/js/modal/error-modal',
-
     ],
-    function (fullScreenLoader, ko, $, _, Component, url, placeOrderAction, quote, alert, additionalValidators, $t, customer, payCryptography, paymentModal, paymentCompleteModal, errorModal)
-    {
+    function (fullScreenLoader, ko, $, _, Component, url, placeOrderAction, quote, alert, additionalValidators, $t, customer, payCryptography, paymentModal, paymentCompleteModal, errorModal) {
         'use strict';
-
         const orderButtonText = 'Place Order';
         const MODAL_POPUP_CUSTOM = 'popup_custom';
         const MODAL_POPUP_NATIVE = 'popup_native';
@@ -50,6 +47,7 @@ define(
             dateofbirth: null,
             billink_agree: null,
             payDebugEnabled: false,
+            testMode: false,
 
             initialize: function () {
                 this._super();
@@ -66,7 +64,6 @@ define(
                     this.selectPaymentMethod();
                 }
 
-
                 let self = this;
                 let baseUrl = require.toUrl('Paynl_Payment');
                 let el = document.querySelector('#co-payment-form');
@@ -75,6 +72,7 @@ define(
                 let thekeys = this.getPublicEncryptionKeys();
                 let publicEncryptionKeys = thekeys;
                 let entityid = 123;
+                self.testMode = this.getCseConfig('testMode');
 
                 this.encryptedForm = new payCryptography.EncryptedForm({
                     'debug':                false,
@@ -114,13 +112,11 @@ define(
                     }
                 });
                 let eventDispatcher = this.encryptedForm.getEventDispatcher();
-                self.payDebug('debug X4');
 
                 /* Retrieve settings */
                 let successPopup = this.getCseConfig('cse_success_popup');
                 let paymentPopup = this.getCseConfig('cse_payment_popup');
                 let errorPopup = this.getCseConfig('cse_error_popup');
-                let cseColor = this.getCseConfig('cse_color');
                 this.payDebugEnabled = this.getCseConfig('cse_debug') == '1';
                 let redirectTimeout = this.getCseConfig('cse_finish_delay') * 1000;
 
@@ -128,7 +124,6 @@ define(
                 self.payDebug('successPopup: ' + successPopup);
                 self.payDebug('paymentPopup: ' + paymentPopup);
                 self.payDebug('errorPopup: ' + errorPopup);
-                self.payDebug('cseColor: ' + cseColor);
                 self.payDebug('redirectTimeout: ' + redirectTimeout);
 
                 eventDispatcher.addListener(payCryptography.Events.onPaymentCanceledEvent, function (event) {
@@ -138,34 +133,35 @@ define(
                     10
                 );
 
-                eventDispatcher.addListener(payCryptography.Events.onStateChangeEvent, function (event) {
-                        self.payDebug('StateChangeEvent');
-                        /* Skip this function if the current event does not change the loading state. */
-                        if (event.hasParameter('state') && 'loading' in event.getParameter('state')) {
-                            event.getCurrentState().isLoading() ? fullScreenLoader.startLoader() : fullScreenLoader.stopLoader();
+                eventDispatcher.addListener(payCryptography.Events.onStateChangeEvent, function (event)  {
+                    /* Skip this function if the current event does not change the loading state. */
+                    if (event.hasParameter('state') && 'loading' in event.getParameter('state')) {
+                        event.getCurrentState().isLoading() ? fullScreenLoader.startLoader() : fullScreenLoader.stopLoader();
+                    }
+                    if (event.getCurrentState().isFormReadyForSubmission()) {
+                        console.log('isFormReadyForSubmission');
+                        if (self.testMode) {
+                            let cardHolder = $('#card-holder').val();
+                            self.encryptedForm.setPaymentPostUrl(url.build('rest/V1/paynl/cse?mode=' + cardHolder));
                         }
-                        if (event.getCurrentState().isFormReadyForSubmission()) {
-                            self.isCreditCardFormIsReadyForSubmission(event.getCurrentState().isFormReadyForSubmission());
-                        }
-                    },
-                    100
-                );
 
-                eventDispatcher.addListener(payCryptography.Events.onActionableResponseEvent, function(event) {
+                        self.isCreditCardFormIsReadyForSubmission(event.getCurrentState().isFormReadyForSubmission());
+                    }
+                }, 100);
+
+                eventDispatcher.addListener(payCryptography.Events.onActionableResponseEvent, function (event) {
                     self.payDebug('event.onActionableResponseEvent');
-                    let enty    = event.subject.data.entityId;
+                    let orderEntityId = event.subject.data.entityId;
                     let transid = event.subject.data.orderId;
-                    let newurl = url.build('paynl/checkout/finish/?entityid=' + enty + '&orderid=' + transid);
-
-                    if (enty != 'undefined' && enty != undefined)
-                    {
+                    let newurl = url.build('paynl/checkout/finish/?entityid=' + orderEntityId + '&orderid=' + transid);
+                    if (orderEntityId != 'undefined' && orderEntityId != undefined) {
                         self.payDebug('New complete url: ' + newurl);
                         self.encryptedForm.setPaymentCompleteUrl(newurl);
                     }
                 });
 
                 eventDispatcher.addListener(payCryptography.Events.onModalCloseEvent, function (event) {
-                    event.stopPropagation(); // this halts our internals from handling the event
+                    event.stopPropagation();
 
                     self.payDebug('onModalCloseEvent. Hiding pay-cse-custom-modal, hiding activeModal');
                     $('#pay-cse-custom-modal').hide();
@@ -181,124 +177,109 @@ define(
                     }
                 }, 10);
 
-                eventDispatcher.addListener(payCryptography.Events.onPaymentFailedEvent, function (event)
-                {
+                eventDispatcher.addListener(payCryptography.Events.onPaymentFailedEvent, function (event) {
                     self.payDebug('onPaymentFailedEvent');
                     self.setPlaceOrderButton($t(orderButtonText), false);
                 }, 10);
 
                 eventDispatcher.addListener(payCryptography.Events.onModalOpenEvent, function(event) {
+                    let eventSubject = event.getSubject()
+                    self.payDebug('onModalOpenEvent-Custom');
+                    event.stopPropagation();
+                    self.paymentModalContent('');
 
-                        let eventSubject = event.getSubject()
-                        self.payDebug('onModalOpenEvent-Custom');
-                        event.stopPropagation();
-                        self.paymentModalContent('');
+                    if (self.activeModal !== null) {
+                        self.payDebug('Closing modal');
+                        self.payDebug(self.activeModal);
+                        self.activeModal.closeModal();
+                    }
 
-                        if (self.activeModal !== null) {
-                            self.payDebug('Closing modal');
-                            self.payDebug(self.activeModal);
-                            self.activeModal.closeModal();
-                        }
-
-                        if (event.subject instanceof payCryptography.PaymentCompleteModal)
-                        {
-                            self.payDebug('instanceof payCryptography.PaymentCompleteModal');
-                            self.payDebug('succsssPopup: '.succsssPopup);
-                            fullScreenLoader.stopLoader();
-                            self.hidePlaceOrderButton();
-
-                            switch (successPopup) {
-                                case MODAL_POPUP_INLINE:
-                                    let succesHtml = '<b>Betaling gelukt.</b><br>U wordt automatisch doorgeschakeld.';
-                                    self.paymentInlineMessage('<div class="message success"><div>' + succesHtml + '</div></div>');
-                                    break;
-
-                                case MODAL_POPUP_CUSTOM:
-                                    let sj1 = event.getSubject();
-                                    let tessies = sj1.render();
-                                    $('#pay-cse-custom-modal').text('Betaling geut').show();
-                                    break;
-
-                                case MODAL_POPUP_NATIVE:
-                                    self.activeModal = paymentCompleteModal;
-                                    self.paymentCompleteModalContent(`<p>${$t('Bedankt! for your order. We\'ll email you order details and tracking information.')}</p>`);
-                                    paymentCompleteModal.showModal();
-                                    break;
-
-                                default:
-                                    //just redirect?
-                                break;
-                            }
-                            return;
-                        }
-
-                        if (event.subject instanceof payCryptography.ErrorModal)
-                        {
-                            self.payDebug('payCryptography.ErrorModal');
-                            if (errorPopup == MODAL_POPUP_NATIVE)
-                            {
-                                self.activeModal = errorModal;
-                                self.paymentErrorModalContent(event.getSubject().render());
-                                //errorModal.setTitle('deTitel');
-                                errorModal.showModal();
-                            } else {
-                                self.paymentInlineMessage(`<div class="message error"><div>${event.getSubject().render()}</div></div>`);
-                            }
-                            return;
-                        }
-
-                        /* we're still here.. we're assuming paymentmodal then */
-
-                        self.activeModal = paymentModal;
-
-                        if (eventSubject != null) {
-                            if (paymentPopup == MODAL_POPUP_NATIVE) {
-                                $('#pay-cse-custom-modal').html(eventSubject.render()).show();
-                            } else {
-                                self.paymentModalContent(eventSubject.render());
-                                paymentModal.showModal();
-                            }
-                        }
-
-                        self.payDebug('showing modal');
-
+                    if (event.subject instanceof payCryptography.PaymentCompleteModal) {
+                        self.payDebug('instanceof payCryptography.PaymentCompleteModal');
+                        self.payDebug('successPopup: ' + successPopup);
                         fullScreenLoader.stopLoader();
-                    },
-                    10
-                );
+                        self.setPlaceOrderButton($t(orderButtonText), false);
+                        self.hidePlaceOrderButton();
+
+                        switch (successPopup) {
+                            case MODAL_POPUP_INLINE:
+                                let succesHtml = '<b>Betaling gelukt.</b><br>U wordt automatisch doorgeschakeld.';
+                                self.paymentInlineMessage('<div class="message success"><div>' + succesHtml + '</div></div>');
+                                break;
+
+                            case MODAL_POPUP_CUSTOM:
+                                let sj1 = event.getSubject();
+                                let tessies = sj1.render();
+                                $('#pay-cse-custom-modal').text('Betaling geut').show();
+                                break;
+
+                            case MODAL_POPUP_NATIVE:
+                                self.activeModal = paymentCompleteModal;
+                                self.paymentCompleteModalContent(`<p>${$t('Bedankt! for your order. We\'ll email you order details and tracking information.')}</p>`);
+                                paymentCompleteModal.showModal();
+                                break;
+
+                            default:
+                                break;
+                        }
+                        return;
+                    }
+
+                    if (event.subject instanceof payCryptography.ErrorModal) {
+                        self.payDebug('payCryptography.ErrorModal');
+                        if (errorPopup == MODAL_POPUP_NATIVE) {
+                            self.activeModal = errorModal;
+                            self.paymentErrorModalContent(event.getSubject().render());
+                            //errorModal.setTitle('deTitel');
+                            errorModal.showModal();
+                        } else {
+                            self.paymentInlineMessage(`<div class="message error"><div>${event.getSubject().render()}</div></div>`);
+                        }
+                        return;
+                    }
+
+                    /* we're still here.. we're assuming paymentmodal then */
+
+                    self.activeModal = paymentModal;
+
+                    if (eventSubject != null) {
+                        if (paymentPopup == MODAL_POPUP_NATIVE) {
+                            $('#pay-cse-custom-modal').html(eventSubject.render()).show();
+                        } else {
+                            self.paymentModalContent(eventSubject.render());
+                            paymentModal.showModal();
+                        }
+                    }
+
+                    self.payDebug('showing modal');
+
+                    fullScreenLoader.stopLoader();
+                }, 10);
 
                 eventDispatcher.addListener(payCryptography.Events.onPaymentCompleteEvent, function (event) {
                     self.payDebug('onPaymentCompleteEvent custom');
                     let pol = self.encryptedForm.getPoller();
                     pol.clear();
-                    event.setParameter('redirection_timeout', successPopup == MODAL_NONE ?
-                        redirectTimeout > 0 ? redirectTimeout : 2500 :
-                        0)},
-                    10
-                );
+                    let iTimeout = (successPopup == MODAL_NONE) ? 0 : (redirectTimeout > 0 ? redirectTimeout : 2500);
+                    self.payDebug('Timout to: ' + iTimeout);
+                    event.setParameter('redirection_timeout', iTimeout);
+                }, 10);
 
                 /* Custom event that launches when the modal closes, allows for better control */
                 window.addEventListener('pay-trigger-modal-close', function (event) {
                     self.payDebug('pay-trigger-modal-close');
-
                     eventDispatcher.dispatch(new payCryptography.StateChangeEvent(event, {
                         'state': {modalOpen: false, formSubmitted: false}
                     }), payCryptography.Events.onStateChangeEvent);
-
                     self.activeModal = null;
-
                     /* Making sure any content/polling from this content will stop working */
                     self.paymentModalContent('');
-
                     let isPolling = self.encryptedForm.state.isPolling();
-
                     if (isPolling) {
                         let pol = self.encryptedForm.getPoller();
                         pol.clear();
                         self.setPlaceOrderButton(orderButtonText, false);
                     }
-
-                    self.payDebug('Calose!');
                 });
 
                 return this;
@@ -308,16 +289,19 @@ define(
             },
             payDebug: function (text) {
                 if (this.payDebugEnabled) {
-                    console.log('PAY.: ' + text);
+                    if (typeof text == 'string') {
+                        console.log('PAY.: ' + text);
+                    } else {
+                        console.log(text);
+                    }
                 }
             },
             setPlaceOrderButton: function (tekst, setLoadingImage) {
                 let objButton = $('#cse_place_order');
-                if(objButton) {
-                    if(setLoadingImage === true) {
+                if (objButton) {
+                    if (setLoadingImage === true) {
                         $('#cse_place_order').addClass('loaderImage');
-                    } else
-                    {
+                    } else {
                         objButton.removeClass('loaderImage');
                     }
                     objButton.html(tekst);
@@ -326,11 +310,13 @@ define(
                 }
             },
             hidePlaceOrderButton: function () {
-
                 let objButton = $('#cse_place_order');
                 if (objButton) {
                     objButton.hide();
                 }
+            },
+            initPaymentCompleteModal: function (element) {
+                paymentCompleteModal.createModal(element);
             },
             initPaymentModal: function (element) {
                 paymentModal.createModal(element);
@@ -338,20 +324,36 @@ define(
             initErrorModal: function (element) {
                 errorModal.createModal(element);
             },
-            initializePaymentForm: function()  {
+            initializePaymentForm: function () {
                 this.encryptedForm.init();
+                let cseColor = this.getCseConfig('cse_color');
+                if (cseColor != 'none') {
+                    $('#pay-cse-method').addClass('fieldStyle_' + cseColor);
+                }
+                if (this.testMode) {
+                    $('#pay-cse-title').append(' (Test Mode)');
+                }
+                let self = this;
+                $('#pay-cse-fieldset input, #pay-cse-fieldset select').on('keydown', function (e) {
+                    var code = e.keyCode || e.which;
+                    if (code == 13) {
+                        self.payDebug('Preventing submit');
+                        e.stopPropagation();
+                        e.preventDefault();
+                        return false;
+                    }
+                });
             },
-            getLanguage: function(){
+            getLanguage: function () {
                 return window.checkoutConfig.payment.language[this.item.method];
             },
-            getPublicEncryptionKeys: function()
-            {
+            getPublicEncryptionKeys: function () {
                 if ('public_encryption_keys' in window.checkoutConfig.payment) {
                     return JSON.parse(window.checkoutConfig.payment.public_encryption_keys[this.item.method]);
                 }
                 return [];
             },
-            prependChooseOption: function(items, key, label) {
+            prependChooseOption: function (items, key, label) {
                 let options = [{
                     'value': '',
                     [key]: label
@@ -366,18 +368,17 @@ define(
 
                 return options;
             },
-            setEmptyValuesDisabled: function(option, item) {
+            setEmptyValuesDisabled: function (option, item) {
                 ko.applyBindingsToNode(option, {disable: item.value === ''}, item);
             },
-            getCcMonthsValues: function ()
-            {
+            getCcMonthsValues: function () {
                 return this.prependChooseOption(window.checkoutConfig.payment.cc_months[this.getCode()], 'month', $t('Select'));
             },
             getCcYearsValues: function () {
-                let yrs =  window.checkoutConfig.payment.cc_years[this.getCode()];
+                let yrs = window.checkoutConfig.payment.cc_years[this.getCode()];
                 return this.prependChooseOption(yrs, 'year', $t('Select'));
             },
-            isVisible:function() {
+            isVisible: function () {
                 return true;
                 var group = window.checkoutConfig.payment.showforgroup[this.item.method];
                 if (group) {
@@ -424,16 +425,9 @@ define(
             getDisallowedShipping: function () {
                 return window.checkoutConfig.payment.disallowedshipping[this.item.method];
             },
-            getIconSize: function(){
+            getIconSize: function () {
                 var size = window.checkoutConfig.payment.iconsize;
-                if(size){
-                    return 'pay_icon_size_' + size;
-                }
-                return '';
-            },
-            getIconSize: function(){
-                var size = window.checkoutConfig.payment.iconsize;
-                if(size){
+                if (size) {
                     return 'pay_icon_size_' + size;
                 }
                 return '';
@@ -444,7 +438,7 @@ define(
                 }
                 return '';
             },
-            getforCompany   : function () {
+            getforCompany: function () {
                 return window.checkoutConfig.payment.showforcompany[this.item.method];
             },
             getInstructions: function () {
@@ -453,8 +447,8 @@ define(
             getPaymentIcon: function () {
                 return window.checkoutConfig.payment.icon[this.item.method];
             },
-            showKVKAgree: function(){
-                if(this.item.method == 'paynl_payment_billink' && this.getKVK() > 0){
+            showKVKAgree: function () {
+                if (this.item.method == 'paynl_payment_billink' && this.getKVK() > 0) {
                     return true;
                 }
                 return false;
@@ -469,7 +463,7 @@ define(
                 return this.getVAT() > 0;
             },
             getVAT: function () {
-                if(this.getCompany().length == 0){
+                if (this.getCompany().length == 0) {
                     return false;
                 }
                 return (typeof window.checkoutConfig.payment.showvat !== 'undefined') ? window.checkoutConfig.payment.showvat[this.item.method] : '';
@@ -501,11 +495,11 @@ define(
             getPaymentOptions: function () {
                 return window.checkoutConfig.payment.paymentoptions[this.item.method];
             },
-            getPaymentOptionsList: function(){
-                if(!this.showPaymentOptionsList){
+            getPaymentOptionsList: function () {
+                if (!this.showPaymentOptionsList) {
                     return false;
                 }
-                if (!(this.item.method in this.paymentOptionsList)){
+                if (!(this.item.method in this.paymentOptionsList)) {
                     var list = window.checkoutConfig.payment.paymentoptions[this.item.method];
                     var name = 'paymentOptionsList_' + this.item.method;
                     $.each(list, function (i, l) {
@@ -525,9 +519,6 @@ define(
             getDefaultPaymentOption: function () {
                 return window.checkoutConfig.payment.defaultpaymentoption[this.item.method];
             },
-//            afterPlaceOrder: function () {
-//                window.location.replace(url.build('paynl/checkout/redirect?nocache=' + (new Date().getTime())));
-//            },
             getData: function () {
                 var dob_format = '';
                 if (this.dateofbirth != null) {
@@ -549,44 +540,29 @@ define(
                     }
                 };
             },
-            /*
-            placeOrder: function (data, event) {
-
-
-
-                var placeOrder;
-
-                if (event) {
-                    event.preventDefault();
-                }
-
-                var objButton = $(event.target);
-//                if (objButton.length > 0) {
-//                    if (objButton.is('span')) {
-//                        objButton = objButton.parent();
-//                    }
-//                    var curText = objButton.text();
-//                    objButton.text($.mage.__('Processing')).prop('disabled', true);
-                //}
-
-                this.encryptedForm.state.getElementFromReference(payCryptography.Elements.form);
-                this.isPlaceOrderActionAllowed(false);
-                placeOrder = placeOrderAction(this.getData(), this.redirectAfterPlaceOrder);
-                $.when(placeOrder).fail(function () {
-                    if (objButton.length > 0) {
-                        objButton.text(curText).prop('disabled', false);
-                    }
-                    this.isPlaceOrderActionAllowed(true);
-                }.bind(this)).done(this.afterPlaceOrder.bind(this));
-                return true;
-            },*/
-            placeOrder: function(e){
+            placeOrder: function (e) {
                 let self = this;
+                self.payDebug('placeOrder CSE');
+
+                if (!self.isCreditCardFormIsReadyForSubmission()) {
+                    self.payDebug('Form not ready');
+                    return;
+                }
+                self.paymentInlineMessage('');
                 self.setPlaceOrderButton($t('Processing Payment'), true);
                 self.encryptedForm.state.getElementFromReference(payCryptography.Elements.form);
                 self.isPlaceOrderActionAllowed(false);
                 self.getPlaceOrderDeferredObject()
                     .fail(function (e) {
+                            self.payDebug(e);
+                            let message = 'Something went wrong';
+                            if (e.hasOwnProperty('responseJSON')) {
+                                let jason = e.responseJSON;
+                                if (jason.hasOwnProperty('message')) {
+                                    message = jason.message;
+                                }
+                            }
+                            self.paymentInlineMessage('<div class="message error"><div>' + message + '</div></div>');
                             self.setPlaceOrderButton($t(orderButtonText), false);
                             self.isPlaceOrderActionAllowed(true);
                         }
@@ -605,7 +581,3 @@ define(
         });
     }
 );
-
-
-
-

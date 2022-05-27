@@ -1,4 +1,4 @@
-<div class="payment-method paynl payment-method-cse" data-bind="css: {'_active': (getCode() == isChecked())}" afterRender="initializePaymentForm">
+<div class="payment-method paynl payment-method-cse" id="pay-cse-method" data-bind="css: {'_active': (getCode() == isChecked())}" afterRender="initializePaymentForm">
 
     <div class="payment-method-title field choice">
         <input type="radio" name="payment[method]" class="radio"
@@ -20,15 +20,16 @@
             <!--/ko-->
         </div>
 
-        <fieldset>
+        <fieldset id="pay-cse-fieldset">
             <div class="container-wrap">
-                <legend><!-- ko i18n: 'Credit card payment'--><!-- /ko --></legend>
+                <legend id="pay-cse-title"><!-- ko i18n: 'Credit card payment'--><!-- /ko --></legend>
             </div>
 
             <div class="container-wrap">
                 <div class="form-element-container container-cardholder">
                     <label for="card-holder"><!-- ko i18n: 'Name on card'--><!-- /ko --></label>
                     <input id="card-holder"
+                           tabindex="101"
                            type="text"
                            name="cardholder"
                            required
@@ -45,6 +46,7 @@
                         <span class="input-container">
                             <input id="cardnumber"
                                    type="text"
+                                   tabindex="102"
                                    name="cardnumber"
                                    required
                                    data-pay-encrypt-field
@@ -61,6 +63,7 @@
                 <div class="form-element-container container-cvc">
                     <label for="cvc" data-cvc-label><!-- ko i18n: 'CVC'--><!-- /ko --></label>
                     <input id="cvc"
+                           tabindex="103"
                            type="text"
                            name="cardcvc"
                            required
@@ -75,6 +78,7 @@
                     <label for="month"><!-- ko i18n: 'Month'--><!-- /ko --></label>
                     <select name="valid_thru_month"
                             id="month"
+                            tabindex="104"
                             data-pay-encrypt-field
                             class="select select-month"
                             data-bind="options: getCcMonthsValues(),
@@ -89,6 +93,7 @@
                 <div class="form-element-container container-exp-year">
                     <label for="year"><!-- ko i18n: 'Year'--><!-- /ko --></label>
                     <select name="valid_thru_year"
+                            tabindex="105"
                             id="year"
                             class="select select-year"
                             data-pay-encrypt-field
@@ -99,7 +104,6 @@
                                            value: ''
                                            ">
                     </select>
-                    </select>
                 </div>
             </div>
             <p data-bind="html: getInstructions();"></p>
@@ -109,7 +113,7 @@
 
             <div class="actions-toolbar">
                 <div class="primary">
-                    <button id="cse_place_order" class="action primary checkout"
+                    <button id="cse_place_order"  tabindex="106" class="action primary checkout"
                             type="submit"
                             data-bind="
                         click: placeOrder,
@@ -125,18 +129,15 @@
         </fieldset>
     </div>
     <div id="pay-cse-custom-modal"></div>
-
 </div>
-
 <div id="checkout-payment-modal" data-bind="afterRender: initPaymentModal" style="display: none">
-    <div class="checkout-payment-item-content" data-bind="html: paymentModalContent, style: {height: contentHeight, overflow:'auto' }"></div>
+    <div class="checkout-payment-item-content" data-bind="html: paymentModalContent, style: {height: contentHeight, overflow:'auto'}"></div>
 </div>
 
 <div id="checkout-payment-complete-modal" data-bind="afterRender: initPaymentCompleteModal" style="display: none">
-    <div class="checkout-payment-item-content" data-bind="html: paymentCompleteModalContent, style: {height: contentHeight, overflow:'auto' }"></div>
+    <div class="checkout-payment-item-content" data-bind="html: paymentCompleteModalContent, style: {height: contentHeight, overflow:'auto'}"></div>
 </div>
 
 <div id="checkout-failure-modal" data-bind="afterRender: initErrorModal" style="display: none">
-    <div class="checkout-payment-item-content" data-bind="html: paymentErrorModalContent, style: {height: contentHeight, overflow:'auto' }"></div>
+    <div class="checkout-payment-item-content" data-bind="html: paymentErrorModalContent, style: {height: contentHeight, overflow:'auto'}"></div>
 </div>
-

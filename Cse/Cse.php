@@ -115,8 +115,6 @@ class Cse
 
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $this->messageManager = $objectManager->get(\Magento\Framework\Message\ManagerInterface::class);
-
-        //parent::__construct($context);
     }
 
 
@@ -127,7 +125,10 @@ class Cse
      */
     public function execute()
     {
-        $this->_logger->debug('In Cse');
+
+        $params = $this->request->getParams();
+
+        payHelper::logDebug('In Cse Class, with params:' . PHP_EOL, $params);
 
         try {
             $order = $this->checkoutSession->getLastRealOrder();
@@ -147,45 +148,56 @@ class Cse
             $methodInstance = $this->paymentHelper->getMethodInstance($payment->getMethod());
 
             # Only allow visamastercard class as this is the only one that supports this behavior
-            if ($methodInstance instanceof Visamastercard)
-            {
-                $this->_logger->debug('PAY.: B Start new encrypted payment for order ' . $order->getId());
+            if ($methodInstance instanceof Visamastercard) {
+                payHelper::logDebug('PAY.: B Start new encrypted payment for order ' . $order->getId());
 
                 $returnUrl = $this->storageManager->getStore()->getBaseUrl() . 'paynl/checkout/returnEncryptedTransaction';
                 $paymentCompleteUrl = $this->storageManager->getStore()->getBaseUrl() . 'paynl/checkout/finish';
                 $pay_encrypted_data = $this->request->getParam('pay_encrypted_data');
 
-                $arrEncryptedTransactionResult = $methodInstance->startEncryptedTransaction($order, $pay_encrypted_data, $returnUrl);
-                $arrEncryptedTransactionResult['entityId'] = $order->getEntityId();
+                if ($this->config->isTestMode()) {
+                    payHelper::logDebug('Testmode is enabled');
 
-                $this->_logger->debug('PAY.: return:  ' . print_r($arrEncryptedTransactionResult, true) );
+                    $mode = $this->request->getParam('mode') ?? '';
+                    if (strtolower($mode) == 'error') {
+                        $arrEncryptedTransactionResult['result'] = 0;
+                        $arrEncryptedTransactionResult['nextAction'] = 'error';
+                        $arrEncryptedTransactionResult['errorMessage'] = 'error - niet lukt';
+                    } elseif (strtolower($mode) == 'error2') {
+                        $arrEncryptedTransactionResult['result'] = 0;
+                        $arrEncryptedTransactionResult['entityId'] = 1;
+                        $arrEncryptedTransactionResult['errorMessage'] = 'Helaas is het niet mogelijk om de betaling te voltooien. Het ingevoerde kaartnummer is onjuist. Probeer het nogmaals en controleer uw invoer zorgvuldig.';
+                    } else {
+                        $arrEncryptedTransactionResult['result'] = 1;
+                        $arrEncryptedTransactionResult['nextAction'] = 'paid';
+                        $arrEncryptedTransactionResult['orderId'] = '1234567890X12345';
+                        $arrEncryptedTransactionResult['entranceCode'] = '12345';
+                        $arrEncryptedTransactionResult['transaction'] = array('transactionId' => '1234567890X12345', 'entranceCode' => '12345');
+                        $arrEncryptedTransactionResult['entityId'] = '1';
+                    }
+                } else {
+                    $arrEncryptedTransactionResult = $methodInstance->startEncryptedTransaction($order, $pay_encrypted_data, $returnUrl);
+                    $arrEncryptedTransactionResult['entityId'] = $order->getEntityId();
+                }
+
+                payHelper::logDebug('PAY.:  Execute return:  ' . print_r($arrEncryptedTransactionResult, true));
 
                 return $this->jsonHelper->jsonEncode($arrEncryptedTransactionResult);
             } else {
                 throw new Error('PAY.: Method is not compatible for CSE');
             }
-        } catch (Exception $e)
-        {
+        } catch (Exception $e) {
             $this->_getCheckoutSession()->restoreQuote();
             $this->messageManager->addExceptionMessage($e, $e->getMessage());
             $this->_logger->critical($e);
 
-            return  $this->jsonHelper->jsonEncode(array(
+            return $this->jsonHelper->jsonEncode(array(
                 'type' => 'error',
                 'message' => $e->getMessage(),
                 'trace' => ''
             ));
-            /*
-            $this->getResponse()->representJson(
-                $this->jsonHelper->jsonEncode(array(
-                    'type' => 'error',
-                    'message' => $e->getMessage(),
-                    'trace' => $e->getTraceAsString()
-                ))
-            );*/
         }
     }
-
 
     /**
      * status()
@@ -196,7 +208,7 @@ class Cse
     {
         $params = $this->request->getParams();
 
-        $this->_logger->debug('In status(). Params:  ' . print_r($params, true));
+        payHelper::logDebug('In status(). Params:  ' . print_r($params, true));
 
         $transaction_id = isset($params['transaction_id']) ? $params['transaction_id'] : null;
 
@@ -208,15 +220,13 @@ class Cse
                 $result = \Paynl\Payment::authenticationStatus($transaction_id);
                 $data = $result->getData();
 
-                $this->_logger->debug('status() -> Response:  ' . print_r($data, true));
+                payHelper::logDebug('status() -> Response:  ' . print_r($data, true));
 
-            } catch (Exception $e)
-            {
-                $this->_logger->debug('Status EXCEPTION-desc: ' . $e->getMessage());
-                $this->_logger->debug('Status EXCEPTION-code: ' . $e->getCode());
+            } catch (Exception $e) {
+                payHelper::logDebug('Status EXCEPTION-desc: ' . $e->getMessage());
+                payHelper::logDebug('Status EXCEPTION-code: ' . $e->getCode());
             }
         }
-
         return $this->jsonHelper->jsonEncode($data);
     }
 
@@ -229,7 +239,7 @@ class Cse
     {
         $params = $this->request->getParams();
 
-        $this->_logger->debug('In authentication(). Params:  ' . print_r($params, true));
+        payHelper::logDebug('In authentication(). Params:  ' . print_r($params, true));
 
         $ped = $params['pay_encrypted_data'] ?? null;
         $transId = $params['transaction_id'] ?? null;
@@ -255,7 +265,7 @@ class Cse
                     ->setEntranceCode($ecode);
 
             } else {
-                $this->_logger->debug('WIILL NOT SEE THIS RIGHT?');
+                payHelper::logDebug('WIILL NOT SEE THIS RIGHT?');
 
                 $transaction = new Model\Authenticate\Transaction();
                 $transaction
@@ -301,15 +311,11 @@ class Cse
             $this->config->configureSDK();
             $data = Payment::authenticateMethod($transaction, $payment)->getData();
 
-          #  $data['entityId'] = $order->getEntityId();
-
-            $this->_logger->debug('In authentication(). Response:  ' . print_r($data, true));
+            payHelper::logDebug('In authentication(). Response:  ' . print_r($data, true));
 
         } catch (Exception $e)
         {
-            $this->_logger->debug('In authentication(). Exception resp:  ' . print_r($e->getMessage(), true));
-
-
+            payHelper::logDebug('In authentication(). Exception resp:  ' . print_r($e->getMessage(), true));
             $data = array(
                 'result' => 0,
                 'errorMessage' => $e->getMessage()
@@ -317,9 +323,7 @@ class Cse
         }
 
         return $this->jsonHelper->jsonEncode($data);
-
     }
-
 
     /**
      * authorization
@@ -331,7 +335,7 @@ class Cse
     {
         $params = $this->request->getParams();
 
-        $this->_logger->debug('In authorization(). Params:  ' . print_r($params, true));
+        payHelper::logDebug('In authorization(). Params:  ' . print_r($params, true));
 
         $ped = $params['pay_encrypted_data'] ?? null;
         $transId = $params['transaction_id'] ?? null;
@@ -373,7 +377,7 @@ class Cse
             $nextAction = $data['nextAction'] ?? null;
             if($nextAction == 'verify')
             {
-                $this->_logger->debug('CHANGED VERIFY TO PAID');
+                payHelper::logDebug('CHANGED VERIFY TO PAID');
                 $data['nextAction'] = 'paid';
             }
 
@@ -383,7 +387,7 @@ class Cse
                 $order = $this->checkoutSession->getLastRealOrder();
 
                 if(empty($order)) {
-                    $this->_logger->debug('No order found in session, please try again');
+                    payHelper::logDebug('No order found in session, please try again');
                     throw new Error('No order found in session, please try again');
                 }
 
@@ -391,7 +395,7 @@ class Cse
                     $transaction = \Paynl\Transaction::get($payOrderId);
                 } catch (\Exception $e) {
                     payHelper::logCritical($e, $params, $order->getStore());
-                    $this->_logger->debug('Fout bij ophalen PAY taransaction ');
+                    payHelper::logDebug('Fout bij ophalen PAY taransaction ');
                     return $this->result->setContents('FALSE| Error fetching transaction. ' . $e->getMessage());
                 }
 
@@ -406,11 +410,11 @@ class Cse
                 }*/
             }
 
-            $this->_logger->debug('In authorization(). Response:  ' . print_r($data, true));
+            payHelper::logDebug('In authorization(). Response:  ' . print_r($data, true));
 
         } catch (Exception $e)
         {
-            $this->_logger->debug('In authorization(). Exception resp:  ' . print_r($e->getMessage(), true));
+            payHelper::logDebug('In authorization(). Exception resp:  ' . print_r($e->getMessage(), true));
             $data = array(
                 'result' => 0,
                 'errorMessage' => $e->getMessage()
