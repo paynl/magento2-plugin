@@ -21,7 +21,6 @@ use Paynl\Payment\Model\Config;
 use Paynl\Payment\Model\Paymentmethod\Visamastercard;
 use Paynl\Api\Payment\Model;
 use Paynl\Payment;
-use Psr\Log\LoggerInterface;
 use Magento\Framework\Webapi\Rest\Request;
 
 /**
@@ -43,11 +42,6 @@ class Cse
     private $checkoutSession;
 
     /**
-     * @var LoggerInterface
-     */
-    private $_logger;
-
-    /**
      * @var PaymentHelper
      */
     private $paymentHelper;
@@ -67,8 +61,6 @@ class Cse
      */
     private $orderRepository;
 
-    protected $resultJsonFactory;
-    private $jason;
     /**
      * @var StoreManagerInterface
      */
@@ -79,10 +71,8 @@ class Cse
      * @param Context $context
      * @param Config $config
      * @param Session $checkoutSession
-     * @param LoggerInterface $logger
      * @param PaymentHelper $paymentHelper
      * @param QuoteRepository $quoteRepository
-     * @param OrderRepository $orderRepository
      * @param StoreManagerInterface $storeManager
      * @param Data $jsonHelper
      */
@@ -90,28 +80,20 @@ class Cse
         Context $context,
         Config $config,
         Session $checkoutSession,
-        LoggerInterface $logger,
         PaymentHelper $paymentHelper,
         QuoteRepository $quoteRepository,
-        OrderRepository $orderRepository,
         StoreManagerInterface $storeManager,
         Data $jsonHelper,
-        Request $request,
-        \Magento\Framework\Controller\Result\JsonFactory $resultJsonFactory,
-        \Magento\Framework\Serialize\Serializer\Json $jason
+        Request $request
     )
     {
         $this->config          = $config;
         $this->checkoutSession = $checkoutSession;
-        $this->_logger         = $logger;
         $this->paymentHelper   = $paymentHelper;
         $this->quoteRepository = $quoteRepository;
-        $this->orderRepository = $orderRepository;
         $this->storageManager  = $storeManager;
         $this->jsonHelper      = $jsonHelper;
-        $this->request = $request;
-        $this->resultJsonFactory   = $resultJsonFactory;
-        $this->jason = $jason;
+        $this->request         = $request;
 
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $this->messageManager = $objectManager->get(\Magento\Framework\Message\ManagerInterface::class);
@@ -125,9 +107,7 @@ class Cse
      */
     public function execute()
     {
-
         $params = $this->request->getParams();
-
         payHelper::logDebug('In Cse Class, with params:' . PHP_EOL, $params);
 
         try {
@@ -157,7 +137,6 @@ class Cse
 
                 if ($this->config->isTestMode()) {
                     payHelper::logDebug('Testmode is enabled');
-
                     $mode = $this->request->getParam('mode') ?? '';
                     if (strtolower($mode) == 'error') {
                         $arrEncryptedTransactionResult['result'] = 0;
@@ -189,7 +168,7 @@ class Cse
         } catch (Exception $e) {
             $this->_getCheckoutSession()->restoreQuote();
             $this->messageManager->addExceptionMessage($e, $e->getMessage());
-            $this->_logger->critical($e);
+            payHelper::logCritical('PAY.:  Execute exception: ' . $e->getMessage());
 
             return $this->jsonHelper->jsonEncode(array(
                 'type' => 'error',
@@ -265,18 +244,7 @@ class Cse
                     ->setEntranceCode($ecode);
 
             } else {
-                payHelper::logDebug('WIILL NOT SEE THIS RIGHT?');
-
-                $transaction = new Model\Authenticate\Transaction();
-                $transaction
-                    ->setServiceId(\Paynl\Config::getServiceId())
-                    ->setDescription('Lorem Ipsum')
-                    ->setReference('TEST.1234')
-                    ->setAmount(1)
-                    ->setCurrency('EUR')
-                    ->setIpAddress($_SERVER['REMOTE_ADDR'])
-                    ->setLanguage('NL')
-                    ->setFinishUrl('');
+                throw new Exception('No transaction received');
             }
 
             $cse = new Model\CSE();
@@ -292,7 +260,6 @@ class Cse
                 $auth
                     ->setPayTdsAcquirerId($acquirer_id) // 134 ?
                     ->setPayTdsTransactionId($threeds_transaction_id);
-
                 $payment->setAuth($auth);
             }
 
@@ -313,8 +280,7 @@ class Cse
 
             payHelper::logDebug('In authentication(). Response:  ' . print_r($data, true));
 
-        } catch (Exception $e)
-        {
+        } catch (Exception $e) {
             payHelper::logDebug('In authentication(). Exception resp:  ' . print_r($e->getMessage(), true));
             $data = array(
                 'result' => 0,
@@ -334,7 +300,6 @@ class Cse
     public function authorization()
     {
         $params = $this->request->getParams();
-
         payHelper::logDebug('In authorization(). Params:  ' . print_r($params, true));
 
         $ped = $params['pay_encrypted_data'] ?? null;
@@ -374,52 +339,15 @@ class Cse
             $this->config->configureSDK();
             $data = Payment::authorize($transaction, $payment)->getData();
 
-            $nextAction = $data['nextAction'] ?? null;
-            if($nextAction == 'verify')
-            {
-                payHelper::logDebug('CHANGED VERIFY TO PAID');
-                $data['nextAction'] = 'paid';
-            }
-
-            if($nextAction == 'paid')
-            {
-                /*
-                $order = $this->checkoutSession->getLastRealOrder();
-
-                if(empty($order)) {
-                    payHelper::logDebug('No order found in session, please try again');
-                    throw new Error('No order found in session, please try again');
-                }
-
-                try {
-                    $transaction = \Paynl\Transaction::get($payOrderId);
-                } catch (\Exception $e) {
-                    payHelper::logCritical($e, $params, $order->getStore());
-                    payHelper::logDebug('Fout bij ophalen PAY taransaction ');
-                    return $this->result->setContents('FALSE| Error fetching transaction. ' . $e->getMessage());
-                }
-
-                if ($transaction->isPaid() || $transaction->isAuthorized() || $transaction->isBeingVerified()) {
-                    $payment = $order->getPayment();
-                    $information = $payment->getAdditionalInformation();
-                    PayHelper::checkEmpty((($information['transactionId'] ?? null) == $payOrderId), '', 1014, 'Transaction mismatch');
-
-                    $methodInstance = $this->paymentHelper->getMethodInstance($payment->getMethod());
-
-                    $result = $methodInstance->processPaidOrder($transaction, $order);
-                }*/
-            }
-
-            payHelper::logDebug('In authorization(). Response:  ' . print_r($data, true));
-
-        } catch (Exception $e)
-        {
-            payHelper::logDebug('In authorization(). Exception resp:  ' . print_r($e->getMessage(), true));
+        } catch (Exception $e) {
+            payHelper::logDebug('In authorization(). Exception: ' . print_r($e->getMessage(), true));
             $data = array(
                 'result' => 0,
                 'errorMessage' => $e->getMessage()
             );
         }
+
+        payHelper::logDebug('In authorization(). Response:  ' . print_r($data, true));
 
         return $this->jsonHelper->jsonEncode($data);
     }
