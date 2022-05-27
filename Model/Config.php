@@ -172,6 +172,11 @@ class Config
         return $this->store->getConfig('payment/paynl/use_magorder_for_auth') == 1;
     }
 
+    public function useSkuId()
+    {
+        return $this->store->getConfig('payment/paynl/use_sku_id') == 1;
+    }
+
     public function getLanguage()
     {
         $language = $this->store->getConfig('payment/paynl/language');

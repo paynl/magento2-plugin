@@ -55,6 +55,11 @@
                     <comment><![CDATA[Set this to yes to use base amount as authorize amount instead of currencyamount]]></comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
+                <field id="use_sku_id" translate="label,comment" type="select" sortOrder="72" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Use the SKU as ID for items</label>
+                    <comment><![CDATA[Set this to yes if you want the PAY. order to register the SKU of the product as it's ID.]]></comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
                 <field id="skip_fraud_detection" translate="label,comment" type="select" sortOrder="80" showInDefault="1"
                        showInWebsite="1" showInStore="1">
                     <label>Skip fraud detection</label>

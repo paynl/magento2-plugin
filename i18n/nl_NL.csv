@@ -126,3 +126,4 @@
 "Yes, as list","Ja, als lijst"
 "Force Billing Address for Instore Pickups","Factuuradres forceren voor afhalingen in de winkel"
 "Use the Billing address as Shipping address for instore pickups.","Gebruik factuuradres als bezorgadres voor het afhalen in de winkel."
+"Set this to yes if you want the PAY. order to register the SKU of the product as it's ID.","Stel dit in op ja als u wilt dat PAY. de SKU van het product gebruikt als ID."
