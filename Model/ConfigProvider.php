@@ -154,6 +154,7 @@ class ConfigProvider implements ConfigProviderInterface
                 $config['payment']['language'][$code] = $language;
 
                 if ($code == 'paynl_payment_visamastercard') {
+                    $config['payment']['cse_enabled'] = $this->getConfigItem('cse_enabled', 'visamastercard');
                     $config['payment']['cse_success_popup'] = $this->getConfigItem('cse_success_popup', 'visamastercard');
                     $config['payment']['cse_error_popup'] = $this->getConfigItem('cse_error_popup', 'visamastercard');
                     $config['payment']['cse_payment_popup'] = $this->getConfigItem('cse_payment_popup', 'visamastercard');
@@ -164,7 +165,7 @@ class ConfigProvider implements ConfigProviderInterface
             }
         }
 
-        $config['payment']['testMode'] = $this->paynlConfig->isTestMode();
+        $config['payment']['testMode']                = $this->paynlConfig->isTestMode();
         $config['payment']['useAdditionalValidation'] = $this->paynlConfig->getUseAdditionalValidation();
         $config['payment']['iconsize']                = $this->paynlConfig->getIconSize();
 

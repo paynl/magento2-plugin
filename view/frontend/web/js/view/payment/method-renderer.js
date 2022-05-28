@@ -4,13 +4,16 @@ define(
         'uiComponent',
         'Magento_Checkout/js/model/payment/renderer-list'
     ],
-    function ($,
-              Component,
-              rendererList) {
+    function ($, Component, rendererList) {
         'use strict';
 
         var cseComponent     = 'Paynl_Payment/js/view/payment/method-renderer/cse';
         var defaultComponent = 'Paynl_Payment/js/view/payment/method-renderer/default';
+
+        var cse_enabled = false;
+        if (window.checkoutConfig.payment.hasOwnProperty('cse_enabled')) {
+            var cse_enabled = window.checkoutConfig.payment.cse_enabled == 1;
+        }
 
         var methods = [
             {type: 'paynl_payment_afterpay', component: defaultComponent},
@@ -61,7 +64,7 @@ define(
             {type: 'paynl_payment_telefonischbetalen', component: defaultComponent},
             {type: 'paynl_payment_tikkie', component: defaultComponent},
             {type: 'paynl_payment_trustly', component: defaultComponent},
-            {type: 'paynl_payment_visamastercard', component: cseComponent},
+            {type: 'paynl_payment_visamastercard', component: (cse_enabled ? cseComponent : defaultComponent)},
             {type: 'paynl_payment_vvvgiftcard', component: defaultComponent},
             {type: 'paynl_payment_webshopgiftcard', component: defaultComponent},
             {type: 'paynl_payment_wechatpay', component: defaultComponent},

@@ -15,11 +15,8 @@ class Css extends \Magento\Backend\Block\AbstractBlock
         if ($store->getConfig('payment/paynl/pay_style_checkout') == 1) {
             $page->addPageAsset('Paynl_Payment::css/paycheckout.css');
         }
-
-        $cseEnabled = true;
-        if ($cseEnabled === true) {
+        if ($store->getConfig('payment/paynl_payment_visamastercard/cse_enabled') == 1) {
             $page->addPageAsset('Paynl_Payment::css/paycse.css');
         }
-
     }
 }
