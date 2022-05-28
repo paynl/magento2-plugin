@@ -146,6 +146,8 @@ class Cse
                         $arrEncryptedTransactionResult['result'] = 0;
                         $arrEncryptedTransactionResult['entityId'] = 1;
                         $arrEncryptedTransactionResult['errorMessage'] = 'Helaas is het niet mogelijk om de betaling te voltooien. Het ingevoerde kaartnummer is onjuist. Probeer het nogmaals en controleer uw invoer zorgvuldig.';
+                    } elseif (strtolower($mode) == 'error3') {
+                        throw new Exception('Exception occured');
                     } else {
                         $arrEncryptedTransactionResult['result'] = 1;
                         $arrEncryptedTransactionResult['nextAction'] = 'paid';
@@ -163,7 +165,7 @@ class Cse
 
                 return $this->jsonHelper->jsonEncode($arrEncryptedTransactionResult);
             } else {
-                throw new Error('PAY.: Method is not compatible for CSE');
+                throw new Exception('PAY.: Method is not compatible for CSE');
             }
         } catch (Exception $e) {
             $this->_getCheckoutSession()->restoreQuote();
@@ -172,7 +174,7 @@ class Cse
 
             return $this->jsonHelper->jsonEncode(array(
                 'type' => 'error',
-                'message' => $e->getMessage(),
+                'errorMessage' => $e->getMessage(),
                 'trace' => ''
             ));
         }

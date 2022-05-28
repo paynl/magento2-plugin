@@ -121,6 +121,8 @@ define(
                 let redirectTimeout = this.getCseConfig('cse_finish_delay') * 1000;
 
                 /* cse_pay_debug */
+                self.payDebug('debug XX1');
+
                 self.payDebug('successPopup: ' + successPopup);
                 self.payDebug('paymentPopup: ' + paymentPopup);
                 self.payDebug('errorPopup: ' + errorPopup);
