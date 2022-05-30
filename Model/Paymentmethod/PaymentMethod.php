@@ -489,7 +489,11 @@ abstract class PaymentMethod extends AbstractMethod
                     $child = array_shift($children);
 
                     if (!empty($child) && $child instanceof \Magento\Sales\Model\Order\Item && method_exists($child, 'getProductId')) {
-                        $product['id'] = $child->getProductId();
+                        $productIdChild = $child->getProductId();
+                        if ($this->paynlConfig->useSkuId() && method_exists($child, 'getSku')) {
+                            $productIdChild = $child->getSku();
+                        }
+                        $product['id'] = $productIdChild;
                     }
                 }
 
