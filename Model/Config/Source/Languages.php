@@ -36,7 +36,9 @@ class Languages implements ArrayInterface
             'de' => __('German'),
             'it' => __('Italian'),
             'fr' => __('French'),
-            'es' => __('Spanish')
+            'es' => __('Spanish'),
+            'dk' => __('Danish'),
+            'pl' => __('Polish')
         ];
     }
 }
