@@ -220,48 +220,43 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
 
     private function uncancelOrder(Order $order)
     {
-        if ($order->isCanceled()) {
-            $state = Order::STATE_PENDING_PAYMENT;
-            $productStockQty = [];
-            foreach ($order->getAllVisibleItems() as $item) {
-                $productStockQty[$item->getProductId()] = $item->getQtyCanceled();
-                foreach ($item->getChildrenItems() as $child) {
-                    $productStockQty[$child->getProductId()] = $item->getQtyCanceled();
-                    $child->setQtyCanceled(0);
-                    $child->setTaxCanceled(0);
-                    $child->setDiscountTaxCompensationCanceled(0);
-                }
-                $item->setQtyCanceled(0);
-                $item->setTaxCanceled(0);
-                $item->setDiscountTaxCompensationCanceled(0);
-                $this->_eventManager->dispatch('sales_order_item_uncancel', ['item' => $item]);
+        $state = Order::STATE_PENDING_PAYMENT;
+        $productStockQty = [];
+        foreach ($order->getAllVisibleItems() as $item) {
+            $productStockQty[$item->getProductId()] = $item->getQtyCanceled();
+            foreach ($item->getChildrenItems() as $child) {
+                $productStockQty[$child->getProductId()] = $item->getQtyCanceled();
+                $child->setQtyCanceled(0);
+                $child->setTaxCanceled(0);
+                $child->setDiscountTaxCompensationCanceled(0);
             }
-            $this->_eventManager->dispatch(
-                'sales_order_uncancel_inventory',
-                [
-                    'order' => $order,
-                    'product_qty' => $productStockQty
-                ]
-            );
-            $order->setSubtotalCanceled(0);
-            $order->setBaseSubtotalCanceled(0);
-            $order->setTaxCanceled(0);
-            $order->setBaseTaxCanceled(0);
-            $order->setShippingCanceled(0);
-            $order->setBaseShippingCanceled(0);
-            $order->setDiscountCanceled(0);
-            $order->setBaseDiscountCanceled(0);
-            $order->setTotalCanceled(0);
-            $order->setBaseTotalCanceled(0);
-            $order->setState($state);
-            $order->setStatus($state);
-
-            $order->addStatusHistoryComment(__('PAY. Uncanceled order'), false);
-
-            $this->_eventManager->dispatch('order_uncancel_after', ['order' => $order]);
-        } else {
-            throw new LocalizedException(__('We cannot un-cancel this order.'));
+            $item->setQtyCanceled(0);
+            $item->setTaxCanceled(0);
+            $item->setDiscountTaxCompensationCanceled(0);
+            $this->_eventManager->dispatch('sales_order_item_uncancel', ['item' => $item]);
         }
+        $this->_eventManager->dispatch(
+            'sales_order_uncancel_inventory',
+            [
+                'order' => $order,
+                'product_qty' => $productStockQty
+            ]
+        );
+        $order->setSubtotalCanceled(0);
+        $order->setBaseSubtotalCanceled(0);
+        $order->setTaxCanceled(0);
+        $order->setBaseTaxCanceled(0);
+        $order->setShippingCanceled(0);
+        $order->setBaseShippingCanceled(0);
+        $order->setDiscountCanceled(0);
+        $order->setBaseDiscountCanceled(0);
+        $order->setTotalCanceled(0);
+        $order->setBaseTotalCanceled(0);
+        $order->setState($state);
+        $order->setStatus($state);
+        $order->addStatusHistoryComment(__('PAY. Uncanceled order'), false);
+
+        $this->_eventManager->dispatch('order_uncancel_after', ['order' => $order]);
 
         return $order;
     }
@@ -279,7 +274,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             $message = "AUTHORIZED";
         }
 
-        if ($order->isCanceled()) {
+        if ($order->isCanceled() || $order->getTotalCanceled() == $order->getGrandTotal()) {
             try {
                 $this->uncancelOrder($order);
             } catch (LocalizedException $e) {
@@ -300,8 +295,10 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             $transaction->getAmountPaid(),
         ];
 
-        if (!in_array($order->getGrandTotal(), $transactionPaid)) {
-            $this->logger->debug('Validation error: Paid amount does not match order amount. paidAmount: ' . implode(' / ', $transactionPaid) . ', orderAmount:' . $order->getGrandTotal());
+        $orderAmount = round($order->getGrandTotal(), 2);
+        if (!in_array($orderAmount, $transactionPaid)) {
+            payHelper::logCritical('Amount validation error.', array($transactionPaid, $orderAmount, $order->getGrandTotal()));
+            return $this->result->setContents('FALSE| Amount validation error. Amounts: ' . print_r(array($transactionPaid, $orderAmount, $order->getGrandTotal()), true));
         }
 
         $paidAmount = $order->getGrandTotal();

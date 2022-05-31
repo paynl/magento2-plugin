@@ -547,10 +547,12 @@ abstract class PaymentMethod extends AbstractMethod
         if (!empty($arrShippingAddress)) {
             $arrShippingAddress = $arrShippingAddress->toArray();
 
-            if ($this->useBillingAddressInstorePickup() && $order->getShippingMethod() === InStorePickup::DELIVERY_METHOD) {
-                $arrBillingAddress = $order->getBillingAddress();
-                if (!empty($arrBillingAddress)) {
-                    $arrShippingAddress = $arrBillingAddress->toArray();
+            if ($this->useBillingAddressInstorePickup() && class_exists('InStorePickup')) {
+                if ($order->getShippingMethod() === InStorePickup::DELIVERY_METHOD) {
+                    $arrBillingAddress = $order->getBillingAddress();
+                    if (!empty($arrBillingAddress)) {
+                        $arrShippingAddress = $arrBillingAddress->toArray();
+                    }
                 }
             }
 
@@ -709,8 +711,8 @@ abstract class PaymentMethod extends AbstractMethod
         }
 
         $ipAddress = $order->getRemoteIp();
-        # The ip address field in magento is too short, if the ip is invalid, get the ip myself
-        if (!filter_var($ipAddress, FILTER_VALIDATE_IP)) {
+        # The ip address field in Magento is too short, if the IP is invalid, get the IP myself
+        if (!filter_var($ipAddress, FILTER_VALIDATE_IP) || $ipAddress == '127.0.0.1') {
             $ipAddress = \Paynl\Helper::getIp();
         }
         $data['ipaddress'] = $ipAddress;
