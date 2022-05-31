@@ -367,7 +367,7 @@ abstract class PaymentMethod extends AbstractMethod
 
         $baseUrl = $order->getStore()->getBaseUrl();
 
-        $this->_logger->debug('startEncryptedTransaction. Baseurl: ' . $baseUrl);
+        payHelper::logDebug('StartEncryptedTransaction. Baseurl: ' . $baseUrl);
 
         if ($this->shouldHoldOrder()) {
             $order->hold();

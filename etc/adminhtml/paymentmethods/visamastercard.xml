@@ -177,7 +177,7 @@
             <field id="cse_modal_payment_complete_redirection_timeout" translate="label" type="text" sortOrder="250" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Finish delay</label>
                 <depends>
-                    <field id="cse_modal_payment_complete">1</field>
+                    <field id="cse_enabled">1</field>
                 </depends>
                 <config_path>payment/paynl_payment_visamastercard/cse_modal_payment_complete_redirection_timeout</config_path>
                 <comment><![CDATA[Please specify the amount of seconds to wait before redirecting the customer to the successpage.]]></comment>

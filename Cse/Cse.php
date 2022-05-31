@@ -128,7 +128,7 @@ class Cse
 
             # Only allow visamastercard class as this is the only one that supports this behavior
             if ($methodInstance instanceof Visamastercard) {
-                payHelper::logDebug('PAY.: Start new encrypted payment for order ' . $order->getId());
+                payHelper::logDebug('Start new encrypted payment for order ' . $order->getId());
 
                 $returnUrl = $this->storageManager->getStore()->getBaseUrl() . 'paynl/checkout/returnEncryptedTransaction';
                 $paymentCompleteUrl = $this->storageManager->getStore()->getBaseUrl() . 'paynl/checkout/finish';
@@ -160,16 +160,16 @@ class Cse
                     $arrEncryptedTransactionResult['entityId'] = $order->getEntityId();
                 }
             } else {
-                throw new Exception('PAY.: Method is not compatible for CSE');
+                throw new Exception('Paymentmethod is not compatible for CSE : ' . get_class($methodInstance));
             }
         } catch (Exception $e) {
             $this->_getCheckoutSession()->restoreQuote();
             $this->messageManager->addExceptionMessage($e, $e->getMessage());
-            payHelper::logCritical('PAY.:  Execute exception: ' . $e->getMessage());
+            payHelper::logCritical('Execute exception: ' . $e->getMessage());
             $arrEncryptedTransactionResult = array('type' => 'error', 'errorMessage' => $e->getMessage(), 'trace' => '');
         }
 
-        payHelper::logDebug('PAY.: Execute return: ' . print_r($arrEncryptedTransactionResult, true));
+        payHelper::logDebug('Execute return: ' . print_r($arrEncryptedTransactionResult, true));
         return $this->jsonHelper->jsonEncode($arrEncryptedTransactionResult);
     }
 

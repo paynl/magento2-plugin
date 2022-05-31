@@ -121,8 +121,6 @@ define(
                 let redirectTimeout = this.getCseConfig('cse_finish_delay') * 1000;
 
                 /* cse_pay_debug */
-                self.payDebug('debug XX1');
-
                 self.payDebug('successPopup: ' + successPopup);
                 self.payDebug('paymentPopup: ' + paymentPopup);
                 self.payDebug('errorPopup: ' + errorPopup);
@@ -231,7 +229,6 @@ define(
                         if (errorPopup == MODAL_POPUP_NATIVE) {
                             self.activeModal = errorModal;
                             self.paymentErrorModalContent(event.getSubject().render());
-                            //errorModal.setTitle('deTitel');
                             errorModal.showModal();
                         } else {
                             self.paymentInlineMessage(`<div class="message error"><div>${event.getSubject().render()}</div></div>`);
@@ -240,7 +237,6 @@ define(
                     }
 
                     /* we're still here.. we're assuming paymentmodal then */
-
                     self.activeModal = paymentModal;
 
                     if (eventSubject != null) {

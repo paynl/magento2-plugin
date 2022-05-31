@@ -4,7 +4,6 @@ namespace Paynl\Payment\Plugin\Webapi\RestResponse;
 
 use Magento\Framework\Webapi\Rest\Request;
 use Magento\Framework\Webapi\Rest\Response\Renderer\Json;
-use Psr\Log\LoggerInterface;
 
 class JsonPlugin
 {
@@ -13,18 +12,12 @@ class JsonPlugin
     private $request;
 
     /**
-     * @var LoggerInterface
-     */
-    private $_logger;
-
-    /**
      * JsonPlugin constructor.
      * @param Request $request
      */
-    public function __construct(Request $request, LoggerInterface $logger)
+    public function __construct(Request $request)
     {
         $this->request = $request;
-        $this->_logger = $logger;
     }
 
     /**
@@ -35,7 +28,6 @@ class JsonPlugin
      */
     public function aroundRender(Json $jsonRenderer, callable $proceed, $data)
     {
-        $jsonPaths[] = '/V1/paynl/process-encrypted-transaction'; //deze kan denk ik weg, vervangen door diehieronder (cse)
         $jsonPaths[] = '/V1/paynl/cse';
         $jsonPaths[] = '/V1/paynl/cse/status';
         $jsonPaths[] = '/V1/paynl/cse/authorization';
@@ -44,11 +36,8 @@ class JsonPlugin
         $curPath = $this->request->getPathInfo();
 
         if (in_array($this->request->getPathInfo(), $jsonPaths) && $this->isJson($data)) {
-            #$this->_logger->debug('PAY.: aroundRender (json)  : ' . $curPath);
             return $data;
         }
-
-        #       $this->_logger->debug('PAY.: aroundRender (no-json)  : ' . $curPath);
 
         return $proceed($data);
     }

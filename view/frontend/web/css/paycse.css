@@ -1,5 +1,4 @@
-form[data-pay-encrypt-form] [data-credit-card-cvc], form[data-pay-encrypt-form] [data-credit-card-type]
-{
+form[data-pay-encrypt-form] [data-credit-card-cvc], form[data-pay-encrypt-form] [data-credit-card-type] {
     display: block;
     height: inherit;
     background-size: cover;
@@ -32,14 +31,14 @@ form[data-pay-encrypt-form] .has-icon-container .icon-container {
 form[data-pay-encrypt-form] .has-icon-container .input-container {
     position: relative;
     margin: 0;
-    padding: 0; }
+    padding: 0;
+}
 
 form[data-pay-encrypt-form] .has-icon-container .input-container input {
     position: relative;
 }
 
-.modal-popup.pay-error-modal, .modal-popup.pay-payment-complete-modal, .modal-popup.pay-payment-modal
-{
+.modal-popup.pay-error-modal, .modal-popup.pay-payment-complete-modal, .modal-popup.pay-payment-modal {
     z-index: 901;
 }
 
@@ -51,129 +50,129 @@ form[data-pay-encrypt-form] .has-icon-container .input-container input {
     top: 42%;
     left: 50%;
     transform: translate(-50%, -50%);
-    margin-left:0;
+    margin-left: 0;
 }
 
 .checkout-index-index .modal-popup.pay-payment-modal .modal-content {
-    padding:0;
-    overflow-x:hidden;
-    overflow-y:auto;
+    padding: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .checkout-index-index .modal-popup.pay-payment-modal .modal-content iframe {
-    border:0;
+    border: 0;
 }
 
 .container-wrap {
-    display:flex;
+    display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
     justify-content: flex-start;
     align-items: stretch;
     align-content: stretch;
-    padding-bottom:.45em;
+    padding-bottom: .45em;
 }
 
 .form-element-container {
-    display:block;
+    display: block;
     flex-basis: 0;
     align-self: auto;
 }
 
 .container-cardholder {
-    flex-grow:1;
+    flex-grow: 1;
 }
 
 .container-creditcard {
-    flex-grow:3;
-    padding:.5em 1em 0 0;
+    flex-grow: 3;
+    padding: .5em 1em 0 0;
 }
 
 .container-cvc {
-    flex-grow:1;
-    padding:.5em 0 0 1em;
+    flex-grow: 1;
+    padding: .5em 0 0 1em;
 }
 
 .container-cvc input {
-    text-align:center;
+    text-align: center;
 }
 
 .container-exp-month {
-    flex-grow:1;
-    padding:.5em 1em .5em 0;
+    flex-grow: 1;
+    padding: .5em 1em .5em 0;
 }
 
 .container-exp-year {
-    flex-grow:1;
-    padding:.5em 0 .5em 1em;
+    flex-grow: 1;
+    padding: .5em 0 .5em 1em;
 }
-/*
-.checkout-payment-method .payment-method-cse .actions-toolbar .primary button {
-    float:none;
-    padding: 1em;
-    margin: 1em 1em 1em 0;
 
-    background-color: #052854;
-    color: #A2CC83;
-    border: 0;
-    border-radius: 15px;
-    text-transform: uppercase;
-    font-weight: 700;
-    width: 100%;
-}
-*/
 form[data-pay-encrypt-form] select option {
-    color:#000;
+    color: #000;
 }
-/*--*/
+
 .payment-method-cse input::placeholder,
 form[data-pay-encrypt-form] select:invalid,
 form[data-pay-encrypt-form] select option[value=""] {
-    color:#767676 !important;
-    opacity:1;
+    color: #767676 !important;
+    opacity: 1;
 }
 
 #checkout-payment-modal {
     text-align: center;
 }
-.payment-method-cse #card-holder{
+
+.payment-method-cse #card-holder {
     text-transform: uppercase;
 }
-.payment-method-cse.fieldStyle_borders [data-validation="invalid"]           { border: 1px solid red; }
-.payment-method-cse.fieldStyle_borders [data-validation="valid"]             { border: 1px solid green; }
-.payment-method-cse.fieldStyle_borders [data-validation="potentially-valid"] { border: 1px solid orange;}
 
-.payment-method-cse.fieldStyle_background [data-validation="invalid"]           { background-color:#da7979; border: none; }
-.payment-method-cse.fieldStyle_background [data-validation="valid"]             { background-color: #cfe7c2; border: none; }
-.payment-method-cse.fieldStyle_background [data-validation="potentially-valid"] { background-color: #f0c684; border: none; }
+.payment-method-cse.fieldStyle_borders [data-validation="invalid"] {
+    border: 1px solid red;
+}
+
+.payment-method-cse.fieldStyle_borders [data-validation="valid"] {
+    border: 1px solid green;
+}
+
+.payment-method-cse.fieldStyle_borders [data-validation="potentially-valid"] {
+    border: 1px solid orange;
+}
+
+.payment-method-cse.fieldStyle_background [data-validation="invalid"] {
+    background-color: #da7979;
+    border: none;
+}
+
+.payment-method-cse.fieldStyle_background [data-validation="valid"] {
+    background-color: #cfe7c2;
+    border: none;
+}
+
+.payment-method-cse.fieldStyle_background [data-validation="potentially-valid"] {
+    background-color: #f0c684;
+    border: none;
+}
 
 .checkout-payment-method .payment-method-cse .payment-method-content {
     width: 420px;
 }
 
 .checkout-payment-method .payment-method-cse label {
-    /*display:block;*/
-    margin-bottom:.3em;
+    margin-bottom: .3em;
 }
-/*
-.checkout-payment-method .payment-method-cse .actions-toolbar .primary {
-    display:block;
-    float:none;
-    margin:0;
-}*/
 
 .payment-method-cse fieldset {
-    position:relative;
-    border:0;
-    padding:0;
-    margin:0;
+    position: relative;
+    border: 0;
+    padding: 0;
+    margin: 0;
 }
 
 .payment-method fieldset legend {
-    position:relative;
-    float:left;
-    display:block;
-    width:100%;
+    position: relative;
+    float: left;
+    display: block;
+    width: 100%;
     color: #052854;
     font-size: 1.5em;
     font-weight: 400;
@@ -198,8 +197,7 @@ div#cse-status A {
     text-decoration: none;
 }
 
-.paynl.payment-method-cse #pay-cse-custom-modal
-{
+.paynl.payment-method-cse #pay-cse-custom-modal {
     display: none;
     position: fixed;
     top: 50%;
@@ -215,14 +213,13 @@ div#cse-status A {
     text-align: center;
 }
 
-#challenge-iframe
-{
+#challenge-iframe {
     height: 500px;
     border: 0;
     overflow-y: hidden !important;
 }
 
-button.action.primary.loaderImage  {
+button.action.primary.loaderImage {
     background-image: url(../images/ajax-loader-trans.gif) !important;
     background-repeat: no-repeat;
     background-position: 8px 8px;
