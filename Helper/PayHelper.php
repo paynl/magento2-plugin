@@ -2,6 +2,7 @@
 
 namespace Paynl\Payment\Helper;
 
+use Exception;
 use Psr\Log\LoggerInterface;
 use \Paynl\Payment\Model\Config\Source\LogOptions;
 
@@ -125,13 +126,13 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
      * @param $name
      * @param $errorCode
      * @param null $desc
-     * @throws \Exception
+     * @throws Exception
      */
     public function checkEmpty($field, $name, $errorCode, $desc = null)
     {
         if (empty($field)) {
             $desc = empty($desc) ? $name . ' is empty' : $desc;
-            throw new \Exception('Finish: ' . $desc, $errorCode);
+            throw new Exception('Finish: ' . $desc, $errorCode);
         }
     }
 }
