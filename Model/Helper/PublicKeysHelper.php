@@ -1,4 +1,5 @@
 <?php
+
 namespace Paynl\Payment\Model\Helper;
 
 use Magento\Framework\App\CacheInterface;
@@ -36,11 +37,7 @@ class PublicKeysHelper
      * @param CacheInterface $cache
      * @param Data $jsonHelper
      */
-    public function __construct(
-        Config $config,
-        CacheInterface $cache,
-        Data $jsonHelper
-    )
+    public function __construct(Config $config, CacheInterface $cache, Data $jsonHelper)
     {
         $this->config = $config;
         $this->cache = $cache;
@@ -48,48 +45,22 @@ class PublicKeysHelper
     }
 
     /**
-     * @return mixed|string
+     * @return array|mixed
      * @throws Api
-     * @throws Error
      * @throws ApiToken
+     * @throws Error
      */
     public function getKeys()
     {
         $keysJson = $this->cache->load(self::CACHE_KEY);
 
-        if (!empty($keysJson))
-        {
+        if (!empty($keysJson)) {
             $keysJson = $this->jsonHelper->jsonDecode($keysJson);
-        }
-        else
-        {
-            //$keysJson = Creditcard::publicKeys();
-            /*    ssed to Braintree\Gateway). [] []
-            [2021-11-23 15:37:51] main.CRITICAL:
-
-                Warning: count(): Parameter must be an array or an object that implements Countable
-
-                in /src/public/vendor/paynl/magento2-plugin/Model/Helper/PublicKeysHelper.php on line 68
-
-                {"exception":"[object] (Exception(code: 0): Warning: count(): Parameter must be an array or an object that implements Countable in /s
-                rc/public/vendor/paynl/magento2-plugin/Model/Helper/PublicKeysHelper.php on line 68 at /src/public/vendor/magento/framework/App/ErrorHandler.php:61)"} []
-    */
-
-
+        } else {
             $newKeys = Payment::paymentEncryptionKeys()->getKeys();
-
-            #        $this->logger->critical(print_r($result, true), []) ;
-
-            if (!empty($newKeys) && count($newKeys) > 0)
-            {
-                $this->cache->save(
-                    $this->jsonHelper->jsonEncode($newKeys),
-                    self::CACHE_KEY,
-                    ['paynl', 'paynl_encryption'],
-                    self::CACHE_TTL
-                );
+            if (!empty($newKeys) && count($newKeys) > 0) {
+                $this->cache->save($this->jsonHelper->jsonEncode($newKeys), self::CACHE_KEY, ['paynl', 'paynl_encryption'], self::CACHE_TTL);
             }
-
             $keysJson = $newKeys;
         }
 
