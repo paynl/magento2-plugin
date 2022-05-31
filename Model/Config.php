@@ -11,7 +11,7 @@ use Magento\Store\Model\Store;
  */
 class Config
 {
-    const FINISH_PAYLINK = 'paynl/checkout/paylink';
+    const FINISH_PAY = 'paynl/order/finish';
     const FINISH_STANDARD = 'checkout/onepage/success';
     const ORDERSTATUS_PAID = 100;
     const ORDERSTATUS_DENIED = -63;
