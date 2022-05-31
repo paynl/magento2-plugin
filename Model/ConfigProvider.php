@@ -91,6 +91,7 @@ class ConfigProvider implements ConfigProviderInterface
     protected $paymentConfig;
     protected $resolver;
 
+    private $_store = null;
 
     /**
      * ConfigProvider constructor.
@@ -172,9 +173,11 @@ class ConfigProvider implements ConfigProviderInterface
         return $config;
     }
 
-
-    private $_store = null;
-
+    /**
+     * @param $item
+     * @param $method
+     * @return mixed
+     */
     protected function getConfigItem($item, $method)
     {
         if (empty($this->_store)) {
@@ -185,6 +188,10 @@ class ConfigProvider implements ConfigProviderInterface
         return $this->_store->getConfig('payment/paynl_payment_' . $method . '/' . $item);
     }
 
+    /**
+     * @param $code
+     * @return mixed
+     */
     protected function getPublicEncryptionKeys($code)
     {
         return $this->methods[$code]->getPublicEncryptionKeys();
