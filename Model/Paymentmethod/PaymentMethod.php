@@ -204,7 +204,7 @@ abstract class PaymentMethod extends AbstractMethod
         $transferData = array();
 
         //Get Google Analytics _ga
-        if($this->paynlConfig->sendEcommerceAnalytics()){
+        if ($this->paynlConfig->sendEcommerceAnalytics()) {
             $_gaCookie = $this->cookieManager->getCookie('_ga');
             if (!empty($_gaCookie)) {
                 $_gaSplit = explode('.', $_gaCookie);
