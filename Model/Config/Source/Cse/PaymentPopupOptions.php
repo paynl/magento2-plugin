@@ -2,39 +2,16 @@
 
 namespace Paynl\Payment\Model\Config\Source\Cse;
 
-use \Magento\Framework\Option\ArrayInterface;
+use Paynl\Payment\Model\Config\Source\PayOption;
 
-class PaymentPopupOptions implements ArrayInterface
+class PaymentPopupOptions extends PayOption
 {
-
-  /**
-   * Options getter
-   *
-   * @return array
-   */
-    public function toOptionArray()
+    public function __construct($options = array())
     {
-        $arrOptions = $this->toArray();
-
-        $arrResult = [];
-        foreach ($arrOptions as $value => $label) {
-            $arrResult[] = ['value' => $value, 'label' => $label];
-        }
-        return $arrResult;
-    }
-
-  /**
-   * Get options in "key-value" format
-   *
-   * @return array
-   */
-    public function toArray()
-    {
-        return [
+        $options = [
             'popup_native' => __('Default Magento Popup'),
             'popup_custom' => __('Custom Popup (No close button)'),
         ];
+        parent::__construct($options);
     }
-
- 
 }

@@ -2,38 +2,17 @@
 
 namespace Paynl\Payment\Model\Config\Source\Cse;
 
-use \Magento\Framework\Option\ArrayInterface;
+use Paynl\Payment\Model\Config\Source\PayOption;
 
-class Colors implements ArrayInterface
+class Colors extends PayOption
 {
-
-  /**
-   * Options getter
-   *
-   * @return array
-   */
-    public function toOptionArray()
+    public function __construct($options = array())
     {
-        $arrOptions = $this->toArray();
-
-        $arrResult = [];
-        foreach ($arrOptions as $value => $label) {
-            $arrResult[] = ['value' => $value, 'label' => $label];
-        }
-        return $arrResult;
-    }
-
-  /**
-   * Get options in "key-value" format
-   *
-   * @return array
-   */
-    public function toArray()
-    {
-        return [
-        'borders' => __('Colored Borders'),
-        'background' => __('Background'),
-        'none' => __('No Colors'),
+        $options = [
+            'borders' => __('Coloured Borders'),
+            'background' => __('Background'),
+            'none' => __('No Colours'),
         ];
+        parent::__construct($options);
     }
 }
