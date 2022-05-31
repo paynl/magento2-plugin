@@ -331,11 +331,12 @@ abstract class PaymentMethod extends AbstractMethod
             $transaction = $this->doStartTransaction($order);
             payHelper::logDebug('Transaction: ' . $transaction->getTransactionId());
 
-        } catch(\Exception $e) {
-            payHelper::logDebug('Transactie start mislukt: ' . $e->getMessage().' // '. $e->getCode());
-//todo
-            if (1 == 1) {
-                $this->messageManager->addNoticeMessage(__('Unfortunately the order amount is not suitable for this payment method.'));
+        } catch (\Exception $e) {
+            $strMessage = $e->getMessage();
+            payHelper::logDebug('Transactie start mislukt: ' . $strMessage . ' | ' . $e->getCode());
+
+            if (strpos(strtolower($strMessage), 'minimum amount') !== false) {
+                $this->messageManager->addNoticeMessage(__('Unfortunately the order amount does not fit the requirements for this payment method.'));
             } else {
                 $this->messageManager->addNoticeMessage(__('Unfortunately something went wrong'));
             }
