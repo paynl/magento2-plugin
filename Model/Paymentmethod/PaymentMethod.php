@@ -405,10 +405,12 @@ abstract class PaymentMethod extends AbstractMethod
         if (!empty($arrShippingAddress)) {
             $arrShippingAddress = $arrShippingAddress->toArray();
 
-            if ($this->useBillingAddressInstorePickup() && $order->getShippingMethod() === InStorePickup::DELIVERY_METHOD) {
-                $arrBillingAddress = $order->getBillingAddress();
-                if (!empty($arrBillingAddress)) {
-                    $arrShippingAddress = $arrBillingAddress->toArray();
+            if ($this->useBillingAddressInstorePickup() && class_exists('InStorePickup')) {
+                if ($order->getShippingMethod() === InStorePickup::DELIVERY_METHOD) {
+                    $arrBillingAddress = $order->getBillingAddress();
+                    if (!empty($arrBillingAddress)) {
+                        $arrShippingAddress = $arrBillingAddress->toArray();
+                    }
                 }
             }
 
