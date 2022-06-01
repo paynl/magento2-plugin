@@ -212,7 +212,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         }
 
         $order->cancel();
-        $order->addStatusHistoryComment(__('PAY. canceled the order'));
+        $order->addStatusHistoryComment(__('PAY. - Canceled the order'));
         $this->orderRepository->save($order);
 
         return $this->result->setContents("TRUE| CANCELED");
@@ -254,7 +254,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         $order->setBaseTotalCanceled(0);
         $order->setState($state);
         $order->setStatus($state);
-        $order->addStatusHistoryComment(__('PAY. Uncanceled order'), false);
+        $order->addStatusHistoryComment(__('PAY. - Uncanceled order'), false);
 
         $this->_eventManager->dispatch('order_uncancel_after', ['order' => $order]);
 
@@ -370,7 +370,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         $invoice = $payment->getCreatedInvoice();
         if ($invoice && !$invoice->getEmailSent()) {
             $this->invoiceSender->send($invoice);
-            $order->addStatusHistoryComment(__('You notified customer about invoice #%1.', $invoice->getIncrementId()))
+            $order->addStatusHistoryComment(__('PAY. - Customer notified about invoice #%1.', $invoice->getIncrementId()))
                 ->setIsCustomerNotified(true)
                 ->save();
         }
@@ -430,7 +430,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
                 );
             $transactionBuilder->save();
 
-            $order->addStatusHistoryComment(__('PAY.: Partial payment received: '.$subProfile.' - Amount ' . $currency . ' ' . $amount . ' Method: ' . $method));
+            $order->addStatusHistoryComment(__('PAY. - Partial payment received: '.$subProfile.' - Amount ' . $currency . ' ' . $amount . ' Method: ' . $method));
             $order->setTotalPaid($totalpaid / 100);
 
             $this->orderRepository->save($order);
