@@ -11152,7 +11152,7 @@ define(['exports'], (function (exports) { 'use strict';
                         return response;
                     })
                     .then((response) => {
-                        if (response instanceof ActionableResponse)
+                        if (response instanceof ActionableResponse) {
                             encryptedForm.getEventDispatcher().dispatch(new ActionableResponseEvent(response, {
                                 'encryptedForm': this,
                                 'poller': this.poller,
