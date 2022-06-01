@@ -328,7 +328,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         # Notify customer
         if ($order && !$order->getEmailSent()) {
             $this->orderSender->send($order);
-            $order->addStatusHistoryComment(__('New order email sent'))->setIsCustomerNotified(true)->save();
+            $order->addStatusHistoryComment(__('PAY. - New order email sent'))->setIsCustomerNotified(true)->save();
         }
 
         $newStatus = ($transaction->isAuthorized()) ? $this->config->getAuthorizedStatus($paymentMethod) : $this->config->getPaidStatus($paymentMethod);
@@ -350,7 +350,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
                 $order->setTotalPaid($order->getGrandTotal());
                 $order->setBaseTotalPaid($order->getBaseGrandTotal());
                 $order->setStatus(!empty($newStatus) ? $newStatus : Order::STATE_PROCESSING);
-                $order->addStatusHistoryComment(__('B2B Setting: Skipped creating invoice'));
+                $order->addStatusHistoryComment(__('PAY. - B2B Setting: Skipped creating invoice'));
                 $this->orderRepository->save($order);
                 return $this->result->setContents("TRUE| " . $message . " (B2B: No invoice created)");
             }
