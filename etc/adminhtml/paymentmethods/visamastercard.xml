@@ -131,9 +131,8 @@
             <config_path>payment/paynl_payment_visamastercard/showforgroup</config_path>
             <comment><![CDATA[Show payment method only to specific customer groups.]]></comment>
         </field>
-
         <group id="csegroup" translate="label" sortOrder="200" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Client Side Encryption</label>
+            <label>Checkout Integration</label>
             <field id="cse_enabled"                 translate="label" type="select" sortOrder="210" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Enable Checkout Integration</label>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -141,29 +140,26 @@
                     <field id="active">1</field>
                 </depends>
                 <config_path>payment/paynl_payment_visamastercard/cse_enabled</config_path>
-                <comment><![CDATA[Direct Credit Crd integration in your checkout. Data will be encrypted on the clientside before being sent to the server.]]></comment>
+                <comment><![CDATA[Enable Credit Card Integration in your checkout. Data will be encrypted on the clientside before being sent to the secure server.]]></comment>
             </field>
-
-         <field id="cse_success_popup"  translate="label" type="select" sortOrder="220" showInDefault="1" showInWebsite="1" showInStore="1">
-             <label>Success Popup</label>
-             <source_model>Paynl\Payment\Model\Config\Source\Cse\SuccessPopupOptions</source_model>
-             <depends>
-                 <field id="cse_enabled">1</field>
-             </depends>
-             <config_path>payment/paynl_payment_visamastercard/cse_success_popup</config_path>
-             <comment><![CDATA[When enabled the user will be presented with a payment complete modal, after which we will redirect after set amount of milliseconds.]]></comment>
-         </field>
-
-         <field id="cse_error_popup"   translate="label" type="select" sortOrder="230" showInDefault="1" showInWebsite="1" showInStore="1">
-             <label>Error Popup</label>
-             <source_model>Paynl\Payment\Model\Config\Source\Cse\ErrorPopupOptions</source_model>
-             <depends>
-                 <field id="cse_enabled">1</field>
-             </depends>
-             <config_path>payment/paynl_payment_visamastercard/cse_error_popup</config_path>
-             <comment><![CDATA[When the modal is enabled the user will be informed a payment failed and has to close the window themselves, otherwise an error will be presented below the credit card input fields.]]></comment>
-         </field>
-
+            <field id="cse_success_popup" translate="label" type="select" sortOrder="220" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Success Popup</label>
+                <source_model>Paynl\Payment\Model\Config\Source\Cse\SuccessPopupOptions</source_model>
+                <depends>
+                    <field id="cse_enabled">1</field>
+                </depends>
+                <config_path>payment/paynl_payment_visamastercard/cse_success_popup</config_path>
+                <comment><![CDATA[Select how the customer should be notified when the payment was successfull.]]></comment>
+            </field>
+            <field id="cse_error_popup" translate="label" type="select" sortOrder="230" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Error Popup</label>
+                <source_model>Paynl\Payment\Model\Config\Source\Cse\ErrorPopupOptions</source_model>
+                <depends>
+                    <field id="cse_enabled">1</field>
+                </depends>
+                <config_path>payment/paynl_payment_visamastercard/cse_error_popup</config_path>
+                <comment><![CDATA[Select how the customer should be notified when an error occured.]]></comment>
+            </field>
             <field id="cse_payment_popup" translate="label" type="select" sortOrder="240" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Payment Popup</label>
                 <source_model>Paynl\Payment\Model\Config\Source\Cse\PaymentPopupOptions</source_model>
@@ -171,19 +167,17 @@
                     <field id="cse_enabled">1</field>
                 </depends>
                 <config_path>payment/paynl_payment_visamastercard/cse_payment_popup</config_path>
-                <comment><![CDATA[Enable this setting to set an order to `Hold` when a payment has yet to be verified by you or PAY. Your customer will experience no differences.]]></comment>
+                <comment><![CDATA[Select by which popup-type the customer should handle his 3DS confirmation (when applies).]]></comment>
             </field>
-
             <field id="cse_modal_payment_complete_redirection_timeout" translate="label" type="text" sortOrder="250" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Finish delay</label>
                 <depends>
                     <field id="cse_enabled">1</field>
                 </depends>
                 <config_path>payment/paynl_payment_visamastercard/cse_modal_payment_complete_redirection_timeout</config_path>
-                <comment><![CDATA[Please specify the amount of seconds to wait before redirecting the customer to the successpage.]]></comment>
+                <comment><![CDATA[Please specify the amount of seconds to wait before redirecting the customer to the success page.]]></comment>
                 <validate>validate-number validate-zero-or-greater</validate>
             </field>
-
             <field id="cse_hold_verify_payments" translate="label" type="select" sortOrder="260" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Hold Order on Verify</label>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -191,9 +185,9 @@
                     <field id="cse_enabled">1</field>
                 </depends>
                 <config_path>payment/paynl_payment_visamastercard/cse_hold_verify_payments</config_path>
-                <comment><![CDATA[Enable this setting to set an order to `Hold` when a payment has yet to be verified by you or PAY. Your customer will experience no differences.]]></comment>
+                <comment>
+                    <![CDATA[Enable this setting to set an order to `Hold` when a payment has yet to be verified by you or PAY. Your customer will experience no differences when enabled.]]></comment>
             </field>
-
             <field id="cse_colored_fields" translate="label" type="select" sortOrder="270" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Field Color Mode</label>
                 <source_model>Paynl\Payment\Model\Config\Source\Cse\Colors</source_model>
@@ -201,9 +195,8 @@
                     <field id="cse_enabled">1</field>
                 </depends>
                 <config_path>payment/paynl_payment_visamastercard/cse_colored_fields</config_path>
-                <comment><![CDATA[Select which color your mode you prefer.]]></comment>
+                <comment><![CDATA[Select which colour-mode you prefer for the checkout input fields.]]></comment>
             </field>
-
             <field id="cse_pay_debug" translate="label" type="select" sortOrder="250" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Debug Mode</label>
                 <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -213,9 +206,7 @@
                 <config_path>payment/paynl_payment_visamastercard/cse_pay_debug</config_path>
                 <comment><![CDATA[Enable this setting to output debug information in your browserconsole.]]></comment>
             </field>
-
         </group>
-
         <group id="advanced" translate="label" sortOrder="300" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Advanced</label>
             <field id="payment_option_id" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
