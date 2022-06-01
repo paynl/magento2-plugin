@@ -89,6 +89,7 @@ class ConfigProvider implements ConfigProviderInterface
      * @var \Magento\Payment\Model\Config|Magento\Payment\Model\Config
      */
     protected $paymentConfig;
+
     protected $resolver;
 
     private $_store = null;
@@ -128,7 +129,7 @@ class ConfigProvider implements ConfigProviderInterface
 
         $locale = $this->resolver->getLocale();
         $localeParts = explode('_', $locale);
-        $language = mb_strtoupper($localeParts[0]);
+        $language = isset($localeParts[0]) ? mb_strtoupper($localeParts[0]) : 'NL';
 
         foreach ($this->methodCodes as $code) {
             if ($this->methods[$code]->isAvailable()) {
