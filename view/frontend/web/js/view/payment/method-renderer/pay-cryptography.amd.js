@@ -988,10 +988,7 @@ define(['exports'], (function (exports) { 'use strict';
     }
 
     class ActionableResponseListener extends EventListener {
-        static onActionableResponse(event)
-        {
-            console.log('onActionableResponse evebt');
-
+        static onActionableResponse(event) {
             let response = event.getSubject();
             let nextAction = response.getNextAction();
             let config = event.getParameter('config');
@@ -1007,18 +1004,13 @@ define(['exports'], (function (exports) { 'use strict';
                     'paymentCompleteUrl': config.payment_complete_url
                 });
 
-                console.log('mission.. is a failure');
                 EventDispatcher.getInstance().dispatch(
                     paymentFailedEvent,
                     Events.onPaymentFailedEvent
                 );
             }
 
-            console.log('nextAction: ' + nextAction);
-
-            if ('challenged' === nextAction || 'tdsMethod' === nextAction)
-            {
-                console.log('start poll ');
+            if ('challenged' === nextAction || 'tdsMethod' === nextAction) {
                 poller.poll(config.status_url.replace('%transaction_id%', response.getThreeDSTransactionId()), (url) => {
                     fetch(url, {
                         'method': 'GET',
@@ -1043,7 +1035,6 @@ define(['exports'], (function (exports) { 'use strict';
 
                         EventDispatcher.getInstance().dispatch(pollEvent, Events.onPollingResponseEvent);
                     }).catch((exception) => {
-                        console.log('catch exit()');
                         poller.clear();
 
                         EventDispatcher.getInstance().dispatch(
@@ -2969,8 +2960,6 @@ define(['exports'], (function (exports) { 'use strict';
          */
         static formElementsDisable(state)
         {
-            //console.log('HIER - formElementsDisable');
-
             let elements = [
                 state.getElementFromReference(Events$1.creditCardHolder),
                 state.getElementFromReference(Events$1.creditCardNumber),
@@ -2980,23 +2969,14 @@ define(['exports'], (function (exports) { 'use strict';
                 state.getElementFromReference(Events$1.creditCardExpirationYear),
             ];
 
-            if (state.isFormSubmitted())
-            {
-//                console.log('HIER - disabling');
-            } else {
-                //console.log('HIER - enabling');
-            }
-
-            for (const key in Object.keys(elements))
-            {
+            for (const key in Object.keys(elements)) {
                 let element = elements[key];
 
                 if (!element) {
                     continue;
                 }
 
-                if (state.isFormSubmitted())
-                {
+                if (state.isFormSubmitted()) {
                     if (!(element.hasAttribute('disabled'))) {
                         element.setAttribute('disabled', 'disabled');
                     }
@@ -3004,8 +2984,7 @@ define(['exports'], (function (exports) { 'use strict';
                     if (element.hasAttribute('required')) {
                         element.removeAttribute('required');
                     }
-                } else
-                {
+                } else {
                     if (element.hasAttribute('disabled')) {
                         element.removeAttribute('disabled');
                     }
@@ -9388,7 +9367,6 @@ define(['exports'], (function (exports) { 'use strict';
          */
         static onPaymentAuthenticateEvent(event)
         {
-            console.log('onPaymentAuthenticateEvent');
             EventDispatcher.getInstance().dispatch(new StateChangeEvent(event, {
                 'state': {isAuthenticatingTds: true, loading:true},
             }), Events.onStateChangeEvent);
@@ -9408,7 +9386,6 @@ define(['exports'], (function (exports) { 'use strict';
 
             // stop poller, cause, why poll now ?
             poller.clear();
-            console.log('poller stop');
 
             fetch(config.authentication_url, {
                 'method': 'POST',
@@ -9450,8 +9427,6 @@ define(['exports'], (function (exports) { 'use strict';
                 }
             }).catch((exception) =>
             {
-                console.log(exception);
-
                 poller.clear();
             });
 
@@ -9466,9 +9441,6 @@ define(['exports'], (function (exports) { 'use strict';
 
         static onPaymentAuthorizeEvent(event)
         {
-
-            console.log('onPaymentAuthorizeEvent');
-
             let state = State.getInstance();
             let pollingEvent = event.getParameter('pollingEvent');
 
@@ -9535,9 +9507,6 @@ define(['exports'], (function (exports) { 'use strict';
          * @param {PaymentCanceledEvent} event
          */
         static onPaymentCanceledEvent(event) {
-
-            console.log('onPaymentCanceledEvent fabriq ');
-
             EventDispatcher.getInstance().dispatch(new StateChangeEvent(event.getSubject(), {
                 'state': {loading: false, formSubmitted: false},
             }), Events.onStateChangeEvent);
@@ -9753,13 +9722,8 @@ define(['exports'], (function (exports) { 'use strict';
                 let state = State.getInstance();
                 let currentState = state.getCurrentState();
 
-                console.log('kees code:  ' + statusCode);
-
                 if (currentState.isPaid) {
-                    console.log('TIS BEtAAAALD');
                     return;
-                } else {
-                    console.log('TIS niet betaald');
                 }
 
                 // In case of TDS, we need to catch this separately.
@@ -9768,7 +9732,6 @@ define(['exports'], (function (exports) { 'use strict';
                     && false === currentState.isAuthenticatingTds
                 )
                 {
-                    console.log('dispagin onPaymentAuthenticateEvent');
                     EventDispatcher.getInstance().dispatch(event, Events.onPaymentAuthenticateEvent);
                 }
 
@@ -9789,24 +9752,14 @@ define(['exports'], (function (exports) { 'use strict';
                         EventDispatcher.getInstance().dispatch(new PaymentCanceledEvent(pollingResponse), Events.onPaymentCanceledEvent);
                         break;
                     case null:
-                        console.log('val is null');
-
                         EventDispatcher.getInstance().dispatch(new PaymentCanceledEvent(pollingResponse), Events.onPaymentCanceledEvent);
-
                         this.poller.clear();
                         break;
                     default:
-                        console.log('Default cases. statusCode is: ' + statusCode);
                         break;
                 }
-
             } catch (exception) {
-
-                console.log(exception);
-                console.log('foute status code');
-                //EventDispatcher.getInstance().dispatch(new PaymentCanceledEvent(pollingResponse), Events.onPaymentCanceledEvent);
                 this.poller.clear();
-
                 throw exception;
             }
         }
@@ -11200,10 +11153,6 @@ define(['exports'], (function (exports) { 'use strict';
                     })
                     .then((response) => {
                         if (response instanceof ActionableResponse)
-                        {
-                            console.log('actie repose');
-                            console.log(response);
-
                             encryptedForm.getEventDispatcher().dispatch(new ActionableResponseEvent(response, {
                                 'encryptedForm': this,
                                 'poller': this.poller,
