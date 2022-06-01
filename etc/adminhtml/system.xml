@@ -5,44 +5,35 @@
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
         <section id="payment">
-            <group id="paynl" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1"
-                   showInStore="1">
+            <group id="paynl" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>PAY. Settings</label>
-                <field id="version" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1"
-                       showInStore="1">
+                <field id="version" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Version</label>
                     <frontend_model>Paynl\Payment\Block\Adminhtml\Render\Version</frontend_model>
                 </field>
-                <field id="testmode" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1"
-                       showInStore="1">
-                    <label>Testmode</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                </field>
-                <field id="tokencode" translate="label, comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1"
-                       showInStore="1">
+                <field id="tokencode" translate="label, comment" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Tokencode</label>
                     <comment><![CDATA[Get your AT-code <a target='_blank' href='https://admin.pay.nl/company/tokens'>here</a>. Not registered at PAY? Sign up <a target='_blank' href='https://www.pay.nl/en?register'>here</a>!]]></comment>
                 </field>
-                <field id="apitoken" translate="label, comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="1"
-                       showInStore="1">
+                <field id="apitoken" translate="label, comment" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>API-token</label>
                     <comment><![CDATA[Your API-token, you can find your tokens <a target='_blank' href='https://admin.pay.nl/company/tokens'>here</a>]]></comment>
                 </field>
-                <field id="serviceid" translate="label, comment" type="text" sortOrder="51" showInDefault="1" showInWebsite="1"
-                       showInStore="1">
-                    <label>ServiceId</label>
+                <field id="serviceid" translate="label, comment" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Service-ID</label>
                     <comment><![CDATA[The SL-code of your service, you can find your services <a target='_blank' href='https://admin.pay.nl/programs/programs'>here</a>]]></comment>
                 </field>
-                <field id="language" translate="label" type="select" sortOrder="52" showInDefault="1" showInStore="1"
-                       showInWebsite="1">
+                <field id="testmode" translate="label" type="select" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Testmode</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="language" translate="label" type="select" sortOrder="52" showInDefault="1" showInStore="1" showInWebsite="1">
                     <label>Language payment screen</label>
                     <source_model>Paynl\Payment\Model\Config\Source\Languages</source_model>
                 </field>
-                <field id="never_cancel" translate="label,comment" type="select" sortOrder="60" showInDefault="1"
-                       showInWebsite="1" showInStore="1">
-                    <label>Never cancel order</label>
-                    <comment><![CDATA[This setting will disable cancelling the order when the payment is canceled.
-                    This can be used if uncancelling the order in case of a second chance payment produces errors. WARNING! Orders will never be cancelled automaticly]]></comment>
+                <field id="never_cancel" translate="label,comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Prevent Canceling</label>
+                    <comment><![CDATA[Set to yes, when you don't want an order to be canceled when a payment is being canceled]]></comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="always_base_currency" translate="label,comment" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -55,8 +46,7 @@
                     <comment><![CDATA[Set this to yes to use base amount as authorize amount instead of currencyamount]]></comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="skip_fraud_detection" translate="label,comment" type="select" sortOrder="80" showInDefault="1"
-                       showInWebsite="1" showInStore="1">
+                <field id="skip_fraud_detection" translate="label,comment" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Skip fraud detection</label>
                     <comment><![CDATA[Sometimes magento incorrectly marks an order as fraudulent. this happens more often when using different currencies. Set this to yes to skip fraud detection.]]></comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -66,8 +56,7 @@
                     <comment><![CDATA[Select whether you want to use classic icons, or the newest up-to-date icons.]]></comment>
                     <source_model>Paynl\Payment\Model\Config\Source\ImageStyle</source_model>
                 </field>
-                <field id="iconurl" translate="label,comment" type="text" sortOrder="86" showInDefault="1"
-                       showInWebsite="1" showInStore="1">
+                <field id="iconurl" translate="label,comment" type="text" sortOrder="86" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Icon URL</label>
                     <depends>
                         <field id="image_style">classic</field>

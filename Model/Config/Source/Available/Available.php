@@ -86,7 +86,7 @@ abstract class Available implements ArrayInterface
         }
         $configured = $this->_config->configureSDK();
         if (!$configured) {
-            return [0 => __('Enter your API-token and ServiceId first')];
+            return [0 => __('Enter your API-Token and Service-ID first')];
         }
         try {
             if ($this->_isAvailable()) {

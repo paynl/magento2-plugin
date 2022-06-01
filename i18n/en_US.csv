@@ -8,7 +8,7 @@
 "Order has been made and the payment is pending.", "Order has been made and the payment is pending."
 "Payment canceled","Payment canceled"
 "Something went wrong, please try again later","Something went wrong, please try again later"
-"Enter your API-token and ServiceId first","Enter your API-token and ServiceId first"
+"Enter your API-Token and Service-ID first","Enter your API-Token and Service-ID first"
 "No","No"
 "Yes","Yes"
 "Place Order","Place Order"
@@ -51,11 +51,9 @@
 "Set order on-hold","Set order on-hold"
 "ServiceId","ServiceId"
 "Language payment screen","Language payment screen"
-"Never cancel order","Never cancel order"
+"Prevent Canceling","Prevent Canceling"
 "Paymentmethods","Paymentmethods"
-"This setting will disable cancelling the order when the payment is canceled.
-                    This can be used if uncancelling the order in case of a second chance payment produces errors. WARNING! Orders will never be cancelled automatically","This setting will disable cancelling the order when the payment is canceled.
-                    This can be used if uncancelling the order in case of a second chance payment produces errors. WARNING! Orders will never be cancelled automatically"
+"Set to yes, when you don't want an order to be canceled when a payment is being canceled","Set to yes, when you don't want an order to be canceled when a payment is being canceled"
 "Always use base currency","Always use base currency"
 "Set this to yes if you always want to process payments in the base currency of this store. Magento acts strange when trying to register a payment in another currency than the base currency. The base currency MUST be EUR","Set this to yes if you always want to process payments in the base currency of this store. Magento acts strange when trying to register a payment in another currency than the base currency. The base currency MUST be EUR"
 "Skip fraud detection","Skip fraud detection"
