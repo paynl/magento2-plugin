@@ -203,7 +203,7 @@ abstract class PaymentMethod extends AbstractMethod
     {
         $transferData = array();
 
-        //Get Google Analytics _ga
+        # Get Magento's Google Analytics cookie
         if ($this->paynlConfig->sendEcommerceAnalytics()) {
             $_gaCookie = $this->cookieManager->getCookie('_ga');
             if (!empty($_gaCookie)) {
