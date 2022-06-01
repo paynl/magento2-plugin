@@ -211,6 +211,7 @@ div#cse-status A {
     border: 1px solid #CCC;
     box-shadow: 1px 1px 14px 4px #979797;
     text-align: center;
+    background-color: white;
 }
 
 #challenge-iframe {

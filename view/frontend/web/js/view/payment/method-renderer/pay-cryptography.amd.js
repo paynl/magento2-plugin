@@ -9698,6 +9698,11 @@ define(['exports'], (function (exports) { 'use strict';
         {
             return -5;
         }
+
+        static get aborted()
+        {
+            return -1;
+        }
     }
 
     class PollingListener extends EventListener {
@@ -9747,6 +9752,7 @@ define(['exports'], (function (exports) { 'use strict';
                         this.poller.clear();
                         EventDispatcher.getInstance().dispatch(new PaymentFailedEvent(pollingResponse), Events.onPaymentFailedEvent);
                         break;
+                    case ThreeDSTransactionStatus.aborted:
                     case ThreeDSTransactionStatus.canceled:
                         this.poller.clear();
                         EventDispatcher.getInstance().dispatch(new PaymentCanceledEvent(pollingResponse), Events.onPaymentCanceledEvent);
