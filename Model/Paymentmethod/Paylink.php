@@ -54,11 +54,11 @@ class Paylink extends PaymentMethod
             $send_paylink_email = $this->_scopeConfig->getValue('payment/paynl_payment_paylink/send_paylink_email', 'store', $storeId);
 
             if ($send_paylink_email == 0) {
-                $paylinktext = __('PAY.: Here is your ');
+                $paylinktext = __('PAY. - Here is your ');
                 $postText = __('Open or copy the link to share.');
                 $order->addStatusHistoryComment($paylinktext . '<A href="' . $url . '">PAY. Link</a>. ' . $postText, $status);
             } else {
-                $paylinktext = __('A PAY. Paylink has been send to');
+                $paylinktext = __('PAY. - A Paylink has been send to');
                 $order->addStatusHistoryComment($paylinktext . ' ' . $order->getCustomerEmail() . '.', $status);
 
                 $supportEmail = $this->_scopeConfig->getValue('trans_email/ident_support/email', 'store', $storeId);
