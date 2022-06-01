@@ -363,12 +363,6 @@ abstract class PaymentMethod extends AbstractMethod
     {
         $transaction = (array) $this->doStartTransaction($order, true);
 
-        $this->paynlConfig->setStore($order->getStore());
-
-        $baseUrl = $order->getStore()->getBaseUrl();
-
-        payHelper::logDebug('StartEncryptedTransaction. Baseurl: ' . $baseUrl);
-
         if ($this->shouldHoldOrder()) {
             $order->hold();
         }
