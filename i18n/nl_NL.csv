@@ -126,3 +126,6 @@
 "Yes, as list","Ja, als lijst"
 "Force Billing Address for Instore Pickups","Factuuradres forceren voor afhalingen in de winkel"
 "Use the Billing address as Shipping address for instore pickups.","Gebruik factuuradres als bezorgadres voor het afhalen in de winkel."
+"Transfer analytics to PAY.","Stuur analytics via PAY."
+"Disable","Uitzetten"
+"Enable this to send the e-commerce analytics to Google analytics through PAY. instead of Magento2 default.","Schakel dit in om de e-commerce analytics via PAY naar Google Analytics te sturen in plaats van Magento2 standaard."

@@ -123,3 +123,6 @@
 "Yes, as list","Yes, as list"
 "Force Billing Address for Instore Pickups","Force Billing Address for Instore Pickups"
 "Use the Billing address as Shipping address for instore pickups.","Use the Billing address as Shipping address for instore pickups."
+"Transfer analytics to PAY.","Transfer analytics to PAY."
+"Disable","Disable"
+"Enable this to send the e-commerce analytics to Google analytics through PAY. instead of Magento2 default.","Enable this to send the e-commerce analytics to Google analytics through PAY. instead of Magento2 default."
