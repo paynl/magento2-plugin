@@ -40,6 +40,7 @@ define(
             activeModal: null,
             paymentInlineMessage: ko.observable(null),
             isCreditCardFormIsReadyForSubmission: ko.observable(false),
+            isPlaceOrderActionAllowed: ko.observable(true),
             paymentOption: null,
             paymentOptionsList: [],
             kvknummer: null,
@@ -129,6 +130,7 @@ define(
                 eventDispatcher.addListener(payCryptography.Events.onPaymentCanceledEvent, function (event) {
                         self.payDebug('Cancel Event - reset button');
                         self.setPlaceOrderButton($t(orderButtonText), false);
+                        self.isPlaceOrderActionAllowed(true);  
                     },
                     10
                 );
@@ -179,6 +181,7 @@ define(
                 eventDispatcher.addListener(payCryptography.Events.onPaymentFailedEvent, function (event) {
                     self.payDebug('onPaymentFailedEvent');
                     self.setPlaceOrderButton($t(orderButtonText), false);
+                    self.isPlaceOrderActionAllowed(true);  
                 }, 10);
 
                 eventDispatcher.addListener(payCryptography.Events.onModalOpenEvent, function(event) {
@@ -198,6 +201,7 @@ define(
                         self.payDebug('successPopup: ' + successPopup);
                         fullScreenLoader.stopLoader();
                         self.setPlaceOrderButton($t(orderButtonText), false);
+                        self.isPlaceOrderActionAllowed(true);  
                         self.hidePlaceOrderButton();
 
                         switch (successPopup) {
@@ -276,6 +280,7 @@ define(
                         let pol = self.encryptedForm.getPoller();
                         pol.clear();
                         self.setPlaceOrderButton(orderButtonText, false);
+                        self.isPlaceOrderActionAllowed(true);  
                     }
                 });
 
@@ -570,9 +575,7 @@ define(
                                 self.encryptedForm.state.getElementFromReference(payCryptography.Elements.form)
                             );
                         }
-                    ).always(function(){
-                    self.isPlaceOrderActionAllowed(true);
-                });
+                    ).always(function () { });
                 return false;
             }
         });
