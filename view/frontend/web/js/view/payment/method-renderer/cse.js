@@ -575,7 +575,7 @@ define(
                                 self.encryptedForm.state.getElementFromReference(payCryptography.Elements.form)
                             );
                         }
-                    ).always(function () { });
+                    );
                 return false;
             }
         });
