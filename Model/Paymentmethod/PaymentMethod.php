@@ -468,8 +468,13 @@ abstract class PaymentMethod extends AbstractMethod
                     $price = $arrItem['base_price_incl_tax'];
                 }
 
+                $productId = $arrItem['product_id'];
+                if ($this->paynlConfig->useSkuId()) {
+                    $productId = $arrItem['sku'];
+                }
+
                 $product = [
-                    'id' => $arrItem['product_id'],
+                    'id' => $productId,
                     'name' => $arrItem['name'],
                     'price' => $price,
                     'qty' => $arrItem['qty_ordered'],
@@ -486,7 +491,11 @@ abstract class PaymentMethod extends AbstractMethod
                     $child = array_shift($children);
 
                     if (!empty($child) && $child instanceof \Magento\Sales\Model\Order\Item && method_exists($child, 'getProductId')) {
-                        $product['id'] = $child->getProductId();
+                        $productIdChild = $child->getProductId();
+                        if ($this->paynlConfig->useSkuId() && method_exists($child, 'getSku')) {
+                            $productIdChild = $child->getSku();
+                        }
+                        $product['id'] = $productIdChild;
                     }
                 }
 

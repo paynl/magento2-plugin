@@ -128,3 +128,4 @@
 "Yes, as list","Ja, als lijst"
 "Force Billing Address for Instore Pickups","Factuuradres forceren voor afhalingen in de winkel"
 "Use the Billing address as Shipping address for instore pickups.","Gebruik factuuradres als bezorgadres voor het afhalen in de winkel."
+"Set which product data to use as product ID in the PAY. backend.","Set which product data to use as product ID in the PAY. backend."
