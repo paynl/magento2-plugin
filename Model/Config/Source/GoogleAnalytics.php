@@ -30,9 +30,9 @@ class GoogleAnalytics implements ArrayInterface
    */
     public function toArray()
     {
-        return [        
+        return [
         '1' => __('Transfer analytics to PAY.'),
-        '0' => __('Disable'),
+        '0' => __('Don\'t transfer analytics to PAY.'),
         ];
     }
 }

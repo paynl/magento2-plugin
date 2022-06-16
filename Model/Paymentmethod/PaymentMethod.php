@@ -16,6 +16,7 @@ use Magento\Payment\Model\Method\AbstractMethod;
 use Magento\Payment\Model\Method\Logger;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderRepository;
+use Paynl\Payment\Helper\PayHelper;
 use Paynl\Payment\Model\Config;
 use Paynl\Transaction;
 use Magento\InventoryInStorePickupShippingApi\Model\Carrier\InStorePickup;
@@ -211,7 +212,11 @@ abstract class PaymentMethod extends AbstractMethod
                 if (isset($_gaSplit[2]) && isset($_gaSplit[3])) {
                     $transferData['gaClientId'] = $_gaSplit[2] . '.' . $_gaSplit[3];
                 }
+            } else {
+                payHelper::logDebug('Cookie empty for GA', array());
             }
+        } else {
+            payHelper::logDebug('GA to PAY. not enabled.', array());
         }
 
         return $transferData;

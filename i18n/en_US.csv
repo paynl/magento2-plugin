@@ -125,4 +125,4 @@
 "Use the Billing address as Shipping address for instore pickups.","Use the Billing address as Shipping address for instore pickups."
 "Transfer analytics to PAY.","Transfer analytics to PAY."
 "Disable","Disable"
-"Enable this to send the e-commerce analytics to Google analytics through PAY. instead of Magento2 default.","Enable this to send the e-commerce analytics to Google analytics through PAY. instead of Magento2 default."
+"Select whether you want to use PAY. as Google Analytics proxy.","Select whether you want to use PAY. as Google Analytics proxy."

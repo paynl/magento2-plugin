@@ -141,7 +141,7 @@
                 <field id="google_analytics_ecommerce" translate="label,comment" type="select" sortOrder="109" showInDefault="1"
                        showInWebsite="1" showInStore="1">
                     <label>Google Analyatics</label>
-                    <comment><![CDATA[Enable this to send the e-commerce analytics to Google analytics through PAY. instead of Magento2 default.]]></comment>
+                    <comment><![CDATA[Select whether you want to use PAY. as Google Analytics proxy.]]></comment>
                     <source_model>Paynl\Payment\Model\Config\Source\GoogleAnalytics</source_model>
                 </field>
                 <group id="paynl_paymentmethods" translate="label" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
