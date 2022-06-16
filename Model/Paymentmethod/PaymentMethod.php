@@ -434,10 +434,12 @@ abstract class PaymentMethod extends AbstractMethod
         if (!empty($arrShippingAddress)) {
             $arrShippingAddress = $arrShippingAddress->toArray();
 
-            if ($this->useBillingAddressInstorePickup() && $order->getShippingMethod() === InStorePickup::DELIVERY_METHOD) {
-                $arrBillingAddress = $order->getBillingAddress();
-                if (!empty($arrBillingAddress)) {
-                    $arrShippingAddress = $arrBillingAddress->toArray();
+            if ($this->useBillingAddressInstorePickup() && class_exists('InStorePickup')) {
+                if ($order->getShippingMethod() === InStorePickup::DELIVERY_METHOD) {
+                    $arrBillingAddress = $order->getBillingAddress();
+                    if (!empty($arrBillingAddress)) {
+                        $arrShippingAddress = $arrBillingAddress->toArray();
+                    }
                 }
             }
 
@@ -484,6 +486,7 @@ abstract class PaymentMethod extends AbstractMethod
             $data['enduser'] = $enduser;
         }
         $arrProducts = [];
+        $arrWEEETax = [];
         foreach ($items as $item) {
             $arrItem = $item->toArray();
             if ($arrItem['price_incl_tax'] != null) {
@@ -496,8 +499,13 @@ abstract class PaymentMethod extends AbstractMethod
                     $price = $arrItem['base_price_incl_tax'];
                 }
 
+                $productId = $arrItem['product_id'];
+                if ($this->paynlConfig->useSkuId()) {
+                    $productId = $arrItem['sku'];
+                }
+
                 $product = [
-                    'id' => $arrItem['product_id'],
+                    'id' => $productId,
                     'name' => $arrItem['name'],
                     'price' => $price,
                     'qty' => $arrItem['qty_ordered'],
@@ -514,11 +522,49 @@ abstract class PaymentMethod extends AbstractMethod
                     $child = array_shift($children);
 
                     if (!empty($child) && $child instanceof \Magento\Sales\Model\Order\Item && method_exists($child, 'getProductId')) {
-                        $product['id'] = $child->getProductId();
+                        $productIdChild = $child->getProductId();
+                        if ($this->paynlConfig->useSkuId() && method_exists($child, 'getSku')) {
+                            $productIdChild = $child->getSku();
+                        }
+                        $product['id'] = $productIdChild;
                     }
                 }
 
                 $arrProducts[] = $product;
+
+                # WEEE
+                if (!empty($arrItem['weee_tax_applied'])) {
+                    $weeeArr = json_decode($arrItem['weee_tax_applied']);
+                    if (is_array($weeeArr)) {
+                        foreach ($weeeArr as $weee) {
+                            if (!empty($weee) && is_object($weee)) {
+
+                                $weee_title = $weee->title;
+                                $weee_price = $weee->row_amount_incl_tax;
+                                $weee_taxAmount = $weee->row_amount_incl_tax - $weee->row_amount;
+
+                                if ($this->paynlConfig->isAlwaysBaseCurrency()) {
+                                    $weee_price = $weee->base_row_amount_incl_tax;
+                                    $weee_taxAmount = $weee->base_row_amount_incl_tax - $weee->base_row_amount;
+                                }
+
+                                if (isset($arrWEEETax[$weee_title])) {
+                                    $arrWEEETax[$weee_title]['price'] += $weee_price;
+                                    $arrWEEETax[$weee_title]['tax'] += $weee_taxAmount;
+                                } else {
+                                    $arrWEEETax[$weee_title] = array(
+                                        'id' => 'weee',
+                                        'name' => $weee_title,
+                                        'price' => $weee_price,
+                                        'tax' => $weee_taxAmount,
+                                        'qty' => 1,
+                                        'type' => \Paynl\Transaction::PRODUCT_TYPE_HANDLING
+                                    );
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -590,14 +636,19 @@ abstract class PaymentMethod extends AbstractMethod
             ];
         }
 
+        // WEEE
+        if (!empty($arrWEEETax)) {
+            $arrProducts = array_merge($arrProducts, $arrWEEETax);
+        }
+
         $data['products'] = $arrProducts;
 
         if ($this->paynlConfig->isTestMode()) {
             $data['testmode'] = 1;
         }
         $ipAddress = $order->getRemoteIp();
-        //The ip address field in magento is too short, if the ip is invalid, get the ip myself
-        if (!filter_var($ipAddress, FILTER_VALIDATE_IP)) {
+        //The ip address field in magento is too short, if the ip is invalid or ip is localhost get the ip myself
+        if (!filter_var($ipAddress, FILTER_VALIDATE_IP) || $ipAddress == '127.0.0.1') {
             $ipAddress = \Paynl\Helper::getIp();
         }
         $data['ipaddress'] = $ipAddress;

@@ -19,6 +19,8 @@
 "Italian","Italiaans"
 "French","Frans"
 "Spanish","Spaans"
+"Danish","Deens"
+"Polish","Pools"
 "After successful payment","Na voltooide betaling"
 "Before payment","Voor betaling"
 "Choose your bank","Kies uw bank"
@@ -129,3 +131,4 @@
 "Transfer analytics to PAY.","Stuur analytics via PAY."
 "Disable","Uitzetten"
 "Select whether you want to use PAY. as Google Analytics proxy.","Geef aan of u PAY. als Google Analytics proxy wilt gebruiken."
+"Set which product data to use as product ID in the PAY. backend.","Set which product data to use as product ID in the PAY. backend."
