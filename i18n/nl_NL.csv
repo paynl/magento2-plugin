@@ -128,4 +128,7 @@
 "Yes, as list","Ja, als lijst"
 "Force Billing Address for Instore Pickups","Factuuradres forceren voor afhalingen in de winkel"
 "Use the Billing address as Shipping address for instore pickups.","Gebruik factuuradres als bezorgadres voor het afhalen in de winkel."
+"Transfer analytics to PAY.","Stuur analytics via PAY."
+"Disable","Uitzetten"
+"Select whether you want to use PAY. as Google Analytics proxy.","Geef aan of u PAY. als Google Analytics proxy wilt gebruiken."
 "Set which product data to use as product ID in the PAY. backend.","Set which product data to use as product ID in the PAY. backend."

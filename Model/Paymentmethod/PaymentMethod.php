@@ -16,6 +16,7 @@ use Magento\Payment\Model\Method\AbstractMethod;
 use Magento\Payment\Model\Method\Logger;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderRepository;
+use Paynl\Payment\Helper\PayHelper;
 use Paynl\Payment\Model\Config;
 use Paynl\Transaction;
 use Magento\InventoryInStorePickupShippingApi\Model\Carrier\InStorePickup;
@@ -59,6 +60,11 @@ abstract class PaymentMethod extends AbstractMethod
      */
     protected $storeManager;
 
+    /**
+     * @var \Magento\Framework\Stdlib\CookieManagerInterface
+     */
+    protected $cookieManager;
+
     public function __construct(
         Context $context,
         Registry $registry,
@@ -95,6 +101,7 @@ abstract class PaymentMethod extends AbstractMethod
         $this->orderRepository = $orderRepository;
         $this->orderConfig = $orderConfig;
         $this->storeManager = $objectManager->create(\Magento\Store\Model\StoreManagerInterface::class);
+        $this->cookieManager = $objectManager->create('\Magento\Framework\Stdlib\CookieManagerInterface');
     }
 
     protected function getState($status)
@@ -191,6 +198,28 @@ abstract class PaymentMethod extends AbstractMethod
     {
         $default_payment_option = $this->paynlConfig->getDefaultPaymentOption();
         return ($default_payment_option == $this->_code);
+    }
+
+    public function getTransferData()
+    {
+        $transferData = array();
+
+        # Get Magento's Google Analytics cookie
+        if ($this->paynlConfig->sendEcommerceAnalytics()) {
+            $_gaCookie = $this->cookieManager->getCookie('_ga');
+            if (!empty($_gaCookie)) {
+                $_gaSplit = explode('.', $_gaCookie);
+                if (isset($_gaSplit[2]) && isset($_gaSplit[3])) {
+                    $transferData['gaClientId'] = $_gaSplit[2] . '.' . $_gaSplit[3];
+                }
+            } else {
+                payHelper::logDebug('Cookie empty for GA', array());
+            }
+        } else {
+            payHelper::logDebug('GA to PAY. not enabled.', array());
+        }
+
+        return $transferData;
     }
 
     public function genderConversion($gender)
@@ -442,6 +471,7 @@ abstract class PaymentMethod extends AbstractMethod
             'extra1' => $orderId,
             'extra2' => $quoteId,
             'extra3' => $order->getEntityId(),
+            'transferData' => $this->getTransferData(),
             'exchangeUrl' => $exchangeUrl,
             'currency' => $currency,
             'object' => substr('magento2 ' . $this->paynlConfig->getVersion() . ' | ' . $this->paynlConfig->getMagentoVersion() . ' | ' . $this->paynlConfig->getPHPVersion(), 0, 64),
