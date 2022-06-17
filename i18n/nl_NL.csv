@@ -129,6 +129,7 @@
 "Instore Pickup Address","Instore Pickup Address"
 "Select how shipping address should be handled in case of instore pickup.","Selecteer hoe om te gaan met bezorgadres in het gaval van Instore Pickup."
 "Transfer analytics to PAY.","Stuur analytics via PAY."
+"Don't transfer analytics to PAY.","Stuur analytics niet via PAY."
 "Disable","Uitzetten"
 "Select whether you want to use PAY. as Google Analytics proxy.","Geef aan of u PAY. als Google Analytics proxy wilt gebruiken."
 "Set which product data to use as product ID in the PAY. backend.","Set which product data to use as product ID in the PAY. backend."
