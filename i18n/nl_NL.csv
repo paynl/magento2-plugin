@@ -132,3 +132,5 @@
 "Disable","Uitzetten"
 "Select whether you want to use PAY. as Google Analytics proxy.","Geef aan of u PAY. als Google Analytics proxy wilt gebruiken."
 "Set which product data to use as product ID in the PAY. backend.","Set which product data to use as product ID in the PAY. backend."
+"Leave shipping address unchanged (Default)","Pas verzendadres niet aan (standaard)"
+"Use billing address as shipping address","Gebruik factuuradres als verzendadres"
