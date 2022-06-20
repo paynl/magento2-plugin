@@ -128,7 +128,7 @@
 "Transfer analytics to PAY.","Transfer analytics to PAY."
 "Disable","Disable"
 "Select whether you want to use PAY. as Google Analytics proxy.","Select whether you want to use PAY. as Google Analytics proxy."
-"Select which ID to use as product-ID for PAY. productdata..","Stel in welke productgegevens u wilt gebruiken als product-ID in de PAY. backend."
+"Select which ID to use as product-ID for PAY. productdata.","Stel in welke veld u als product-ID wilt opnemen in PAY. productdata."
 "Leave shipping address unchanged (Default)","Leave shipping address unchanged (Default)"
 "Use billing address as shipping address","Use billing address as shipping address"
 "Credit card payment","Credit card payment"
