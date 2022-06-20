@@ -157,3 +157,5 @@
 "Enable this setting to set an order to `Hold` when a payment has yet to be verified by you or PAY. Your customer will experience no differences when enabled.","Zet een order/bestelling op status Hold (wachtstand), wanneer de betaling door u of PAY. nog bevestigd moet worden in de PAY. admin."
 "Field Color Mode","Validatie kleuren"
 "Select which colour-mode you prefer for the checkout input fields.","Geef aan hoe veld-kleuren toegepast moeten worden t.b.v. validatie in de checkout."
+"Payment successfull","Betaling geslaagd"
+"You will be redirected automatically.","U wordt automatisch doorgestuurd"

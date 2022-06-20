@@ -130,7 +130,7 @@ define(
                 eventDispatcher.addListener(payCryptography.Events.onPaymentCanceledEvent, function (event) {
                         self.payDebug('Cancel Event - reset button');
                         self.setPlaceOrderButton($t(orderButtonText), false);
-                        self.isPlaceOrderActionAllowed(true);  
+                        self.isPlaceOrderActionAllowed(true);
                     },
                     10
                 );
@@ -172,16 +172,13 @@ define(
                         self.payDebug(self.activeModal);
                         self.activeModal.closeModal();
                         self.activeModal = null;
-
-                    } else {
-                        self.payDebug('NOT closing modal cause none active');
                     }
                 }, 10);
 
                 eventDispatcher.addListener(payCryptography.Events.onPaymentFailedEvent, function (event) {
                     self.payDebug('onPaymentFailedEvent');
                     self.setPlaceOrderButton($t(orderButtonText), false);
-                    self.isPlaceOrderActionAllowed(true);  
+                    self.isPlaceOrderActionAllowed(true);
                 }, 10);
 
                 eventDispatcher.addListener(payCryptography.Events.onModalOpenEvent, function(event) {
@@ -201,24 +198,24 @@ define(
                         self.payDebug('successPopup: ' + successPopup);
                         fullScreenLoader.stopLoader();
                         self.setPlaceOrderButton($t(orderButtonText), false);
-                        self.isPlaceOrderActionAllowed(true);  
+                        self.isPlaceOrderActionAllowed(true);
                         self.hidePlaceOrderButton();
 
                         switch (successPopup) {
                             case MODAL_POPUP_INLINE:
-                                let succesHtml = '<b>Betaling gelukt.</b><br>U wordt automatisch doorgeschakeld.';
+                                let succesHtml = '<b>' + $t('Payment successfull') + '</b><br>' +  $t('You will be redirected automatically.');
                                 self.paymentInlineMessage('<div class="message success"><div>' + succesHtml + '</div></div>');
                                 break;
 
                             case MODAL_POPUP_CUSTOM:
                                 let sj1 = event.getSubject();
                                 let tessies = sj1.render();
-                                $('#pay-cse-custom-modal').text('Betaling geut').show();
+                                $('#pay-cse-custom-modal').text($t('Payment successfull')).show();
                                 break;
 
                             case MODAL_POPUP_NATIVE:
                                 self.activeModal = paymentCompleteModal;
-                                self.paymentCompleteModalContent(`<p>${$t('Bedankt! for your order. We\'ll email you order details and tracking information.')}</p>`);
+                                self.paymentCompleteModalContent('<p>' + $t('Payment successfull') + '. ' + $t('You will be redirected automatically.') + '</p>');
                                 paymentCompleteModal.showModal();
                                 break;
 
@@ -280,7 +277,7 @@ define(
                         let pol = self.encryptedForm.getPoller();
                         pol.clear();
                         self.setPlaceOrderButton(orderButtonText, false);
-                        self.isPlaceOrderActionAllowed(true);  
+                        self.isPlaceOrderActionAllowed(true);
                     }
                 });
 
@@ -292,7 +289,7 @@ define(
             payDebug: function (text) {
                 if (this.payDebugEnabled) {
                     if (typeof text == 'string') {
-                        console.log('PAY.: ' + text);
+                        console.log('PAY. - ' + text);
                     } else {
                         console.log(text);
                     }

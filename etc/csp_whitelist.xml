@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<csp_whitelist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Csp:etc/csp_whitelist.xsd">
+    <policies>
+        <policy id="script-src">
+            <values>
+                <value id="pay-script-src" type="host">https://*.pay.nl</value>
+            </values>
+        </policy>
+        <policy id="frame-src">
+            <values>
+                <value id="pay-frame-src-secure" type="host">https://*.pay.nl</value>
+                <value id="pay-script-src-cardinal" type="host">https://*.cardinalcommerce.com</value>
+            </values>
+        </policy>
+        <policy id="connect-src">
+            <values>
+                <value id="pay-connect-src" type="host">https://*.pay.nl</value>
+            </values>
+        </policy>
+        <policy id="img-src">
+            <values>
+                <value id="pay-img-src" type="host">https://static.pay.nl</value>
+            </values>
+        </policy>
+    </policies>
+</csp_whitelist>
