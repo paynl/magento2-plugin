@@ -48,7 +48,7 @@
                 </field>
                 <field id="use_sku_id" translate="label,comment" type="select" sortOrder="72" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Productdata ID</label>
-                    <comment><![CDATA[Set which product data to use as product ID in the PAY. backend.]]></comment>
+                    <comment><![CDATA[Select which ID to use as product-ID for PAY. productdata..]]></comment>
                     <source_model>Paynl\Payment\Model\Config\Source\ProductDataID</source_model>
                 </field>
                 <field id="skip_fraud_detection" translate="label,comment" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
