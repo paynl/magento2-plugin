@@ -121,7 +121,7 @@ class Finish extends PayAction
             if ($bSuccess) {
                 $successUrl = $this->config->getSuccessPage($payment->getMethod());
                 if (empty($successUrl)) {
-                    $successUrl = ($payment->getMethod() == 'paynl_payment_paylink') ? Config::FINISH_PAYLINK : Config::FINISH_STANDARD;
+                    $successUrl = ($payment->getMethod() == 'paynl_payment_paylink' || $this->config->sendEcommerceAnalytics()) ? Config::FINISH_PAY : Config::FINISH_STANDARD;
                 }
 
                 $resultRedirect->setPath($successUrl, ['_query' => ['utm_nooverride' => '1']]);
@@ -143,7 +143,7 @@ class Finish extends PayAction
             } else {
                 $cancelMessage = $bDenied ? __('Payment denied') : __('Payment canceled');
                 $this->messageManager->addNoticeMessage($cancelMessage);
-                $resultRedirect->setPath($payment->getMethod() == 'paynl_payment_paylink' ? Config::FINISH_PAYLINK . '?cancel=1' : $this->config->getCancelURL());
+                $resultRedirect->setPath($payment->getMethod() == 'paynl_payment_paylink' ? Config::FINISH_PAY . '?cancel=1' : $this->config->getCancelURL());
             }
         } catch (\Exception $e) { 
             payHelper::logCritical($e->getCode() . ': ' . $e->getMessage(), $params, $order->getStore());

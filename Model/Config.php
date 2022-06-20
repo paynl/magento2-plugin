@@ -11,7 +11,7 @@ use Magento\Store\Model\Store;
  */
 class Config
 {
-    const FINISH_PAYLINK = 'paynl/checkout/paylink';
+    const FINISH_PAY = 'paynl/order/finish';
     const FINISH_STANDARD = 'checkout/onepage/success';
     const ORDERSTATUS_PAID = 100;
     const ORDERSTATUS_DENIED = -63;
@@ -172,6 +172,11 @@ class Config
         return $this->store->getConfig('payment/paynl/use_magorder_for_auth') == 1;
     }
 
+    public function useSkuId()
+    {
+        return $this->store->getConfig('payment/paynl/use_sku_id') == 1;
+    }
+
     public function getLanguage()
     {
         $language = $this->store->getConfig('payment/paynl/language');
@@ -207,6 +212,11 @@ class Config
     public function autoCaptureEnabled()
     {
         return $this->store->getConfig('payment/paynl/auto_capture') == 1;
+    }
+
+    public function sendEcommerceAnalytics()
+    {
+        return $this->store->getConfig('payment/paynl/google_analytics_ecommerce') == 1;
     }
 
     /**
