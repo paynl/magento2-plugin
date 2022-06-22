@@ -167,11 +167,6 @@ class Config
         return $this->store->getConfig('payment/paynl/always_base_currency') == 1;
     }
 
-    public function useMagOrderAmountForAuth()
-    {
-        return $this->store->getConfig('payment/paynl/use_magorder_for_auth') == 1;
-    }
-
     public function useSkuId()
     {
         return $this->store->getConfig('payment/paynl/use_sku_id') == 1;
