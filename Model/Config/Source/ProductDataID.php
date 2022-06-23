@@ -31,7 +31,7 @@ class ProductDataID implements ArrayInterface
     public function toArray()
     {
         return [
-        '0' => __('product-ID (default)'),
+        '0' => __('Product-ID (default)'),
         '1' => __('SKU-ID'),
         ];
     }
