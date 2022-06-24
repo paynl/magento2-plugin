@@ -209,6 +209,11 @@ class Config
         return $this->store->getConfig('payment/paynl/auto_capture') == 1;
     }
 
+    public function wuunderAutoCaptureEnabled()
+    {
+        return $this->store->getConfig('payment/paynl/wuunder_auto_capture') == 1;
+    }
+
     /**
      * @param $methodCode string
      * @return string

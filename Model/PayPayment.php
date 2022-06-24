@@ -48,6 +48,11 @@ class PayPayment
     private $paynlConfig;
 
     /**
+     * @var PayPayment
+     */
+    private $payPayment;
+
+    /**
      * Exchange constructor.
      *
      * @param \Magento\Framework\App\Action\Context $context
@@ -83,11 +88,12 @@ class PayPayment
             }
             $order->cancel();
             $order->addStatusHistoryComment(__('PAY. canceled the order'));
-            $this->orderRepository->save($order);
-            return
+            $this->orderRepository->save($order);           
         } catch (\Exception $e) {
-            return false;
+            throw new \Exception('Cannot cancel order: ' . $e->getMessage());
         }
+
+        return true;
     }
 
     public function uncancelOrder(Order $order)
@@ -129,7 +135,6 @@ class PayPayment
         $order->addStatusHistoryComment(__('PAY. Uncanceled order'), false);
 
         $this->_eventManager->dispatch('order_uncancel_after', ['order' => $order]);
-
     }
 
     /**
@@ -137,29 +142,21 @@ class PayPayment
      * @param Order $order
      * @return Bool
      */
-    public function processPaidOrder(Transaction $transaction, Order $order, &$payMessage = null)
-    {       
-        if ($transaction->isPaid()) {
-            $message = "PAID";
-        } else {
-            $message = "AUTHORIZED";
-        }
-
+    public function processPaidOrder(Transaction $transaction, Order $order)
+    {
         if ($order->isCanceled() || $order->getTotalCanceled() == $order->getGrandTotal()) {
             try {
                 $this->uncancelOrder($order);
             } catch (LocalizedException $e) {
-                $payMessage = 'FALSE| Cannot un-cancel order: ' . $e->getMessage();
-                return false;
+                throw new \Exception('Cannot un-cancel order: ' . $e->getMessage());
             }
-            $message .= " order was uncanceled";
         }
 
         /** @var Interceptor $payment */
         $payment = $order->getPayment();
         $payment->setTransactionId($transaction->getId());
         $payment->setPreparedMessage('PAY. - ');
-        $payment->setIsTransactionClosed(0);        
+        $payment->setIsTransactionClosed(0);
 
         $paidAmount = $order->getGrandTotal();
 
@@ -193,50 +190,54 @@ class PayPayment
         $newStatus = ($transaction->isAuthorized()) ? $this->config->getAuthorizedStatus($paymentMethod) : $this->config->getPaidStatus($paymentMethod);
 
         # Skip creation of invoice for B2B if enabled
-        if ($this->config->ignoreB2BInvoice($paymentMethod)) {
-            $orderCompany = $order->getBillingAddress()->getCompany();
-            if (!empty($orderCompany)) {
-                # Create transaction
-                $formatedPrice = $order->getBaseCurrency()->formatTxt($order->getGrandTotal());
-                $transactionMessage = __('PAY. - Captured amount of %1.', $formatedPrice);
-                $transactionBuilder = $this->builderInterface->setPayment($payment)->setOrder($order)->setTransactionId($transaction->getId())->setFailSafe(true)->build('capture');
-                $payment->addTransactionCommentsToOrder($transactionBuilder, $transactionMessage);
-                $payment->setParentTransactionId(null);
-                $payment->save();
-                $transactionBuilder->save();
+        if ($this->config->ignoreB2BInvoice($paymentMethod) && !empty($order->getBillingAddress()->getCompany())) {
+            $this->processB2BPayment($transaction, $order, $payment);
+        } else {
+            if ($transaction->isAuthorized()) {
+                $authAmount = $this->config->useMagOrderAmountForAuth() ? $order->getBaseGrandTotal() : $transaction->getCurrencyAmount();
+                $payment->registerAuthorizationNotification($authAmount);
+            } else {
+                $payment->registerCaptureNotification($paidAmount, $this->config->isSkipFraudDetection());
+            }
 
-                # Change amount paid manually
-                $order->setTotalPaid($order->getGrandTotal());
-                $order->setBaseTotalPaid($order->getBaseGrandTotal());
-                $order->setStatus(!empty($newStatus) ? $newStatus : Order::STATE_PROCESSING);
-                $order->addStatusHistoryComment(__('B2B Setting: Skipped creating invoice'));
-                $this->orderRepository->save($order);        
-                $payMessage = "TRUE| " . $message . " (B2B: No invoice created)";
-                return true;
+            $order->setStatus(!empty($newStatus) ? $newStatus : Order::STATE_PROCESSING);
+
+            $this->orderRepository->save($order);
+
+            $invoice = $payment->getCreatedInvoice();
+            if ($invoice && !$invoice->getEmailSent()) {
+                $this->invoiceSender->send($invoice);
+                $order->addStatusHistoryComment(__('You notified customer about invoice #%1.', $invoice->getIncrementId()))
+                    ->setIsCustomerNotified(true)
+                    ->save();
             }
         }
 
-        if ($transaction->isAuthorized()) {
-            $authAmount = $this->config->useMagOrderAmountForAuth() ? $order->getBaseGrandTotal() : $transaction->getCurrencyAmount();
-            $payment->registerAuthorizationNotification($authAmount);
-        } else {
-            $payment->registerCaptureNotification($paidAmount, $this->config->isSkipFraudDetection());
-        }
-
-        $order->setStatus(!empty($newStatus) ? $newStatus : Order::STATE_PROCESSING);
-
-        $this->orderRepository->save($order);
-
-        $invoice = $payment->getCreatedInvoice();
-        if ($invoice && !$invoice->getEmailSent()) {
-            $this->invoiceSender->send($invoice);
-            $order->addStatusHistoryComment(__('You notified customer about invoice #%1.', $invoice->getIncrementId()))
-                ->setIsCustomerNotified(true)
-                ->save();
-        }
-
-        $payMessage = "TRUE| " . $message;
         return true;
+    }
+
+    /**
+     * @param Transaction $transaction
+     * @param Order $order
+     * @param Interceptor $payment
+     */
+    private function processB2BPayment(Transaction $transaction, Order $order, Interceptor $payment)
+    {
+        # Create transaction
+        $formatedPrice = $order->getBaseCurrency()->formatTxt($order->getGrandTotal());
+        $transactionMessage = __('PAY. - Captured amount of %1.', $formatedPrice);
+        $transactionBuilder = $this->builderInterface->setPayment($payment)->setOrder($order)->setTransactionId($transaction->getId())->setFailSafe(true)->build('capture');
+        $payment->addTransactionCommentsToOrder($transactionBuilder, $transactionMessage);
+        $payment->setParentTransactionId(null);
+        $payment->save();
+        $transactionBuilder->save();
+
+        # Change amount paid manually
+        $order->setTotalPaid($order->getGrandTotal());
+        $order->setBaseTotalPaid($order->getBaseGrandTotal());
+        $order->setStatus(!empty($newStatus) ? $newStatus : Order::STATE_PROCESSING);
+        $order->addStatusHistoryComment(__('B2B Setting: Skipped creating invoice'));
+        $this->orderRepository->save($order);
     }
 
     /**
@@ -248,7 +249,6 @@ class PayPayment
     {
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $orderPaymentFactory = $objectManager->get(\Magento\Sales\Model\Order\PaymentFactory::class);
-        $returnMessage = "TRUE| Partial payment processed";
 
         try {
             $details = \Paynl\Transaction::details($payOrderId);
@@ -296,9 +296,9 @@ class PayPayment
 
             $this->orderRepository->save($order);
         } catch (\Exception $e) {
-            $returnMessage = 'TRUE| Failed processing partial payment' . $e->getMessage();
+            throw new \Exception('Failed processing partial payment: ' . $e->getMessage());
         }
 
-        return $this->result->setContents($returnMessage);
+        return true;
     }
 }

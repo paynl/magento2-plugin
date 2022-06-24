@@ -113,9 +113,14 @@
                     <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
                     <comment><![CDATA[Enable this to also apply the validation of other activated (third party) modules during the payment process.]]></comment>
                 </field>
-                <field id="auto_capture" translate="label" type="select" sortOrder="105" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="auto_capture" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Auto Capture</label>
                     <comment><![CDATA[Automatically capture authorisation-transaction when creating the shipment for the order.]]></comment>
+                    <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
+                </field>
+                <field id="wuunder_auto_capture" translate="label" type="select" sortOrder="105" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Auto Capture</label>
+                    <comment><![CDATA[Automatically capture authorisation-transaction when wuunder creates the shipment for the order.]]></comment>
                     <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
                 </field>
                 <field id="register_partial_payments" translate="label" type="select" sortOrder="106" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -138,6 +143,7 @@
                     <label>Failover Gateway</label>
                     <comment><![CDATA[Leave this empty unless advised otherwise by PAY.]]></comment>
                 </field>
+               
                 <group id="paynl_paymentmethods" translate="label" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
                     <frontend_model>Paynl\Payment\Block\Adminhtml\System\Config\Fieldset\Expanded</frontend_model>
                     <label>Paymentmethods</label>

@@ -124,7 +124,13 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         if (method_exists($transaction, 'isPartialPayment')) {
             if ($transaction->isPartialPayment()) {
                 if ($this->config->registerPartialPayments()) {
-                    return $this->payPayment->processPartiallyPaidOrder($order, $payOrderId);
+                    try {
+                        $this->payPayment->processPartiallyPaidOrder($order, $payOrderId);
+                        $message = 'TRUE| Partial payment processed';
+                    } catch (\Exception $e) {
+                        $message = 'FALSE| ' . $e->getMessage();
+                    }
+                    return $this->result->setContents($message);
                 }
                 return $this->result->setContents("TRUE| Partial payment");
             }
@@ -150,12 +156,19 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
                 payHelper::logDebug('Already captured.');
                 return $this->result->setContents('TRUE| Already captured.');
             }
+            if ($this->config->wuunderAutoCaptureEnabled()) {
+                return $this->result->setContents('TRUE| Wuunder already captured.');
+            }
         }
 
         if ($transaction->isPaid() || $transaction->isAuthorized()) {
-            $payMessage = '';
-            $this->payPayment->processPaidOrder($transaction, $order, $payMessage);
-            return $this->result->setContents($payMessage);
+            try {
+                $this->payPayment->processPaidOrder($transaction, $order);
+                $message = 'TRUE| ' . (($transaction->isPaid()) ? "PAID" : "AUTHORIZED");
+            } catch (\Exception $e) {
+                $message = 'FALSE| ' . $e->getMessage();
+            }
+            return $this->result->setContents($message);
         } elseif ($transaction->isCanceled()) {
             if ($order->getState() == Order::STATE_PROCESSING) {
                 return $this->result->setContents("TRUE| Ignoring cancel, order is `processing`");
@@ -165,11 +178,13 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
                 if ($this->config->isNeverCancel()) {
                     return $this->result->setContents("TRUE| Not Canceled because never cancel is enabled");
                 }
-                if ($this->payPayment->cancelOrder($order)) {
-                    return $this->result->setContents("TRUE| CANCELED");
-                } else {
-                    return $this->result->setContents("FALSE| Cannot cancel order");
+                try {
+                    $this->payPayment->cancelOrder($order);
+                    $message = 'TRUE| CANCELED';
+                } catch (\Exception $e) {
+                    $message = 'FALSE| ' . $e->getMessage();
                 }
+                return $this->result->setContents($message);
             }
         }
     }
