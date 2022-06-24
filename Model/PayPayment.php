@@ -46,12 +46,7 @@ class PayPayment
     private $builderInterface;
 
     private $paynlConfig;
-
-    /**
-     * @var PayPayment
-     */
-    private $payPayment;
-
+    
     /**
      * Exchange constructor.
      *
@@ -88,7 +83,7 @@ class PayPayment
             }
             $order->cancel();
             $order->addStatusHistoryComment(__('PAY. canceled the order'));
-            $this->orderRepository->save($order);           
+            $this->orderRepository->save($order);
         } catch (\Exception $e) {
             throw new \Exception('Cannot cancel order: ' . $e->getMessage());
         }
@@ -144,6 +139,8 @@ class PayPayment
      */
     public function processPaidOrder(Transaction $transaction, Order $order)
     {
+        $returnResult = false;
+
         if ($order->isCanceled() || $order->getTotalCanceled() == $order->getGrandTotal()) {
             try {
                 $this->uncancelOrder($order);
@@ -191,8 +188,9 @@ class PayPayment
 
         # Skip creation of invoice for B2B if enabled
         if ($this->config->ignoreB2BInvoice($paymentMethod) && !empty($order->getBillingAddress()->getCompany())) {
-            $this->processB2BPayment($transaction, $order, $payment);
+            $returnResult = $this->processB2BPayment($transaction, $order, $payment);
         } else {
+
             if ($transaction->isAuthorized()) {
                 $authAmount = $this->config->useMagOrderAmountForAuth() ? $order->getBaseGrandTotal() : $transaction->getCurrencyAmount();
                 $payment->registerAuthorizationNotification($authAmount);
@@ -211,9 +209,11 @@ class PayPayment
                     ->setIsCustomerNotified(true)
                     ->save();
             }
+
+            $returnResult = true;
         }
 
-        return true;
+        return $returnResult;
     }
 
     /**
@@ -238,6 +238,8 @@ class PayPayment
         $order->setStatus(!empty($newStatus) ? $newStatus : Order::STATE_PROCESSING);
         $order->addStatusHistoryComment(__('B2B Setting: Skipped creating invoice'));
         $this->orderRepository->save($order);
+
+        return true;
     }
 
     /**

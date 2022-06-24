@@ -125,7 +125,10 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             if ($transaction->isPartialPayment()) {
                 if ($this->config->registerPartialPayments()) {
                     try {
-                        $this->payPayment->processPartiallyPaidOrder($order, $payOrderId);
+                        $result = $this->payPayment->processPartiallyPaidOrder($order, $payOrderId);
+                        if (!$result) {
+                            throw new \Exception('Cannot process partial payment');
+                        }
                         $message = 'TRUE| Partial payment processed';
                     } catch (\Exception $e) {
                         $message = 'FALSE| ' . $e->getMessage();
@@ -163,7 +166,10 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
 
         if ($transaction->isPaid() || $transaction->isAuthorized()) {
             try {
-                $this->payPayment->processPaidOrder($transaction, $order);
+                $result = $this->payPayment->processPaidOrder($transaction, $order);
+                if (!$result) {
+                    throw new \Exception('Cannot process order');
+                }
                 $message = 'TRUE| ' . (($transaction->isPaid()) ? "PAID" : "AUTHORIZED");
             } catch (\Exception $e) {
                 $message = 'FALSE| ' . $e->getMessage();
