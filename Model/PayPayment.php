@@ -30,9 +30,9 @@ class PayPayment
     private $invoiceSender;
 
     /**
-     * @var \Magento\Framework\Controller\Result\Raw
+     * @var \Magento\Framework\Event\ManagerInterface
      */
-    private $result;
+    private $eventManager;
 
     /**
      * @var OrderRepository
@@ -61,12 +61,12 @@ class PayPayment
         \Paynl\Payment\Model\Config $config,
         \Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender,
         \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender,
-        \Magento\Framework\Controller\Result\Raw $result,
+        \Magento\Framework\Event\ManagerInterface $eventManager,
         OrderRepository $orderRepository,
         \Paynl\Payment\Model\Config $paynlConfig,
         \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $builderInterface
     ) {
-        $this->result = $result;
+        $this->eventManager = $eventManager;
         $this->config = $config;
         $this->orderSender = $orderSender;
         $this->invoiceSender = $invoiceSender;
@@ -77,6 +77,7 @@ class PayPayment
 
     public function cancelOrder(Order $order)
     {
+        $returnResult = false;
         try {
             if ($order->getState() == 'holded') {
                 $order->unhold();
@@ -84,11 +85,12 @@ class PayPayment
             $order->cancel();
             $order->addStatusHistoryComment(__('PAY. canceled the order'));
             $this->orderRepository->save($order);
+            $returnResult = true;
         } catch (\Exception $e) {
             throw new \Exception('Cannot cancel order: ' . $e->getMessage());
         }
 
-        return true;
+        return $returnResult;
     }
 
     public function uncancelOrder(Order $order)
@@ -106,9 +108,9 @@ class PayPayment
             $item->setQtyCanceled(0);
             $item->setTaxCanceled(0);
             $item->setDiscountTaxCompensationCanceled(0);
-            $this->_eventManager->dispatch('sales_order_item_uncancel', ['item' => $item]);
+            $this->eventManager->dispatch('sales_order_item_uncancel', ['item' => $item]);
         }
-        $this->_eventManager->dispatch(
+        $this->eventManager->dispatch(
             'sales_order_uncancel_inventory',
             [
                 'order' => $order,
@@ -129,7 +131,7 @@ class PayPayment
         $order->setStatus($state);
         $order->addStatusHistoryComment(__('PAY. Uncanceled order'), false);
 
-        $this->_eventManager->dispatch('order_uncancel_after', ['order' => $order]);
+        $this->eventManager->dispatch('order_uncancel_after', ['order' => $order]);
     }
 
     /**
@@ -249,6 +251,7 @@ class PayPayment
      */
     public function processPartiallyPaidOrder(Order $order, $payOrderId)
     {
+        $returnResult = false;
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $orderPaymentFactory = $objectManager->get(\Magento\Sales\Model\Order\PaymentFactory::class);
 
@@ -297,10 +300,11 @@ class PayPayment
             $order->setTotalPaid($totalpaid / 100);
 
             $this->orderRepository->save($order);
+            $returnResult = true;
         } catch (\Exception $e) {
             throw new \Exception('Failed processing partial payment: ' . $e->getMessage());
         }
 
-        return true;
+        return $returnResult;
     }
 }

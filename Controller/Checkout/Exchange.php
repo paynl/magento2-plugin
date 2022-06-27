@@ -160,7 +160,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
                 return $this->result->setContents('TRUE| Already captured.');
             }
             if ($this->config->wuunderAutoCaptureEnabled()) {
-                return $this->result->setContents('TRUE| Wuunder already captured.');
+                return $this->result->setContents('TRUE| Captured.');
             }
         }
 
@@ -185,8 +185,11 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
                     return $this->result->setContents("TRUE| Not Canceled because never cancel is enabled");
                 }
                 try {
-                    $this->payPayment->cancelOrder($order);
-                    $message = 'TRUE| CANCELED';
+                    $result = $this->payPayment->cancelOrder($order);
+                    if (!$result) {
+                        throw new \Exception('Cannot process partial payment');
+                    }
+                    $message = 'TRUE| CANCELED';                   
                 } catch (\Exception $e) {
                     $message = 'FALSE| ' . $e->getMessage();
                 }
