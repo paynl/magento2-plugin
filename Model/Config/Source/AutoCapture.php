@@ -32,8 +32,8 @@ class AutoCapture implements ArrayInterface
     {
         return [
         '0' => __('Off'),
-        '1' => __('On (Default)'),
-        '2' => __('On (Wuunder fix)'),
+        '1' => __('On'),
+        '2' => __('On (Wuunder)'),
         ];
     }
 }
