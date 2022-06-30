@@ -1,8 +1,8 @@
 <?php
 
-namespace Paynl\Payment\Controller\Checkout;
+namespace Paynl\Payment\Controller\Order;
 
-class Paylink extends \Magento\Framework\App\Action\Action
+class Finish extends \Magento\Framework\App\Action\Action
 {
     protected $_pageFactory;
     public function __construct(

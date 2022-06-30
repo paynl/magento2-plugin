@@ -189,7 +189,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
                     if (!$result) {
                         throw new \Exception('Cannot process partial payment');
                     }
-                    $message = 'TRUE| CANCELED';                   
+                    $message = 'TRUE| CANCELED';
                 } catch (\Exception $e) {
                     $message = 'FALSE| ' . $e->getMessage();
                 }

@@ -46,7 +46,7 @@ class PayPayment
     private $builderInterface;
 
     private $paynlConfig;
-    
+
     /**
      * Exchange constructor.
      *
@@ -156,6 +156,18 @@ class PayPayment
         $payment->setTransactionId($transaction->getId());
         $payment->setPreparedMessage('PAY. - ');
         $payment->setIsTransactionClosed(0);
+
+        $transactionPaid = [
+            $transaction->getCurrencyAmount(),
+            $transaction->getPaidCurrencyAmount(),
+            $transaction->getPaidAmount(),
+        ];
+
+        $orderAmount = round($order->getGrandTotal(), 2);
+        if (!in_array($orderAmount, $transactionPaid)) {
+            payHelper::logCritical('Amount validation error.', array($transactionPaid, $orderAmount, $order->getGrandTotal()));
+            throw new \Exception('Amount validation error. Amounts: ' . print_r(array($transactionPaid, $orderAmount, $order->getGrandTotal())));
+        }
 
         $paidAmount = $order->getGrandTotal();
 

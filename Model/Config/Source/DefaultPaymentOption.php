@@ -35,7 +35,7 @@ class DefaultPaymentOption implements ArrayInterface
         $scopeConfigInterface = $objectManager->get(\Magento\Framework\App\Config\ScopeConfigInterface::class);
         //get only PAY. Methods
         $active_paynl_methods = [];
-        $active_paynl_methods[0] = 'None';
+        $active_paynl_methods[0] =  __('None');
         foreach ($activePaymentMethods as $key => $value) {
             if (strpos($key, 'paynl') !== false && $key != 'paynl_payment_paylink') {
                 $active_paynl_methods[$key] = $scopeConfigInterface->getValue('payment/' . $key . '/title');

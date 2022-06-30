@@ -16,6 +16,7 @@ use Magento\Payment\Model\Method\AbstractMethod;
 use Magento\Payment\Model\Method\Logger;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderRepository;
+use Paynl\Payment\Helper\PayHelper;
 use Paynl\Payment\Model\Config;
 use Paynl\Transaction;
 use Magento\InventoryInStorePickupShippingApi\Model\Carrier\InStorePickup;
@@ -59,6 +60,11 @@ abstract class PaymentMethod extends AbstractMethod
      */
     protected $storeManager;
 
+    /**
+     * @var \Magento\Framework\Stdlib\CookieManagerInterface
+     */
+    protected $cookieManager;
+
     public function __construct(
         Context $context,
         Registry $registry,
@@ -95,6 +101,7 @@ abstract class PaymentMethod extends AbstractMethod
         $this->orderRepository = $orderRepository;
         $this->orderConfig = $orderConfig;
         $this->storeManager = $objectManager->create(\Magento\Store\Model\StoreManagerInterface::class);
+        $this->cookieManager = $objectManager->create('\Magento\Framework\Stdlib\CookieManagerInterface');
     }
 
     protected function getState($status)
@@ -191,6 +198,28 @@ abstract class PaymentMethod extends AbstractMethod
     {
         $default_payment_option = $this->paynlConfig->getDefaultPaymentOption();
         return ($default_payment_option == $this->_code);
+    }
+
+    public function getTransferData()
+    {
+        $transferData = array();
+
+        # Get Magento's Google Analytics cookie
+        if ($this->paynlConfig->sendEcommerceAnalytics()) {
+            $_gaCookie = $this->cookieManager->getCookie('_ga');
+            if (!empty($_gaCookie)) {
+                $_gaSplit = explode('.', $_gaCookie);
+                if (isset($_gaSplit[2]) && isset($_gaSplit[3])) {
+                    $transferData['gaClientId'] = $_gaSplit[2] . '.' . $_gaSplit[3];
+                }
+            } else {
+                payHelper::logDebug('Cookie empty for GA', array());
+            }
+        } else {
+            payHelper::logDebug('GA to PAY. not enabled.', array());
+        }
+
+        return $transferData;
     }
 
     public function genderConversion($gender)
@@ -442,6 +471,7 @@ abstract class PaymentMethod extends AbstractMethod
             'extra1' => $orderId,
             'extra2' => $quoteId,
             'extra3' => $order->getEntityId(),
+            'transferData' => $this->getTransferData(),
             'exchangeUrl' => $exchangeUrl,
             'currency' => $currency,
             'object' => substr('magento2 ' . $this->paynlConfig->getVersion() . ' | ' . $this->paynlConfig->getMagentoVersion() . ' | ' . $this->paynlConfig->getPHPVersion(), 0, 64),
@@ -456,6 +486,7 @@ abstract class PaymentMethod extends AbstractMethod
             $data['enduser'] = $enduser;
         }
         $arrProducts = [];
+        $arrWEEETax = [];
         foreach ($items as $item) {
             $arrItem = $item->toArray();
             if ($arrItem['price_incl_tax'] != null) {
@@ -468,8 +499,13 @@ abstract class PaymentMethod extends AbstractMethod
                     $price = $arrItem['base_price_incl_tax'];
                 }
 
+                $productId = $arrItem['product_id'];
+                if ($this->paynlConfig->useSkuId()) {
+                    $productId = $arrItem['sku'];
+                }
+
                 $product = [
-                    'id' => $arrItem['product_id'],
+                    'id' => $productId,
                     'name' => $arrItem['name'],
                     'price' => $price,
                     'qty' => $arrItem['qty_ordered'],
@@ -486,11 +522,49 @@ abstract class PaymentMethod extends AbstractMethod
                     $child = array_shift($children);
 
                     if (!empty($child) && $child instanceof \Magento\Sales\Model\Order\Item && method_exists($child, 'getProductId')) {
-                        $product['id'] = $child->getProductId();
+                        $productIdChild = $child->getProductId();
+                        if ($this->paynlConfig->useSkuId() && method_exists($child, 'getSku')) {
+                            $productIdChild = $child->getSku();
+                        }
+                        $product['id'] = $productIdChild;
                     }
                 }
 
                 $arrProducts[] = $product;
+
+                # WEEE
+                if (!empty($arrItem['weee_tax_applied'])) {
+                    $weeeArr = json_decode($arrItem['weee_tax_applied']);
+                    if (is_array($weeeArr)) {
+                        foreach ($weeeArr as $weee) {
+                            if (!empty($weee) && is_object($weee)) {
+
+                                $weee_title = $weee->title;
+                                $weee_price = $weee->row_amount_incl_tax;
+                                $weee_taxAmount = $weee->row_amount_incl_tax - $weee->row_amount;
+
+                                if ($this->paynlConfig->isAlwaysBaseCurrency()) {
+                                    $weee_price = $weee->base_row_amount_incl_tax;
+                                    $weee_taxAmount = $weee->base_row_amount_incl_tax - $weee->base_row_amount;
+                                }
+
+                                if (isset($arrWEEETax[$weee_title])) {
+                                    $arrWEEETax[$weee_title]['price'] += $weee_price;
+                                    $arrWEEETax[$weee_title]['tax'] += $weee_taxAmount;
+                                } else {
+                                    $arrWEEETax[$weee_title] = array(
+                                        'id' => 'weee',
+                                        'name' => $weee_title,
+                                        'price' => $weee_price,
+                                        'tax' => $weee_taxAmount,
+                                        'qty' => 1,
+                                        'type' => \Paynl\Transaction::PRODUCT_TYPE_HANDLING
+                                    );
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -560,6 +634,11 @@ abstract class PaymentMethod extends AbstractMethod
                 'tax' => $discountTax,
                 'type' => \Paynl\Transaction::PRODUCT_TYPE_DISCOUNT
             ];
+        }
+
+        // WEEE
+        if (!empty($arrWEEETax)) {
+            $arrProducts = array_merge($arrProducts, $arrWEEETax);
         }
 
         $data['products'] = $arrProducts;

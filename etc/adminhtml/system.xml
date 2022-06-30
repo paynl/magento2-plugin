@@ -5,11 +5,9 @@
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
         <section id="payment">
-            <group id="paynl" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1"
-                   showInStore="1">
+            <group id="paynl" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>PAY. Settings</label>
-                <field id="version" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1"
-                       showInStore="1">
+                <field id="version" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Version</label>
                     <frontend_model>Paynl\Payment\Block\Adminhtml\Render\Version</frontend_model>
                 </field>
@@ -18,31 +16,25 @@
                     <label>Testmode</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="tokencode" translate="label, comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1"
-                       showInStore="1">
+                <field id="tokencode" translate="label, comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Tokencode</label>
                     <comment><![CDATA[Get your AT-code <a target='_blank' href='https://admin.pay.nl/company/tokens'>here</a>. Not registered at PAY? Sign up <a target='_blank' href='https://www.pay.nl/en?register'>here</a>!]]></comment>
                 </field>
-                <field id="apitoken" translate="label, comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="1"
-                       showInStore="1">
+                <field id="apitoken" translate="label, comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>API-token</label>
                     <comment><![CDATA[Your API-token, you can find your tokens <a target='_blank' href='https://admin.pay.nl/company/tokens'>here</a>]]></comment>
                 </field>
-                <field id="serviceid" translate="label, comment" type="text" sortOrder="51" showInDefault="1" showInWebsite="1"
-                       showInStore="1">
+                <field id="serviceid" translate="label, comment" type="text" sortOrder="51" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>ServiceId</label>
                     <comment><![CDATA[The SL-code of your service, you can find your services <a target='_blank' href='https://admin.pay.nl/programs/programs'>here</a>]]></comment>
                 </field>
-                <field id="language" translate="label" type="select" sortOrder="52" showInDefault="1" showInStore="1"
-                       showInWebsite="1">
-                    <label>Language payment screen</label>
+                <field id="language" translate="label" type="select" sortOrder="52" showInDefault="1" showInStore="1" showInWebsite="1">
+                    <label>Language Payment Screen</label>
                     <source_model>Paynl\Payment\Model\Config\Source\Languages</source_model>
                 </field>
-                <field id="never_cancel" translate="label,comment" type="select" sortOrder="60" showInDefault="1"
-                       showInWebsite="1" showInStore="1">
+                <field id="never_cancel" translate="label,comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Never cancel order</label>
-                    <comment><![CDATA[This setting will disable cancelling the order when the payment is canceled.
-                    This can be used if uncancelling the order in case of a second chance payment produces errors. WARNING! Orders will never be cancelled automaticly]]></comment>
+                    <comment><![CDATA[This might be your preference when uncancelling orders isn't possible, which might lead to problems in case of a second chance payments.]]></comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="always_base_currency" translate="label,comment" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -50,10 +42,10 @@
                     <comment><![CDATA[Set this to yes if you always want to process payments in the base currency of this store. Magento acts strange when trying to register a payment in another currency than the base currency. The base currency MUST be EUR]]></comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="use_magorder_for_auth" translate="label,comment" type="select" sortOrder="71" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Use base amount for authorisations</label>
-                    <comment><![CDATA[Set this to yes to use base amount as authorize amount instead of currencyamount]]></comment>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                <field id="use_sku_id" translate="label,comment" type="select" sortOrder="72" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Productdata ID</label>
+                    <comment><![CDATA[Set which product data to use as product ID in the PAY. backend.]]></comment>
+                    <source_model>Paynl\Payment\Model\Config\Source\ProductDataID</source_model>
                 </field>
                 <field id="skip_fraud_detection" translate="label,comment" type="select" sortOrder="80" showInDefault="1"
                        showInWebsite="1" showInStore="1">
@@ -120,7 +112,7 @@
                 </field>
                 <field id="register_partial_payments" translate="label" type="select" sortOrder="106" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Register partial payments</label>
-                    <comment><![CDATA[Register partial payments]]></comment>
+                    <comment><![CDATA[Enable to register every partial payment in your transactions tab, located in your order details.]]></comment>
                     <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
                 </field>
                 <field id="order_description_prefix" translate="label" type="text" sortOrder="107" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -137,6 +129,12 @@
                        showInStore="1">
                     <label>Failover Gateway</label>
                     <comment><![CDATA[Leave this empty unless advised otherwise by PAY.]]></comment>
+                </field>
+                <field id="google_analytics_ecommerce" translate="label,comment" type="select" sortOrder="109" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Google Analytics</label>
+                    <comment><![CDATA[Select whether you want to use PAY. as Google Analytics proxy.]]></comment>
+                    <source_model>Paynl\Payment\Model\Config\Source\GoogleAnalytics</source_model>
                 </field>
                 <group id="paynl_paymentmethods" translate="label" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
                     <frontend_model>Paynl\Payment\Block\Adminhtml\System\Config\Fieldset\Expanded</frontend_model>
