@@ -33,7 +33,7 @@ class AutoCapture implements ArrayInterface
         return [
         '0' => __('Off'),
         '1' => __('On'),
-        '2' => __('On (Wuunder)'),
+        '2' => __('On - Via Wuunder'),
         ];
     }
 }

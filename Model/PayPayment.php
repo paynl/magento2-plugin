@@ -205,9 +205,8 @@ class PayPayment
             $returnResult = $this->processB2BPayment($transaction, $order, $payment);
         } else {
 
-            if ($transaction->isAuthorized()) {
-                $authAmount = $this->config->useMagOrderAmountForAuth() ? $order->getBaseGrandTotal() : $transaction->getCurrencyAmount();
-                $payment->registerAuthorizationNotification($authAmount);
+            if ($transaction->isAuthorized()) {               
+                $payment->registerAuthorizationNotification($paidAmount);
             } else {
                 $payment->registerCaptureNotification($paidAmount, $this->config->isSkipFraudDetection());
             }

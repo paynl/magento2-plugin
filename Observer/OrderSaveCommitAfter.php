@@ -10,7 +10,7 @@ use Magento\Sales\Model\Order;
 use \Paynl\Payment\Helper\PayHelper;
 use \Paynl\Payment\Model\PayPayment;
 
-class ShipmentSaveAfter implements ObserverInterface
+class OrderSaveCommitAfter implements ObserverInterface
 {
 
     /**
@@ -42,19 +42,22 @@ class ShipmentSaveAfter implements ObserverInterface
 
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
-        $order = $observer->getEvent()->getShipment()->getOrder();
+        $order = $observer->getEvent()->getOrder();
         $this->config->setStore($order->getStore());
 
+        $result = json_decode(file_get_contents('php://input'), true);
+
         if ($this->config->autoCaptureEnabled()) {
-            if ($order->getState() == Order::STATE_PROCESSING && !$order->hasInvoices()) {
+            if (($order->getState() == Order::STATE_PROCESSING || $result['action'] === "track_and_trace_updated") && !$order->hasInvoices() && $order->hasShipments()) {
                 $data = $order->getPayment()->getData();
+
                 if (!empty($data['last_trans_id'])) {
                     $bHasAmountAuthorized = !empty($data['base_amount_authorized']);
                     $amountPaid = isset($data['amount_paid']) ? $data['amount_paid'] : null;
                     $amountRefunded = isset($data['amount_refunded']) ? $data['amount_refunded'] : null;
 
                     if ($bHasAmountAuthorized && $amountPaid === null && $amountRefunded === null) {
-                        payHelper::logNotice('AUTO-CAPTURING(rest) ' . $data['last_trans_id'], [], $order->getStore());
+                        payHelper::logNotice('AUTO-CAPTURING ' . $data['last_trans_id'], [], $order->getStore());
                         try {
                             \Paynl\Config::setApiToken($this->config->getApiToken());
 
@@ -68,11 +71,11 @@ class ShipmentSaveAfter implements ObserverInterface
                             }
                             $strResult = 'Success';
                         } catch (\Exception $e) {
-                            payHelper::logCritical('Order PAY error(rest): ' . $e->getMessage() . ' EntityId: ' . $order->getEntityId(), [], $order->getStore());
-                            $strResult = 'Failed. Errorcode: PAY-MAGENTO2-004. See docs.pay.nl for more information';
+                            payHelper::logCritical('Order PAY error: ' . $e->getMessage() . ' EntityId: ' . $order->getEntityId(), [], $order->getStore());
+                            $strResult = 'Failed. Errorcode: PAY-MAGENTO2-003. See docs.pay.nl for more information';
                         }
 
-                        $order->addStatusHistoryComment(__('PAY. - Performed auto-capture(rest). Result: ') . $strResult, false)->save();
+                        $order->addStatusHistoryComment(__('PAY. - Performed auto-capture. Result: ') . $strResult, false)->save();
                     }
                 }
             }
