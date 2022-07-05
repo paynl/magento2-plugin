@@ -9,8 +9,8 @@ class SuccessPopupOptions extends PayOption
     public function __construct($options = array())
     {
         $options = [
-            'popup_native' => __('Default Magento Popup'),
             'inline' => __('Inline'),
+            'popup_native' => __('Default Magento Popup'),
             'none' => __('Don\'t show popup, instant redirect'),
         ];
         parent::__construct($options);

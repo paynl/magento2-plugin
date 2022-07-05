@@ -237,7 +237,7 @@ define(
                         return;
                     }
 
-                    /* we're still here.. we're assuming paymentmodal then */
+                    /* We're still here.. we're assuming paymentmodal then */
                     self.activeModal = paymentModal;
 
                     if (eventSubject != null) {
