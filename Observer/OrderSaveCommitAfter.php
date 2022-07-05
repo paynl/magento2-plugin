@@ -46,9 +46,10 @@ class OrderSaveCommitAfter implements ObserverInterface
         $this->config->setStore($order->getStore());
 
         $result = json_decode(file_get_contents('php://input'), true);
+        $action = (!empty($result['action'])) ? $result['action'] : '';
 
         if ($this->config->autoCaptureEnabled()) {
-            if (($order->getState() == Order::STATE_PROCESSING || $result['action'] === "track_and_trace_updated") && !$order->hasInvoices() && $order->hasShipments()) {
+            if (($order->getState() == Order::STATE_PROCESSING || $action === "track_and_trace_updated") && !$order->hasInvoices() && $order->hasShipments()) {
                 $data = $order->getPayment()->getData();
 
                 if (!empty($data['last_trans_id'])) {
