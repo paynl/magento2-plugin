@@ -287,7 +287,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             $transaction->getPaidAmount(),
         ];
 
-        $orderAmount = round($order->getGrandTotal(), 2);
+        $orderAmount = round($this->paynlConfig->isAlwaysBaseCurrency() ? $order->getBaseGrandTotal() : $order->getGrandTotal(), 2);
         if (!in_array($orderAmount, $transactionPaid)) {
             payHelper::logCritical('Amount validation error.', array($transactionPaid, $orderAmount, $order->getGrandTotal()));
             return $this->result->setContents('FALSE| Amount validation error. Amounts: ' . print_r(array($transactionPaid, $orderAmount, $order->getGrandTotal()), true));
@@ -295,11 +295,9 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
 
         $paidAmount = $order->getGrandTotal();
 
-        if (!$this->paynlConfig->isAlwaysBaseCurrency()) {
-            if ($order->getBaseCurrencyCode() != $order->getOrderCurrencyCode()) {
-                # We can only register the payment in the base currency
-                $paidAmount = $order->getBaseGrandTotal();
-            }
+        if ($order->getBaseCurrencyCode() != $order->getOrderCurrencyCode()) {
+            # We can only register the payment in the base currency
+            $paidAmount = $order->getBaseGrandTotal();
         }
 
         # Multipayments finish
@@ -385,7 +383,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             $paymentDetails = $details->getPaymentDetails();
             $transactionDetails = $paymentDetails['transactionDetails'];
             $firstPayment = count($transactionDetails) == 1;
-            $totalpaid =0;
+            $totalpaid = 0;
             foreach ($transactionDetails as $_dt) {
                 $totalpaid += $_dt['amount']['value'];
             }
@@ -420,13 +418,12 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
                 );
             $transactionBuilder->save();
 
-            $order->addStatusHistoryComment(__('PAY.: Partial payment received: '.$subProfile.' - Amount ' . $currency . ' ' . $amount . ' Method: ' . $method));
+            $order->addStatusHistoryComment(__('PAY.: Partial payment received: ' . $subProfile . ' - Amount ' . $currency . ' ' . $amount . ' Method: ' . $method));
             $order->setTotalPaid($totalpaid / 100);
 
             $this->orderRepository->save($order);
-
         } catch (\Exception $e) {
-            $returnMessage = 'TRUE| Failed processing partial payment'. $e->getMessage();
+            $returnMessage = 'TRUE| Failed processing partial payment' . $e->getMessage();
         }
 
         return $this->result->setContents($returnMessage);
