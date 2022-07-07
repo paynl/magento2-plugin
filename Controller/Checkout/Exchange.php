@@ -287,28 +287,14 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             $transaction->getPaidAmount(),
         ];
 
-        $orderAmount = round($this->paynlConfig->isAlwaysBaseCurrency() ? $order->getBaseGrandTotal() : $order->getGrandTotal(), 2);
-        if (!in_array($orderAmount, $transactionPaid)) {
+        $orderAmount = round($order->getGrandTotal(), 2);
+        $orderBaseAmount = round($order->getBaseGrandTotal(), 2);
+        if (!in_array($orderAmount, $transactionPaid) && !in_array($orderBaseAmount, $transactionPaid)) {
             payHelper::logCritical('Amount validation error.', array($transactionPaid, $orderAmount, $order->getGrandTotal()));
             return $this->result->setContents('FALSE| Amount validation error. Amounts: ' . print_r(array($transactionPaid, $orderAmount, $order->getGrandTotal()), true));
         }
 
-        $paidAmount = $order->getGrandTotal();
-
-        if ($order->getBaseCurrencyCode() != $order->getOrderCurrencyCode()) {
-            # We can only register the payment in the base currency
-            $paidAmount = $order->getBaseGrandTotal();
-        }
-
-        # Multipayments finish
-        if ($this->config->registerPartialPayments()) {
-            $payments = $order->getAllPayments();
-            if (count($payments) > 1) {
-                if ($transaction->isPaid() && $order->getTotalDue() == 0) {
-                    $paidAmount = $order->getBaseGrandTotal();
-                }
-            }
-        }
+        $paidAmount = $order->getBaseGrandTotal();        
 
         # Force order state to processing
         $order->setState(Order::STATE_PROCESSING);
