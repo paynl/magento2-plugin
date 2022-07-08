@@ -1,0 +1,34 @@
+<?php
+
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+/**
+ * @var $block Paynl\Payment\Block\Form\Paylink
+ */
+$code = $block->escapeHtml($block->getMethodCode());
+?>
+<?php $terminals = $block->getTerminals(); ?>
+<?php $defaultTerminal = $block->getDefaultTerminal(); ?>
+<?php $hidePaymentOptions = $block->hidePaymentOptions(); ?>
+<?php $methodCode = $block->escapeHtml($block->getMethodCode()); ?>
+
+<fieldset class="admin__fieldset payment-method" id="payment_form_<?= /* @noEscape */ $code ?>" style="display:none;">
+    <?php if ($hidePaymentOptions == 1) : ?>
+        <input type="hidden" id="<?= /* @noEscape */ $code ?>_payment_option" name="payment[payment_option]" value="<?= $defaultTerminal ?>" />
+    <?php else : ?>
+        <div class="admin__field">
+            <label for="<?= /* @noEscape */ $code ?>_payment_option" class="admin__field-label"><?= __('Terminal') ?>:</label>
+            <div class="admin__field-control">
+                <select class="admin__control-select" id="<?= /* @noEscape */ $code ?>_payment_option" name="payment[payment_option]">
+                    <?php foreach ($terminals as $key => $terminal) : ?>
+                        <option value="<?= $key ?>" <?= ($key == $defaultTerminal) ? 'selected' : '' ?>><?= $terminal ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </div>
+    <?php endif; ?>
+</fieldset>
