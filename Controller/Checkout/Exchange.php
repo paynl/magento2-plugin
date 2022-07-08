@@ -290,11 +290,9 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         $orderAmount = round($order->getGrandTotal(), 2);
         $orderBaseAmount = round($order->getBaseGrandTotal(), 2);
         if (!in_array($orderAmount, $transactionPaid) && !in_array($orderBaseAmount, $transactionPaid)) {
-            payHelper::logCritical('Amount validation error.', array($transactionPaid, $orderAmount, $order->getGrandTotal()));
-            return $this->result->setContents('FALSE| Amount validation error. Amounts: ' . print_r(array($transactionPaid, $orderAmount, $order->getGrandTotal()), true));
+            payHelper::logCritical('Amount validation error.', array($transactionPaid, $orderAmount, $order->getGrandTotal(), $order->getBaseGrandTotal()));
+            return $this->result->setContents('FALSE| Amount validation error. Amounts: ' . print_r(array($transactionPaid, $orderAmount, $order->getGrandTotal(), $order->getBaseGrandTotal()), true));
         }
-
-        $paidAmount = $order->getBaseGrandTotal();        
 
         # Force order state to processing
         $order->setState(Order::STATE_PROCESSING);
@@ -332,9 +330,9 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         }
 
         if ($transaction->isAuthorized()) {
-            $payment->registerAuthorizationNotification($paidAmount);
+            $payment->registerAuthorizationNotification($order->getBaseGrandTotal());
         } else {
-            $payment->registerCaptureNotification($paidAmount, $this->config->isSkipFraudDetection());
+            $payment->registerCaptureNotification($order->getBaseGrandTotal(), $this->config->isSkipFraudDetection());
         }
 
         $order->setStatus(!empty($newStatus) ? $newStatus : Order::STATE_PROCESSING);
