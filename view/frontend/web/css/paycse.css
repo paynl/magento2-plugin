@@ -214,6 +214,61 @@ div#cse-status A {
     background-color: white;
 }
 
+@media (min-width:320px)  { /* smartphones, portrait iPhone, portrait 480x320 phones (Android) */
+    .paynl.payment-method-cse #pay-cse-custom-modal {
+        left: 0;
+        transform: none;
+        text-align: left;
+        top: 0;
+        padding: 0;
+    }
+    .checkout-index-index .modal-popup.pay-error-modal .modal-inner-wrap,
+    .checkout-index-index .modal-popup.pay-payment-modal .modal-inner-wrap,
+    .checkout-index-index .modal-popup.pay-payment-complete-modal .modal-inner-wrap {
+        width: 100%;
+        min-width: 30%;
+        margin-left: 0;
+        transform: none;
+        left: 0;
+        position: fixed;
+        top: 0;
+    }
+}
+@media (min-width:480px)  {}
+@media (min-width:600px)  {}
+@media (min-width:801px)  {}
+@media (min-width:1025px) {}
+@media (min-width:1281px) { /* hi-res laptops and desktops */
+
+    .paynl.payment-method-cse #pay-cse-custom-modal {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: fit-content;
+        z-index: 1234;
+        padding: 21px;
+        color: #333;
+        min-width: 30%;
+        border: 1px solid #CCC;
+        box-shadow: 1px 1px 14px 4px #979797;
+        text-align: center;
+        background-color: white;
+    }
+
+    .checkout-index-index .modal-popup.pay-error-modal .modal-inner-wrap,
+    .checkout-index-index .modal-popup.pay-payment-modal .modal-inner-wrap,
+    .checkout-index-index .modal-popup.pay-payment-complete-modal .modal-inner-wrap {
+        width: fit-content;
+        min-width: 30%;
+        top: 42%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        margin-left: 0;
+    }
+}
+
 #challenge-iframe {
     height: 500px;
     border: 0;

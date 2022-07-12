@@ -241,7 +241,7 @@ define(
                     self.activeModal = paymentModal;
 
                     if (eventSubject != null) {
-                        if (paymentPopup == MODAL_POPUP_NATIVE) {
+                        if (paymentPopup == MODAL_POPUP_CUSTOM) {
                             $('#pay-cse-custom-modal').html(eventSubject.render()).show();
                         } else {
                             self.paymentModalContent(eventSubject.render());
