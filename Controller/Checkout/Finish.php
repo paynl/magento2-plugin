@@ -143,7 +143,7 @@ class Finish extends PayAction
             } else {
                 $cancelMessage = $bDenied ? __('Payment denied') : __('Payment canceled');
                 $this->messageManager->addNoticeMessage($cancelMessage);
-                $resultRedirect->setPath($payment->getMethod() == 'paynl_payment_paylink' ? Config::FINISH_PAY . '?cancel=1' : $this->config->getCancelURL());
+                $resultRedirect->setPath($payment->getMethod() == 'paynl_payment_paylink' ? Config::CANCEL_PAY : $this->config->getCancelURL());
             }
         } catch (\Exception $e) { 
             payHelper::logCritical($e->getCode() . ': ' . $e->getMessage(), $params, $order->getStore());
