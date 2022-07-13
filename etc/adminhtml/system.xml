@@ -10,7 +10,6 @@
             <label>General settings</label>
             <tab>paynl</tab>
             <resource>Paynl_Payment::config</resource>
-            <attribute type="expanded">false</attribute>
             <group id="paynl_general_settings" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>PAY. Settings</label>
                 <field id="version" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
