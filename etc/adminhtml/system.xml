@@ -65,6 +65,7 @@
             <tab>paynl</tab>
             <resource>Paynl_Payment::config</resource>
             <group id="paynl_layout_settings" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>PAY. LAyout Settings</label>
                 <field id="image_style" translate="label" type="select" sortOrder="85" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Image style</label>
                     <comment>
@@ -109,6 +110,7 @@
             <tab>paynl</tab>
             <resource>Paynl_Payment::config</resource>
             <group id="paynl_advanced_settings" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>PAY. Advanced Settings</label>
                 <field id="never_cancel" translate="label,comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Never cancel order</label>
                     <comment>
