@@ -58,8 +58,14 @@ class Paylink extends PaymentMethod
                 $this->addPaylinkComment($order, $url, $status);
             } else {
                 try {
-                    $paylinktext = __('A PAY. Paylink has been send to');
-                    $order->addStatusHistoryComment($paylinktext . ' ' . $order->getCustomerEmail() . '.', $status)->save();
+                    $customerEmail = [$order->getCustomerEmail()];
+
+                    if (empty($customerEmail)) {
+                        # Can't send email without customer email so add paylink as a comment instead.
+                        $order->addStatusHistoryComment(__('PAY.: Customer E-mail is empty cannot send E-mail.'), $status)->save();
+                        $this->addPaylinkComment($order, $url, $status);
+                        return false;
+                    }
 
                     $supportEmail = $this->_scopeConfig->getValue('trans_email/ident_support/email', 'store', $storeId);
                     $senderName = $this->_scopeConfig->getValue('trans_email/ident_sales/name', 'store', $storeId);
@@ -69,15 +75,6 @@ class Paylink extends PaymentMethod
                         'name' => $senderName,
                         'email' => $senderEmail,
                     ];
-
-                    $customerEmail = [$order->getCustomerEmail()];
-
-                    if (empty($customerEmail)) {
-                        # Can't send email without customer email so add paylink as a comment instead.
-                        $order->addStatusHistoryComment(__('PAY.: Customer E-mail is empty cannot send E-mail.'), $status)->save();
-                        $this->addPaylinkComment($order, $url, $status);
-                        return false;
-                    }
 
                     $paymentHelper = $objectManager->create(\Magento\Payment\Helper\Data::class);
 
@@ -143,6 +140,9 @@ class Paylink extends PaymentMethod
                         ->setReplyTo($supportEmail)
                         ->getTransport();
                     $transport->sendMessage();
+
+                    $paylinktext = __('A PAY. Paylink has been send to');
+                    $order->addStatusHistoryComment($paylinktext . ' ' . $order->getCustomerEmail() . '.', $status)->save();
                 } catch (\Exception $e) {
                     payHelper::logDebug('Paylink exception: ' . $e->getMessage());
                     $order->addStatusHistoryComment(__('PAY.: Unable to send E-mail'), $status)->save();
