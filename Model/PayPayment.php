@@ -83,7 +83,7 @@ class PayPayment
                 $order->unhold();
             }
             $order->cancel();
-            $order->addStatusHistoryComment(__('PAY. canceled the order'));
+            $order->addStatusHistoryComment(__('PAY. - Canceled the order'));
             $this->orderRepository->save($order);
             $returnResult = true;
         } catch (\Exception $e) {
@@ -129,7 +129,7 @@ class PayPayment
         $order->setBaseTotalCanceled(0);
         $order->setState($state);
         $order->setStatus($state);
-        $order->addStatusHistoryComment(__('PAY. Uncanceled order'), false);
+        $order->addStatusHistoryComment(__('PAY. - Uncanceled order'), false);
 
         $this->eventManager->dispatch('order_uncancel_after', ['order' => $order]);
     }
@@ -195,7 +195,7 @@ class PayPayment
         # Notify customer
         if ($order && !$order->getEmailSent()) {
             $this->orderSender->send($order);
-            $order->addStatusHistoryComment(__('New order email sent'))->setIsCustomerNotified(true)->save();
+            $order->addStatusHistoryComment(__('PAY. - New order email sent'))->setIsCustomerNotified(true)->save();
         }
 
         $newStatus = ($transaction->isAuthorized()) ? $this->config->getAuthorizedStatus($paymentMethod) : $this->config->getPaidStatus($paymentMethod);
@@ -205,7 +205,7 @@ class PayPayment
             $returnResult = $this->processB2BPayment($transaction, $order, $payment);
         } else {
 
-            if ($transaction->isAuthorized()) {               
+            if ($transaction->isAuthorized()) {
                 $payment->registerAuthorizationNotification($paidAmount);
             } else {
                 $payment->registerCaptureNotification($paidAmount, $this->config->isSkipFraudDetection());
@@ -218,7 +218,7 @@ class PayPayment
             $invoice = $payment->getCreatedInvoice();
             if ($invoice && !$invoice->getEmailSent()) {
                 $this->invoiceSender->send($invoice);
-                $order->addStatusHistoryComment(__('You notified customer about invoice #%1.', $invoice->getIncrementId()))
+                $order->addStatusHistoryComment(__('PAY. - You notified customer about invoice #%1.', $invoice->getIncrementId()))
                     ->setIsCustomerNotified(true)
                     ->save();
             }

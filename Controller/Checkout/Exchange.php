@@ -160,7 +160,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
                 return $this->result->setContents('TRUE| Already captured.');
             }
             if ($this->config->wuunderAutoCaptureEnabled() || $this->config->sherpaEnabled()) {
-                return $this->result->setContents('TRUE|Captured');
+                return $this->result->setContents('TRUE| CAPTURED');
             }
         }
 
@@ -175,25 +175,19 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
                 $message = 'FALSE| ' . $e->getMessage();
             }
             return $this->result->setContents($message);
-        } elseif ($transaction->isCanceled()) 
-        {
-            if ($order->getState() == Order::STATE_PROCESSING) 
-            {
+        } elseif ($transaction->isCanceled()) {
+            if ($order->getState() == Order::STATE_PROCESSING) {
                 return $this->result->setContents("TRUE| Ignoring cancel, order is `processing`");
             } elseif ($order->isCanceled()) {
                 return $this->result->setContents("TRUE| Already canceled");
-            } else 
-            {
-                
-          
-
+            } else {
                 if ($this->config->isNeverCancel()) {
-                    return $this->result->setContents("TRUE| Not Canceled because never cancel is enabled");
+                    return $this->result->setContents("TRUE| Not Canceled because option `never-cancel-order` is enabled");
                 }
                 try {
                     $result = $this->payPayment->cancelOrder($order);
                     if (!$result) {
-                        throw new \Exception('Cannot process partial payment');
+                        throw new \Exception('Cannot cancel order');
                     }
                     $message = 'TRUE| CANCELED';
                 } catch (\Exception $e) {
@@ -203,8 +197,4 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             }
         }
     }
-
-   
-
-
 }
