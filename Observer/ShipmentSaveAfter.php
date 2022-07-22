@@ -45,26 +45,34 @@ class ShipmentSaveAfter implements ObserverInterface
         $order = $observer->getEvent()->getShipment()->getOrder();
         $this->config->setStore($order->getStore());
 
-        if ($this->config->autoCaptureEnabled()) {
+        if ($this->config->autoCaptureEnabled())
+        {
             if ($order->getState() == Order::STATE_PROCESSING && !$order->hasInvoices()) {
                 $data = $order->getPayment()->getData();
-                if (!empty($data['last_trans_id'])) {
+                $payOrderId = $data['last_trans_id'] ?? null;
+
+                if (!empty($transactionId)) {
                     $bHasAmountAuthorized = !empty($data['base_amount_authorized']);
                     $amountPaid = isset($data['amount_paid']) ? $data['amount_paid'] : null;
                     $amountRefunded = isset($data['amount_refunded']) ? $data['amount_refunded'] : null;
 
                     if ($bHasAmountAuthorized && $amountPaid === null && $amountRefunded === null) {
-                        payHelper::logNotice('AUTO-CAPTURING(rest) ' . $data['last_trans_id'], [], $order->getStore());
+                        payHelper::logNotice('AUTO-CAPTURING(shipment-save-after) ' . $transactionId, [], $order->getStore());
                         try {
                             \Paynl\Config::setApiToken($this->config->getApiToken());
 
                             # Auto Capture for Wuunder
-                            if ($this->config->wuunderAutoCaptureEnabled() || $this->config->sherpaEnabled()) {
-                                \Paynl\Transaction::capture($data['last_trans_id']);
-                                $transaction = \Paynl\Transaction::get($data['last_trans_id']);
+                            if ($this->config->wuunderAutoCaptureEnabled() || $this->config->sherpaEnabled())
+                            {
+                                \Paynl\Transaction::capture($transactionId);
+                                $transaction = \Paynl\Transaction::get($transactionId);
                                 $this->payPayment->processPaidOrder($transaction, $order);
-                            } elseif ($this->config->autoCaptureEnabled()) {
-                                \Paynl\Transaction::capture($data['last_trans_id']);
+                            }
+                            else
+                            {
+  //                                \Paynl\Transaction::capture($transactionId);
+
+                                payHelper::logCritical('not doing aauto-capture in else', [], $order->getStore());
                             }
                             $strResult = 'Success';
                         } catch (\Exception $e) {
