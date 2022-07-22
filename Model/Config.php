@@ -12,6 +12,7 @@ use Magento\Store\Model\Store;
 class Config
 {
     const FINISH_PAY = 'paynl/order/finish';
+    const CANCEL_PAY = 'paynl/order/cancel';
     const FINISH_STANDARD = 'checkout/onepage/success';
     const ORDERSTATUS_PAID = 100;
     const ORDERSTATUS_DENIED = -63;

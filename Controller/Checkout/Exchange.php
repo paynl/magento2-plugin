@@ -175,12 +175,18 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
                 $message = 'FALSE| ' . $e->getMessage();
             }
             return $this->result->setContents($message);
-        } elseif ($transaction->isCanceled()) {
-            if ($order->getState() == Order::STATE_PROCESSING) {
+        } elseif ($transaction->isCanceled()) 
+        {
+            if ($order->getState() == Order::STATE_PROCESSING) 
+            {
                 return $this->result->setContents("TRUE| Ignoring cancel, order is `processing`");
             } elseif ($order->isCanceled()) {
                 return $this->result->setContents("TRUE| Already canceled");
-            } else {
+            } else 
+            {
+                
+          
+
                 if ($this->config->isNeverCancel()) {
                     return $this->result->setContents("TRUE| Not Canceled because never cancel is enabled");
                 }
@@ -197,4 +203,8 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             }
         }
     }
+
+   
+
+
 }
