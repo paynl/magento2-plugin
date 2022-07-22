@@ -59,7 +59,7 @@ class ShipmentSaveAfter implements ObserverInterface
                             \Paynl\Config::setApiToken($this->config->getApiToken());
 
                             # Auto Capture for Wuunder
-                            if ($this->config->wuunderAutoCaptureEnabled()) {
+                            if ($this->config->wuunderAutoCaptureEnabled() || $this->config->sherpaEnabled()) {
                                 \Paynl\Transaction::capture($data['last_trans_id']);
                                 $transaction = \Paynl\Transaction::get($data['last_trans_id']);
                                 $this->payPayment->processPaidOrder($transaction, $order);

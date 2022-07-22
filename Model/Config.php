@@ -214,6 +214,11 @@ class Config
         return $this->store->getConfig('payment/paynl/auto_capture') == 2;
     }
 
+    public function sherpaEnabled()
+    {
+        return $this->store->getConfig('payment/paynl/auto_capture') == 3;
+    }
+
     public function sendEcommerceAnalytics()
     {
         return $this->store->getConfig('payment/paynl/google_analytics_ecommerce') == 1;

@@ -105,6 +105,7 @@
 "PAY. -Order has been shipped, but no invoice was found. Capturing the payment automatically.","PAY. -Bestelling is verzonden, maar er is geen factuur gevonden. De betaling wordt automatisch gecaptured."
 "On","Aan"
 "On - Via Wuunder","Aan - Via Wuunder"
+"On - Via Sherpa","Aan - Via Sherpa"
 "Off","Uit"
 "Auto capture","Automatische capture"
 "Automatically capture authorisation-transaction when creating the shipment for the order.","Capture een geautoriseerde betaling automatisch bij het aanmaken van een nieuwe verzending."
