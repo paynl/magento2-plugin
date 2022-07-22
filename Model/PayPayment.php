@@ -93,6 +93,9 @@ class PayPayment
         return $returnResult;
     }
 
+    /**
+     * @param Order $order
+     */
     public function uncancelOrder(Order $order)
     {
         $state = Order::STATE_PENDING_PAYMENT;
@@ -137,18 +140,18 @@ class PayPayment
     /**
      * @param Transaction $transaction
      * @param Order $order
-     * @return Bool
+     * @return bool
+     * @throws \Magento\Framework\Exception\AlreadyExistsException
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function processPaidOrder(Transaction $transaction, Order $order)
     {
         $returnResult = false;
 
+        # Before processing the payment, check if we should uncancel the corresponding order
         if ($order->isCanceled() || $order->getTotalCanceled() == $order->getGrandTotal()) {
-            try {
-                $this->uncancelOrder($order);
-            } catch (LocalizedException $e) {
-                throw new \Exception('Cannot un-cancel order: ' . $e->getMessage());
-            }
+            $this->uncancelOrder($order);
         }
 
         /** @var Interceptor $payment */
@@ -164,28 +167,10 @@ class PayPayment
         ];
 
         $orderAmount = round($order->getGrandTotal(), 2);
-        if (!in_array($orderAmount, $transactionPaid)) {
-            payHelper::logCritical('Amount validation error.', array($transactionPaid, $orderAmount, $order->getGrandTotal()));
-            throw new \Exception('Amount validation error. Amounts: ' . print_r(array($transactionPaid, $orderAmount, $order->getGrandTotal())));
-        }
-
-        $paidAmount = $order->getGrandTotal();
-
-        if (!$this->paynlConfig->isAlwaysBaseCurrency()) {
-            if ($order->getBaseCurrencyCode() != $order->getOrderCurrencyCode()) {
-                # We can only register the payment in the base currency
-                $paidAmount = $order->getBaseGrandTotal();
-            }
-        }
-
-        # Multipayments finish
-        if ($this->config->registerPartialPayments()) {
-            $payments = $order->getAllPayments();
-            if (count($payments) > 1) {
-                if ($transaction->isPaid() && $order->getTotalDue() == 0) {
-                    $paidAmount = $order->getBaseGrandTotal();
-                }
-            }
+        $orderBaseAmount = round($order->getBaseGrandTotal(), 2);
+        if (!in_array($orderAmount, $transactionPaid) && !in_array($orderBaseAmount, $transactionPaid)) {
+            payHelper::logCritical('Amount validation error.', array($transactionPaid, $orderAmount, $order->getGrandTotal(), $order->getBaseGrandTotal()));
+            return $this->result->setContents('FALSE| Amount validation error. Amounts: ' . print_r(array($transactionPaid, $orderAmount, $order->getGrandTotal(), $order->getBaseGrandTotal()), true));
         }
 
         # Force order state to processing
@@ -206,9 +191,9 @@ class PayPayment
         } else {
 
             if ($transaction->isAuthorized()) {
-                $payment->registerAuthorizationNotification($paidAmount);
+                $payment->registerAuthorizationNotification($order->getBaseGrandTotal());
             } else {
-                $payment->registerCaptureNotification($paidAmount, $this->config->isSkipFraudDetection());
+                $payment->registerCaptureNotification($order->getBaseGrandTotal(), $this->config->isSkipFraudDetection());
             }
 
             $order->setStatus(!empty($newStatus) ? $newStatus : Order::STATE_PROCESSING);

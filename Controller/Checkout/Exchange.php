@@ -8,8 +8,10 @@ use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderRepository;
 use Paynl\Payment\Controller\CsrfAwareActionInterface;
 use Paynl\Payment\Controller\PayAction;
-use \Paynl\Payment\Helper\PayHelper;
-use \Paynl\Payment\Model\PayPayment;
+use Paynl\Payment\Helper\PayHelper;
+use Paynl\Payment\Model\PayPayment;
+use Paynl\Transaction;
+use Paynl\Config as PAYSDK;
 
 /**
  * Communicates with PAY. in order to update payment statuses in magento
@@ -19,11 +21,9 @@ use \Paynl\Payment\Model\PayPayment;
 class Exchange extends PayAction implements CsrfAwareActionInterface
 {
     /**
-     *
      * @var \Paynl\Payment\Model\Config
      */
     private $config;
-
 
     /**
      * @var \Magento\Framework\Controller\Result\Raw
@@ -39,7 +39,6 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
      * @var PayPayment
      */
     private $payPayment;
-
 
     public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
     {
@@ -104,10 +103,10 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         }
 
         $this->config->setStore($order->getStore());
-        \Paynl\Config::setApiToken($this->config->getApiToken());
+        PAYSDK::setApiToken($this->config->getApiToken());
 
         try {
-            $transaction = \Paynl\Transaction::get($payOrderId);
+            $transaction = Transaction::get($payOrderId);
         } catch (\Exception $e) {
             payHelper::logCritical($e, $params, $order->getStore());
 
