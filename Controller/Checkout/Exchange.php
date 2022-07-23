@@ -158,7 +158,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
                 payHelper::logDebug('Already captured.');
                 return $this->result->setContents('TRUE| Already captured.');
             }
-            if ($this->config->wuunderAutoCaptureEnabled() || $this->config->sherpaEnabled()) {
+            if ($this->config->autoCaptureEnabled()) {
                 return $this->result->setContents('TRUE| CAPTURED');
             }
         }
