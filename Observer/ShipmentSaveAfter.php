@@ -63,10 +63,14 @@ class ShipmentSaveAfter implements ObserverInterface
                             # Handles Sherpa
                             # Handles Manual made shipment
                             \Paynl\Config::setApiToken($this->config->getApiToken());
-                            \Paynl\Transaction::capture($payOrderId);
-                            $transaction = \Paynl\Transaction::get($payOrderId);
-                            $this->payPayment->processPaidOrder($transaction, $order);
-                            $strResult = 'Success';
+                            $bCaptureResult = \Paynl\Transaction::capture($payOrderId);
+                            if($bCaptureResult) {
+                                $transaction = \Paynl\Transaction::get($payOrderId);
+                                $this->payPayment->processPaidOrder($transaction, $order);
+                                $strResult = 'Success';
+                            } else {
+                                throw new \Exception('Capture failed');
+                            }
                         } catch (\Exception $e) {
                             payHelper::logDebug('Order PAY error(rest): ' . $e->getMessage() . ' EntityId: ' . $order->getEntityId(), [], $order->getStore());
                             $strResult = 'Failed. Errorcode: PAY-MAGENTO2-004. See docs.pay.nl for more information';
