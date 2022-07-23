@@ -59,30 +59,29 @@ class OrderSaveCommitAfter implements ObserverInterface
                     $amountRefunded = isset($data['amount_refunded']) ? $data['amount_refunded'] : null;
 
                     if ($bHasAmountAuthorized && $amountPaid === null && $amountRefunded === null) {
-                        payHelper::logNotice('AUTO-CAPTURING (order-save-commit-after) ' . $payOrderId, [], $order->getStore());
+                        payHelper::logDebug('DISABLED handling AUTO-CAPTURING in order-save-commit-after' . $payOrderId, [], $order->getStore());
+                        return;
+
+                        payHelper::logDebug('AUTO-CAPTURING (order-save-commit-after) ' . $payOrderId, [], $order->getStore());
                         try {
                             \Paynl\Config::setApiToken($this->config->getApiToken());
-
                             # Auto Capture for Wuunder
-                            if ($this->config->wuunderAutoCaptureEnabled())
-                            {
-                                /*
+                            if ($this->config->wuunderAutoCaptureEnabled()) {
                                 \Paynl\Transaction::capture($payOrderId);
                                 $transaction = \Paynl\Transaction::get($payOrderId);
                                 $this->payPayment->processPaidOrder($transaction, $order);
-                                */
-
-                                payHelper::logCritical('wuunderAutoCaptureEnabled but in OrderSaveCommitAfter(why am i here) ');
-
-                            } else {
+                                payHelper::logDebug('wuunderAutoCaptureEnabled but in OrderSaveCommitAfter(why am i here) ');
+                            }
+                            else {
                                 \Paynl\Transaction::capture($payOrderId);
+                                $transaction = \Paynl\Transaction::get($payOrderId);
+                                $this->payPayment->processPaidOrder($transaction, $order);
                             }
                             $strResult = 'Success';
                         } catch (\Exception $e) {
-                            payHelper::logCritical('Order PAY error: ' . $e->getMessage() . ' EntityId: ' . $order->getEntityId() . ' PAY. OrderID: ' . $payOrderId, [], $order->getStore());
+                            payHelper::logDebug('Order PAY error: ' . $e->getMessage() . ' EntityId: ' . $order->getEntityId() . ' PAY. OrderID: ' . $payOrderId, [], $order->getStore());
                             $strResult = 'Failed. Errorcode: PAY-MAGENTO2-003. See docs.pay.nl for more information';
                         }
-
                         $order->addStatusHistoryComment(__('PAY. - Performed auto-capture. Result: ') . $strResult, false)->save();
                     }
                 }

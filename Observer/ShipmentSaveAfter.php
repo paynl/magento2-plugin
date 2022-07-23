@@ -45,44 +45,41 @@ class ShipmentSaveAfter implements ObserverInterface
         $order = $observer->getEvent()->getShipment()->getOrder();
         $this->config->setStore($order->getStore());
 
-        if ($this->config->autoCaptureEnabled())
-        {
+        if ($this->config->autoCaptureEnabled()) {
             if ($order->getState() == Order::STATE_PROCESSING && !$order->hasInvoices()) {
                 $data = $order->getPayment()->getData();
                 $payOrderId = $data['last_trans_id'] ?? null;
 
-                if (!empty($transactionId)) {
+                if (!empty($payOrderId)) {
                     $bHasAmountAuthorized = !empty($data['base_amount_authorized']);
                     $amountPaid = isset($data['amount_paid']) ? $data['amount_paid'] : null;
                     $amountRefunded = isset($data['amount_refunded']) ? $data['amount_refunded'] : null;
 
                     if ($bHasAmountAuthorized && $amountPaid === null && $amountRefunded === null) {
-                        payHelper::logNotice('AUTO-CAPTURING(shipment-save-after) ' . $transactionId, [], $order->getStore());
+                        payHelper::logDebug('AUTO-CAPTURING(shipment-save-after) ' . $payOrderId, [], $order->getStore());
                         try {
+                            # Handles Wuunder
+                            # Handles Picqer
+                            # Handles Sherpa
+                            # Handles auto-capture through manual made shipment
                             \Paynl\Config::setApiToken($this->config->getApiToken());
-
-                            # Auto Capture for Wuunder
-                            if ($this->config->wuunderAutoCaptureEnabled() || $this->config->sherpaEnabled())
-                            {
-                                \Paynl\Transaction::capture($transactionId);
-                                $transaction = \Paynl\Transaction::get($transactionId);
-                                $this->payPayment->processPaidOrder($transaction, $order);
-                            }
-                            else
-                            {
-  //                                \Paynl\Transaction::capture($transactionId);
-
-                                payHelper::logCritical('not doing aauto-capture in else', [], $order->getStore());
-                            }
+                            \Paynl\Transaction::capture($payOrderId);
+                            $transaction = \Paynl\Transaction::get($payOrderId);
+                            $this->payPayment->processPaidOrder($transaction, $order);
                             $strResult = 'Success';
                         } catch (\Exception $e) {
-                            payHelper::logCritical('Order PAY error(rest): ' . $e->getMessage() . ' EntityId: ' . $order->getEntityId(), [], $order->getStore());
+                            payHelper::logDebug('Order PAY error(rest): ' . $e->getMessage() . ' EntityId: ' . $order->getEntityId(), [], $order->getStore());
                             $strResult = 'Failed. Errorcode: PAY-MAGENTO2-004. See docs.pay.nl for more information';
                         }
-
-                        $order->addStatusHistoryComment(__('PAY. - Performed auto-capture(rest). Result: ') . $strResult, false)->save();
+                        $order->addStatusHistoryComment(__('PAY. - Performed auto-capture. Result: ') . $strResult, false)->save();
+                    } else {
+                        payHelper::logDebug('Auto-Capture conditions not met (yet). Amountpaid:' . $amountPaid . ' bHasAmountAuthorized: ' . ($bHasAmountAuthorized ? '1' : '0'), [], $order->getStore());
                     }
+                } else {
+                    payHelper::logDebug('Auto-Capture conditions not met (yet). No PAY-Order-id.', [], $order->getStore());
                 }
+            } else {
+                payHelper::logDebug('Auto-capture conditions not met (yet). State: ' . $order->getState(), [], $order->getStore());
             }
         }
     }
