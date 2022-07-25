@@ -16,6 +16,7 @@ class Config
     const CANCEL_PAY = 'paynl/order/cancel';
     const FINISH_STANDARD = 'checkout/onepage/success';
     const ORDERSTATUS_PAID = 100;
+    const ORDERSTATUS_PENDING = 50;
     const ORDERSTATUS_DENIED = -63;
     const ORDERSTATUS_CANCELED = -90;
 
