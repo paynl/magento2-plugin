@@ -38,6 +38,7 @@
     <include path="Paynl_Payment::paymentmethods/mistercash.xml" />
     <include path="Paynl_Payment::paymentmethods/multibanco.xml" />
     <include path="Paynl_Payment::paymentmethods/mybank.xml" />
+    <include path="Paynl_Payment::paymentmethods/nexi.xml" />
     <include path="Paynl_Payment::paymentmethods/overboeking.xml" />
     <include path="Paynl_Payment::paymentmethods/payconiq.xml" />
     <include path="Paynl_Payment::paymentmethods/paypal.xml" />

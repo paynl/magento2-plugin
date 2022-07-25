@@ -46,6 +46,7 @@ define(
             {type: 'paynl_payment_mistercash', component: defaultComponent},
             {type: 'paynl_payment_multibanco', component: defaultComponent},
             {type: 'paynl_payment_mybank', component: defaultComponent},
+            {type: 'paynl_payment_nexi', component: defaultComponent},
             {type: 'paynl_payment_overboeking', component: defaultComponent},
             {type: 'paynl_payment_payconiq', component: defaultComponent},
             {type: 'paynl_payment_paypal', component: defaultComponent},

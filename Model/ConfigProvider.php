@@ -47,6 +47,7 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_mistercash',
         'paynl_payment_multibanco',
         'paynl_payment_mybank',
+        'paynl_payment_nexi',
         'paynl_payment_overboeking',
         'paynl_payment_payconiq',
         'paynl_payment_paypal',
