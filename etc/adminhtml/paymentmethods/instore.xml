@@ -37,6 +37,9 @@
         <field id="show_pin_button" translate="label" type="select" sortOrder="26" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Show pin button on Order page</label>
             <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
+            <depends>
+                <field id="active">1</field>
+            </depends>
             <config_path>payment/paynl_payment_instore/show_pin_button</config_path>
             <comment>
                 <![CDATA[Enable this to start a Pin transaction via the Order detail page after making an order with the Instore option via the Magento2 backend.]]>
