@@ -67,9 +67,6 @@ class Paylink extends PaymentMethod
                         return false;
                     }
 
-                $paylinktext = __('A PAY. Paylink has been send to');
-                $order->addStatusHistoryComment($paylinktext . ' ' . $order->getCustomerEmail() . '.', $status);
-
                     $supportEmail = $this->_scopeConfig->getValue('trans_email/ident_support/email', 'store', $storeId);
                     $senderName = $this->_scopeConfig->getValue('trans_email/ident_sales/name', 'store', $storeId);
                     $senderEmail = $this->_scopeConfig->getValue('trans_email/ident_sales/email', 'store', $storeId);
