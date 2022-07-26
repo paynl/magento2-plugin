@@ -296,33 +296,14 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         ];
 
         $orderAmount = round($order->getGrandTotal(), 2);
-        if (!in_array($orderAmount, $transactionPaid)) {
-            payHelper::logCritical('Amount validation error.', array($transactionPaid, $orderAmount, $order->getGrandTotal()));
-            return $this->result->setContents('FALSE| Amount validation error. Amounts: ' . print_r(array($transactionPaid, $orderAmount, $order->getGrandTotal()), true));
-        }
-
-        $paidAmount = $order->getGrandTotal();
-
-        if (!$this->paynlConfig->isAlwaysBaseCurrency()) {
-            if ($order->getBaseCurrencyCode() != $order->getOrderCurrencyCode()) {
-                # We can only register the payment in the base currency
-                $paidAmount = $order->getBaseGrandTotal();
-            }
-        }
-
-        # Multipayments finish
-        if ($this->config->registerPartialPayments()) {
-            $payments = $order->getAllPayments();
-            if (count($payments) > 1) {
-                if ($transaction->isPaid() && $order->getTotalDue() == 0) {
-                    $paidAmount = $order->getBaseGrandTotal();
-                }
-            }
+        $orderBaseAmount = round($order->getBaseGrandTotal(), 2);
+        if (!in_array($orderAmount, $transactionPaid) && !in_array($orderBaseAmount, $transactionPaid)) {
+            payHelper::logCritical('Amount validation error.', array($transactionPaid, $orderAmount, $order->getGrandTotal(), $order->getBaseGrandTotal()));
+            return $this->result->setContents('FALSE| Amount validation error. Amounts: ' . print_r(array($transactionPaid, $orderAmount, $order->getGrandTotal(), $order->getBaseGrandTotal()), true));
         }
 
         # Force order state to processing
         $order->setState(Order::STATE_PROCESSING);
-
         $paymentMethod = $order->getPayment()->getMethod();
 
         # Notify customer
@@ -357,11 +338,11 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         }
 
         if ($transaction->isAuthorized()) {
-            $authAmount = $this->config->useMagOrderAmountForAuth() ? $order->getBaseGrandTotal() : $transaction->getAmountOriginal();
-            $payment->registerAuthorizationNotification($authAmount);
+            $payment->registerAuthorizationNotification($order->getBaseGrandTotal());
         } else {
-            $payment->registerCaptureNotification($paidAmount, $this->config->isSkipFraudDetection());
+            $payment->registerCaptureNotification($order->getBaseGrandTotal(), $this->config->isSkipFraudDetection());
         }
+
 
         $order->setStatus(!empty($newStatus) ? $newStatus : Order::STATE_PROCESSING);
 
@@ -395,7 +376,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             $paymentDetails = $details->getPaymentDetails();
             $transactionDetails = $paymentDetails['transactionDetails'];
             $firstPayment = count($transactionDetails) == 1;
-            $totalpaid =0;
+            $totalpaid = 0;
             foreach ($transactionDetails as $_dt) {
                 $totalpaid += $_dt['amount']['value'];
             }
@@ -430,13 +411,13 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
                 );
             $transactionBuilder->save();
 
-            $order->addStatusHistoryComment(__('PAY. - Partial payment received: '.$subProfile.' - Amount ' . $currency . ' ' . $amount . ' Method: ' . $method));
+            $order->addStatusHistoryComment(__('PAY. - Partial payment received: ' . $subProfile . ' - Amount ' . $currency . ' ' . $amount . ' Method: ' . $method));
             $order->setTotalPaid($totalpaid / 100);
 
             $this->orderRepository->save($order);
 
         } catch (\Exception $e) {
-            $returnMessage = 'TRUE| Failed processing partial payment'. $e->getMessage();
+            $returnMessage = 'TRUE| Failed processing partial payment' . $e->getMessage();
         }
 
         return $this->result->setContents($returnMessage);

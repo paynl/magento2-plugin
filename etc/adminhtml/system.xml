@@ -41,11 +41,6 @@
                     <comment><![CDATA[Set this to yes if you always want to process payments in the base currency of this store. Magento acts strange when trying to register a payment in another currency than the base currency. The base currency MUST be EUR]]></comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="use_magorder_for_auth" translate="label,comment" type="select" sortOrder="71" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Use base amount for authorisations</label>
-                    <comment><![CDATA[Set this to yes to use base amount as authorize amount instead of currencyamount]]></comment>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                </field>
                 <field id="use_sku_id" translate="label,comment" type="select" sortOrder="72" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Productdata ID</label>
                     <comment><![CDATA[Select which ID to use as product-ID for PAY. productdata.]]></comment>
@@ -114,7 +109,7 @@
                 </field>
                 <field id="register_partial_payments" translate="label" type="select" sortOrder="106" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Register partial payments</label>
-                    <comment><![CDATA[Register partial payments]]></comment>
+                    <comment><![CDATA[Enable to register every partial payment in your transactions tab, located in your order details.]]></comment>
                     <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
                 </field>
                 <field id="order_description_prefix" translate="label" type="text" sortOrder="107" showInDefault="1" showInWebsite="1" showInStore="1">

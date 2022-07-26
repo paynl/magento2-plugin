@@ -12,6 +12,7 @@ use Magento\Store\Model\Store;
 class Config
 {
     const FINISH_PAY = 'paynl/order/finish';
+    const CANCEL_PAY = 'paynl/order/cancel';
     const FINISH_STANDARD = 'checkout/onepage/success';
     const ORDERSTATUS_PAID = 100;
     const ORDERSTATUS_DENIED = -63;
@@ -165,11 +166,6 @@ class Config
     public function isAlwaysBaseCurrency()
     {
         return $this->store->getConfig('payment/paynl/always_base_currency') == 1;
-    }
-
-    public function useMagOrderAmountForAuth()
-    {
-        return $this->store->getConfig('payment/paynl/use_magorder_for_auth') == 1;
     }
 
     public function useSkuId()
