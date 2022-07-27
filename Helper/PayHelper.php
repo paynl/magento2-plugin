@@ -79,20 +79,22 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
      */
     public static function log($text, $params = array(), $store = null)
     {
-        $objectManager = self::getObjectManager();
-        $logger = $objectManager->get(\Psr\Log\LoggerInterface::class);
+        $writer = new \Zend\Log\Writer\Stream(BP . '/var/log/pay.log');
+        $logger = new \Zend\Log\Logger();
+        $logger->addWriter($writer);
         $logger->notice(PayHelper::PAY_LOG_PREFIX . $text, $params);
     }
 
     public static function writeLog($text, $type, $params, $store)
     {
-        $objectManager = self::getObjectManager();
-        $logger = $objectManager->get(\Psr\Log\LoggerInterface::class);
-
         $store = self::getStore($store);
         $level = $store->getConfig('payment/paynl/logging_level');
 
         if (self::hasCorrectLevel($level, $type)) {
+            $writer = new \Zend\Log\Writer\Stream(BP . '/var/log/pay.log');
+            $logger = new \Zend\Log\Logger();
+            $logger->addWriter($writer);
+            
             $text = PayHelper::PAY_LOG_PREFIX . $text;
             if (!is_array($params)) {
                 $params = array();
