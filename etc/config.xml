@@ -455,6 +455,18 @@ In order to pay for your order click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_mybank>
+            <paynl_payment_nexi>
+                <active>0</active>
+                <title>Nexi</title>
+                <payment_option_id>1945</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Nexi</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_nexi>
             <paynl_payment_overboeking>
                 <active>0</active>
                 <title>Overboeking</title>
