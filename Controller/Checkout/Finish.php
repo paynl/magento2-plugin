@@ -112,8 +112,8 @@ class Finish extends PayAction
             }
 
             if (empty($bSuccess) && !$isPinTransaction) {
-                $transaction = \Paynl\Transaction::status($payOrderId);
-                $orderNumber = $transaction->getOrderNumber();
+                $transaction = \Paynl\Transaction::get($payOrderId);
+                $orderNumber = $transaction->getExtra1();
                 $this->checkEmpty($order->getIncrementId() == $orderNumber, '', 104, 'order mismatch');
                 $bSuccess = ($transaction->isPaid() || $transaction->isAuthorized() || ($transaction->isPending() && !$bCanceled));
             }
