@@ -79,42 +79,42 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
      */
     public static function log($text, $params = array(), $store = null)
     {
-        $writer = new \Zend\Log\Writer\Stream(BP . '/var/log/pay.log');
-        $logger = new \Zend\Log\Logger();
-        $logger->addWriter($writer);
-        $logger->notice(PayHelper::PAY_LOG_PREFIX . $text, $params);
+        $objectManager = self::getObjectManager();
+        $logger = $objectManager->get(\Paynl\Payment\Logging\LoggerNotice::class);
+        $logger->notice($text, $params);
     }
 
     public static function writeLog($text, $type, $params, $store)
     {
+        $objectManager = self::getObjectManager();
         $store = self::getStore($store);
         $level = $store->getConfig('payment/paynl/logging_level');
 
         if (self::hasCorrectLevel($level, $type)) {
-            $writer = new \Zend\Log\Writer\Stream(BP . '/var/log/pay.log');
-            $logger = new \Zend\Log\Logger();
-            $logger->addWriter($writer);
-            
-            $text = PayHelper::PAY_LOG_PREFIX . $text;
             if (!is_array($params)) {
                 $params = array();
             }
             switch ($type) {
                 case 'critical':
+                    $logger = $objectManager->get(\Paynl\Payment\Logging\LoggerCritical::class);
                     $logger->critical($text, $params);
                     break;
                 case 'notice':
+                    $logger = $objectManager->get(\Paynl\Payment\Logging\LoggerNotice::class);
                     $logger->notice($text, $params);
                     break;
                 case 'info':
+                    $logger = $objectManager->get(\Paynl\Payment\Logging\LoggerInfo::class);
                     $logger->info($text, $params);
                     break;
                 case 'debug':
+                    $logger = $objectManager->get(\Paynl\Payment\Logging\LoggerDebug::class);
                     $logger->debug($text, $params);
                     break;
             }
         }
     }
+
 
     public function getClientIp()
     {
