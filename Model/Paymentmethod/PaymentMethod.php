@@ -437,6 +437,7 @@ abstract class PaymentMethod extends AbstractMethod
 
             $statistics = new Model\Statistics();
             $statistics->setObject($transaction['object']);
+            $statistics->setExtra1($transaction['extra1']);
             $statistics->setExtra3($transaction['extra3']);
 
             $browser = new Model\Browser();

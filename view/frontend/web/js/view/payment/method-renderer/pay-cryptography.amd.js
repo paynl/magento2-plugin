@@ -1084,8 +1084,7 @@ define(['exports'], (function (exports) { 'use strict';
                             'paymentCompleteUrl': config.payment_complete_url,
                             'urlParameters': {
                                 'orderId': response.data.orderId,
-                                'entranceCode': response.data.entranceCode,
-                                'sueprArg' : 12345,
+                                'entranceCode': response.data.entranceCode
                             }
                         }),
                         Events.onPaymentCompleteEvent
