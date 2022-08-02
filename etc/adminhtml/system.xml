@@ -50,7 +50,7 @@
             </group>
         </section>
         <section id="paynl_paymentmethods" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="15" translate="label">
-            <label>Paymentmethods</label>
+            <label>Payment methods</label>
             <tab>paynl</tab>
             <resource>Paynl_Payment::config</resource>
             <include path="Paynl_Payment::paymentmethods.xml" />
