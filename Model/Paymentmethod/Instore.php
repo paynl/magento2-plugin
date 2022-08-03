@@ -62,6 +62,7 @@ class Instore extends PaymentMethod
 
             $additionalData['transactionId'] = $transaction->getTransactionId();
             $additionalData['terminal_hash'] = $instorePayment->getHash();
+            $additionalData['payment_option'] = $terminalId;
 
             $order->getPayment()->setAdditionalInformation($additionalData);
             $order->save();
