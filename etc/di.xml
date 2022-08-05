@@ -15,67 +15,18 @@
         />
     </type>
 
-    <!-- CRITICAL Logger-->
-    <virtualType name="Paynl\Payment\Logging\CriticalHandler" type="Magento\Framework\Logger\Handler\Base">
+    <!-- PAY. Logger -->
+    <virtualType name="Paynl\Payment\Logging\Handler" type="Magento\Framework\Logger\Handler\Base">
         <arguments>
-            <argument name="fileName" xsi:type="string">/var/log/pay.log</argument>
-            <argument name="loggerType" xsi:type="string">CRITICAL</argument>            
+            <argument name="fileName" xsi:type="string">/var/log/pay.log</argument>              
         </arguments>
     </virtualType>
-    <type name="Paynl\Payment\Logging\LoggerCritical">
+    <type name="Paynl\Payment\Logging\Logger">
 		<arguments>
 			<argument name="name" xsi:type="string">PAY</argument>
 			<argument name="handlers"  xsi:type="array">
-				<item name="debug" xsi:type="object">Paynl\Payment\Logging\CriticalHandler</item>
+				<item name="handler" xsi:type="object">Paynl\Payment\Logging\Handler</item>
 			</argument>
 		</arguments>
-	</type>
-
-    <!-- NOTICE Logger-->
-    <virtualType name="Paynl\Payment\Logging\NoticeHandler" type="Magento\Framework\Logger\Handler\Base">
-        <arguments>
-            <argument name="fileName" xsi:type="string">/var/log/pay.log</argument>
-            <argument name="loggerType" xsi:type="string">NOTICE</argument>            
-        </arguments>
-    </virtualType>
-    <type name="Paynl\Payment\Logging\LoggerNotice">
-		<arguments>
-			<argument name="name" xsi:type="string">PAY</argument>
-			<argument name="handlers"  xsi:type="array">
-				<item name="debug" xsi:type="object">Paynl\Payment\Logging\NoticeHandler</item>
-			</argument>
-		</arguments>
-	</type>
-
-    <!-- INFO Logger-->
-    <virtualType name="Paynl\Payment\Logging\InfoHandler" type="Magento\Framework\Logger\Handler\Base">
-        <arguments>
-            <argument name="fileName" xsi:type="string">/var/log/pay.log</argument>
-            <argument name="loggerType" xsi:type="string">INFO</argument>            
-        </arguments>
-    </virtualType>
-    <type name="Paynl\Payment\Logging\LoggerInfo">
-		<arguments>
-			<argument name="name" xsi:type="string">PAY</argument>
-			<argument name="handlers"  xsi:type="array">
-				<item name="debug" xsi:type="object">Paynl\Payment\Logging\InfoHandler</item>
-			</argument>
-		</arguments>
-	</type>
-
-    <!-- DEBUG Logger-->
-    <virtualType name="Paynl\Payment\Logging\DebugHandler" type="Magento\Framework\Logger\Handler\Base">
-        <arguments>
-            <argument name="fileName" xsi:type="string">/var/log/pay.log</argument>
-            <argument name="loggerType" xsi:type="string">DEBUG</argument>            
-        </arguments>
-    </virtualType>
-    <type name="Paynl\Payment\Logging\LoggerDebug">
-		<arguments>
-			<argument name="name" xsi:type="string">PAY</argument>
-			<argument name="handlers"  xsi:type="array">
-				<item name="debug" xsi:type="object">Paynl\Payment\Logging\DebugHandler</item>
-			</argument>
-		</arguments>
-	</type>
+	</type>  
 </config>
