@@ -19,47 +19,59 @@ class Logs extends \Magento\Framework\App\Action\Action
         return parent::__construct($context);
     }
 
+
+    private function downloadPayLog()
+    {
+        # Just download the PAY. logs
+        $content['type'] = 'filename';
+        $content['value'] = 'log/pay.log';
+        $content['rm'] = 0;
+        $dir = $this->directoryList->getPath(\Magento\Framework\App\Filesystem\DirectoryList::ROOT);
+        $rootPath = $dir . '/var/log/pay.log';
+
+        if (file_exists($rootPath)) {
+            $this->fileFactory->create('pay.log', $content, DirectoryList::VAR_DIR);
+        }
+    }
+
     public function execute()
     {
         if (!class_exists('\ZipArchive')) {
-            # Just download the PAY. logs         
-            $content['type'] = 'filename';
-            $content['value'] ='log/pay.log';
-            $content['rm'] = 0;
-            $this->fileFactory->create('pay.log', $content, DirectoryList::VAR_DIR);  
+            # Zipping is not possible, so trying to download only pay.log
+            $this->downloadPayLog();
         }
-        
-        $dir = $this->directoryList->getPath(\Magento\Framework\App\Filesystem\DirectoryList::ROOT);     
-        $rootPath = $dir.'/var/log';
-        chdir($rootPath);
 
-        $zip = new \ZipArchive();
-        $zip->open('logs.zip', \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
-        
-        $files = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator($rootPath),
-            \RecursiveIteratorIterator::LEAVES_ONLY
-        );       
+        $dir = $this->directoryList->getPath(\Magento\Framework\App\Filesystem\DirectoryList::ROOT);
+        $rootPath = $dir . '/var/loeg';
 
-        foreach ($files as $name => $file)
-        {
-            // Skip directories (they would be added automatically)
-            if (!$file->isDir())
-            {
-                // Get real and relative path for current file
-                $filePath = $file->getRealPath();
-                $relativePath = substr($filePath, strlen($rootPath) + 1);
+        try {
+            $bDirChange = chdir($rootPath);
+        } catch (\Exception $e) {
+            $bDirChange = false;
+        }
 
-                // Add current file to archive
-                $zip->addFile($filePath, $relativePath);
+        if ($bDirChange) {
+            $zip = new \ZipArchive();
+            $zip->open('logs.zip', \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+
+            $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($rootPath), \RecursiveIteratorIterator::LEAVES_ONLY);
+            foreach ($files as $name => $file) {
+                if (!$file->isDir()) {
+                    $filePath = $file->getRealPath();
+                    $relativePath = substr($filePath, strlen($rootPath) + 1);
+                    $zip->addFile($filePath, $relativePath);
+                }
             }
+
+            $zip->close();
+
+            $content['type'] = 'filename';
+            $content['value'] = 'log/logs.zip';
+            $content['rm'] = 1;
+            $this->fileFactory->create('logs-' . date("Y-m-d") . '.zip', $content, DirectoryList::VAR_DIR);
+        } else {
+            $this->downloadPayLog();
         }
 
-        $zip->close();
-
-        $content['type'] = 'filename';
-        $content['value'] = 'log/logs.zip';
-        $content['rm'] = 1;
-        $this->fileFactory->create('logs-'. date("Y-m-d").'.zip', $content, DirectoryList::VAR_DIR);              
     }
 }
