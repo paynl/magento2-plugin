@@ -27,9 +27,9 @@ class Logs extends \Magento\Framework\App\Action\Action
         $content['value'] = 'log/pay.log';
         $content['rm'] = 0;
         $dir = $this->directoryList->getPath(\Magento\Framework\App\Filesystem\DirectoryList::ROOT);
-        $rootPath = $dir . '/var/log/pay.log';
+        $filePath = $dir . '/var/log/pay.log';
 
-        if (file_exists($rootPath)) {
+        if (file_exists($filePath)) {
             $this->fileFactory->create('pay.log', $content, DirectoryList::VAR_DIR);
         }
     }
@@ -42,7 +42,7 @@ class Logs extends \Magento\Framework\App\Action\Action
         }
 
         $dir = $this->directoryList->getPath(\Magento\Framework\App\Filesystem\DirectoryList::ROOT);
-        $rootPath = $dir . '/var/loeg';
+        $rootPath = $dir . '/var/log';
 
         try {
             $bDirChange = chdir($rootPath);
@@ -72,6 +72,5 @@ class Logs extends \Magento\Framework\App\Action\Action
         } else {
             $this->downloadPayLog();
         }
-
     }
 }
