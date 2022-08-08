@@ -80,7 +80,7 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
     public static function log($text, $params = array(), $store = null)
     {
         $objectManager = self::getObjectManager();
-        $logger = $objectManager->get(\Paynl\Payment\Logging\LoggerNotice::class);
+        $logger = $objectManager->get(\Paynl\Payment\Logging\Logger::class);
         $logger->notice($text, $params);
     }
 
@@ -94,21 +94,18 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
             if (!is_array($params)) {
                 $params = array();
             }
+            $logger = $objectManager->get(\Paynl\Payment\Logging\Logger::class);
             switch ($type) {
                 case 'critical':
-                    $logger = $objectManager->get(\Paynl\Payment\Logging\LoggerCritical::class);
                     $logger->critical($text, $params);
                     break;
                 case 'notice':
-                    $logger = $objectManager->get(\Paynl\Payment\Logging\LoggerNotice::class);
                     $logger->notice($text, $params);
                     break;
                 case 'info':
-                    $logger = $objectManager->get(\Paynl\Payment\Logging\LoggerInfo::class);
                     $logger->info($text, $params);
                     break;
                 case 'debug':
-                    $logger = $objectManager->get(\Paynl\Payment\Logging\LoggerDebug::class);
                     $logger->debug($text, $params);
                     break;
             }
