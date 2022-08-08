@@ -80,23 +80,21 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
     public static function log($text, $params = array(), $store = null)
     {
         $objectManager = self::getObjectManager();
-        $logger = $objectManager->get(\Psr\Log\LoggerInterface::class);
-        $logger->notice(PayHelper::PAY_LOG_PREFIX . $text, $params);
+        $logger = $objectManager->get(\Paynl\Payment\Logging\Logger::class);
+        $logger->notice($text, $params);
     }
 
     public static function writeLog($text, $type, $params, $store)
     {
         $objectManager = self::getObjectManager();
-        $logger = $objectManager->get(\Psr\Log\LoggerInterface::class);
-
         $store = self::getStore($store);
         $level = $store->getConfig('payment/paynl/logging_level');
 
         if (self::hasCorrectLevel($level, $type)) {
-            $text = PayHelper::PAY_LOG_PREFIX . $text;
             if (!is_array($params)) {
                 $params = array();
             }
+            $logger = $objectManager->get(\Paynl\Payment\Logging\Logger::class);
             switch ($type) {
                 case 'critical':
                     $logger->critical($text, $params);
@@ -113,6 +111,7 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
             }
         }
     }
+
 
     public function getClientIp()
     {
