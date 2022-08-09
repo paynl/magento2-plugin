@@ -8,11 +8,17 @@ class InstoreButton
 {
 
     protected $_messageManager;
+    protected $cookieManager;
+    protected $cookieMetadataFactory;
 
     public function __construct(
-        \Magento\Framework\Message\ManagerInterface $messageManager
+        \Magento\Framework\Message\ManagerInterface $messageManager,
+        \Magento\Framework\Stdlib\CookieManagerInterface $cookieManager,
+        \Magento\Framework\Stdlib\Cookie\CookieMetadataFactory $cookieMetadataFactory
     ) {
         $this->_messageManager = $messageManager;
+        $this->cookieManager = $cookieManager;
+        $this->cookieMetadataFactory = $cookieMetadataFactory;
     }
 
     public function beforePushButtons(
@@ -47,12 +53,36 @@ class InstoreButton
                     );
                 }
 
-                if (!empty($this->_request->getParams()['pay_error_message'])) {
-                    $this->_messageManager->addError($this->_request->getParams()['pay_error_message']);
+                $error = $this->getCookie('pinError');
+
+                if (!empty($error)) {
+                    $this->_messageManager->addError($error);
                 }
+
+                $this->deleteCookie('pinError');
             }
         }
 
         return [$context, $buttonList];
+    }
+
+    /**
+     * get cookie by name
+     */
+    public function getCookie($cookieName)
+    {
+        return $this->cookieManager->getCookie($cookieName);
+    }
+
+    /**
+     * delete cookie by name
+     */
+    public function deleteCookie($cookieName)
+    {
+        if ($this->cookieManager->getCookie($cookieName)) {
+            $metadata = $this->cookieMetadataFactory->createPublicCookieMetadata();
+            $metadata->setPath('/');
+            return $this->cookieManager->deleteCookie($cookieName, $metadata);
+        }
     }
 }

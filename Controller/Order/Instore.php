@@ -29,7 +29,7 @@ class Instore extends PayAction implements CsrfAwareActionInterface
     }
 
     /**
-     * Exchange constructor.
+     * Instore constructor.
      *
      * @param \Magento\Framework\App\Action\Context $context
      * @param Magento\Sales\Model\OrderRepository $orderRepository
@@ -40,14 +40,19 @@ class Instore extends PayAction implements CsrfAwareActionInterface
         \Magento\Framework\App\Action\Context $context,
         OrderRepository $orderRepository,
         PaymentHelper $paymentHelper,
-        QuoteRepository $quoteRepository
+        QuoteRepository $quoteRepository,
+        \Magento\Framework\Stdlib\CookieManagerInterface $cookieManager,
+        \Magento\Framework\Stdlib\Cookie\CookieMetadataFactory $cookieMetadataFactory
     ) {
         $this->orderRepository = $orderRepository;
         $this->paymentHelper = $paymentHelper;
         $this->quoteRepository = $quoteRepository;
+        $this->cookieManager = $cookieManager;
+        $this->cookieMetadataFactory = $cookieMetadataFactory;
 
         parent::__construct($context);
     }
+
 
     public function execute()
     {
@@ -80,27 +85,25 @@ class Instore extends PayAction implements CsrfAwareActionInterface
                 exit;
             }
         } catch (\Exception $e) {
-            $returnUrl = $this->addUrlParameter($returnUrl, 'pay_error_message', $e->getMessage());
+            $this->setCookie('pinError', $e->getMessage());
             header("Location: " . $returnUrl);
             exit;
         }
     }
 
-    public function addUrlParameter($url, $parameter, $value)
+    public function setCookie($cookieName, $value)
     {
-        $url_parts = parse_url($url);
-        // If URL doesn't have a query string.
-        if (isset($url_parts['query'])) { // Avoid 'Undefined index: query'
-            parse_str($url_parts['query'], $params);
-        } else {
-            $params = array();
-        }
+        $metadata = $this->cookieMetadataFactory
+            ->createPublicCookieMetadata()
+            ->setDuration(300)
+            ->setSecure(false)
+            ->setPath('/')
+            ->setHttpOnly(false);
 
-        $params[$parameter] = $value;       
-
-        // Note that this will url_encode all values
-        $url_parts['query'] = http_build_query($params);
-
-        return $url_parts['scheme'] . '://' . $url_parts['host'] . $url_parts['path'] . '?' . $url_parts['query'];
+        $this->cookieManager->setPublicCookie(
+            $cookieName,
+            $value,
+            $metadata
+        );
     }
 }
