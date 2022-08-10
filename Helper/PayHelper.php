@@ -112,6 +112,44 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
         }
     }
 
+    public static function setCookie($cookieName, $value)
+    {
+        $objectManager = self::getObjectManager();
+        $cookieManager = $objectManager->get(\Magento\Framework\Stdlib\CookieManagerInterface::class);
+        $cookieMetadataFactory = $objectManager->get(\Magento\Framework\Stdlib\Cookie\CookieMetadataFactory::class);
+
+        $metadata = $cookieMetadataFactory
+            ->createPublicCookieMetadata()
+            ->setDuration(300)
+            ->setSecure(false)
+            ->setPath('/')
+            ->setHttpOnly(false);
+
+        $cookieManager->setPublicCookie(
+            $cookieName,
+            $value,
+            $metadata
+        );
+    }
+
+    public static function getCookie($cookieName)
+    {
+        $objectManager = self::getObjectManager();
+        $cookieManager = $objectManager->get(\Magento\Framework\Stdlib\CookieManagerInterface::class);
+        return $cookieManager->getCookie($cookieName);
+    }
+
+    public static function deleteCookie($cookieName)
+    {
+        $objectManager = self::getObjectManager();
+        $cookieManager = $objectManager->get(\Magento\Framework\Stdlib\CookieManagerInterface::class);
+        $cookieMetadataFactory = $objectManager->get(\Magento\Framework\Stdlib\Cookie\CookieMetadataFactory::class);
+        if ($cookieManager->getCookie($cookieName)) {
+            $metadata = $cookieMetadataFactory->createPublicCookieMetadata();
+            $metadata->setPath('/');
+            return $cookieManager->deleteCookie($cookieName, $metadata);
+        }
+    }
 
     public function getClientIp()
     {
