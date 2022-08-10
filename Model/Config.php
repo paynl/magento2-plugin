@@ -12,9 +12,11 @@ use Magento\Store\Model\Store;
 class Config
 {
     const FINISH_PAY = 'paynl/order/finish';
+    const PENDING_PAY = 'paynl/order/pending';
     const CANCEL_PAY = 'paynl/order/cancel';
     const FINISH_STANDARD = 'checkout/onepage/success';
     const ORDERSTATUS_PAID = 100;
+    const ORDERSTATUS_PENDING = 50;
     const ORDERSTATUS_DENIED = -63;
     const ORDERSTATUS_CANCELED = -90;
 
@@ -61,6 +63,7 @@ class Config
         "paynl_payment_mistercash" => "2",
         "paynl_payment_multibanco" => "141",
         "paynl_payment_mybank" => "5",
+        "paynl_payment_nexi" => "76",
         "paynl_payment_overboeking" => "12",
         "paynl_payment_payconiq" => "138",
         "paynl_payment_paypal" => "21",

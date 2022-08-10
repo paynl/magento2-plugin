@@ -14,7 +14,23 @@
                 type="Paynl\Payment\Plugin\OrderPaymentAdditionalInformation"
         />
     </type>
+
     <type name="Magento\Backend\Block\Widget\Button\Toolbar">
         <plugin name="paynl_payment_order_payment_custom_button" type="Paynl\Payment\Plugin\InstoreButton"/>
     </type>    
+
+    <!-- PAY. Logger -->
+    <virtualType name="Paynl\Payment\Logging\Handler" type="Magento\Framework\Logger\Handler\Base">
+        <arguments>
+            <argument name="fileName" xsi:type="string">/var/log/pay.log</argument>              
+        </arguments>
+    </virtualType>
+    <type name="Paynl\Payment\Logging\Logger">
+		<arguments>
+			<argument name="name" xsi:type="string">PAY</argument>
+			<argument name="handlers"  xsi:type="array">
+				<item name="handler" xsi:type="object">Paynl\Payment\Logging\Handler</item>
+			</argument>
+		</arguments>
+	</type>  
 </config>
