@@ -6,12 +6,12 @@
         <tab id="paynl" sortOrder="300" translate="label" class="paynl-tab">
             <label>PAY.</label>
         </tab>
-        <section id="paynl_general" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label">
-            <label>General settings</label>
+        <section id="paynl_setup" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label">
+            <label>Setup</label>
             <tab>paynl</tab>
             <resource>Paynl_Payment::config</resource>
             <group id="paynl_general_settings" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>PAY. General Settings</label>
+                <label>PAY. Setup</label>
                 <field id="version" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Version</label>
                     <frontend_model>Paynl\Payment\Block\Adminhtml\Render\Version</frontend_model>
@@ -50,15 +50,58 @@
             </group>
         </section>
         <section id="paynl_paymentmethods" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="15" translate="label">
-            <label>Payment methods</label>
+            <label>Payment Methods</label>
             <tab>paynl</tab>
             <resource>Paynl_Payment::config</resource>
             <include path="Paynl_Payment::paymentmethods.xml" />
-        </section>
-        <section id="paynl_layout" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="20" translate="label">
-            <label>Layout settings</label>
+        </section>     
+        <section id="paynl_settings" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="30" translate="label">
+            <label>Settings</label>
             <tab>paynl</tab>
             <resource>Paynl_Payment::config</resource>
+            <group id="paynl_general_settings" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>PAY. General Settings</label>
+                <field id="default_payment_option" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Select default payment option</label>
+                    <source_model>Paynl\Payment\Model\Config\Source\DefaultPaymentOption</source_model>
+                    <config_path>payment/paynl/default_payment_option</config_path>
+                </field>
+                <field id="auto_capture" translate="label" type="select" sortOrder="105" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Auto Capture</label>
+                    <comment>
+                        <![CDATA[Automatically capture authorisation-transaction when creating the shipment for the order.]]>
+                    </comment>
+                    <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
+                    <config_path>payment/paynl/auto_capture</config_path>
+                </field>
+                <field id="register_partial_payments" translate="label" type="select" sortOrder="106" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Register partial payments</label>
+                    <comment>
+                        <![CDATA[Enable to register every partial payment in your transactions tab, located in your order details.]]>
+                    </comment>
+                    <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
+                    <config_path>payment/paynl/register_partial_payments</config_path>
+                </field>
+                <field id="order_description_prefix" translate="label" type="text" sortOrder="107" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Order description prefix</label>
+                    <comment>
+                        <![CDATA[Prefix the order description with a custom word]]>
+                    </comment>
+                    <config_path>payment/paynl/order_description_prefix</config_path>
+                </field>   
+                <field id="logging_level" translate="label" type="select" sortOrder="107" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Loglevel</label>
+                    <source_model>Paynl\Payment\Model\Config\Source\LogOptions</source_model>
+                    <comment>
+                        <![CDATA[Set PAY. loglevel]]>
+                    </comment>
+                    <config_path>payment/paynl/logging_level</config_path>
+                </field>
+                <field id="logsdownload" translate="label" type="button" sortOrder="107" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>PAY. Logs</label>
+                    <frontend_model>Paynl\Payment\Block\Adminhtml\Render\Logs</frontend_model>
+                </field>
+            </group>
             <group id="paynl_layout_settings" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>PAY. Layout Settings</label>
                 <field id="image_style" translate="label" type="select" sortOrder="85" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -99,11 +142,6 @@
                     <config_path>payment/paynl/icon_size</config_path>
                 </field>
             </group>
-        </section>
-        <section id="paynl_advanced" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="30" translate="label">
-            <label>Advanced settings</label>
-            <tab>paynl</tab>
-            <resource>Paynl_Payment::config</resource>
             <group id="paynl_advanced_settings" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>PAY. Advanced Settings</label>
                 <field id="never_cancel" translate="label,comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -161,11 +199,7 @@
                     </comment>
                     <config_path>payment/paynl/testipaddress</config_path>
                 </field>
-                <field id="default_payment_option" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Select default payment option</label>
-                    <source_model>Paynl\Payment\Model\Config\Source\DefaultPaymentOption</source_model>
-                    <config_path>payment/paynl/default_payment_option</config_path>
-                </field>
+                
                 <field id="use_additional_validation" translate="label" type="select" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enable additional validation</label>
                     <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
@@ -173,38 +207,7 @@
                         <![CDATA[Enable this to also apply the validation of other activated (third party) modules during the payment process.]]>
                     </comment>
                     <config_path>payment/paynl/use_additional_validation</config_path>
-                </field>
-                <field id="auto_capture" translate="label" type="select" sortOrder="105" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Auto Capture</label>
-                    <comment>
-                        <![CDATA[Automatically capture authorisation-transaction when creating the shipment for the order.]]>
-                    </comment>
-                    <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
-                    <config_path>payment/paynl/auto_capture</config_path>
-                </field>
-                <field id="register_partial_payments" translate="label" type="select" sortOrder="106" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Register partial payments</label>
-                    <comment>
-                        <![CDATA[Enable to register every partial payment in your transactions tab, located in your order details.]]>
-                    </comment>
-                    <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
-                    <config_path>payment/paynl/register_partial_payments</config_path>
-                </field>
-                <field id="order_description_prefix" translate="label" type="text" sortOrder="107" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Order description prefix</label>
-                    <comment>
-                        <![CDATA[Prefix the order description with a custom word]]>
-                    </comment>
-                    <config_path>payment/paynl/order_description_prefix</config_path>
-                </field>
-                <field id="logging_level" translate="label" type="select" sortOrder="107" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Loglevel</label>
-                    <source_model>Paynl\Payment\Model\Config\Source\LogOptions</source_model>
-                    <comment>
-                        <![CDATA[Set PAY. loglevel]]>
-                    </comment>
-                    <config_path>payment/paynl/logging_level</config_path>
-                </field>
+                </field>                             
                 <field id="failover_gateway" translate="label" type="text" sortOrder="108" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Failover Gateway</label>
                     <comment>
