@@ -15,6 +15,10 @@
         />
     </type>
 
+    <type name="Magento\Backend\Block\Widget\Button\Toolbar">
+        <plugin name="paynl_payment_order_payment_custom_button" type="Paynl\Payment\Plugin\InstoreButton"/>
+    </type>    
+
     <!-- PAY. Logger -->
     <virtualType name="Paynl\Payment\Logging\Handler" type="Magento\Framework\Logger\Handler\Base">
         <arguments>

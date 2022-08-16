@@ -9,12 +9,38 @@ class Instore extends PaymentMethod
 {
     protected $_code = 'paynl_payment_instore';
 
+    /**
+     * Paylink payment block paths
+     *
+     * @var string
+     */
+    protected $_formBlockType = \Paynl\Payment\Block\Form\Instore::class;
+
     protected function getDefaultPaymentOptionId()
     {
         return 1729;
     }
 
-    public function startTransaction(Order $order)
+    public function initialize($paymentAction, $stateObject)
+    {
+        if ($paymentAction == 'order') {
+            /** @var Order $order */
+            $order = $this->getInfoInstance()->getOrder();
+
+            $additionalData = $order->getPayment()->getAdditionalInformation();
+            $terminalId = null;
+            if (isset($additionalData['payment_option'])) {
+                $terminalId = $additionalData['payment_option'];
+            }
+            if (empty($terminalId)) {
+                throw new \Magento\Framework\Exception\LocalizedException(__('Please select a pin-terminal'));
+            }
+
+            parent::initialize($paymentAction, $stateObject);
+        }
+    }
+
+    public function startTransaction(Order $order, $fromAdmin = false)
     {
         $store = $order->getStore();
         $url = $store->getBaseUrl() . 'checkout/cart/';
@@ -36,19 +62,25 @@ class Instore extends PaymentMethod
 
             $additionalData['transactionId'] = $transaction->getTransactionId();
             $additionalData['terminal_hash'] = $instorePayment->getHash();
+            $additionalData['payment_option'] = $terminalId;
 
             $order->getPayment()->setAdditionalInformation($additionalData);
             $order->save();
 
             $url = $instorePayment->getRedirectUrl();
-
-        } catch (\Exception $e) {           
+        } catch (\Exception $e) {
             payHelper::logCritical($e->getMessage(), [], $store);
 
             if ($e->getCode() == 201) {
                 $this->messageManager->addNoticeMessage($e->getMessage());
+                if ($fromAdmin) {
+                    throw new \Exception(__($e->getMessage()));
+                }
             } else {
                 $this->messageManager->addNoticeMessage(__('Pin transaction could not be started'));
+                if ($fromAdmin) {
+                    throw new \Exception(__('Pin transaction could not be started'));
+                }
             }
         }
 
