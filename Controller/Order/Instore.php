@@ -17,6 +17,7 @@ class Instore extends PayAction implements CsrfAwareActionInterface
     private $orderRepository;
     private $quoteRepository;
     private $paymentHelper;
+    protected $resultFactory;
 
     public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
     {
@@ -40,11 +41,13 @@ class Instore extends PayAction implements CsrfAwareActionInterface
         \Magento\Framework\App\Action\Context $context,
         OrderRepository $orderRepository,
         PaymentHelper $paymentHelper,
-        QuoteRepository $quoteRepository
+        QuoteRepository $quoteRepository,
+        \Magento\Framework\Controller\ResultFactory $resultFactory
     ) {
         $this->orderRepository = $orderRepository;
         $this->paymentHelper = $paymentHelper;
         $this->quoteRepository = $quoteRepository;
+        $this->resultFactory = $resultFactory;
 
         parent::__construct($context);
     }
@@ -75,11 +78,13 @@ class Instore extends PayAction implements CsrfAwareActionInterface
             PayHelper::setCookie('pinError', $e->getMessage());
         }
 
+        $redirect = $this->resultFactory->create(\Magento\Framework\Controller\ResultFactory::TYPE_REDIRECT);
+
         if (!empty($redirectUrl)) {
-            header("Location: " . $redirectUrl);
+            $redirect->setUrl($redirectUrl);
         } else {
-            header("Location: " . $returnUrl);
+            $redirect->setUrl($returnUrl);
         }
-        exit;
+        return $redirect;
     }
 }
