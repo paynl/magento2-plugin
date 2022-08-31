@@ -318,9 +318,9 @@ abstract class PaymentMethod extends AbstractMethod
         return $this;
     }
 
-    public function startTransaction(Order $order)
+    public function startTransaction(Order $order, $graphqlVersion = null)
     {
-        $transaction = $this->doStartTransaction($order);
+        $transaction = $this->doStartTransaction($order, $graphqlVersion);
         $order->getPayment()->setAdditionalInformation('transactionId', $transaction->getTransactionId());
         $this->paynlConfig->setStore($order->getStore());
 
@@ -333,7 +333,7 @@ abstract class PaymentMethod extends AbstractMethod
         return $transaction->getRedirectUrl();
     }
 
-    protected function doStartTransaction(Order $order)
+    protected function doStartTransaction(Order $order, $graphqlVersion = null)
     {
         $this->paynlConfig->setStore($order->getStore());
         $this->paynlConfig->configureSDK();
@@ -474,7 +474,7 @@ abstract class PaymentMethod extends AbstractMethod
             'transferData' => $this->getTransferData(),
             'exchangeUrl' => $exchangeUrl,
             'currency' => $currency,
-            'object' => substr('magento2 ' . $this->paynlConfig->getVersion() . ' | ' . $this->paynlConfig->getMagentoVersion() . ' | ' . $this->paynlConfig->getPHPVersion(), 0, 64),
+            'object' => substr('magento2 ' . $this->paynlConfig->getVersion() . ' | ' . (!empty($graphqlVersion) ? 'graphQL ' . $graphqlVersion . ' | ' : '') . $this->paynlConfig->getMagentoVersion() . ' | ' . $this->paynlConfig->getPHPVersion(), 0, 64),
         ];
         if (isset($shippingAddress)) {
             $data['address'] = $shippingAddress;
