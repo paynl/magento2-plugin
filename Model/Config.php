@@ -137,8 +137,9 @@ class Config
 
     public function isSkipFraudDetection()
     {
-        return $this->store->getConfig('payment/paynl/skip_fraud_detection') == 1;
+        return $this->sherpaEnabled() === true || $this->store->getConfig('payment/paynl/skip_fraud_detection') == 1;
     }
+
 
     public function isTestMode()
     {

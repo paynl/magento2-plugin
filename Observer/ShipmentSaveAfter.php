@@ -46,7 +46,9 @@ class ShipmentSaveAfter implements ObserverInterface
         $this->config->setStore($order->getStore());
 
         if ($this->config->autoCaptureEnabled()) {
-            if ($order->getState() == Order::STATE_PROCESSING && !$order->hasInvoices()) {
+            $invoiceCheck = $this->config->sherpaEnabled() ? true : !$order->hasInvoices();
+
+            if ($order->getState() == Order::STATE_PROCESSING && $invoiceCheck) {
                 $data = $order->getPayment()->getData();
                 $payOrderId = $data['last_trans_id'] ?? null;
 
@@ -54,8 +56,9 @@ class ShipmentSaveAfter implements ObserverInterface
                     $bHasAmountAuthorized = !empty($data['base_amount_authorized']);
                     $amountPaid = isset($data['amount_paid']) ? $data['amount_paid'] : null;
                     $amountRefunded = isset($data['amount_refunded']) ? $data['amount_refunded'] : null;
+                    $amountPaidCheck =  $this->config->sherpaEnabled() ? true : $amountPaid === null;
 
-                    if ($bHasAmountAuthorized && $amountPaid === null && $amountRefunded === null) {
+                    if ($bHasAmountAuthorized && $amountPaidCheck === true && $amountRefunded === null) {
                         payHelper::logDebug('AUTO-CAPTURING(shipment-save-after) ' . $payOrderId, [], $order->getStore());
                         try {
                             # Handles Wuunder
@@ -64,7 +67,7 @@ class ShipmentSaveAfter implements ObserverInterface
                             # Handles Manual made shipment
                             \Paynl\Config::setApiToken($this->config->getApiToken());
                             $bCaptureResult = \Paynl\Transaction::capture($payOrderId);
-                            if($bCaptureResult) {
+                            if ($bCaptureResult) {
                                 $transaction = \Paynl\Transaction::get($payOrderId);
                                 $this->payPayment->processPaidOrder($transaction, $order);
                                 $strResult = 'Success';
