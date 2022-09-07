@@ -151,6 +151,32 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
         }
     }
 
+    public static function checkProcessing($payOrderId)
+    {
+        $objectManager = self::getObjectManager();
+        $resource = $objectManager->get('Magento\Framework\App\ResourceConnection');
+        $connection = $resource->getConnection();
+        $tableName = $resource->getTableName('pay_processing');
+
+        $select = "SELECT * FROM `" . $tableName . "` WHERE `payOrderId` = '" . $payOrderId . "' AND `created_at` > date_sub(now(), interval 1 minute);";
+        $result = $connection->fetchAll($select);
+
+        $sql = "INSERT INTO `" . $tableName . "` (`payOrderId`) Values ('" . $payOrderId . "') ON DUPLICATE KEY UPDATE `created_at` = now()";
+        $connection->query($sql);
+
+        return is_array($result) ? $result : array();
+    }
+
+    public static function removeProcessing($payOrderId)
+    {
+        $objectManager = self::getObjectManager();
+        $resource = $objectManager->get('Magento\Framework\App\ResourceConnection');
+        $connection = $resource->getConnection();
+        $tableName = $resource->getTableName('pay_processing');   
+        $sql = "DELETE FROM `" . $tableName . "` WHERE `payOrderId` = '" . $payOrderId . "';"; 
+        $connection->query($sql);      
+    }
+
     public function getClientIp()
     {
         $ipforward = !empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'];
