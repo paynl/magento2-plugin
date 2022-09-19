@@ -72,29 +72,32 @@ class PinTerminals implements ArrayInterface
         $terminalArr = [];
         if ($this->_isConfigured()) {
             $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+            $config = $objectManager->get(\Paynl\Payment\Model\Config::class);
 
-            $cache = $objectManager->get(\Magento\Framework\App\CacheInterface::class);
-            $storeId = $this->_request->getParam('store');
-            $cacheName = 'paynl_terminals_' . $this->getConfigValue('payment/paynl_payment_instore/payment_option_id') . '_' . $storeId;
-            $terminalJson = $cache->load($cacheName);
-            if ($terminalJson) {
-                $terminalArr = json_decode($terminalJson);
-            } else {
-                try {
-                    $terminals = \Paynl\Instore::getAllTerminals();
-                    $terminals = $terminals->getList();
+            if ($config->isPaymentMethodActive('paynl_payment_instore')) {
+                $cache = $objectManager->get(\Magento\Framework\App\CacheInterface::class);
+                $storeId = $this->_request->getParam('store');
+                $cacheName = 'paynl_terminals_' . $this->getConfigValue('payment/paynl_payment_instore/payment_option_id') . '_' . $storeId;
+                $terminalJson = $cache->load($cacheName);
+                if ($terminalJson) {
+                    $terminalArr = json_decode($terminalJson);
+                } else {
+                    try {
+                        $terminals = \Paynl\Instore::getAllTerminals();
+                        $terminals = $terminals->getList();
 
-                    if (!is_array($terminals)) {
-                        $terminals = [];
+                        if (!is_array($terminals)) {
+                            $terminals = [];
+                        }
+
+                        foreach ($terminals as $terminal) {
+                            $terminal['visibleName'] = $terminal['name'];
+                            array_push($terminalArr, $terminal);
+                        }
+                        $cache->save(json_encode($terminalArr), $cacheName);
+                    } catch (\Paynl\Error\Error $e) {
+                        payHelper::logCritical('PAY.: Pinterminal error, ' . $e->getMessage());
                     }
-                    
-                    foreach ($terminals as $terminal) {
-                        $terminal['visibleName'] = $terminal['name'];
-                        array_push($terminalArr, $terminal);
-                    }
-                    $cache->save(json_encode($terminalArr), $cacheName);
-                } catch (\Paynl\Error\Error $e) {
-                    payHelper::logCritical('PAY.: Pinterminal error, ' . $e->getMessage());
                 }
             }
         }
