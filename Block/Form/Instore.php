@@ -58,7 +58,7 @@ class Instore extends \Magento\Payment\Block\Form
                         }
                         $cache->save(json_encode($terminalArr), $cacheName);
                     } catch (\Paynl\Error\Error $e) {
-                        payHelper::logCritical('PAY.: Pinterminal error, ' . $e->getMessage());
+                        payHelper::logNotice('PAY.: Pinterminal error, ' . $e->getMessage());
                     }
                 }
             }
