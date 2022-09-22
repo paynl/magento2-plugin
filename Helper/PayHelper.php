@@ -155,14 +155,17 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
     {
         $objectManager = self::getObjectManager();
         $resource = $objectManager->get('Magento\Framework\App\ResourceConnection');
-        $connection = $resource->getConnection();
+        $connection = $resource->getConnection();      
         $tableName = $resource->getTableName('pay_processing');
 
-        $select = "SELECT * FROM `" . $tableName . "` WHERE `payOrderId` = '" . $payOrderId . "' AND `created_at` > date_sub(now(), interval 1 minute);";
+        $select = $connection->select()->from([$tableName])->where('payOrderId = ?', $payOrderId)->where('created_at > date_sub(now(), interval 1 minute)');
         $result = $connection->fetchAll($select);
 
-        $sql = "INSERT INTO `" . $tableName . "` (`payOrderId`) Values ('" . $payOrderId . "') ON DUPLICATE KEY UPDATE `created_at` = now()";
-        $connection->query($sql);
+        $connection->insertOnDuplicate(
+            $tableName,
+            ['payOrderId' => $payOrderId],
+            ['payOrderId', 'created_at']
+        );
 
         return is_array($result) ? $result : array();
     }
@@ -172,9 +175,11 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $objectManager = self::getObjectManager();
         $resource = $objectManager->get('Magento\Framework\App\ResourceConnection');
         $connection = $resource->getConnection();
-        $tableName = $resource->getTableName('pay_processing');   
-        $sql = "DELETE FROM `" . $tableName . "` WHERE `payOrderId` = '" . $payOrderId . "';"; 
-        $connection->query($sql);      
+        $tableName = $resource->getTableName('pay_processing');
+        $connection->delete(
+            $tableName,
+            ['payOrderId = ?' => $payOrderId]
+        );
     }
 
     public function getClientIp()
