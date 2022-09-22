@@ -65,6 +65,8 @@ abstract class PaymentMethod extends AbstractMethod
      */
     protected $cookieManager;
 
+    protected $graphqlVersion;
+
     public function __construct(
         Context $context,
         Registry $registry,
@@ -222,6 +224,16 @@ abstract class PaymentMethod extends AbstractMethod
         return $transferData;
     }
 
+    public function setGraphqlVersion($version)
+    {
+        $this->graphqlVersion = $version;
+    }
+
+    public function getGraphqlVersion()
+    {
+        return $this->graphqlVersion;
+    }
+
     public function genderConversion($gender)
     {
         switch ($gender) {
@@ -318,9 +330,9 @@ abstract class PaymentMethod extends AbstractMethod
         return $this;
     }
 
-    public function startTransaction(Order $order, $graphqlVersion = null)
+    public function startTransaction(Order $order)
     {
-        $transaction = $this->doStartTransaction($order, $graphqlVersion);
+        $transaction = $this->doStartTransaction($order);
         $order->getPayment()->setAdditionalInformation('transactionId', $transaction->getTransactionId());
         $this->paynlConfig->setStore($order->getStore());
 
@@ -333,7 +345,7 @@ abstract class PaymentMethod extends AbstractMethod
         return $transaction->getRedirectUrl();
     }
 
-    protected function doStartTransaction(Order $order, $graphqlVersion = null)
+    protected function doStartTransaction(Order $order)
     {
         $this->paynlConfig->setStore($order->getStore());
         $this->paynlConfig->configureSDK();
@@ -474,7 +486,7 @@ abstract class PaymentMethod extends AbstractMethod
             'transferData' => $this->getTransferData(),
             'exchangeUrl' => $exchangeUrl,
             'currency' => $currency,
-            'object' => substr('magento2 ' . $this->paynlConfig->getVersion() . ' | ' . (!empty($graphqlVersion) ? 'graphQL ' . $graphqlVersion . ' | ' : '') . $this->paynlConfig->getMagentoVersion() . ' | ' . $this->paynlConfig->getPHPVersion(), 0, 64),
+            'object' => substr('magento2 ' . $this->paynlConfig->getVersion() . ' | ' . (!empty($this->getGraphqlVersion()) ? 'graphQL ' . $this->getGraphqlVersion() . ' | ' : '') . $this->paynlConfig->getMagentoVersion() . ' | ' . $this->paynlConfig->getPHPVersion(), 0, 64),
         ];
         if (isset($shippingAddress)) {
             $data['address'] = $shippingAddress;
