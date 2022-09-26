@@ -229,9 +229,14 @@ abstract class PaymentMethod extends AbstractMethod
         $this->graphqlVersion = $version;
     }
 
-    public function getGraphqlVersion()
+    public function getVersion()
     {
-        return $this->graphqlVersion;
+        $version = substr('magento2 ' . $this->paynlConfig->getVersion() . ' | ' . $this->paynlConfig->getMagentoVersion() . ' | ' . $this->paynlConfig->getPHPVersion(), 0, 64);
+        if (!empty($this->graphqlVersion)) {
+            $version .= ' | ' . $this->graphqlVersion;
+        }
+
+        return $version;
     }
 
     public function genderConversion($gender)
@@ -486,7 +491,7 @@ abstract class PaymentMethod extends AbstractMethod
             'transferData' => $this->getTransferData(),
             'exchangeUrl' => $exchangeUrl,
             'currency' => $currency,
-            'object' => substr('magento2 ' . $this->paynlConfig->getVersion() . ' | ' . (!empty($this->getGraphqlVersion()) ? 'graphQL ' . $this->getGraphqlVersion() . ' | ' : '') . $this->paynlConfig->getMagentoVersion() . ' | ' . $this->paynlConfig->getPHPVersion(), 0, 64),
+            'object' => $this->getVersion(),
         ];
         if (isset($shippingAddress)) {
             $data['address'] = $shippingAddress;
