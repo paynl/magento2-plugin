@@ -1,24 +1,32 @@
 <?php
 
-namespace Paynl\Payment\Controller\Order;
+namespace Paynl\Payment\Controller\Adminhtml\Order;
 
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Filesystem\DirectoryList;
+use Magento\Framework\AuthorizationInterface;
 
-class Logs extends \Magento\Framework\App\Action\Action
+class Logs extends \Magento\Backend\App\Action
 {
     protected $fileFactory;
     protected $directoryList;
+    private $authorization;
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
         \Magento\Framework\App\Response\Http\FileFactory $fileFactory,
-        \Magento\Framework\App\Filesystem\DirectoryList $directoryList
+        \Magento\Framework\App\Filesystem\DirectoryList $directoryList,
+        AuthorizationInterface $authorization
     ) {
         $this->fileFactory = $fileFactory;
         $this->directoryList = $directoryList;
+        $this->authorization = $authorization;
         return parent::__construct($context);
     }
 
+    protected function _isAllowed()
+    {
+        return $this->authorization->isAllowed('Paynl_Payment::logs');
+    }
 
     private function downloadPayLog()
     {
@@ -35,7 +43,11 @@ class Logs extends \Magento\Framework\App\Action\Action
     }
 
     public function execute()
-    {
+    {        
+        if(!$this->_isAllowed()){
+            return false;
+        }
+
         if (!class_exists('\ZipArchive')) {
             # Zipping is not possible, so trying to download only pay.log
             $this->downloadPayLog();
@@ -51,6 +63,7 @@ class Logs extends \Magento\Framework\App\Action\Action
         }
 
         if ($bDirChange) {
+
             $zip = new \ZipArchive();
             $zip->open('logs.zip', \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
 
@@ -68,7 +81,7 @@ class Logs extends \Magento\Framework\App\Action\Action
             $content['type'] = 'filename';
             $content['value'] = 'log/logs.zip';
             $content['rm'] = 1;
-            $this->fileFactory->create('logs-' . date("Y-m-d") . '.zip', $content, DirectoryList::VAR_DIR);
+            $this->fileFactory->create('logs-' . date("Y-m-d") . '.zip', $content, DirectoryList::VAR_DIR, 'application/zip');
         } else {
             $this->downloadPayLog();
         }
