@@ -3,7 +3,7 @@
     <acl>
         <resources>
             <resource id="Magento_Backend::admin">
-                <resource id="Paynl_Payment::acl" title="PAY." sortOrder="1">
+                <resource id="Paynl_Payment::acl" title="Pay." sortOrder="1">
                     <resource id="Paynl_Payment::logs" title="Download logs" sortOrder="1" />
                 </resource>
             </resource>
