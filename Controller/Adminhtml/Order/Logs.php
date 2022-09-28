@@ -5,21 +5,28 @@ namespace Paynl\Payment\Controller\Adminhtml\Order;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\AuthorizationInterface;
+use Magento\Framework\Controller\ResultFactory;
 
 class Logs extends \Magento\Backend\App\Action
 {
     protected $fileFactory;
     protected $directoryList;
+    protected $resultFactory;
+    protected $redirect;
     private $authorization;
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
         \Magento\Framework\App\Response\Http\FileFactory $fileFactory,
         \Magento\Framework\App\Filesystem\DirectoryList $directoryList,
-        AuthorizationInterface $authorization
+        AuthorizationInterface $authorization,
+        ResultFactory $resultFactory,
+        \Magento\Framework\App\Response\RedirectInterface $redirect
     ) {
         $this->fileFactory = $fileFactory;
         $this->directoryList = $directoryList;
         $this->authorization = $authorization;
+        $this->resultFactory = $resultFactory;
+        $this->redirect = $redirect;
         return parent::__construct($context);
     }
 
@@ -63,9 +70,6 @@ class Logs extends \Magento\Backend\App\Action
         }
 
         if ($bDirChange) {
-            $zip = new \ZipArchive();
-            $zip->open('logs.zip', \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
-
             $logs = [
                 $rootPath . '/pay.log',
                 $rootPath . '/exception.log',
@@ -74,11 +78,25 @@ class Logs extends \Magento\Backend\App\Action
             ];
 
             $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($rootPath), \RecursiveIteratorIterator::LEAVES_ONLY);
+            $filesFound = [];
             foreach ($files as $name => $file) {
+                if (!in_array($name, $logs)) {
+                    continue;
+                }
+                $filesFound[$name] = $file;
+            }
+
+            if (empty($filesFound)) {
+                $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
+                $resultRedirect->setUrl($this->redirect->getRefererUrl());
+                return $resultRedirect;
+            }
+
+            $zip = new \ZipArchive();
+            $zip->open('logs.zip', \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+
+            foreach ($filesFound as $name => $file) {
                 if (!$file->isDir()) {
-                    if (!in_array($name, $logs)) {
-                        continue;
-                    }
                     $filePath = $file->getRealPath();
                     $relativePath = substr($filePath, strlen($rootPath) + 1);
                     $zip->addFile($filePath, $relativePath);
