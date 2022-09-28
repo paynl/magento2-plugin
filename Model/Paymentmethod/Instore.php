@@ -71,15 +71,17 @@ class Instore extends PaymentMethod
         } catch (\Exception $e) {
             payHelper::logCritical($e->getMessage(), [], $store);
 
-            if ($e->getCode() == 201) {
-                $this->messageManager->addNoticeMessage($e->getMessage());
+            if ($e->getCode() == 201) {                
                 if ($fromAdmin) {
                     throw new \Exception(__($e->getMessage()));
+                } else {
+                    $this->messageManager->addNoticeMessage($e->getMessage());
                 }
-            } else {
-                $this->messageManager->addNoticeMessage(__('Pin transaction could not be started'));
+            } else {                
                 if ($fromAdmin) {
                     throw new \Exception(__('Pin transaction could not be started'));
+                } else {
+                    $this->messageManager->addNoticeMessage(__('Pin transaction could not be started'));
                 }
             }
         }
