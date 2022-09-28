@@ -43,8 +43,8 @@ class Logs extends \Magento\Backend\App\Action
     }
 
     public function execute()
-    {        
-        if(!$this->_isAllowed()){
+    {
+        if (!$this->_isAllowed()) {
             return false;
         }
 
@@ -67,9 +67,19 @@ class Logs extends \Magento\Backend\App\Action
             $zip = new \ZipArchive();
             $zip->open('logs.zip', \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
 
+            $logs = [
+                $rootPath . '/pay.log',
+                $rootPath . '/exception.log', 
+                $rootPath . '/debug.log',
+                $rootPath . '/system.log'
+            ];
+
             $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($rootPath), \RecursiveIteratorIterator::LEAVES_ONLY);
             foreach ($files as $name => $file) {
-                if (!$file->isDir()) {
+                if (!$file->isDir() ) {
+                    if(!in_array($name, $logs)){
+                        continue;
+                    }
                     $filePath = $file->getRealPath();
                     $relativePath = substr($filePath, strlen($rootPath) + 1);
                     $zip->addFile($filePath, $relativePath);
@@ -77,7 +87,7 @@ class Logs extends \Magento\Backend\App\Action
             }
 
             $zip->close();
-
+     
             $content['type'] = 'filename';
             $content['value'] = 'log/logs.zip';
             $content['rm'] = 1;
