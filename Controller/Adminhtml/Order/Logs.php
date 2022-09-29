@@ -14,8 +14,9 @@ class Logs extends \Magento\Backend\App\Action
     protected $resultFactory;
     protected $redirect;
     private $authorization;
+    
     public function __construct(
-        \Magento\Framework\App\Action\Context $context,
+        \Magento\Backend\App\Action\Context $context,
         \Magento\Framework\App\Response\Http\FileFactory $fileFactory,
         \Magento\Framework\App\Filesystem\DirectoryList $directoryList,
         AuthorizationInterface $authorization,

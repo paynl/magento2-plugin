@@ -37,7 +37,7 @@ class Instore extends \Magento\Backend\App\Action implements CsrfAwareActionInte
      * @param Magento\Payment\Helper\Data $paymentHelper
      */
     public function __construct(
-        \Magento\Framework\App\Action\Context $context,
+        \Magento\Backend\App\Action\Context $context,
         OrderRepository $orderRepository,
         PaymentHelper $paymentHelper,
         QuoteRepository $quoteRepository,
