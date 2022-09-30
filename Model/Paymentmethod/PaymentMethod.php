@@ -577,7 +577,7 @@ abstract class PaymentMethod extends AbstractMethod
             $shippingTax = $order->getBaseShippingTaxAmount();
         }
 
-        $shippingDescription = $order->getShippingDescription();
+        $shippingDescription = (!empty($order->getShippingDescription())) ? $order->getShippingDescription() : 'Shipping';    
 
         if ($shippingCost != 0) {
             $arrProducts[] = [
