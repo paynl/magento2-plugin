@@ -269,6 +269,8 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
      */
     private function processPaidOrder(Transaction $transaction, Order $order)
     {
+        $payOrderId = $transaction->getId();
+
         if ($transaction->isPaid()) {
             $message = "PAID";
         } else {
