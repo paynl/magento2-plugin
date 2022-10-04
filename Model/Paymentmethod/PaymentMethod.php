@@ -582,7 +582,7 @@ abstract class PaymentMethod extends AbstractMethod
         if ($shippingCost != 0) {
             $arrProducts[] = [
                 'id' => 'shipping',
-                'name' => $shippingDescription,
+                'name' => empty($shippingDescription) ? 'Shipping' : $shippingDescription,
                 'price' => $shippingCost,
                 'qty' => 1,
                 'tax' => $shippingTax,
