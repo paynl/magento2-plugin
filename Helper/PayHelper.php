@@ -3,6 +3,7 @@
 namespace Paynl\Payment\Helper;
 
 use Psr\Log\LoggerInterface;
+use Magento\Framework\App\ResourceConnection;
 use \Paynl\Payment\Model\Config\Source\LogOptions;
 
 
@@ -12,6 +13,13 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
     private static $objectManager;
     private static $store;
+    private $resource;
+
+    public function __construct(
+        ResourceConnection $resource
+    ) {
+        $this->resource = $resource;
+    }
 
     public static function getObjectManager()
     {
@@ -151,12 +159,10 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
         }
     }
 
-    public static function checkProcessing($payOrderId)
+    public function checkProcessing($payOrderId)
     {
-        $objectManager = self::getObjectManager();
-        $resource = $objectManager->get('Magento\Framework\App\ResourceConnection');
-        $connection = $resource->getConnection();
-        $tableName = $resource->getTableName('pay_processing');
+        $connection = $this->resource->getConnection();
+        $tableName = $this->resource->getTableName('pay_processing');
 
         $select = $connection->select()->from([$tableName])->where('payOrderId = ?', $payOrderId)->where('created_at > date_sub(now(), interval 1 minute)');
         $result = $connection->fetchAll($select);
@@ -171,12 +177,10 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
         return is_array($result) ? $result : array();
     }
 
-    public static function removeProcessing($payOrderId)
+    public function removeProcessing($payOrderId)
     {
-        $objectManager = self::getObjectManager();
-        $resource = $objectManager->get('Magento\Framework\App\ResourceConnection');
-        $connection = $resource->getConnection();
-        $tableName = $resource->getTableName('pay_processing');
+        $connection = $this->resource->getConnection();
+        $tableName = $this->resource->getTableName('pay_processing');
         $connection->delete(
             $tableName,
             ['payOrderId = ?' => $payOrderId]

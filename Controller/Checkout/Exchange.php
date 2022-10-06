@@ -60,7 +60,17 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
      */
     private $builderInterface;
 
+    /**
+     *
+     * @var \Paynl\Payment\Model\Config
+     */
     private $paynlConfig;
+
+    /**
+     *
+     * @var \Paynl\Payment\Helper\PayHelper;
+     */
+    private $paynlHelper;
 
     public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
     {
@@ -91,6 +101,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         \Magento\Framework\Controller\Result\Raw $result,
         OrderRepository $orderRepository,
         \Paynl\Payment\Model\Config $paynlConfig,
+        \Paynl\Payment\Helper\PayHelper $paynlHelper,
         \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $builderInterface
     ) {
         $this->result = $result;
@@ -100,6 +111,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         $this->invoiceSender = $invoiceSender;
         $this->orderRepository = $orderRepository;
         $this->paynlConfig = $paynlConfig;
+        $this->paynlHelper = $paynlHelper;
         $this->builderInterface = $builderInterface;
 
         parent::__construct($context);
@@ -122,7 +134,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         }
 
         if ($action == 'new_ppt') {
-            if (PayHelper::checkProcessing($payOrderId)) {
+            if ($this->paynlHelper->checkProcessing($payOrderId)) {
                 return $this->result->setContents('FALSE| Order already processing.');
             }
         }
@@ -177,7 +189,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             payHelper::logDebug($action . '. Ignoring - already paid: ' . $orderEntityId);
             if (!$this->config->registerPartialPayments()) {
                 if ($action == 'new_ppt') {
-                    PayHelper::removeProcessing($payOrderId);
+                    $this->paynlHelper->removeProcessing($payOrderId);
                 }
                 return $this->result->setContents('TRUE| Ignoring: order has already been paid');
             }
@@ -281,7 +293,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             try {
                 $this->uncancelOrder($order);
             } catch (LocalizedException $e) {
-                PayHelper::removeProcessing($payOrderId);
+                $this->paynlHelper->removeProcessing($payOrderId);
                 return $this->result->setContents('FALSE| Cannot un-cancel order: ' . $e->getMessage());
             }
             $message .= " order was uncanceled";
@@ -302,7 +314,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         $orderAmount = round($order->getGrandTotal(), 2);
         $orderBaseAmount = round($order->getBaseGrandTotal(), 2);
         if (!in_array($orderAmount, $transactionPaid) && !in_array($orderBaseAmount, $transactionPaid)) {
-            PayHelper::removeProcessing($payOrderId);
+            $this->paynlHelper->removeProcessing($payOrderId);
             payHelper::logCritical('Amount validation error.', array($transactionPaid, $orderAmount, $order->getGrandTotal(), $order->getBaseGrandTotal()));
             return $this->result->setContents('FALSE| Amount validation error. Amounts: ' . print_r(array($transactionPaid, $orderAmount, $order->getGrandTotal(), $order->getBaseGrandTotal()), true));
         }
@@ -359,7 +371,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
                 ->setIsCustomerNotified(true)
                 ->save();
         }
-        PayHelper::removeProcessing($payOrderId);
+        $this->paynlHelper->removeProcessing($payOrderId);
         return $this->result->setContents("TRUE| " . $message);
     }
 
@@ -422,7 +434,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         } catch (\Exception $e) {
             $returnMessage = 'TRUE| Failed processing partial payment' . $e->getMessage();
         }
-        PayHelper::removeProcessing($payOrderId);
+        $this->paynlHelper->removeProcessing($payOrderId);
         return $this->result->setContents($returnMessage);
     }
 }
