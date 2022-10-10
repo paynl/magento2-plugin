@@ -17,18 +17,18 @@ With the PAY. plugin you can easily add different payment methods to your Magent
 
 # Available payment methods
 
-Bank Payments  | Creditcards | Gift cards & Vouchers |        Pay by invoice        | Others | 
-:-----------: | :-----------: | :-----------: |:----------------------------:| :-----------: |
-iDEAL + QR |Visa | VVV Cadeaukaart | Achteraf betalen via Billink | PayPal |
-Bancontact + QR |  Mastercard | Webshop Giftcard |   Focum AchterafBetalen.nl   | WeChatPay | 
-Giropay |American Express | FashionCheque |  Capayable Achteraf Betalen  | AmazonPay |
-MyBank | Carte Bancaire | Podium Cadeaukaart |  in3 keer betalen, 0% rente  | Cashly | 
-SOFORT | PostePay | Gezondheidsbon |            Klarna            | Pay Fixed Price (phone) |
-Maestro | Dankort | Fashion Giftcard |           Riverty            | Instore Payments (POS) |
-Bank Transfer | Cartasi | GivaCard |           SprayPay           | Przelewy24 | 
-Trustly | Tikkie | De Cadeaukaart |           YourGift           | Creditclick | Apple Pay | 
-| Multibanco | Nexi | Paysafecard |                              | Payconiq
-| |  | Huis en Tuin Cadeau|                              | Google Pay |
+Bank Payments  | Creditcards | Gift cards & Vouchers | Pay by invoice | Others | 
+:-----------: | :-----------: | :-----------: | :-----------: | :-----------: |
+iDEAL + QR |Visa | VVV Cadeaukaart | AfterPay | PayPal |
+Bancontact + QR |  Mastercard | Webshop Giftcard | Achteraf betalen via Billink | WeChatPay | 
+Giropay |American Express | FashionCheque | Focum AchterafBetalen.nl | AmazonPay |
+MyBank | Carte Bancaire | Podium Cadeaukaart | Capayable Achteraf Betalen | Cashly | 
+SOFORT | PostePay | Gezondheidsbon | in3 keer betalen, 0% rente | Pay Fixed Price (phone) |
+Maestro | Dankort | Fashion Giftcard | Klarna | Instore Payments (POS) |
+Bank Transfer | Cartasi | GivaCard | SprayPay | Przelewy24 | 
+Trustly | Tikkie | De Cadeaukaart | YourGift | Creditclick | Apple Pay | 
+| Multibanco | Nexi | Paysafecard | | Payconiq
+| |  | Huis en Tuin Cadeau| | Google Pay |
 | | | Good4Fun
 
 
