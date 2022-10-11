@@ -163,3 +163,5 @@
 "PAY.: Unable to send E-mail", "PAY.: Kan geen e-mail verzenden"
 "PAY.: Customer E-mail is empty cannot send E-mail.", "PAY.: E-mail klant is leeg kan geen e-mail verzenden."
 "Payment pending","Betaling in behandeling"
+"Yes - test mode enabled", "Ja - test modus aan"
+"No - live transactions enabled", "Nee - live transacties aan"
