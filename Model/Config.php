@@ -283,33 +283,11 @@ class Config
 
     public function getIconUrl($methodCode, $paymentOptionId)
     {
-        if ($this->store->getConfig('payment/paynl/image_style') == 'newest') {
-            $brandId = $this->store->getConfig('payment/' . $methodCode . '/brand_id');
-            if (empty($brandId)) {
-                $brandId = $this->brands[$methodCode];
-            }
-            $iconUrl = $this->resources->getViewFileUrl("Paynl_Payment::logos/" . $brandId . ".png");
-        } else {
-            $iconsize = '50x32';
-            if ($this->store->getConfig('payment/paynl/pay_style_checkout') == 1) {
-                switch ($this->store->getConfig('payment/paynl/icon_size')) {
-                    case 'xlarge':
-                        $iconsize = '100x100';
-                        break;
-                    case 'large':
-                        $iconsize = '75x75';
-                        break;
-                    case 'medium':
-                        $iconsize = '50x50';
-                        break;
-                }
-            }
-            $iconUrl = 'https://static.pay.nl/payment_profiles/' . $iconsize . '/' . $paymentOptionId . '.png';
-            $customUrl = $this->store->getConfig('payment/paynl/iconurl');
-            if (!empty($customUrl)) {
-                $iconUrl = str_replace('#paymentOptionId#', $paymentOptionId, $customUrl);
-            }
+        $brandId = $this->store->getConfig('payment/' . $methodCode . '/brand_id');
+        if (empty($brandId)) {
+            $brandId = $this->brands[$methodCode];
         }
+        $iconUrl = $this->resources->getViewFileUrl("Paynl_Payment::logos/" . $brandId . ".png");
 
         return $iconUrl;
     }
@@ -321,7 +299,7 @@ class Config
 
     public function getIconSize()
     {
-        if ($this->store->getConfig('payment/paynl/pay_style_checkout') == 1 && $this->store->getConfig('payment/paynl/image_style') == 'newest') {
+        if ($this->store->getConfig('payment/paynl/pay_style_checkout') == 1) {
             return $this->store->getConfig('payment/paynl/icon_size');
         }
         return false;
