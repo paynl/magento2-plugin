@@ -108,7 +108,7 @@
                 <field id="auto_capture" translate="label" type="select" sortOrder="105" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Auto Capture</label>
                     <comment><![CDATA[Automatically capture authorisation-transaction when creating the shipment for the order.]]></comment>
-                    <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
+                    <source_model>Paynl\Payment\Model\Config\Source\AutoCapture</source_model>
                 </field>
                 <field id="register_partial_payments" translate="label" type="select" sortOrder="106" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Register partial payments</label>
