@@ -4,14 +4,14 @@ namespace Paynl\Payment\Controller\Checkout;
 
 use Magento\Framework\App\Request\InvalidRequestException;
 use Magento\Framework\App\RequestInterface;
-use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Model\Order;
-use Magento\Sales\Model\Order\Payment\Interceptor;
 use Magento\Sales\Model\OrderRepository;
 use Paynl\Payment\Controller\CsrfAwareActionInterface;
 use Paynl\Payment\Controller\PayAction;
-use Paynl\Result\Transaction\Transaction;
-use \Paynl\Payment\Helper\PayHelper;
+use Paynl\Payment\Helper\PayHelper;
+use Paynl\Payment\Model\PayPayment;
+use Paynl\Transaction;
+use Paynl\Config as PAYSDK;
 
 /**
  * Communicates with PAY. in order to update payment statuses in magento
@@ -21,28 +21,9 @@ use \Paynl\Payment\Helper\PayHelper;
 class Exchange extends PayAction implements CsrfAwareActionInterface
 {
     /**
-     *
      * @var \Paynl\Payment\Model\Config
      */
     private $config;
-
-    /**
-     *
-     * @var \Magento\Sales\Model\OrderFactory
-     */
-    private $orderFactory;
-
-    /**
-     *
-     * @var \Magento\Sales\Model\Order\Email\Sender\OrderSender
-     */
-    private $orderSender;
-
-    /**
-     *
-     * @var \Magento\Sales\Model\Order\Email\Sender\InvoiceSender
-     */
-    private $invoiceSender;
 
     /**
      * @var \Magento\Framework\Controller\Result\Raw
@@ -55,12 +36,9 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
     private $orderRepository;
 
     /**
-     *
-     * @var Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface
+     * @var PayPayment
      */
-    private $builderInterface;
-
-    private $paynlConfig;
+    private $payPayment;
 
     public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
     {
@@ -85,22 +63,14 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
         \Paynl\Payment\Model\Config $config,
-        \Magento\Sales\Model\OrderFactory $orderFactory,
-        \Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender,
-        \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender,
         \Magento\Framework\Controller\Result\Raw $result,
         OrderRepository $orderRepository,
-        \Paynl\Payment\Model\Config $paynlConfig,
-        \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $builderInterface
+        PayPayment $payPayment
     ) {
         $this->result = $result;
         $this->config = $config;
-        $this->orderFactory = $orderFactory;
-        $this->orderSender = $orderSender;
-        $this->invoiceSender = $invoiceSender;
         $this->orderRepository = $orderRepository;
-        $this->paynlConfig = $paynlConfig;
-        $this->builderInterface = $builderInterface;
+        $this->payPayment = $payPayment;
 
         parent::__construct($context);
     }
@@ -133,10 +103,10 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         }
 
         $this->config->setStore($order->getStore());
-        \Paynl\Config::setApiToken($this->config->getApiToken());
+        PAYSDK::setApiToken($this->config->getApiToken());
 
         try {
-            $transaction = \Paynl\Transaction::get($payOrderId);
+            $transaction = Transaction::get($payOrderId);
         } catch (\Exception $e) {
             payHelper::logCritical($e, $params, $order->getStore());
 
@@ -153,7 +123,16 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         if (method_exists($transaction, 'isPartialPayment')) {
             if ($transaction->isPartialPayment()) {
                 if ($this->config->registerPartialPayments()) {
-                    return $this->processPartiallyPaidOrder($order, $payOrderId);
+                    try {
+                        $result = $this->payPayment->processPartiallyPaidOrder($order, $payOrderId);
+                        if (!$result) {
+                            throw new \Exception('Cannot process partial payment');
+                        }
+                        $message = 'TRUE| Partial payment processed';
+                    } catch (\Exception $e) {
+                        $message = 'FALSE| ' . $e->getMessage();
+                    }
+                    return $this->result->setContents($message);
                 }
                 return $this->result->setContents("TRUE| Partial payment");
             }
@@ -179,237 +158,42 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
                 payHelper::logDebug('Already captured.');
                 return $this->result->setContents('TRUE| Already captured.');
             }
+            if ($this->config->autoCaptureEnabled()) {
+                return $this->result->setContents('TRUE| CAPTURED');
+            }
         }
 
         if ($transaction->isPaid() || $transaction->isAuthorized()) {
-            return $this->processPaidOrder($transaction, $order);
+            try {
+                $result = $this->payPayment->processPaidOrder($transaction, $order);
+                if (!$result) {
+                    throw new \Exception('Cannot process order');
+                }
+                $message = 'TRUE| ' . (($transaction->isPaid()) ? "PAID" : "AUTHORIZED");
+            } catch (\Exception $e) {
+                $message = 'FALSE| ' . $e->getMessage();
+            }
+            return $this->result->setContents($message);
         } elseif ($transaction->isCanceled()) {
             if ($order->getState() == Order::STATE_PROCESSING) {
                 return $this->result->setContents("TRUE| Ignoring cancel, order is `processing`");
             } elseif ($order->isCanceled()) {
                 return $this->result->setContents("TRUE| Already canceled");
             } else {
-                return $this->cancelOrder($order);
+                if ($this->config->isNeverCancel()) {
+                    return $this->result->setContents("TRUE| Not Canceled because option `never-cancel-order` is enabled");
+                }
+                try {
+                    $result = $this->payPayment->cancelOrder($order);
+                    if (!$result) {
+                        throw new \Exception('Cannot cancel order');
+                    }
+                    $message = 'TRUE| CANCELED';
+                } catch (\Exception $e) {
+                    $message = 'FALSE| ' . $e->getMessage();
+                }
+                return $this->result->setContents($message);
             }
         }
-    }
-
-    private function cancelOrder(Order $order)
-    {
-        if ($this->config->isNeverCancel()) {
-            return $this->result->setContents("TRUE| Not Canceled because never cancel is enabled");
-        }
-        if ($order->getState() == 'holded') {
-            $order->unhold();
-        }
-
-        $order->cancel();
-        $order->addStatusHistoryComment(__('PAY. canceled the order'));
-        $this->orderRepository->save($order);
-
-        return $this->result->setContents("TRUE| CANCELED");
-    }
-
-    private function uncancelOrder(Order $order)
-    {
-        $state = Order::STATE_PENDING_PAYMENT;
-        $productStockQty = [];
-        foreach ($order->getAllVisibleItems() as $item) {
-            $productStockQty[$item->getProductId()] = $item->getQtyCanceled();
-            foreach ($item->getChildrenItems() as $child) {
-                $productStockQty[$child->getProductId()] = $item->getQtyCanceled();
-                $child->setQtyCanceled(0);
-                $child->setTaxCanceled(0);
-                $child->setDiscountTaxCompensationCanceled(0);
-            }
-            $item->setQtyCanceled(0);
-            $item->setTaxCanceled(0);
-            $item->setDiscountTaxCompensationCanceled(0);
-            $this->_eventManager->dispatch('sales_order_item_uncancel', ['item' => $item]);
-        }
-        $this->_eventManager->dispatch(
-            'sales_order_uncancel_inventory',
-            [
-                'order' => $order,
-                'product_qty' => $productStockQty
-            ]
-        );
-        $order->setSubtotalCanceled(0);
-        $order->setBaseSubtotalCanceled(0);
-        $order->setTaxCanceled(0);
-        $order->setBaseTaxCanceled(0);
-        $order->setShippingCanceled(0);
-        $order->setBaseShippingCanceled(0);
-        $order->setDiscountCanceled(0);
-        $order->setBaseDiscountCanceled(0);
-        $order->setTotalCanceled(0);
-        $order->setBaseTotalCanceled(0);
-        $order->setState($state);
-        $order->setStatus($state);
-        $order->addStatusHistoryComment(__('PAY. Uncanceled order'), false);
-
-        $this->_eventManager->dispatch('order_uncancel_after', ['order' => $order]);
-
-        return $order;
-    }
-
-    /**
-     * @param Transaction $transaction
-     * @param Order $order
-     * @return \Magento\Framework\Controller\Result\Raw
-     */
-    private function processPaidOrder(Transaction $transaction, Order $order)
-    {
-        if ($transaction->isPaid()) {
-            $message = "PAID";
-        } else {
-            $message = "AUTHORIZED";
-        }
-
-        if ($order->isCanceled() || $order->getTotalCanceled() == $order->getGrandTotal()) {
-            try {
-                $this->uncancelOrder($order);
-            } catch (LocalizedException $e) {
-                return $this->result->setContents('FALSE| Cannot un-cancel order: ' . $e->getMessage());
-            }
-            $message .= " order was uncanceled";
-        }
-
-        /** @var Interceptor $payment */
-        $payment = $order->getPayment();
-        $payment->setTransactionId($transaction->getId());
-        $payment->setPreparedMessage('PAY. - ');
-        $payment->setIsTransactionClosed(0);
-
-        $transactionPaid = [
-            $transaction->getCurrencyAmount(),
-            $transaction->getPaidCurrencyAmount(),
-            $transaction->getPaidAmount(),
-        ];
-
-        $orderAmount = round($order->getGrandTotal(), 2);
-        $orderBaseAmount = round($order->getBaseGrandTotal(), 2);
-        if (!in_array($orderAmount, $transactionPaid) && !in_array($orderBaseAmount, $transactionPaid)) {
-            payHelper::logCritical('Amount validation error.', array($transactionPaid, $orderAmount, $order->getGrandTotal(), $order->getBaseGrandTotal()));
-            return $this->result->setContents('FALSE| Amount validation error. Amounts: ' . print_r(array($transactionPaid, $orderAmount, $order->getGrandTotal(), $order->getBaseGrandTotal()), true));
-        }
-
-        # Force order state to processing
-        $order->setState(Order::STATE_PROCESSING);
-        $paymentMethod = $order->getPayment()->getMethod();
-
-        # Notify customer
-        if ($order && !$order->getEmailSent()) {
-            $this->orderSender->send($order);
-            $order->addStatusHistoryComment(__('New order email sent'))->setIsCustomerNotified(true)->save();
-        }
-
-        $newStatus = ($transaction->isAuthorized()) ? $this->config->getAuthorizedStatus($paymentMethod) : $this->config->getPaidStatus($paymentMethod);
-
-        # Skip creation of invoice for B2B if enabled
-        if ($this->config->ignoreB2BInvoice($paymentMethod)) {
-            $orderCompany = $order->getBillingAddress()->getCompany();
-            if (!empty($orderCompany)) {
-                # Create transaction
-                $formatedPrice = $order->getBaseCurrency()->formatTxt($order->getGrandTotal());
-                $transactionMessage = __('PAY. - Captured amount of %1.', $formatedPrice);
-                $transactionBuilder = $this->builderInterface->setPayment($payment)->setOrder($order)->setTransactionId($transaction->getId())->setFailSafe(true)->build('capture');
-                $payment->addTransactionCommentsToOrder($transactionBuilder, $transactionMessage);
-                $payment->setParentTransactionId(null);
-                $payment->save();
-                $transactionBuilder->save();
-
-                # Change amount paid manually
-                $order->setTotalPaid($order->getGrandTotal());
-                $order->setBaseTotalPaid($order->getBaseGrandTotal());
-                $order->setStatus(!empty($newStatus) ? $newStatus : Order::STATE_PROCESSING);
-                $order->addStatusHistoryComment(__('B2B Setting: Skipped creating invoice'));
-                $this->orderRepository->save($order);
-                return $this->result->setContents("TRUE| " . $message . " (B2B: No invoice created)");
-            }
-        }
-
-        if ($transaction->isAuthorized()) {
-            $payment->registerAuthorizationNotification($order->getBaseGrandTotal());
-        } else {
-            $payment->registerCaptureNotification($order->getBaseGrandTotal(), $this->config->isSkipFraudDetection());
-        }
-
-        $order->setStatus(!empty($newStatus) ? $newStatus : Order::STATE_PROCESSING);
-
-        $this->orderRepository->save($order);
-
-        $invoice = $payment->getCreatedInvoice();
-        if ($invoice && !$invoice->getEmailSent()) {
-            $this->invoiceSender->send($invoice);
-            $order->addStatusHistoryComment(__('You notified customer about invoice #%1.', $invoice->getIncrementId()))
-                ->setIsCustomerNotified(true)
-                ->save();
-        }
-
-        return $this->result->setContents("TRUE| " . $message);
-    }
-
-    /**
-     * @param Order $order
-     * @param $payOrderId
-     * @return \Magento\Framework\Controller\Result\Raw
-     */
-    private function processPartiallyPaidOrder(Order $order, $payOrderId)
-    {
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $orderPaymentFactory = $objectManager->get(\Magento\Sales\Model\Order\PaymentFactory::class);
-        $returnMessage = "TRUE| Partial payment processed";
-
-        try {
-            $details = \Paynl\Transaction::details($payOrderId);
-
-            $paymentDetails = $details->getPaymentDetails();
-            $transactionDetails = $paymentDetails['transactionDetails'];
-            $firstPayment = count($transactionDetails) == 1;
-            $totalpaid = 0;
-            foreach ($transactionDetails as $_dt) {
-                $totalpaid += $_dt['amount']['value'];
-            }
-            $_detail = end($transactionDetails);
-
-            $subProfile = $_detail['orderId'];
-            $profileId = $_detail['paymentProfileId'];
-            $method = $_detail['paymentProfileName'];
-            $amount = $_detail['amount']['value'] / 100;
-            $currency = $_detail['amount']['currency'];
-            $methodCode = $this->config->getPaymentmethodCode($profileId);
-
-            /** @var Interceptor $orderPayment */
-            if (!$firstPayment) {
-                $orderPayment = $orderPaymentFactory->create();
-            } else {
-                $orderPayment = $order->getPayment();
-            }
-            $orderPayment->setMethod($methodCode);
-            $orderPayment->setOrder($order);
-            $orderPayment->setBaseAmountPaid($amount);
-            $orderPayment->save();
-
-            $transactionBuilder = $this->builderInterface->setPayment($orderPayment)
-                ->setOrder($order)
-                ->setTransactionId($subProfile)
-                ->setFailSafe(true)
-                ->build('capture')
-                ->setAdditionalInformation(
-                    \Magento\Sales\Model\Order\Payment\Transaction::RAW_DETAILS,
-                    ["Paymentmethod" => $method, "Amount" => $amount, "Currency" => $currency]
-                );
-            $transactionBuilder->save();
-
-            $order->addStatusHistoryComment(__('PAY.: Partial payment received: ' . $subProfile . ' - Amount ' . $currency . ' ' . $amount . ' Method: ' . $method));
-            $order->setTotalPaid($totalpaid / 100);
-
-            $this->orderRepository->save($order);
-        } catch (\Exception $e) {
-            $returnMessage = 'TRUE| Failed processing partial payment' . $e->getMessage();
-        }
-
-        return $this->result->setContents($returnMessage);
     }
 }

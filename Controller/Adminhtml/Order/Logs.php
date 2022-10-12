@@ -1,24 +1,40 @@
 <?php
 
-namespace Paynl\Payment\Controller\Order;
+namespace Paynl\Payment\Controller\Adminhtml\Order;
 
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Filesystem\DirectoryList;
+use Magento\Framework\AuthorizationInterface;
+use Magento\Framework\Controller\ResultFactory;
 
-class Logs extends \Magento\Framework\App\Action\Action
+class Logs extends \Magento\Backend\App\Action
 {
     protected $fileFactory;
     protected $directoryList;
+    protected $resultFactory;
+    protected $redirect;
+    private $authorization;
+    
     public function __construct(
-        \Magento\Framework\App\Action\Context $context,
+        \Magento\Backend\App\Action\Context $context,
         \Magento\Framework\App\Response\Http\FileFactory $fileFactory,
-        \Magento\Framework\App\Filesystem\DirectoryList $directoryList
+        \Magento\Framework\App\Filesystem\DirectoryList $directoryList,
+        AuthorizationInterface $authorization,
+        ResultFactory $resultFactory,
+        \Magento\Framework\App\Response\RedirectInterface $redirect
     ) {
         $this->fileFactory = $fileFactory;
         $this->directoryList = $directoryList;
+        $this->authorization = $authorization;
+        $this->resultFactory = $resultFactory;
+        $this->redirect = $redirect;
         return parent::__construct($context);
     }
 
+    protected function isAllowed()
+    {
+        return $this->authorization->isAllowed('Paynl_Payment::logs');
+    }
 
     private function downloadPayLog()
     {
@@ -36,6 +52,10 @@ class Logs extends \Magento\Framework\App\Action\Action
 
     public function execute()
     {
+        if (!$this->isAllowed()) {
+            return false;
+        }
+
         if (!class_exists('\ZipArchive')) {
             # Zipping is not possible, so trying to download only pay.log
             $this->downloadPayLog();
@@ -51,11 +71,32 @@ class Logs extends \Magento\Framework\App\Action\Action
         }
 
         if ($bDirChange) {
+            $logs = [
+                $rootPath . '/pay.log',
+                $rootPath . '/exception.log',
+                $rootPath . '/debug.log',
+                $rootPath . '/system.log'
+            ];
+
+            $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($rootPath), \RecursiveIteratorIterator::LEAVES_ONLY);
+            $filesFound = [];
+            foreach ($files as $name => $file) {
+                if (!in_array($name, $logs)) {
+                    continue;
+                }
+                $filesFound[$name] = $file;
+            }
+
+            if (empty($filesFound)) {
+                $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
+                $resultRedirect->setUrl($this->redirect->getRefererUrl());
+                return $resultRedirect;
+            }
+
             $zip = new \ZipArchive();
             $zip->open('logs.zip', \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
 
-            $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($rootPath), \RecursiveIteratorIterator::LEAVES_ONLY);
-            foreach ($files as $name => $file) {
+            foreach ($filesFound as $name => $file) {
                 if (!$file->isDir()) {
                     $filePath = $file->getRealPath();
                     $relativePath = substr($filePath, strlen($rootPath) + 1);
@@ -68,7 +109,7 @@ class Logs extends \Magento\Framework\App\Action\Action
             $content['type'] = 'filename';
             $content['value'] = 'log/logs.zip';
             $content['rm'] = 1;
-            $this->fileFactory->create('logs-' . date("Y-m-d") . '.zip', $content, DirectoryList::VAR_DIR);
+            $this->fileFactory->create('logs-' . date("Y-m-d") . '.zip', $content, DirectoryList::VAR_DIR, 'application/zip');
         } else {
             $this->downloadPayLog();
         }

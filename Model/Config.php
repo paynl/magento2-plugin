@@ -137,8 +137,9 @@ class Config
 
     public function isSkipFraudDetection()
     {
-        return $this->store->getConfig('payment/paynl/skip_fraud_detection') == 1;
+        return $this->sherpaEnabled() === true || $this->store->getConfig('payment/paynl/skip_fraud_detection') == 1;
     }
+
 
     public function isTestMode()
     {
@@ -169,6 +170,11 @@ class Config
     public function isAlwaysBaseCurrency()
     {
         return $this->store->getConfig('payment/paynl/always_base_currency') == 1;
+    }
+
+    public function isPaymentMethodActive($paymentMethod)
+    {
+        return $this->store->getConfig('payment/' . $paymentMethod . '/active') == 1;
     }
 
     public function useSkuId()
@@ -210,7 +216,17 @@ class Config
 
     public function autoCaptureEnabled()
     {
-        return $this->store->getConfig('payment/paynl/auto_capture') == 1;
+        return $this->store->getConfig('payment/paynl/auto_capture') >= 1;
+    }
+
+    public function wuunderAutoCaptureEnabled()
+    {
+        return $this->store->getConfig('payment/paynl/auto_capture') == 2;
+    }
+
+    public function sherpaEnabled()
+    {
+        return $this->store->getConfig('payment/paynl/auto_capture') == 3;
     }
 
     public function sendEcommerceAnalytics()
