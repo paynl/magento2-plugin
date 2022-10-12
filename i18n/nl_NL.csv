@@ -158,7 +158,6 @@
 "Enable this to also apply the validation of other activated (third party) modules during the payment process.","Selecter `Aan` indien u meerdere (externe) modules heeft geinstalleerd die ook validatie (moeten) toepassen op de gebruikergegevens voordat de bestellingen geplaatst wordt."
 "Set PAY. loglevel","Geef aan tot welk niveau logregels moeten worden opgeslagen"
 "Select whether you want PAY. style applied to your checkout.","Geef aan of u PAY. styling wilt toepassen in uw checkout(Deze is vereist voor de optie `Icoon Grootte`)."
-"Select whether you want to use classic icons, or the newest up-to-date icons.","Geef aan of u de oude stijl betaaliconen wilt gebruiken, of liever de meest up-to-date set afbeeldingen."
 "Please select a pin-terminal","Selecteer een pin-terminal"
 "Enable this to start a Pin transaction via the Order detail page after making an order with the Instore option via the Magento2 backend.","Schakel dit in om een ​​Pin transactie te starten via de Order detail pagina na het plaatsen van een bestelling met de Instore optie via de Magento2 backend."
 "Payment has been canceled","Betaling is geannuleerd"
