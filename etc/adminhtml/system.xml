@@ -42,11 +42,6 @@
                     </comment>
                     <config_path>payment/paynl/serviceid</config_path>
                 </field>
-                <field id="language" translate="label" type="select" sortOrder="52" showInDefault="1" showInStore="1" showInWebsite="1">
-                    <label>Language Payment Screen</label>
-                    <source_model>Paynl\Payment\Model\Config\Source\Languages</source_model>
-                    <config_path>payment/paynl/language</config_path>
-                </field>
             </group>
         </section>
         <section id="paynl_paymentmethods" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="15" translate="label">
@@ -61,6 +56,11 @@
             <resource>Paynl_Payment::config</resource>
             <group id="paynl_general_settings" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>PAY. General Settings</label>
+                <field id="language" translate="label" type="select" sortOrder="52" showInDefault="1" showInStore="1" showInWebsite="1">
+                    <label>Language Payment Screen</label>
+                    <source_model>Paynl\Payment\Model\Config\Source\Languages</source_model>
+                    <config_path>payment/paynl/language</config_path>
+                </field>
                 <field id="default_payment_option" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Select default payment option</label>
                     <source_model>Paynl\Payment\Model\Config\Source\DefaultPaymentOption</source_model>
