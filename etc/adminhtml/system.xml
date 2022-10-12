@@ -74,14 +74,6 @@
                     <source_model>Paynl\Payment\Model\Config\Source\AutoCapture</source_model>
                     <config_path>payment/paynl/auto_capture</config_path>
                 </field>
-                <field id="register_partial_payments" translate="label" type="select" sortOrder="106" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Register partial payments</label>
-                    <comment>
-                        <![CDATA[Enable to register every partial payment in your transactions tab, located in your order details.]]>
-                    </comment>
-                    <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
-                    <config_path>payment/paynl/register_partial_payments</config_path>
-                </field>
                 <field id="order_description_prefix" translate="label" type="text" sortOrder="107" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Order description prefix</label>
                     <comment>
@@ -89,8 +81,6 @@
                     </comment>
                     <config_path>payment/paynl/order_description_prefix</config_path>
                 </field>
-
-
             </group>
             <group id="paynl_layout_settings" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>PAY. Layout Settings</label>
@@ -105,17 +95,21 @@
                 <field id="icon_size" translate="label" type="select" sortOrder="88" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Icon size</label>
                     <source_model>Paynl\Payment\Model\Config\Source\IconSize</source_model>
-                    <depends>
-                        <field id="pay_style_checkout">1</field>
-                    </depends>
-                    <comment>
-                        <![CDATA[Select which size you'd like the icons to be.]]>
-                    </comment>
+                    <depends><field id="pay_style_checkout">1</field></depends>
+                    <comment><![CDATA[Select which size you'd like the icons to be.]]></comment>
                     <config_path>payment/paynl/icon_size</config_path>
                 </field>
             </group>
             <group id="paynl_advanced_settings" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>PAY. Advanced Settings</label>
+                <field id="register_partial_payments" translate="label" type="select" sortOrder="106" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Register partial payments</label>
+                    <comment>
+                        <![CDATA[Enable to register every partial payment in your transactions tab, located in your order details.]]>
+                    </comment>
+                    <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
+                    <config_path>payment/paynl/register_partial_payments</config_path>
+                </field>
                 <field id="never_cancel" translate="label,comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Never cancel order</label>
                     <comment>
@@ -171,16 +165,11 @@
                     </comment>
                     <config_path>payment/paynl/testipaddress</config_path>
                 </field>
-
                 <field id="use_additional_validation" translate="label" type="select" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enable additional validation</label>
                     <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
                     <comment><![CDATA[Enable this to also apply the validation of other activated (third party) modules during the payment process.]]></comment>
-                </field>
-
-                <field id="order_description_prefix" translate="label" type="text" sortOrder="107" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Order description prefix</label>
-                    <comment><![CDATA[Prefix the order description with a custom word]]></comment>
+                    <config_path>payment/paynl/use_additional_validation</config_path>
                 </field>
                 <field id="logging_level" translate="label" type="select" sortOrder="107" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Loglevel</label>
