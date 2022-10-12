@@ -274,17 +274,17 @@ class Config
 
     public function getApiToken()
     {
-        return $this->store->getConfig('payment/paynl/apitoken');
+        return $this->store->getConfig('payment/paynl/apitoken_encrypted');
     }
 
     public function getTokencode()
     {
-        return $this->store->getConfig('payment/paynl/tokencode');
+        return $this->store->getConfig('payment/paynl/tokencode_encrypted');
     }
 
     public function getServiceId()
     {
-        return $this->store->getConfig('payment/paynl/serviceid');
+        return $this->store->getConfig('payment/paynl/serviceid_encrypted');
     }
 
     public function getFailoverGateway()

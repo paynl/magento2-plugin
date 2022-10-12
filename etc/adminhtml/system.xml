@@ -21,26 +21,29 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <config_path>payment/paynl/testmode</config_path>
                 </field>
-                <field id="tokencode" translate="label, comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="tokencode_encrypted" translate="label, comment" type="obscure" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Tokencode</label>
                     <comment>
                         <![CDATA[Get your AT-code <a target='_blank' href='https://admin.pay.nl/company/tokens'>here</a>. Not registered at PAY? Sign up <a target='_blank' href='https://www.pay.nl/en?register'>here</a>!]]>
                     </comment>
-                    <config_path>payment/paynl/tokencode</config_path>
+                    <config_path>payment/paynl/tokencode_encrypted</config_path>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
                 </field>
-                <field id="apitoken" translate="label, comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="apitoken_encrypted" translate="label, comment" type="obscure" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>API-token</label>
                     <comment>
                         <![CDATA[Your API-token, you can find your tokens <a target='_blank' href='https://admin.pay.nl/company/tokens'>here</a>]]>
                     </comment>
-                    <config_path>payment/paynl/apitoken</config_path>
+                    <config_path>payment/paynl/apitoken_encrypted</config_path>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
                 </field>
-                <field id="serviceid" translate="label, comment" type="text" sortOrder="51" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="serviceid_encrypted" translate="label, comment" type="obscure" sortOrder="51" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>ServiceId</label>
                     <comment>
                         <![CDATA[The SL-code of your service, you can find your services <a target='_blank' href='https://admin.pay.nl/programs/programs'>here</a>]]>
                     </comment>
-                    <config_path>payment/paynl/serviceid</config_path>
+                    <config_path>payment/paynl/serviceid_encrypted</config_path>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
                 </field>
                 <field id="language" translate="label" type="select" sortOrder="52" showInDefault="1" showInStore="1" showInWebsite="1">
                     <label>Language Payment Screen</label>
