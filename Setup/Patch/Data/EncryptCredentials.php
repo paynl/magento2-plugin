@@ -39,6 +39,10 @@ class EncryptCredentials implements DataPatchInterface
 
     /**
      * @param ModuleDataSetupInterface $moduleDataSetup
+     * @param ConfigInterface $scopeConfig
+     * @param EncryptorInterface $encryptor
+     * @param Store $store
+     * @param StoreRepositoryInterface $storeRepository
      */
     public function __construct(ModuleDataSetupInterface $moduleDataSetup, ConfigInterface $scopeConfig, EncryptorInterface $encryptor, Store $store, StoreRepositoryInterface $storeRepository)
     {
@@ -60,45 +64,46 @@ class EncryptCredentials implements DataPatchInterface
         payHelper::log('Encrypting Credentials');
 
         // Default settings
-        if (!empty($this->store->getConfig('payment/paynl/tokencode'))) {
-            $this->scopeConfig->saveConfig('payment/paynl/tokencode_encrypted', $this->encryptor->encrypt($this->store->getConfig('payment/paynl/tokencode')));
-            $this->scopeConfig->deleteConfig('payment/paynl/tokencode');
-        }
-        if (!empty($this->store->getConfig('payment/paynl/apitoken'))) {
-            $this->scopeConfig->saveConfig('payment/paynl/apitoken_encrypted', $this->encryptor->encrypt($this->store->getConfig('payment/paynl/apitoken')));
-            $this->scopeConfig->deleteConfig('payment/paynl/apitoken');
-        }
-        if (!empty($this->store->getConfig('payment/paynl/serviceid'))) {
-            $this->scopeConfig->saveConfig('payment/paynl/serviceid_encrypted', $this->encryptor->encrypt($this->store->getConfig('payment/paynl/serviceid')));
-            $this->scopeConfig->deleteConfig('payment/paynl/serviceid');
-        }
+        $this->encryptConfig('payment/paynl/tokencode_encrypted', 'payment/paynl/tokencode', $this->store, 'default', 0);
+        $this->encryptConfig('payment/paynl/apitoken_encrypted', 'payment/paynl/apitoken', $this->store, 'default', 0);
+        $this->encryptConfig('payment/paynl/serviceid_encrypted', 'payment/paynl/serviceid', $this->store, 'default', 0);
 
         // MultiStore settings
         $stores = $this->storeRepository->getList();
         foreach ($stores as $store) {
+            // Stores
             $storeId = $store->getStoreId();
+            $this->encryptConfig('payment/paynl/tokencode_encrypted', 'payment/paynl/tokencode', $store, 'store', $storeId);
+            $this->encryptConfig('payment/paynl/apitoken_encrypted', 'payment/paynl/apitoken', $store, 'store', $storeId);
+            $this->encryptConfig('payment/paynl/serviceid_encrypted', 'payment/paynl/serviceid', $store, 'store', $storeId);
+
+            // Websites
             $websiteId = $store->getWebsiteId();
-            if (!empty($store->getConfig('payment/paynl/tokencode'))) {
-                $this->scopeConfig->saveConfig('payment/paynl/tokencode_encrypted', $this->encryptor->encrypt($store->getConfig('payment/paynl/tokencode')), 'store', $storeId);
-                $this->scopeConfig->deleteConfig('payment/paynl/tokencode', 'store', $storeId);
-                $this->scopeConfig->saveConfig('payment/paynl/tokencode_encrypted', $this->encryptor->encrypt($store->getConfig('payment/paynl/tokencode')), 'website', $websiteId);
-                $this->scopeConfig->deleteConfig('payment/paynl/tokencode', 'website', $websiteId);
-            }
-            if (!empty($store->getConfig('payment/paynl/apitoken'))) {
-                $this->scopeConfig->saveConfig('payment/paynl/apitoken_encrypted', $this->encryptor->encrypt($store->getConfig('payment/paynl/apitoken')), 'store', $storeId);
-                $this->scopeConfig->deleteConfig('payment/paynl/apitoken', 'store', $storeId);
-                $this->scopeConfig->saveConfig('payment/paynl/apitoken_encrypted', $this->encryptor->encrypt($store->getConfig('payment/paynl/apitoken')), 'website', $websiteId);
-                $this->scopeConfig->deleteConfig('payment/paynl/apitoken', 'website', $websiteId);
-            }
-            if (!empty($store->getConfig('payment/paynl/serviceid'))) {
-                $this->scopeConfig->saveConfig('payment/paynl/serviceid_encrypted', $this->encryptor->encrypt($store->getConfig('payment/paynl/serviceid')), 'store', $storeId);
-                $this->scopeConfig->deleteConfig('payment/paynl/serviceid', 'store', $storeId);
-                $this->scopeConfig->saveConfig('payment/paynl/serviceid_encrypted', $this->encryptor->encrypt($store->getConfig('payment/paynl/serviceid')), 'website', $websiteId);
-                $this->scopeConfig->deleteConfig('payment/paynl/serviceid', 'website', $websiteId);
-            }
+            $this->encryptConfig('payment/paynl/tokencode_encrypted', 'payment/paynl/tokencode', $store, 'website', $websiteId);
+            $this->encryptConfig('payment/paynl/apitoken_encrypted', 'payment/paynl/apitoken', $store, 'website', $websiteId);
+            $this->encryptConfig('payment/paynl/serviceid_encrypted', 'payment/paynl/serviceid', $store, 'website', $websiteId);
         }
 
         $this->moduleDataSetup->endSetup();
+    }
+
+    /**
+     * @param string $path
+     * @param string $pathOld
+     * @param store $store
+     * @param string $scope
+     * @param int $scopeId
+     */
+    private function encryptConfig($path, $pathOld, $store, $scope, $scopeId)
+    {
+        try {
+            if (!empty($store->getConfig($pathOld))) {
+                $this->scopeConfig->saveConfig($path, $this->encryptor->encrypt($store->getConfig($pathOld)), $scope, $scopeId);
+                $this->scopeConfig->deleteConfig($pathOld);
+            }
+        } catch (\Exception $e) {
+            payHelper::log('Couldn\'t encrypt "' . $pathOld . '" - ' . $e->getMessage());
+        }
     }
 
     public static function getDependencies()
