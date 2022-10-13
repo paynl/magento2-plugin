@@ -64,25 +64,19 @@ class EncryptCredentials implements DataPatchInterface
         payHelper::log('Encrypting Credentials');
 
         // Default settings
-        $this->encryptConfig('payment/paynl/tokencode_encrypted', 'payment/paynl/tokencode', $this->store, 'default', 0);
         $this->encryptConfig('payment/paynl/apitoken_encrypted', 'payment/paynl/apitoken', $this->store, 'default', 0);
-        $this->encryptConfig('payment/paynl/serviceid_encrypted', 'payment/paynl/serviceid', $this->store, 'default', 0);
 
         // MultiStore settings
         $stores = $this->storeRepository->getList();
         foreach ($stores as $store) {
             // Stores
             $storeId = $store->getStoreId();
-            $this->encryptConfig('payment/paynl/tokencode_encrypted', 'payment/paynl/tokencode', $store, 'store', $storeId);
             $this->encryptConfig('payment/paynl/apitoken_encrypted', 'payment/paynl/apitoken', $store, 'store', $storeId);
-            $this->encryptConfig('payment/paynl/serviceid_encrypted', 'payment/paynl/serviceid', $store, 'store', $storeId);
 
             // Websites
             $websiteId = $store->getWebsiteId();
-            $this->encryptConfig('payment/paynl/tokencode_encrypted', 'payment/paynl/tokencode', $store, 'website', $websiteId);
             $this->encryptConfig('payment/paynl/apitoken_encrypted', 'payment/paynl/apitoken', $store, 'website', $websiteId);
-            $this->encryptConfig('payment/paynl/serviceid_encrypted', 'payment/paynl/serviceid', $store, 'website', $websiteId);
-        }
+           }
 
         $this->moduleDataSetup->endSetup();
     }

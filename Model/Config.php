@@ -279,12 +279,12 @@ class Config
 
     public function getTokencode()
     {
-        return $this->store->getConfig('payment/paynl/tokencode_encrypted');
+        return $this->store->getConfig('payment/paynl/tokencode');
     }
 
     public function getServiceId()
     {
-        return $this->store->getConfig('payment/paynl/serviceid_encrypted');
+        return $this->store->getConfig('payment/paynl/serviceid');
     }
 
     public function getFailoverGateway()
