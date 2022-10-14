@@ -4,7 +4,7 @@ namespace Paynl\Payment\Model\Config\Source;
 
 use \Magento\Framework\Option\ArrayInterface;
 
-class Testmode implements ArrayInterface
+class TestMode implements ArrayInterface
 {
 
   /**
