@@ -71,15 +71,17 @@ class Instore extends PaymentMethod
         } catch (\Exception $e) {
             payHelper::logCritical($e->getMessage(), [], $store);
 
-            if ($e->getCode() == 201) {
-                $this->messageManager->addNoticeMessage($e->getMessage());
+            if ($e->getCode() == 201) {                
                 if ($fromAdmin) {
                     throw new \Exception(__($e->getMessage()));
+                } else {
+                    $this->messageManager->addNoticeMessage($e->getMessage());
                 }
-            } else {
-                $this->messageManager->addNoticeMessage(__('Pin transaction could not be started'));
+            } else {                
                 if ($fromAdmin) {
                     throw new \Exception(__('Pin transaction could not be started'));
+                } else {
+                    $this->messageManager->addNoticeMessage(__('Pin transaction could not be started'));
                 }
             }
         }
@@ -110,6 +112,14 @@ class Instore extends PaymentMethod
         $storeId = $store->getId();
         $cacheName = 'paynl_terminals_' . $this->getPaymentOptionId() . '_' . $storeId;
         $terminalsJson = $cache->load($cacheName);
+
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $config = $objectManager->get(\Paynl\Payment\Model\Config::class);
+        $config->setStore($store);
+
+        if (!$config->isPaymentMethodActive('paynl_payment_instore')) {
+            return false;
+        }
         if ($terminalsJson) {
             $terminalsArr = json_decode($terminalsJson);
         } else {

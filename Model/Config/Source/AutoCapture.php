@@ -4,7 +4,7 @@ namespace Paynl\Payment\Model\Config\Source;
 
 use \Magento\Framework\Option\ArrayInterface;
 
-class ImageStyle implements ArrayInterface
+class AutoCapture implements ArrayInterface
 {
 
   /**
@@ -31,8 +31,10 @@ class ImageStyle implements ArrayInterface
     public function toArray()
     {
         return [
-        'classic' => __('Classic'),
-        'newest' => __('Newest'),
+        '0' => __('Off'),
+        '1' => __('On'),
+        '2' => __('On - Via Wuunder'),
+        '3' => __('On - Via Sherpa'),
         ];
     }
 }

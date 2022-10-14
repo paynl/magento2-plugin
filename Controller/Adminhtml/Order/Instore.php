@@ -1,6 +1,6 @@
 <?php
 
-namespace Paynl\Payment\Controller\Order;
+namespace Paynl\Payment\Controller\Adminhtml\Order;
 
 use Magento\Framework\App\Request\InvalidRequestException;
 use Magento\Framework\App\RequestInterface;
@@ -9,10 +9,9 @@ use Magento\Quote\Model\QuoteRepository;
 use Magento\Payment\Helper\Data as PaymentHelper;
 
 use Paynl\Payment\Controller\CsrfAwareActionInterface;
-use Paynl\Payment\Controller\PayAction;
 use \Paynl\Payment\Helper\PayHelper;
 
-class Instore extends PayAction implements CsrfAwareActionInterface
+class Instore extends \Magento\Backend\App\Action implements CsrfAwareActionInterface
 {
     private $orderRepository;
     private $quoteRepository;
@@ -38,7 +37,7 @@ class Instore extends PayAction implements CsrfAwareActionInterface
      * @param Magento\Payment\Helper\Data $paymentHelper
      */
     public function __construct(
-        \Magento\Framework\App\Action\Context $context,
+        \Magento\Backend\App\Action\Context $context,
         OrderRepository $orderRepository,
         PaymentHelper $paymentHelper,
         QuoteRepository $quoteRepository,
