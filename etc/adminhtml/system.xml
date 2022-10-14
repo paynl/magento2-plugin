@@ -1,150 +1,206 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 -->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Config:etc/system_file.xsd">
     <system>
-        <section id="payment">
-            <group id="paynl" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>PAY. Settings</label>
+        <tab id="paynl" sortOrder="300" translate="label" class="paynl-tab">
+            <label>PAY.</label>
+        </tab>
+        <section id="paynl_setup" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label">
+            <label>Setup</label>
+            <tab>paynl</tab>
+            <resource>Paynl_Payment::config</resource>
+            <group id="paynl_general_settings" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>PAY. Setup</label>
                 <field id="version" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Version</label>
                     <frontend_model>Paynl\Payment\Block\Adminhtml\Render\Version</frontend_model>
                 </field>
-                <field id="testmode" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1"
-                       showInStore="1">
+                <field id="testmode" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Testmode</label>
                     <source_model>Paynl\Payment\Model\Config\Source\TestMode</source_model>
+                    <config_path>payment/paynl/testmode</config_path>
                 </field>
                 <field id="tokencode" translate="label, comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Tokencode</label>
-                    <comment><![CDATA[Get your AT-code <a target='_blank' href='https://admin.pay.nl/company/tokens'>here</a>. Not registered at PAY? Sign up <a target='_blank' href='https://www.pay.nl/en?register'>here</a>!]]></comment>
+                    <comment>
+                        <![CDATA[Get your AT-code <a target='_blank' href='https://admin.pay.nl/company/tokens'>here</a>. Not registered at PAY? Sign up <a target='_blank' href='https://www.pay.nl/en?register'>here</a>!]]>
+                    </comment>
+                    <config_path>payment/paynl/tokencode</config_path>
                 </field>
                 <field id="apitoken" translate="label, comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>API-token</label>
-                    <comment><![CDATA[Your API-token, you can find your tokens <a target='_blank' href='https://admin.pay.nl/company/tokens'>here</a>]]></comment>
+                    <comment>
+                        <![CDATA[Your API-token, you can find your tokens <a target='_blank' href='https://admin.pay.nl/company/tokens'>here</a>]]>
+                    </comment>
+                    <config_path>payment/paynl/apitoken</config_path>
                 </field>
                 <field id="serviceid" translate="label, comment" type="text" sortOrder="51" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>ServiceId</label>
-                    <comment><![CDATA[The SL-code of your service, you can find your services <a target='_blank' href='https://admin.pay.nl/programs/programs'>here</a>]]></comment>
+                    <comment>
+                        <![CDATA[The SL-code of your service, you can find your services <a target='_blank' href='https://admin.pay.nl/programs/programs'>here</a>]]>
+                    </comment>
+                    <config_path>payment/paynl/serviceid</config_path>
                 </field>
+            </group>
+        </section>
+        <section id="paynl_paymentmethods" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="15" translate="label">
+            <label>Payment Methods</label>
+            <tab>paynl</tab>
+            <resource>Paynl_Payment::config</resource>
+            <include path="Paynl_Payment::paymentmethods.xml" />
+        </section>
+        <section id="paynl_settings" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="30" translate="label">
+            <label>Settings</label>
+            <tab>paynl</tab>
+            <resource>Paynl_Payment::config</resource>
+            <group id="paynl_general_settings" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>PAY. General Settings</label>
                 <field id="language" translate="label" type="select" sortOrder="52" showInDefault="1" showInStore="1" showInWebsite="1">
                     <label>Language Payment Screen</label>
                     <source_model>Paynl\Payment\Model\Config\Source\Languages</source_model>
-                </field>
-                <field id="never_cancel" translate="label,comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Never cancel order</label>
-                    <comment><![CDATA[This might be your preference when uncancelling orders isn't possible, which might lead to problems in case of a second chance payments.]]></comment>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                </field>
-                <field id="always_base_currency" translate="label,comment" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Always use base currency</label>
-                    <comment><![CDATA[Set this to yes if you always want to process payments in the base currency of this store. Magento acts strange when trying to register a payment in another currency than the base currency. The base currency MUST be EUR]]></comment>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                </field>
-                <field id="use_sku_id" translate="label,comment" type="select" sortOrder="72" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Productdata ID</label>
-                    <comment><![CDATA[Set which product data to use as product ID in the PAY. backend.]]></comment>
-                    <source_model>Paynl\Payment\Model\Config\Source\ProductDataID</source_model>
-                </field>
-                <field id="skip_fraud_detection" translate="label,comment" type="select" sortOrder="80" showInDefault="1"
-                       showInWebsite="1" showInStore="1">
-                    <label>Skip fraud detection</label>
-                    <comment><![CDATA[Sometimes magento incorrectly marks an order as fraudulent. this happens more often when using different currencies. Set this to yes to skip fraud detection.]]></comment>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                </field>
-                <field id="image_style" translate="label" type="select" sortOrder="85" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Image style</label>
-                    <comment><![CDATA[Select whether you want to use classic icons, or the newest up-to-date icons.]]></comment>
-                    <source_model>Paynl\Payment\Model\Config\Source\ImageStyle</source_model>
-                </field>
-                <field id="iconurl" translate="label,comment" type="text" sortOrder="86" showInDefault="1"
-                       showInWebsite="1" showInStore="1">
-                    <label>Icon URL</label>
-                    <depends>
-                        <field id="image_style">classic</field>
-                    </depends>
-                    <comment><![CDATA[URL of the payment option icons. Default URL: https://static.pay.nl/payment_profiles/50x32/#paymentOptionId#.png]]></comment>
-                </field>
-                <field id="pay_style_checkout" translate="label" type="select" sortOrder="87" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>PAY. Style checkout</label>
-                    <comment><![CDATA[Select whether you want PAY. style applied to your checkout.]]></comment>
-                    <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
-                </field>
-                <field id="icon_size" translate="label" type="select" sortOrder="88" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Icon size</label>
-                    <source_model>Paynl\Payment\Model\Config\Source\IconSize</source_model>
-                    <depends>
-                        <field id="pay_style_checkout">1</field>
-                    </depends>
-                    <comment><![CDATA[Select which size you'd like the icons to be.]]></comment>
-                </field>
-                <field id="discount_tax" translate="label,comment" type="select" sortOrder="90" showInDefault="1"
-                       showInWebsite="1" showInStore="1">
-                    <label>Send discount tax</label>
-                    <comment><![CDATA[Set this to NO if you have a mix of low and high vatrate products. Some pay later methods have issues when the discount has a tax amount other than the default vat categories]]></comment>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                </field>
-                <field id="cancelurl" translate="label,comment" type="select" sortOrder="95" showInDefault="1"
-                       showInWebsite="1" showInStore="1">
-                    <label>Cancel URL</label>
-                    <comment><![CDATA[URL the customer gets send to after cancelling payment. Default URL: checkout/cart]]></comment>
-                    <source_model>Paynl\Payment\Model\Config\Source\CancelURL</source_model>
-                </field>
-                <field id="testipaddress" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1"
-                       showInStore="1">
-                    <label>Test IP Address</label>
-                    <comment><![CDATA[Forces testmode on these Ip addresses, separate ip's by comma's for multiple ip's]]></comment>
+                    <config_path>payment/paynl/language</config_path>
                 </field>
                 <field id="default_payment_option" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Select default payment option</label>
                     <source_model>Paynl\Payment\Model\Config\Source\DefaultPaymentOption</source_model>
+                    <config_path>payment/paynl/default_payment_option</config_path>
+                </field>
+                <field id="auto_capture" translate="label" type="select" sortOrder="105" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Auto Capture</label>
+                    <comment>
+                        <![CDATA[Automatically capture authorisation-transaction when creating the shipment for the order.]]>
+                    </comment>
+                    <source_model>Paynl\Payment\Model\Config\Source\AutoCapture</source_model>
+                    <config_path>payment/paynl/auto_capture</config_path>
+                </field>
+                <field id="order_description_prefix" translate="label" type="text" sortOrder="107" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Order description prefix</label>
+                    <comment>
+                        <![CDATA[Prefix the order description with a custom word]]>
+                    </comment>
+                    <config_path>payment/paynl/order_description_prefix</config_path>
+                </field>
+            </group>
+            <group id="paynl_layout_settings" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>PAY. Layout Settings</label>
+                <field id="pay_style_checkout" translate="label" type="select" sortOrder="87" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>PAY. Style checkout</label>
+                    <comment>
+                        <![CDATA[Select whether you want PAY. style applied to your checkout.]]>
+                    </comment>
+                    <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
+                    <config_path>payment/paynl/pay_style_checkout</config_path>
+                </field>
+                <field id="icon_size" translate="label" type="select" sortOrder="88" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Icon size</label>
+                    <source_model>Paynl\Payment\Model\Config\Source\IconSize</source_model>
+                    <depends><field id="pay_style_checkout">1</field></depends>
+                    <comment><![CDATA[Select which size you'd like the icons to be.]]></comment>
+                    <config_path>payment/paynl/icon_size</config_path>
+                </field>
+            </group>
+            <group id="paynl_advanced_settings" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>PAY. Advanced Settings</label>
+                <field id="register_partial_payments" translate="label" type="select" sortOrder="106" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Register partial payments</label>
+                    <comment>
+                        <![CDATA[Enable to register every partial payment in your transactions tab, located in your order details.]]>
+                    </comment>
+                    <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
+                    <config_path>payment/paynl/register_partial_payments</config_path>
+                </field>
+                <field id="never_cancel" translate="label,comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Never cancel order</label>
+                    <comment>
+                        <![CDATA[This might be your preference when uncancelling orders isn't possible, which might lead to problems in case of a second chance payments.]]>
+                    </comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <config_path>payment/paynl/never_cancel</config_path>
+                </field>
+                <field id="always_base_currency" translate="label,comment" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Always use base currency</label>
+                    <comment>
+                        <![CDATA[Set this to yes if you always want to process payments in the base currency of this store. Magento acts strange when trying to register a payment in another currency than the base currency. The base currency MUST be EUR]]>
+                    </comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <config_path>payment/paynl/always_base_currency</config_path>
+                </field>
+                <field id="use_sku_id" translate="label,comment" type="select" sortOrder="72" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Productdata ID</label>
+                    <comment>
+                        <![CDATA[Set which product data to use as product ID in the PAY. backend.]]>
+                    </comment>
+                    <source_model>Paynl\Payment\Model\Config\Source\ProductDataID</source_model>
+                    <config_path>payment/paynl/use_sku_id</config_path>
+                </field>
+                <field id="skip_fraud_detection" translate="label,comment" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Skip fraud detection</label>
+                    <comment>
+                        <![CDATA[Sometimes magento incorrectly marks an order as fraudulent. this happens more often when using different currencies. Set this to yes to skip fraud detection.]]>
+                    </comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <config_path>payment/paynl/skip_fraud_detection</config_path>
+                </field>
+                <field id="discount_tax" translate="label,comment" type="select" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Send discount tax</label>
+                    <comment>
+                        <![CDATA[Set this to NO if you have a mix of low and high vatrate products. Some pay later methods have issues when the discount has a tax amount other than the default vat categories]]>
+                    </comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <config_path>payment/paynl/discount_tax</config_path>
+                </field>
+                <field id="cancelurl" translate="label,comment" type="select" sortOrder="95" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Cancel URL</label>
+                    <comment>
+                        <![CDATA[URL the customer gets send to after cancelling payment. Default URL: checkout/cart]]>
+                    </comment>
+                    <source_model>Paynl\Payment\Model\Config\Source\CancelURL</source_model>
+                    <config_path>payment/paynl/cancelurl</config_path>
+                </field>
+                <field id="testipaddress" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Test IP Address</label>
+                    <comment>
+                        <![CDATA[Forces testmode on these Ip addresses, separate ip's by comma's for multiple ip's]]>
+                    </comment>
+                    <config_path>payment/paynl/testipaddress</config_path>
                 </field>
                 <field id="use_additional_validation" translate="label" type="select" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enable additional validation</label>
                     <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
                     <comment><![CDATA[Enable this to also apply the validation of other activated (third party) modules during the payment process.]]></comment>
+                    <config_path>payment/paynl/use_additional_validation</config_path>
                 </field>
-                <field id="auto_capture" translate="label" type="select" sortOrder="105" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Auto Capture</label>
-                    <comment><![CDATA[Automatically capture authorisation-transaction when creating the shipment for the order.]]></comment>
-                    <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
-                </field>
-                <field id="register_partial_payments" translate="label" type="select" sortOrder="106" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Register partial payments</label>
-                    <comment><![CDATA[Enable to register every partial payment in your transactions tab, located in your order details.]]></comment>
-                    <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
-                </field>
-                <field id="order_description_prefix" translate="label" type="text" sortOrder="107" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Order description prefix</label>
-                    <comment><![CDATA[Prefix the order description with a custom word]]></comment>
-                </field>
-                <field id="logging_level" translate="label" type="select" sortOrder="107" showInDefault="1" showInWebsite="1"
-                       showInStore="1">
+                <field id="logging_level" translate="label" type="select" sortOrder="107" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Loglevel</label>
                     <source_model>Paynl\Payment\Model\Config\Source\LogOptions</source_model>
                     <comment><![CDATA[Set PAY. loglevel]]></comment>
+                    <config_path>payment/paynl/logging_level</config_path>
                 </field>
                 <field id="logsdownload" translate="label" type="button" sortOrder="107" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>PAY. Logs</label>
                     <frontend_model>Paynl\Payment\Block\Adminhtml\Render\Logs</frontend_model>
                 </field>
-                <field id="failover_gateway" translate="label" type="text" sortOrder="108" showInDefault="1" showInWebsite="1"
-                       showInStore="1">
+                <field id="failover_gateway" translate="label" type="text" sortOrder="108" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Failover Gateway</label>
                     <comment><![CDATA[Leave this empty unless advised otherwise by PAY.]]></comment>
+                    <config_path>payment/paynl/failover_gateway</config_path>
                 </field>
-                <field id="google_analytics_ecommerce" translate="label,comment" type="select" sortOrder="109" showInDefault="1"
-                       showInWebsite="1" showInStore="1">
+                <field id="google_analytics_ecommerce" translate="label,comment" type="select" sortOrder="109" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Google Analytics</label>
                     <comment><![CDATA[Select whether you want to use PAY. as Google Analytics proxy.]]></comment>
                     <source_model>Paynl\Payment\Model\Config\Source\GoogleAnalytics</source_model>
+                    <config_path>payment/paynl/google_analytics_ecommerce</config_path>
                 </field>
-                <group id="paynl_paymentmethods" translate="label" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <frontend_model>Paynl\Payment\Block\Adminhtml\System\Config\Fieldset\Expanded</frontend_model>
-                    <label>Paymentmethods</label>
-                    <include path="Paynl_Payment::paymentmethods.xml"/>
-                </group>
+            </group>
+        </section>
+        <section id="payment">
+            <group id="paynllink" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>PAY. Settings</label>
+                <field id="version" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>PAY. Settings</label>
+                    <frontend_model>Paynl\Payment\Block\Adminhtml\Render\SettingsButton</frontend_model>
+                </field>
             </group>
         </section>
     </system>
