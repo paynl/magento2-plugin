@@ -26,17 +26,17 @@ MyBank | Carte Bancaire | Podium Cadeaukaart | Capayable Achteraf Betalen | Cash
 SOFORT | PostePay | Gezondheidsbon | in3 keer betalen, 0% rente | Pay Fixed Price (phone) |
 Maestro | Dankort | Fashion Giftcard | Klarna | Instore Payments (POS) |
 Bank Transfer | Cartasi | GivaCard | SprayPay | Przelewy24 | 
-Trustly | Tikkie | De Cadeaukaart | YourGift | Creditclick | Apple Pay | 
+Trustly | Tikkie | De Cadeaukaart | YourGift | Creditclick | 
 | Multibanco | Nexi | Paysafecard | | Payconiq
 | |  | Huis en Tuin Cadeau| | Google Pay |
-| | | Good4Fun
+| | | Good4Fun | | Apple Pay
 
 
 # Requirements
 
     PHP 7.2 or higher
     PHP tested up to 8.1
-    Magento tested up to 2.4.4
+    Magento tested up to 2.4.5
 
 
 # Installation
