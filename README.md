@@ -19,7 +19,7 @@ With the PAY. plugin you can easily add different payment methods to your Magent
 
 Bank Payments  | Creditcards | Gift cards & Vouchers | Pay by invoice | Others | 
 :-----------: | :-----------: | :-----------: | :-----------: | :-----------: |
-iDEAL + QR |Visa | VVV Cadeaukaart | AfterPay | PayPal |
+iDEAL + QR |Visa | VVV Cadeaukaart | AfterPay (by Riverty) | PayPal |
 Bancontact + QR |  Mastercard | Webshop Giftcard | Achteraf betalen via Billink | WeChatPay | 
 Giropay |American Express | FashionCheque | Focum AchterafBetalen.nl | AmazonPay |
 MyBank | Carte Bancaire | Podium Cadeaukaart | Capayable Achteraf Betalen | Cashly | 
