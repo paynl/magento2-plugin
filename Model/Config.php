@@ -3,7 +3,6 @@
 namespace Paynl\Payment\Model;
 
 use Magento\Store\Model\Store;
-use Magento\Framework\HTTP\PhpEnvironment\RemoteAddress;
 
 /**
  * Get / Set configuration for the PAY api and Magento settings.
@@ -27,8 +26,7 @@ class Config
     /** @var  Resources */
     private $resources;
 
-    /** @var RemoteAddress */
-    private $remoteAddress;
+    protected $helper;
 
     /** @array  Brands */
     public $brands = [
@@ -94,11 +92,11 @@ class Config
     public function __construct(
         Store $store,
         \Magento\Framework\View\Element\Template $resources,
-        RemoteAddress $remoteAddress
+        \Paynl\Payment\Helper\PayHelper $helper
     ) {
         $this->store = $store;
         $this->resources = $resources;
-        $this->remoteAddress = $remoteAddress;
+        $this->helper = $helper;
     }
 
     /**
@@ -149,7 +147,7 @@ class Config
 
     public function isTestMode()
     {
-        $ip = $this->remoteAddress->getRemoteAddress();
+        $ip = $this->helper->getClientIp();
 
         $ipconfig = $this->store->getConfig('payment/paynl/testipaddress');
 
