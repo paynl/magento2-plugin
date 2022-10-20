@@ -159,24 +159,40 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
         }
     }
 
+    /**
+     * Checks if new-ppt is already processing, mark as processing if not marked already
+     *
+     * @param $payOrderId
+     * @return bool
+     */
     public function checkProcessing($payOrderId)
     {
-        $connection = $this->resource->getConnection();
-        $tableName = $this->resource->getTableName('pay_processing');
+        try {
+            $connection = $this->resource->getConnection();
+            $tableName = $this->resource->getTableName('pay_processing');
 
-        $select = $connection->select()->from([$tableName])->where('payOrderId = ?', $payOrderId)->where('created_at > date_sub(now(), interval 1 minute)');
-        $result = $connection->fetchAll($select);
+            $select = $connection->select()->from([$tableName])->where('payOrderId = ?', $payOrderId)->where('created_at > date_sub(now(), interval 1 minute)');
+            $result = $connection->fetchAll($select);
 
-        if (empty($result)) {
-            $connection->insertOnDuplicate(
-                $tableName,
-                ['payOrderId' => $payOrderId],
-                ['payOrderId', 'created_at']
-            );
+            $processing = !empty($result[0]);
+            if (!$processing) {
+                $connection->insertOnDuplicate(
+                    $tableName,
+                    ['payOrderId' => $payOrderId],
+                    ['payOrderId', 'created_at']
+                );
+            }
+        } catch (\Exception $e) {
+            $processing = false;
         }
-        return is_array($result) ? $result : array();
+        return $processing;
     }
 
+    /**
+     * Removes processing mark after new-ppt is finished
+     *
+     * @param $payOrderId
+     */
     public function removeProcessing($payOrderId)
     {
         $connection = $this->resource->getConnection();

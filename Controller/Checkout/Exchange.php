@@ -111,7 +111,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         }
 
         if ($action == 'new_ppt') {
-            if (!empty($this->paynlHelper->checkProcessing($payOrderId))) {
+            if ($this->paynlHelper->checkProcessing($payOrderId)) {
                 return $this->result->setContents('FALSE| Order already processing.');
             }
         }
