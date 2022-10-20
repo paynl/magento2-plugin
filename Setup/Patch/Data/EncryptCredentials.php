@@ -7,8 +7,8 @@ use Magento\Framework\Setup\Patch\DataPatchInterface;
 use Magento\Framework\App\Config\ConfigResource\ConfigInterface;
 use \Paynl\Payment\Helper\PayHelper;
 use Magento\Framework\Encryption\EncryptorInterface;
-use Magento\Store\Model\Store;
-use Magento\Store\Api\StoreRepositoryInterface;
+use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 
 class EncryptCredentials implements DataPatchInterface
 {
@@ -18,9 +18,15 @@ class EncryptCredentials implements DataPatchInterface
     private $moduleDataSetup;
 
     /**
-     * @var ScopeConfigInterface
+     *
+     * @var ScopeConfigInterface;
      */
-    private $scopeConfig;
+    protected $scopeConfig;
+
+    /**
+     * @var ConfigInterface
+     */
+    private $config;
 
     /**
      * @var  EncryptorInterface
@@ -28,29 +34,22 @@ class EncryptCredentials implements DataPatchInterface
     private $encryptor;
 
     /**
-     * @var  Store
+     * @var  ResourceConnection
      * */
-    private $store;
-
-    /**
-     * @var  StoreRepositoryInterface
-     * */
-    private $storeRepository;
+    private $resource;
 
     /**
      * @param ModuleDataSetupInterface $moduleDataSetup
      * @param ConfigInterface $scopeConfig
-     * @param EncryptorInterface $encryptor
-     * @param Store $store
-     * @param StoreRepositoryInterface $storeRepository
+     * @param EncryptorInterface $encryptor    
      */
-    public function __construct(ModuleDataSetupInterface $moduleDataSetup, ConfigInterface $scopeConfig, EncryptorInterface $encryptor, Store $store, StoreRepositoryInterface $storeRepository)
+    public function __construct(ModuleDataSetupInterface $moduleDataSetup, ScopeConfigInterface $scopeConfig, ConfigInterface $config, EncryptorInterface $encryptor, ResourceConnection $resource)
     {
         $this->moduleDataSetup = $moduleDataSetup;
         $this->scopeConfig = $scopeConfig;
+        $this->config = $config;
         $this->encryptor = $encryptor;
-        $this->store = $store;
-        $this->storeRepository = $storeRepository;
+        $this->resource = $resource;
     }
 
     /**
@@ -60,44 +59,27 @@ class EncryptCredentials implements DataPatchInterface
     {
         $this->moduleDataSetup->startSetup();
 
-        $stores = $this->storeRepository->getList();
         payHelper::log('Encrypting Credentials');
+        $connection = $this->resource->getConnection();
+        $tableName = $this->resource->getTableName('core_config_data');
 
-        // Default settings
-        $this->encryptConfig('payment/paynl/apitoken_encrypted', 'payment/paynl/apitoken', $this->store, 'default', 0);
-
-        // MultiStore settings
-        $stores = $this->storeRepository->getList();
-        foreach ($stores as $store) {
-            // Stores
-            $storeId = $store->getStoreId();
-            $this->encryptConfig('payment/paynl/apitoken_encrypted', 'payment/paynl/apitoken', $store, 'store', $storeId);
-
-            // Websites
-            $websiteId = $store->getWebsiteId();
-            $this->encryptConfig('payment/paynl/apitoken_encrypted', 'payment/paynl/apitoken', $store, 'website', $websiteId);
-           }
+        $select = $connection->select()->from([$tableName])->where('path = ?', 'payment/paynl/apitoken');
+        $results = $connection->fetchAll($select);
+        if (!empty($results)) {
+            foreach ($results as $result) {
+                try {
+                    $config = $this->scopeConfig->getValue('payment/paynl/apitoken', $result['scope'], $result['scope_id']);
+                    if (!empty($config)) {
+                        $this->config->saveConfig('payment/paynl/apitoken_encrypted', $this->encryptor->encrypt($config), $result['scope'], $result['scope_id']);
+                        $this->config->deleteConfig('payment/paynl/apitoken', $result['scope'], $result['scope_id']);
+                    }
+                } catch (\Exception $e) {
+                    payHelper::log('Couldn\'t encrypt \'payment/paynl/apitoken\' - ' . $e->getMessage());
+                }
+            }
+        }
 
         $this->moduleDataSetup->endSetup();
-    }
-
-    /**
-     * @param string $path
-     * @param string $pathOld
-     * @param store $store
-     * @param string $scope
-     * @param int $scopeId
-     */
-    private function encryptConfig($path, $pathOld, $store, $scope, $scopeId)
-    {
-        try {
-            if (!empty($store->getConfig($pathOld))) {
-                $this->scopeConfig->saveConfig($path, $this->encryptor->encrypt($store->getConfig($pathOld)), $scope, $scopeId);
-                $this->scopeConfig->deleteConfig($pathOld);
-            }
-        } catch (\Exception $e) {
-            payHelper::log('Couldn\'t encrypt "' . $pathOld . '" - ' . $e->getMessage());
-        }
     }
 
     public static function getDependencies()
