@@ -4,14 +4,14 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Config:etc/system_file.xsd">
     <system>
         <tab id="paynl" sortOrder="300" translate="label" class="paynl-tab">
-            <label>PAY.</label>
+            <label>Pay.</label>
         </tab>
         <section id="paynl_setup" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="10" translate="label">
             <label>Setup</label>
             <tab>paynl</tab>
             <resource>Paynl_Payment::config</resource>
             <group id="paynl_general_settings" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>PAY. Setup</label>
+                <label>Pay. - Setup</label>
                 <field id="version" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Version</label>
                     <frontend_model>Paynl\Payment\Block\Adminhtml\Render\Version</frontend_model>
@@ -42,11 +42,6 @@
                     </comment>
                     <config_path>payment/paynl/serviceid</config_path>
                 </field>
-                <field id="language" translate="label" type="select" sortOrder="52" showInDefault="1" showInStore="1" showInWebsite="1">
-                    <label>Language Payment Screen</label>
-                    <source_model>Paynl\Payment\Model\Config\Source\Languages</source_model>
-                    <config_path>payment/paynl/language</config_path>
-                </field>
             </group>
         </section>
         <section id="paynl_paymentmethods" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="15" translate="label">
@@ -60,7 +55,12 @@
             <tab>paynl</tab>
             <resource>Paynl_Payment::config</resource>
             <group id="paynl_general_settings" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>PAY. General Settings</label>
+                <label>Pay. - General Settings</label>
+                <field id="language" translate="label" type="select" sortOrder="52" showInDefault="1" showInStore="1" showInWebsite="1">
+                    <label>Language Payment Screen</label>
+                    <source_model>Paynl\Payment\Model\Config\Source\Languages</source_model>
+                    <config_path>payment/paynl/language</config_path>
+                </field>
                 <field id="default_payment_option" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Select default payment option</label>
                     <source_model>Paynl\Payment\Model\Config\Source\DefaultPaymentOption</source_model>
@@ -74,14 +74,6 @@
                     <source_model>Paynl\Payment\Model\Config\Source\AutoCapture</source_model>
                     <config_path>payment/paynl/auto_capture</config_path>
                 </field>
-                <field id="register_partial_payments" translate="label" type="select" sortOrder="106" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Register partial payments</label>
-                    <comment>
-                        <![CDATA[Enable to register every partial payment in your transactions tab, located in your order details.]]>
-                    </comment>
-                    <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
-                    <config_path>payment/paynl/register_partial_payments</config_path>
-                </field>
                 <field id="order_description_prefix" translate="label" type="text" sortOrder="107" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Order description prefix</label>
                     <comment>
@@ -89,21 +81,9 @@
                     </comment>
                     <config_path>payment/paynl/order_description_prefix</config_path>
                 </field>
-                <field id="logging_level" translate="label" type="select" sortOrder="107" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Loglevel</label>
-                    <source_model>Paynl\Payment\Model\Config\Source\LogOptions</source_model>
-                    <comment>
-                        <![CDATA[Set PAY. loglevel]]>
-                    </comment>
-                    <config_path>payment/paynl/logging_level</config_path>
-                </field>
-                <field id="logsdownload" translate="label" type="button" sortOrder="107" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>PAY. Logs</label>
-                    <frontend_model>Paynl\Payment\Block\Adminhtml\Render\Logs</frontend_model>
-                </field>
             </group>
             <group id="paynl_layout_settings" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>PAY. Layout Settings</label>
+                <label>Pay. - Layout Settings</label>
                 <field id="pay_style_checkout" translate="label" type="select" sortOrder="87" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>PAY. Style checkout</label>
                     <comment>
@@ -115,17 +95,21 @@
                 <field id="icon_size" translate="label" type="select" sortOrder="88" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Icon size</label>
                     <source_model>Paynl\Payment\Model\Config\Source\IconSize</source_model>
-                    <depends>
-                        <field id="pay_style_checkout">1</field>
-                    </depends>
-                    <comment>
-                        <![CDATA[Select which size you'd like the icons to be.]]>
-                    </comment>
+                    <depends><field id="pay_style_checkout">1</field></depends>
+                    <comment><![CDATA[Select which size you'd like the icons to be.]]></comment>
                     <config_path>payment/paynl/icon_size</config_path>
                 </field>
             </group>
             <group id="paynl_advanced_settings" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>PAY. Advanced Settings</label>
+                <label>Pay. - Advanced Settings</label>
+                <field id="register_partial_payments" translate="label" type="select" sortOrder="106" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Register partial payments</label>
+                    <comment>
+                        <![CDATA[Enable to register every partial payment in your transactions tab, located in your order details.]]>
+                    </comment>
+                    <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
+                    <config_path>payment/paynl/register_partial_payments</config_path>
+                </field>
                 <field id="never_cancel" translate="label,comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Never cancel order</label>
                     <comment>
@@ -181,40 +165,30 @@
                     </comment>
                     <config_path>payment/paynl/testipaddress</config_path>
                 </field>
-
                 <field id="use_additional_validation" translate="label" type="select" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enable additional validation</label>
                     <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
                     <comment><![CDATA[Enable this to also apply the validation of other activated (third party) modules during the payment process.]]></comment>
+                    <config_path>payment/paynl/use_additional_validation</config_path>
                 </field>
-
-                <field id="order_description_prefix" translate="label" type="text" sortOrder="107" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Order description prefix</label>
-                    <comment><![CDATA[Prefix the order description with a custom word]]></comment>
-                </field>
-                <field id="logging_level" translate="label" type="select" sortOrder="107" showInDefault="1" showInWebsite="1"
-                       showInStore="1">
+                <field id="logging_level" translate="label" type="select" sortOrder="107" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Loglevel</label>
                     <source_model>Paynl\Payment\Model\Config\Source\LogOptions</source_model>
                     <comment><![CDATA[Set PAY. loglevel]]></comment>
+                    <config_path>payment/paynl/logging_level</config_path>
                 </field>
                 <field id="logsdownload" translate="label" type="button" sortOrder="107" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>PAY. Logs</label>
                     <frontend_model>Paynl\Payment\Block\Adminhtml\Render\Logs</frontend_model>
                 </field>
-                <field id="failover_gateway" translate="label" type="text" sortOrder="108" showInDefault="1" showInWebsite="1"
-                       showInStore="1">
+                <field id="failover_gateway" translate="label" type="text" sortOrder="108" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Failover Gateway</label>
-                    <comment>
-                        <![CDATA[Leave this empty unless advised otherwise by PAY.]]>
-                    </comment>
+                    <comment><![CDATA[Leave this empty unless advised otherwise by PAY.]]></comment>
                     <config_path>payment/paynl/failover_gateway</config_path>
                 </field>
                 <field id="google_analytics_ecommerce" translate="label,comment" type="select" sortOrder="109" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Google Analytics</label>
-                    <comment>
-                        <![CDATA[Select whether you want to use PAY. as Google Analytics proxy.]]>
-                    </comment>
+                    <comment><![CDATA[Select whether you want to use PAY. as Google Analytics proxy.]]></comment>
                     <source_model>Paynl\Payment\Model\Config\Source\GoogleAnalytics</source_model>
                     <config_path>payment/paynl/google_analytics_ecommerce</config_path>
                 </field>
@@ -222,7 +196,7 @@
         </section>
         <section id="payment">
             <group id="paynllink" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>PAY. Settings</label>
+                <label>Pay. - Settings</label>
                 <field id="version" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>PAY. Settings</label>
                     <frontend_model>Paynl\Payment\Block\Adminhtml\Render\SettingsButton</frontend_model>
