@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+
+.paynl .payment-method-title, .paynl .payment-method-content {
+    font-family: 'Lato', sans-serif;
+}
+
+.checkout-payment-method .payment-method-title .payment-icon {
+    width: 35px;
+    float: right;
+    margin-top: -7px;
+}
+
+.paynl .payment-method-content .fieldset input, .paynl .payment-method-content select,
+.paynl .checkout-payment-method .billing-address-form input,
+.paynl .payment-method-content .field-select-billing input[type="text"],
+.paynl .payment-method-content .field-select-billing input[type="date"] {
+    position: relative;
+    font-family: 'Lato', sans-serif;
+    border-radius: 10px;
+    height: 50px;
+    padding: 10px;
+}
+
+.paynl .payment-method-content .fieldset .label,
+.paynl .payment-method-content p,
+.paynl .payment-method-content .field-select-billing label[for="dob"],
+.paynl .payment-method-content .field-select-billing label[for="kvknummer"],
+.paynl .payment-method-content .field-select-billing label[for="vatnumber"] {
+    position: absolute;
+    z-index: 1;
+    margin: -10px 0 0 15px;
+    background-color: white;
+    padding: 0 3px 0 3px;
+}
+
+.paynl .actions-toolbar button {
+    border-radius: 10px;
+}
+
+.paynl .actions-toolbar .checkout {
+    margin-top: 10px;
+}
+
+.paynl .payment-method-content .field-select-billing img {
+    height: 35px;
+    top: 10px;
+    position: relative;
+}

@@ -46,12 +46,12 @@
         </div>
         <div data-bind="visible: showKVK()" class="field-select-billing">
             <label for="kvknummer" data-bind="i18n: 'COC number'"> </label>
-            <input data-bind="optionsValue: 'id', name: 'kvknummer', value: kvknummer" name="kvknummer"/>
+            <input data-bind="optionsValue: 'id', name: 'kvknummer', value: kvknummer" name="kvknummer" type="text"/>
         </div>
         <div data-bind="visible: showVAT()" class="field-select-billing">
             <br/>
             <label for="vatnumber" data-bind="i18n: 'VAT-id'"></label>
-            <input data-bind="optionsValue: 'id', name: 'vatnumber', value: vatnumber" name="vatnumber"/>
+            <input data-bind="optionsValue: 'id', name: 'vatnumber', value: vatnumber" name="vatnumber" type="text"/>
         </div>
         <div data-bind="visible: showKVKAgree()" class="field-select-billing">
             <div style="padding-top:10px; padding-bottom:10px">

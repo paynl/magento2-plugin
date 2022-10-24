@@ -9,7 +9,9 @@ class Css extends \Magento\Backend\Block\AbstractBlock
 {
     public function __construct(Config $page, Store $store)
     {
-        if ($store->getConfig('payment/paynl/pay_style_checkout') == 1) {
+        if ($store->getConfig('payment/paynl/pay_checkout_style') == 1) {
+            $page->addPageAsset('Paynl_Payment::css/paycheckoutstyle.css');
+        } else {
             $page->addPageAsset('Paynl_Payment::css/paycheckout.css');
         }
     }

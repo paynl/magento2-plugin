@@ -310,7 +310,7 @@ class Config
 
     public function getIconSize()
     {
-        if ($this->store->getConfig('payment/paynl/pay_style_checkout') == 1) {
+        if ($this->store->getConfig('payment/paynl/pay_checkout_style') == 0) {
             return $this->store->getConfig('payment/paynl/icon_size');
         }
         return false;
