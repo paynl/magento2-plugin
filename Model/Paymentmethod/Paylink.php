@@ -116,7 +116,8 @@ class Paylink extends PaymentMethod
                         'paylink' => $url,
                         'support_email' => $supportEmail,
                         'current_language' => $lang,
-                        'order_id' =>  $order->getIncrementId(),
+                        'order_id' =>  $order->getEntityId(),
+                        'order_increment_id' =>  $order->getIncrementId(),
                         'billing' => $order->getBillingAddress(),
                         'payment_html' => $orderHTML,
                         'formattedShippingAddress' => $order->getIsVirtual() ? null : $addressRenderer->format($order->getShippingAddress(), 'html'),
@@ -132,7 +133,12 @@ class Paylink extends PaymentMethod
                     $transportBuilder = $objectManager->create(\Magento\Framework\Mail\Template\TransportBuilder::class);
 
                     payHelper::logDebug('Sending Paylink E-mail with the following user data: ', array("sender" => $sender, "customer_email" => $customerEmail, "support_email" => $supportEmail));
-                    $transport = $transportBuilder->setTemplateIdentifier('paylink_email_template')
+                    $template = 'paylink_email_template';
+                    if($show_order_in_mail){
+                        $template = 'paylink_email_order_template';
+                    }
+
+                    $transport = $transportBuilder->setTemplateIdentifier($template)
                         ->setTemplateOptions(['area' => \Magento\Framework\App\Area::AREA_FRONTEND, 'store' => $storeId])
                         ->setTemplateVars($templateVars)
                         ->setFrom($sender)
