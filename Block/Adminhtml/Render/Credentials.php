@@ -11,6 +11,9 @@ use \Paynl\Paymentmethods;
 
 class Credentials extends Field
 {
+
+    protected $_template = 'Paynl_Payment::system/config/credentials.phtml';
+
     /**
      *
      * @var Magento\Framework\App\RequestInterface
@@ -34,13 +37,29 @@ class Credentials extends Field
     }
 
     /**
-     * Render block: extension version
-     *
+     * @return $this
+     */
+    protected function _prepareLayout()
+    {
+        parent::_prepareLayout();
+        return $this;
+    }
+
+    /**
      * @param AbstractElement $element
-     *
      * @return string
      */
-    public function render(AbstractElement $element)
+    protected function _getElementHtml(AbstractElement $element)
+    {
+        $this->setNamePrefix($element->getName())->setHtmlId($element->getHtmlId());
+        return $this->_toHtml();
+    }
+
+    /**
+     * Check the Credentials
+     * @return array
+     */
+    public function checkCredentials()
     {
         $storeId = $this->request->getParam('store');
         $websiteId = $this->request->getParam('website');
@@ -77,8 +96,10 @@ class Credentials extends Field
             } catch (\Exception $e) {
                 $error = $e->getMessage();
             }
-        } elseif (!empty($apiToken) || !empty($serviceId) || !empty($tokencode)) {
+        } else if (!empty($apiToken) || !empty($serviceId) || !empty($tokencode)) {
             $error = __('Pay. Tokencode, API token and serviceId are required.');
+        } else {
+            $status = 0;
         }
 
         switch ($error) {
@@ -97,18 +118,6 @@ class Credentials extends Field
             $status = 0;
         }
 
-        $html = '<tr id="row_' . $element->getHtmlId() . '">';
-        $html .= '  <td class="label">' . $element->getData('label') . '</td>';
-        if ($status) {
-            $html .= '  <td class="value" style="color:#10723a; font-weight: bold">' . __('Pay. Successfully connected.') . '</td>';
-        } elseif (!empty($error)) {
-            $html .= '  <td class="value" style="color:#f00; font-weight: bold">' . __('Pay. Connection failed.') . ' (' . $error . ')</td>';
-        } else {
-            $html .= '  <td class="value" style="color:#ff8300; font-weight: bold">' . __('Pay. Not connected.') . '</td>';
-        }
-        $html .= '  <td></td>';
-        $html .= '</tr>';
-
-        return $html;
+        return ['status' => $status, 'error' => $error];
     }
 }
