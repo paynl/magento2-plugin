@@ -181,3 +181,7 @@
 "Service-ID, API-Token or Tokencode invalid","Service-ID, API-Token of Tokencode zijn onjuist"
 "Service-ID is invalid.","Service-ID is onjuist"
 "Service-ID / API-Token combination is invalid.","Service-ID / API-Token combinatie is onjuist"
+"No logging","Geen logging"
+"Only Critical errors are logged","Alleen kritieke fouten worden gelogd"
+"Only Critical errors and Notices are logged","Alleen kritieke fouten en waarschuwingen worden gelogd"
+"Everything is logged, including Critical, Notice, Info and Debug","Alles wordt gelogd, inclusief kritieke fouten, waarschuwingen, informatie en debugging"
