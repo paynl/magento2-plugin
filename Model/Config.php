@@ -35,6 +35,7 @@ class Config
         "paynl_payment_amex" => "9",
         "paynl_payment_applepay" => "114",
         "paynl_payment_biercheque" => "204",
+        "paynl_payment_biller" => "252",
         "paynl_payment_billink" => "16",
         "paynl_payment_capayable" => "18",
         "paynl_payment_capayable_gespreid" => "19",
