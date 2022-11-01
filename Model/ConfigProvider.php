@@ -133,8 +133,6 @@ class ConfigProvider implements ConfigProviderInterface
         }
 
         $config['payment']['useAdditionalValidation'] = $this->paynlConfig->getUseAdditionalValidation();
-        $config['payment']['iconsize']                = $this->paynlConfig->getIconSize();
-        ;
 
         return $config;
     }

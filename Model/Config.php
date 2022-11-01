@@ -26,6 +26,8 @@ class Config
     /** @var  Resources */
     private $resources;
 
+    protected $helper;
+
     /** @array  Brands */
     public $brands = [
         "paynl_payment_afterpay" => "14",
@@ -89,10 +91,12 @@ class Config
 
     public function __construct(
         Store $store,
-        \Magento\Framework\View\Element\Template $resources
+        \Magento\Framework\View\Element\Template $resources,
+        \Paynl\Payment\Helper\PayHelper $helper
     ) {
         $this->store = $store;
         $this->resources = $resources;
+        $this->helper = $helper;
     }
 
     /**
@@ -143,8 +147,7 @@ class Config
 
     public function isTestMode()
     {
-        $remoteIP =  isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'];
-        $ip = isset($_SERVER['HTTP_CLIENT_IP']) ? $_SERVER['HTTP_CLIENT_IP'] : $remoteIP;
+        $ip = $this->helper->getClientIp();
 
         $ipconfig = $this->store->getConfig('payment/paynl/testipaddress');
 
@@ -274,7 +277,7 @@ class Config
 
     public function getApiToken()
     {
-        return $this->store->getConfig('payment/paynl/apitoken');
+        return $this->store->getConfig('payment/paynl/apitoken_encrypted');
     }
 
     public function getTokencode()
@@ -306,14 +309,6 @@ class Config
     public function getIconUrlIssuer($issuerId)
     {
         return $this->resources->getViewFileUrl("Paynl_Payment::logos_issuers/qr-" . $issuerId . ".svg");
-    }
-
-    public function getIconSize()
-    {
-        if ($this->store->getConfig('payment/paynl/pay_style_checkout') == 1) {
-            return $this->store->getConfig('payment/paynl/icon_size');
-        }
-        return false;
     }
 
     public function getUseAdditionalValidation()
