@@ -16,22 +16,17 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
     private static $objectManager;
     private static $store;
     private $resource;
-
-    public function __construct(
-        ResourceConnection $resource
-    ) {
-        $this->resource = $resource;
-    }
-
     private $remoteAddress;
     private $httpHeader;
 
     public function __construct(
+        ResourceConnection $resource,
         RemoteAddress $remoteAddress,
         Header $httpHeader
     ) {
         $this->remoteAddress = $remoteAddress;
         $this->httpHeader = $httpHeader;
+        $this->resource = $resource;
     }
 
     public static function getObjectManager()
