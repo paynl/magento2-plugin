@@ -277,7 +277,7 @@ class Config
 
     public function getApiToken()
     {
-        return $this->store->getConfig('payment/paynl/apitoken');
+        return $this->store->getConfig('payment/paynl/apitoken_encrypted');
     }
 
     public function getTokencode()
