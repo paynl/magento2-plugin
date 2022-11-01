@@ -16,6 +16,10 @@
                     <label>Version</label>
                     <frontend_model>Paynl\Payment\Block\Adminhtml\Render\Version</frontend_model>
                 </field>
+                <field id="status" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Status</label>
+                    <frontend_model>Paynl\Payment\Block\Adminhtml\Render\Credentials</frontend_model>
+                </field>
                 <field id="tokencode" translate="label, comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Tokencode</label>
                     <comment>
