@@ -77,7 +77,7 @@ class Credentials extends Field
         }
 
         $tokencode = $this->scopeConfig->getValue('payment/paynl/tokencode', $scope, $scopeId);
-        $apiToken = $this->scopeConfig->getValue('payment/paynl/apitoken', $scope, $scopeId);
+        $apiToken = $this->scopeConfig->getValue('payment/paynl/apitoken_encrypted', $scope, $scopeId);
         $serviceId = $this->scopeConfig->getValue('payment/paynl/serviceid', $scope, $scopeId);
         $gateway = $this->scopeConfig->getValue('payment/paynl/failover_gateway', $scope, $scopeId);
 
