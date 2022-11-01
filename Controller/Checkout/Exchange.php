@@ -40,6 +40,12 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
      */
     private $payPayment;
 
+    /**
+     *
+     * @var \Paynl\Payment\Helper\PayHelper;
+     */
+    private $paynlHelper;
+
     public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
     {
         return null;
@@ -65,12 +71,14 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         \Paynl\Payment\Model\Config $config,
         \Magento\Framework\Controller\Result\Raw $result,
         OrderRepository $orderRepository,
-        PayPayment $payPayment
+        PayPayment $payPayment,
+        PayHelper $paynlHelper
     ) {
         $this->result = $result;
         $this->config = $config;
         $this->orderRepository = $orderRepository;
         $this->payPayment = $payPayment;
+        $this->paynlHelper = $paynlHelper;
 
         parent::__construct($context);
     }
@@ -102,6 +110,12 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             return $this->result->setContents('FALSE| Error loading order. ' . $e->getMessage());
         }
 
+        if ($action == 'new_ppt') {
+            if ($this->paynlHelper->checkProcessing($payOrderId)) {
+                return $this->result->setContents('FALSE| Order already processing.');
+            }
+        }
+
         $this->config->setStore($order->getStore());
         PAYSDK::setApiToken($this->config->getApiToken());
 
@@ -109,12 +123,13 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             $transaction = Transaction::get($payOrderId);
         } catch (\Exception $e) {
             payHelper::logCritical($e, $params, $order->getStore());
-
+            $this->removeProcessing($payOrderId, $action);
             return $this->result->setContents('FALSE| Error fetching transaction. ' . $e->getMessage());
         }
 
         if ($transaction->isPending()) {
             if ($action == 'new_ppt') {
+                $this->removeProcessing($payOrderId, $action);
                 return $this->result->setContents("FALSE| Payment is pending");
             }
             return $this->result->setContents("TRUE| Ignoring pending");
@@ -132,8 +147,10 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
                     } catch (\Exception $e) {
                         $message = 'FALSE| ' . $e->getMessage();
                     }
+                    $this->removeProcessing($payOrderId, $action);
                     return $this->result->setContents($message);
                 }
+                $this->removeProcessing($payOrderId, $action);
                 return $this->result->setContents("TRUE| Partial payment");
             }
         }
@@ -143,12 +160,14 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
 
         if ($orderEntityId != $orderEntityIdTransaction) {
             payHelper::logCritical('Transaction mismatch ' . $orderEntityId . ' / ' . $orderEntityIdTransaction, $params, $order->getStore());
+            $this->removeProcessing($payOrderId, $action);
             return $this->result->setContents('FALSE|Transaction mismatch');
         }
 
         if ($order->getTotalDue() <= 0) {
             payHelper::logDebug($action . '. Ignoring - already paid: ' . $orderEntityId);
             if (!$this->config->registerPartialPayments()) {
+                $this->removeProcessing($payOrderId, $action);
                 return $this->result->setContents('TRUE| Ignoring: order has already been paid');
             }
         }
@@ -173,27 +192,41 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             } catch (\Exception $e) {
                 $message = 'FALSE| ' . $e->getMessage();
             }
-            return $this->result->setContents($message);
         } elseif ($transaction->isCanceled()) {
             if ($order->getState() == Order::STATE_PROCESSING) {
-                return $this->result->setContents("TRUE| Ignoring cancel, order is `processing`");
+                $message = "TRUE| Ignoring cancel, order is `processing`";
             } elseif ($order->isCanceled()) {
-                return $this->result->setContents("TRUE| Already canceled");
+                $message = "TRUE| Already canceled";
             } else {
                 if ($this->config->isNeverCancel()) {
-                    return $this->result->setContents("TRUE| Not Canceled because option `never-cancel-order` is enabled");
-                }
-                try {
-                    $result = $this->payPayment->cancelOrder($order);
-                    if (!$result) {
-                        throw new \Exception('Cannot cancel order');
+                    $message = "TRUE| Not Canceled because option `never-cancel-order` is enabled";
+                } else {
+                    try {
+                        $result = $this->payPayment->cancelOrder($order);
+                        if (empty($result)) {
+                            throw new \Exception('Cannot cancel order');
+                        }
+                        $message = 'TRUE| CANCELED';
+                    } catch (\Exception $e) {
+                        $message = 'FALSE| ' . $e->getMessage();
                     }
-                    $message = 'TRUE| CANCELED';
-                } catch (\Exception $e) {
-                    $message = 'FALSE| ' . $e->getMessage();
                 }
-                return $this->result->setContents($message);
             }
+        }
+
+        $this->removeProcessing($payOrderId, $action);
+
+        return $this->result->setContents($message);
+    }
+
+    /**
+     * @param $payOrderId
+     * @param $action
+     */
+    private function removeProcessing($payOrderId, $action)
+    {
+        if ($action == 'new_ppt') {
+            $this->paynlHelper->removeProcessing($payOrderId);
         }
     }
 }

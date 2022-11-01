@@ -3,6 +3,7 @@
 namespace Paynl\Payment\Helper;
 
 use Psr\Log\LoggerInterface;
+use Magento\Framework\App\ResourceConnection;
 use \Paynl\Payment\Model\Config\Source\LogOptions;
 use Magento\Framework\HTTP\PhpEnvironment\RemoteAddress;
 use Magento\Framework\HTTP\Header;
@@ -14,6 +15,13 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
     private static $objectManager;
     private static $store;
+    private $resource;
+
+    public function __construct(
+        ResourceConnection $resource
+    ) {
+        $this->resource = $resource;
+    }
 
     private $remoteAddress;
     private $httpHeader;
@@ -162,6 +170,50 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $metadata->setPath('/');
             return $cookieManager->deleteCookie($cookieName, $metadata);
         }
+    }
+
+    /**
+     * Checks if new-ppt is already processing, mark as processing if not marked already
+     *
+     * @param $payOrderId
+     * @return bool
+     */
+    public function checkProcessing($payOrderId)
+    {
+        try {
+            $connection = $this->resource->getConnection();
+            $tableName = $this->resource->getTableName('pay_processing');
+
+            $select = $connection->select()->from([$tableName])->where('payOrderId = ?', $payOrderId)->where('created_at > date_sub(now(), interval 1 minute)');
+            $result = $connection->fetchAll($select);
+
+            $processing = !empty($result[0]);
+            if (!$processing) {
+                $connection->insertOnDuplicate(
+                    $tableName,
+                    ['payOrderId' => $payOrderId],
+                    ['payOrderId', 'created_at']
+                );
+            }
+        } catch (\Exception $e) {
+            $processing = false;
+        }
+        return $processing;
+    }
+
+    /**
+     * Removes processing mark after new-ppt is finished
+     *
+     * @param $payOrderId
+     */
+    public function removeProcessing($payOrderId)
+    {
+        $connection = $this->resource->getConnection();
+        $tableName = $this->resource->getTableName('pay_processing');
+        $connection->delete(
+            $tableName,
+            ['payOrderId = ?' => $payOrderId]
+        );
     }
 
     public function getClientIp()
