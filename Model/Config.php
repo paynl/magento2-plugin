@@ -311,14 +311,6 @@ class Config
         return $this->resources->getViewFileUrl("Paynl_Payment::logos_issuers/qr-" . $issuerId . ".svg");
     }
 
-    public function getIconSize()
-    {
-        if ($this->store->getConfig('payment/paynl/pay_style_checkout') == 1) {
-            return $this->store->getConfig('payment/paynl/icon_size');
-        }
-        return false;
-    }
-
     public function getUseAdditionalValidation()
     {
         return $this->store->getConfig('payment/paynl/use_additional_validation');

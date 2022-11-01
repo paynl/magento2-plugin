@@ -10,7 +10,6 @@
                 <model>Paynl\Payment\Model\Paymentmethod\Invisible</model>
                 <discount_tax>1</discount_tax>
                 <pay_style_checkout>1</pay_style_checkout>
-                <icon_size>small</icon_size>
                 <order_description_prefix>Order </order_description_prefix>
             </paynl>
             <paynl_payment_paylink>
