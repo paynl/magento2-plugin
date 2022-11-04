@@ -19,24 +19,24 @@ With the PAY. plugin you can easily add different payment methods to your Magent
 
 Bank Payments  | Creditcards | Gift cards & Vouchers | Pay by invoice | Others | 
 :-----------: | :-----------: | :-----------: | :-----------: | :-----------: |
-iDEAL + QR |Visa | VVV Cadeaukaart | AfterPay | PayPal |
+iDEAL + QR |Visa | VVV Cadeaukaart | AfterPay (by Riverty) | PayPal |
 Bancontact + QR |  Mastercard | Webshop Giftcard | Achteraf betalen via Billink | WeChatPay | 
 Giropay |American Express | FashionCheque | Focum AchterafBetalen.nl | AmazonPay |
 MyBank | Carte Bancaire | Podium Cadeaukaart | Capayable Achteraf Betalen | Cashly | 
 SOFORT | PostePay | Gezondheidsbon | in3 keer betalen, 0% rente | Pay Fixed Price (phone) |
 Maestro | Dankort | Fashion Giftcard | Klarna | Instore Payments (POS) |
 Bank Transfer | Cartasi | GivaCard | SprayPay | Przelewy24 | 
-Trustly | Tikkie | De Cadeaukaart | YourGift | Creditclick | Apple Pay | 
+Trustly | Tikkie | De Cadeaukaart | YourGift | Creditclick | 
 | Multibanco | Nexi | Paysafecard | | Payconiq
 | Blik |  | Huis en Tuin Cadeau| | Google Pay |
-| | | Good4Fun
+| | | Good4Fun | | Apple Pay
 
 
 # Requirements
 
     PHP 7.2 or higher
     PHP tested up to 8.1
-    Magento tested up to 2.4.4
+    Magento tested up to 2.4.5
 
 
 # Installation

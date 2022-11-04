@@ -191,7 +191,7 @@ class Instore extends PaymentMethod
         if (empty($specifiedUserAgent) || $specifiedUserAgent == 'No') {
             return true;
         }
-        $currentUserAgent = $_SERVER['HTTP_USER_AGENT'];
+        $currentUserAgent = $this->helper->getHttpUserAgent();
         if ($specifiedUserAgent != 'Custom') {
             $arr_browsers = ["Opera", "Edg", "Chrome", "Safari", "Firefox", "MSIE", "Trident"];
 

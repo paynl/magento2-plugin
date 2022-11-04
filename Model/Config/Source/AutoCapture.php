@@ -4,7 +4,7 @@ namespace Paynl\Payment\Model\Config\Source;
 
 use \Magento\Framework\Option\ArrayInterface;
 
-class IconSize implements ArrayInterface
+class AutoCapture implements ArrayInterface
 {
 
   /**
@@ -31,11 +31,10 @@ class IconSize implements ArrayInterface
     public function toArray()
     {
         return [
-        'xsmall' => __('Extra small'),
-        'small' => __('Small'),
-        'medium' => __('Medium'),
-        'large' => __('Large'),
-        'xlarge' => __('Extra large'),
+        '0' => __('Off'),
+        '1' => __('On'),
+        '2' => __('On - Via Wuunder'),
+        '3' => __('On - Via Sherpa'),
         ];
     }
 }

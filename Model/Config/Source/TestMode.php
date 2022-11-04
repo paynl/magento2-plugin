@@ -4,7 +4,7 @@ namespace Paynl\Payment\Model\Config\Source;
 
 use \Magento\Framework\Option\ArrayInterface;
 
-class ImageStyle implements ArrayInterface
+class TestMode implements ArrayInterface
 {
 
   /**
@@ -31,8 +31,8 @@ class ImageStyle implements ArrayInterface
     public function toArray()
     {
         return [
-        'classic' => __('Classic'),
-        'newest' => __('Newest'),
+        '0' => __('No - live transactions enabled'),
+        '1' => __('Yes - test mode enabled'),
         ];
     }
 }

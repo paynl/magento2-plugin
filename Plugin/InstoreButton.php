@@ -4,21 +4,25 @@ namespace Paynl\Payment\Plugin;
 
 use Magento\Sales\Block\Adminhtml\Order\View as OrderView;
 use \Paynl\Payment\Helper\PayHelper;
+use \Magento\Framework\UrlInterface;
 
 class InstoreButton
 {
     protected $messageManager;
     protected $order;
     protected $backendUrl;
+    protected $urlInterface;
 
     public function __construct(
         \Magento\Framework\Message\ManagerInterface $messageManager,
         \Magento\Sales\Model\Order $order,
-        \Magento\Backend\Model\Url $backendUrl
+        \Magento\Backend\Model\Url $backendUrl,
+        UrlInterface $urlInterface
     ) {
         $this->messageManager = $messageManager;
         $this->order = $order;
         $this->backendUrl = $backendUrl;
+        $this->urlInterface = $urlInterface;
     }
 
     public function beforePushButtons(
@@ -38,8 +42,7 @@ class InstoreButton
             $payment = $order->getPayment();
             $payment_method = $payment->getMethod();
 
-            $website = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]";
-            $currentUrl = $website . $_SERVER['REQUEST_URI'];
+            $currentUrl = $this->urlInterface->getCurrentUrl();
 
             if (!isset($buttonList->getItems()['paynl']['start_instore_payment'])) {
                 if ($payment_method == 'paynl_payment_instore' && !$order->hasInvoices() && $store->getConfig('payment/paynl_payment_instore/show_pin_button') == 1) {
