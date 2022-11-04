@@ -6,7 +6,7 @@
     <default>
         <payment>
             <paynl>
-                <apitoken_encrypted backend_model="Magento\Config\Model\Config\Backend\Encrypted"></apitoken_encrypted> 
+                <apitoken_encrypted backend_model="Magento\Config\Model\Config\Backend\Encrypted"></apitoken_encrypted>
                 <model>Paynl\Payment\Model\Paymentmethod\Invisible</model>
                 <discount_tax>1</discount_tax>
                 <pay_style_checkout>1</pay_style_checkout>
@@ -120,6 +120,18 @@ In order to pay for your order click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_biercheque>
+            <paynl_payment_bataviacadeaukaart>
+                <active>0</active>
+                <title>Batavia Cadeaukaart</title>
+                <payment_option_id>2955</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Bataviacadeaukaart</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_bataviacadeaukaart>
             <paynl_payment_billink>
                 <active>0</active>
                 <title>Achteraf betalen via Billink</title>
