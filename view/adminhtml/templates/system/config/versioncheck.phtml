@@ -1,0 +1,37 @@
+<?php
+
+/**
+ * @see \Paynl\Payment\Block\Adminhtml\Render\Version
+ * @var \Paynl\Payment\Block\Adminhtml\Render\Version $block
+ */
+?>
+<?= $block->getButtonHtml() ?>
+<tr id="version">
+    <td class="label"></td>
+    <td class="value">
+        <span id="paynl_version_check_loading" style="display: none;">Loading...</span>
+        <span id="paynl_version_check_result" style="display: none;"></span>
+    </td>
+</tr>
+<script>
+    require([
+        'jquery'
+    ], function(jQuery) {
+        jQuery('#version').click(function() {
+            new Ajax.Request('<?= $block->getAjaxUrl() ?>', {
+                loaderArea: false,
+                asynchronous: true,
+                onCreate: function () {
+                    jQuery('#paynl_version_check_result').hide();
+                    jQuery('#paynl_version_check_loading').show();
+                },
+                onSuccess: function(response) {
+                    var json = response.responseJSON;
+                    jQuery('#paynl_version_check_result').html(json.version);
+                    jQuery('#paynl_version_check_result').show();
+                    jQuery('#paynl_version_check_loading').hide();
+                }
+            });
+        });
+    });
+</script>
