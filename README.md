@@ -30,7 +30,7 @@ Trustly | Tikkie | De Cadeaukaart | YourGift | Creditclick |
 | Multibanco | Nexi | Paysafecard | | Payconiq
 | |  | Huis en Tuin Cadeau| | Google Pay |
 | | | Good4Fun | | Apple Pay
-| | | Batavia Cadeaukaart | | 
+| | | Bataviastad Cadeaukaart | | 
 
 
 # Requirements
