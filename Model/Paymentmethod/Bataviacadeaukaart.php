@@ -12,16 +12,4 @@ class Bataviacadeaukaart extends PaymentMethod
     {
         return 2955;
     }
-
-  /**
-   * @return \Magento\Framework\App\CacheInterface
-   */
-    private function getCache()
-    {
-      /** @var \Magento\Framework\ObjectManagerInterface $om */
-        $om = \Magento\Framework\App\ObjectManager::getInstance();
-      /** @var \Magento\Framework\App\CacheInterface $cache */
-        $cache = $om->get(\Magento\Framework\App\CacheInterface::class);
-        return $cache;
-    }
 }
