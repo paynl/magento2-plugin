@@ -68,7 +68,8 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_wechatpay',
         'paynl_payment_wijncadeau',
         'paynl_payment_yehhpay',
-        'paynl_payment_yourgift'
+        'paynl_payment_yourgift',
+        'paynl_payment_yourgreengift'
     ];
 
     /**
