@@ -44,7 +44,7 @@
                 </field>
                 <field id="testmode" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Testmode</label>
-                    <source_model>Paynl\Payment\Model\Config\Source\TestMode</source_model>
+                    <frontend_model>Paynl\Payment\Block\Adminhtml\Render\Checkbox</frontend_model>
                     <config_path>payment/paynl/testmode</config_path>
                 </field>
             </group>
