@@ -174,8 +174,6 @@
 "Service-ID, API-Token or Tokencode invalid","Service-ID, API-Token of Tokencode zijn onjuist"
 "Service-ID is invalid.","Service-ID is onjuist"
 "Service-ID / API-Token combination is invalid.","Service-ID / API-Token combinatie is onjuist"
-"Yes - test mode enabled", "Ja - test modus aan"
-"No - live transactions enabled", "Nee - live transacties aan"
 "No logging","Geen logging"
 "Only Critical errors are logged","Alleen kritieke fouten worden gelogd"
 "Only Critical errors and Notices are logged","Alleen kritieke fouten en waarschuwingen worden gelogd"

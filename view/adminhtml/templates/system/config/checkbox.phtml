@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+/**
+ * @var $block \Paynl\Payment\Block\Adminhtml\Render\Checkbox
+ */
+
+?>
+
+<input type="hidden" name="<?php echo $this->getNamePrefix() ?>" value="0" />
+<input type="checkbox" value="1" name="<?php echo $this->getNamePrefix() ?>[]" id="paynl_setup_paynl_general_settings_testmode_on" <?php echo ($this->getIsChecked() ? ' checked="checked"' : '') ?> />
