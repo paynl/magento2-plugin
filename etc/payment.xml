@@ -39,6 +39,9 @@
         <method name="paynl_payment_blik">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
+        <method name="paynl_payment_biller">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
         <method name="paynl_payment_capayable">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
