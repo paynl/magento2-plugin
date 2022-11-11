@@ -141,7 +141,7 @@
         <method name="paynl_payment_przelewy24">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
-        <method name="paynl_payment_shoesensneakers">
+        <method name="paynl_payment_shoesandsneakers">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_sofortbanking">

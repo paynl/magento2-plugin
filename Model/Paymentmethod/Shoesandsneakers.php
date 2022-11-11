@@ -2,9 +2,9 @@
 
 namespace Paynl\Payment\Model\Paymentmethod;
 
-class Shoesensneakers extends PaymentMethod
+class Shoesandsneakers extends PaymentMethod
 {
-    protected $_code = 'paynl_payment_shoesensneakers';
+    protected $_code = 'paynl_payment_shoesandsneakers';
 
     protected function getDefaultPaymentOptionId()
     {
