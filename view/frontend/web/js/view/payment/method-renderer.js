@@ -9,7 +9,7 @@ define(
               rendererList) {
         'use strict';
 
-        var defaultComponent = 'Paynl_Payment/js/view/payment/method-renderer/default';       
+        var defaultComponent = 'Paynl_Payment/js/view/payment/method-renderer/default';
 
         var methods = [
             {type: 'paynl_payment_afterpay', component: defaultComponent},
@@ -68,7 +68,8 @@ define(
             {type: 'paynl_payment_wechatpay', component: defaultComponent},
             {type: 'paynl_payment_wijncadeau', component: defaultComponent},
             {type: 'paynl_payment_yehhpay', component: defaultComponent},
-            {type: 'paynl_payment_yourgift', component: defaultComponent}
+            {type: 'paynl_payment_yourgift', component: defaultComponent},
+            {type: 'paynl_payment_yourgreengift', component: defaultComponent},
         ];
 
         function isApplePayAvailable()

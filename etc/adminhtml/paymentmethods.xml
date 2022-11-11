@@ -61,4 +61,5 @@
     <include path="Paynl_Payment::paymentmethods/wijncadeau.xml" />
     <include path="Paynl_Payment::paymentmethods/yehhpay.xml" />
     <include path="Paynl_Payment::paymentmethods/yourgift.xml" />
+    <include path="Paynl_Payment::paymentmethods/yourgreengift.xml" />
 </include>
