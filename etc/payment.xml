@@ -30,7 +30,16 @@
         <method name="paynl_payment_biercheque">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
+        <method name="paynl_payment_bataviacadeaukaart">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
         <method name="paynl_payment_billink">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_blik">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_biller">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_capayable">
@@ -111,6 +120,9 @@
         <method name="paynl_payment_overboeking">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
+        <method name="paynl_payment_onlinebankbetaling">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
         <method name="paynl_payment_payconiq">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
@@ -169,6 +181,9 @@
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_yourgift">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_yourgreengift">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
     </methods>

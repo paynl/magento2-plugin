@@ -6,10 +6,10 @@
     <default>
         <payment>
             <paynl>
+                <apitoken_encrypted backend_model="Magento\Config\Model\Config\Backend\Encrypted"></apitoken_encrypted>
                 <model>Paynl\Payment\Model\Paymentmethod\Invisible</model>
                 <discount_tax>1</discount_tax>
                 <pay_style_checkout>1</pay_style_checkout>
-                <icon_size>small</icon_size>
                 <order_description_prefix>Order </order_description_prefix>
             </paynl>
             <paynl_payment_paylink>
@@ -120,6 +120,31 @@ In order to pay for your order click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_biercheque>
+            <paynl_payment_biller>
+                <active>0</active>
+                <title>Biller</title>
+                <payment_option_id>2931</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Biller</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+                <turn_off_invoices_b2b>No</turn_off_invoices_b2b>
+            </paynl_payment_biller>
+            <paynl_payment_bataviacadeaukaart>
+                <active>0</active>
+                <title>Bataviastad Cadeaukaart</title>
+                <payment_option_id>2955</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Bataviacadeaukaart</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_bataviacadeaukaart>
             <paynl_payment_billink>
                 <active>0</active>
                 <title>Achteraf betalen via Billink</title>
@@ -133,6 +158,18 @@ In order to pay for your order click the link below
                 <send_new_order_email>after_payment</send_new_order_email>
                 <turn_off_invoices_b2b>No</turn_off_invoices_b2b>
             </paynl_payment_billink>
+            <paynl_payment_blik>
+                <active>0</active>
+                <title>Blik</title>
+                <payment_option_id>2856</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Blik</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_blik>
             <paynl_payment_capayable>
                 <active>0</active>
                 <title>Capayable Achteraf Betalen</title>
@@ -483,6 +520,18 @@ In order to pay for your order click the link below
                 <send_new_order_email>before_payment</send_new_order_email>
                 <holded>1</holded>
             </paynl_payment_overboeking>
+            <paynl_payment_onlinebankbetaling>
+                <active>0</active>
+                <title>Online bankbetaling</title>
+                <payment_option_id>2970</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Onlinebankbetaling</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_onlinebankbetaling>
             <paynl_payment_payconiq>
                 <active>0</active>
                 <title>Payconiq</title>
@@ -738,6 +787,18 @@ In order to pay for your order click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_yourgift>
+            <paynl_payment_yourgreengift>
+                <active>0</active>
+                <title>Your Green Gift Cadeaukaart</title>
+                <payment_option_id>2925</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Yourgreengift</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_yourgreengift>
         </payment>
     </default>
 </config>
