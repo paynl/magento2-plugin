@@ -28,7 +28,7 @@ Maestro | Dankort | Fashion Giftcard | Klarna | Instore Payments (POS) |
 Bank Transfer | Cartasi | GivaCard | SprayPay | Przelewy24 | 
 Trustly | Tikkie | De Cadeaukaart | Biller | Creditclick | 
 | Multibanco | Nexi | Paysafecard | | Payconiq
-| |  | Huis en Tuin Cadeau| | Google Pay |
+| Blik |  | Huis en Tuin Cadeau| | Google Pay |
 | | | Good4Fun | | Apple Pay
 | | | YourGift | | 
 | | | Bataviastad Cadeaukaart | | 

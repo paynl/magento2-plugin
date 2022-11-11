@@ -22,6 +22,7 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_biercheque',
         'paynl_payment_biller',
         'paynl_payment_billink',
+        'paynl_payment_blik',
         'paynl_payment_decadeaukaart',
         'paynl_payment_capayable',
         'paynl_payment_capayable_gespreid',
