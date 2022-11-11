@@ -11,6 +11,7 @@
     <include path="Paynl_Payment::paymentmethods/applepay.xml" />
     <include path="Paynl_Payment::paymentmethods/bataviacadeaukaart.xml" />
     <include path="Paynl_Payment::paymentmethods/biercheque.xml" />
+    <include path="Paynl_Payment::paymentmethods/biller.xml" />
     <include path="Paynl_Payment::paymentmethods/billink.xml" />
     <include path="Paynl_Payment::paymentmethods/capayable.xml" />
     <include path="Paynl_Payment::paymentmethods/capayable_gespreid.xml" />
