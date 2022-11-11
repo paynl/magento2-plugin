@@ -18,6 +18,7 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_amazonpay',
         'paynl_payment_amex',
         'paynl_payment_applepay',
+        'paynl_payment_bataviacadeaukaart',
         'paynl_payment_biercheque',
         'paynl_payment_biller',
         'paynl_payment_billink',
@@ -50,6 +51,7 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_mybank',
         'paynl_payment_nexi',
         'paynl_payment_overboeking',
+        'paynl_payment_onlinebankbetaling',
         'paynl_payment_payconiq',
         'paynl_payment_paypal',
         'paynl_payment_paysafecard',
@@ -69,7 +71,8 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_wechatpay',
         'paynl_payment_wijncadeau',
         'paynl_payment_yehhpay',
-        'paynl_payment_yourgift'
+        'paynl_payment_yourgift',
+        'paynl_payment_yourgreengift'
     ];
 
     /**
@@ -134,8 +137,6 @@ class ConfigProvider implements ConfigProviderInterface
         }
 
         $config['payment']['useAdditionalValidation'] = $this->paynlConfig->getUseAdditionalValidation();
-        $config['payment']['iconsize']                = $this->paynlConfig->getIconSize();
-        ;
 
         return $config;
     }

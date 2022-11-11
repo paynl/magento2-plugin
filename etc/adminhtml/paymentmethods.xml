@@ -9,6 +9,7 @@
     <include path="Paynl_Payment::paymentmethods/amazonpay.xml" />
     <include path="Paynl_Payment::paymentmethods/amex.xml" />
     <include path="Paynl_Payment::paymentmethods/applepay.xml" />
+    <include path="Paynl_Payment::paymentmethods/bataviacadeaukaart.xml" />
     <include path="Paynl_Payment::paymentmethods/biercheque.xml" />
     <include path="Paynl_Payment::paymentmethods/biller.xml" />
     <include path="Paynl_Payment::paymentmethods/billink.xml" />
@@ -41,6 +42,7 @@
     <include path="Paynl_Payment::paymentmethods/mybank.xml" />
     <include path="Paynl_Payment::paymentmethods/nexi.xml" />
     <include path="Paynl_Payment::paymentmethods/overboeking.xml" />
+    <include path="Paynl_Payment::paymentmethods/onlinebankbetaling.xml"/>
     <include path="Paynl_Payment::paymentmethods/payconiq.xml" />
     <include path="Paynl_Payment::paymentmethods/paypal.xml" />
     <include path="Paynl_Payment::paymentmethods/paysafecard.xml" />
@@ -61,4 +63,5 @@
     <include path="Paynl_Payment::paymentmethods/wijncadeau.xml" />
     <include path="Paynl_Payment::paymentmethods/yehhpay.xml" />
     <include path="Paynl_Payment::paymentmethods/yourgift.xml" />
+    <include path="Paynl_Payment::paymentmethods/yourgreengift.xml" />
 </include>

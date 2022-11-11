@@ -31,6 +31,7 @@ Trustly | Tikkie | De Cadeaukaart | Biller | Creditclick |
 | |  | Huis en Tuin Cadeau| | Google Pay |
 | | | Good4Fun | | Apple Pay
 | | | YourGift | | 
+| | | Bataviastad Cadeaukaart | | 
 
 
 # Requirements
