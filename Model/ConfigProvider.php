@@ -50,6 +50,7 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_mybank',
         'paynl_payment_nexi',
         'paynl_payment_overboeking',
+        'paynl_payment_onlinebankbetaling',
         'paynl_payment_payconiq',
         'paynl_payment_paypal',
         'paynl_payment_paysafecard',

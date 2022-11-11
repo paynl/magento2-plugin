@@ -114,6 +114,9 @@
         <method name="paynl_payment_overboeking">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
+        <method name="paynl_payment_onlinebankbetaling">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
         <method name="paynl_payment_payconiq">
             <allow_multiple_address>0</allow_multiple_address>
         </method>

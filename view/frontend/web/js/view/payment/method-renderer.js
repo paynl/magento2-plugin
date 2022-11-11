@@ -20,6 +20,7 @@ define(
             {type: 'paynl_payment_bataviacadeaukaart', component: defaultComponent},
             {type: 'paynl_payment_biercheque', component: defaultComponent},
             {type: 'paynl_payment_billink', component: defaultComponent},
+            {type: 'paynl_payment_onlinebankbetaling', component: defaultComponent},
             {type: 'paynl_payment_capayable', component: defaultComponent},
             {type: 'paynl_payment_capayable_gespreid', component: defaultComponent},
             {type: 'paynl_payment_cartasi', component: defaultComponent},

@@ -41,6 +41,7 @@
     <include path="Paynl_Payment::paymentmethods/mybank.xml" />
     <include path="Paynl_Payment::paymentmethods/nexi.xml" />
     <include path="Paynl_Payment::paymentmethods/overboeking.xml" />
+    <include path="Paynl_Payment::paymentmethods/onlinebankbetaling.xml"/>
     <include path="Paynl_Payment::paymentmethods/payconiq.xml" />
     <include path="Paynl_Payment::paymentmethods/paypal.xml" />
     <include path="Paynl_Payment::paymentmethods/paysafecard.xml" />
