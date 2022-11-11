@@ -9,7 +9,7 @@ define(
               rendererList) {
         'use strict';
 
-        var defaultComponent = 'Paynl_Payment/js/view/payment/method-renderer/default';       
+        var defaultComponent = 'Paynl_Payment/js/view/payment/method-renderer/default';
 
         var methods = [
             {type: 'paynl_payment_afterpay', component: defaultComponent},
@@ -17,6 +17,7 @@ define(
             {type: 'paynl_payment_alipay', component: defaultComponent},
             {type: 'paynl_payment_amazonpay', component: defaultComponent},
             {type: 'paynl_payment_amex', component: defaultComponent},
+            {type: 'paynl_payment_bataviacadeaukaart', component: defaultComponent},
             {type: 'paynl_payment_biercheque', component: defaultComponent},
             {type: 'paynl_payment_billink', component: defaultComponent},
             {type: 'paynl_payment_blik', component: defaultComponent},
@@ -49,6 +50,7 @@ define(
             {type: 'paynl_payment_mybank', component: defaultComponent},
             {type: 'paynl_payment_nexi', component: defaultComponent},
             {type: 'paynl_payment_overboeking', component: defaultComponent},
+            {type: 'paynl_payment_onlinebankbetaling', component: defaultComponent},
             {type: 'paynl_payment_payconiq', component: defaultComponent},
             {type: 'paynl_payment_paypal', component: defaultComponent},
             {type: 'paynl_payment_paysafecard', component: defaultComponent},
@@ -68,7 +70,8 @@ define(
             {type: 'paynl_payment_wechatpay', component: defaultComponent},
             {type: 'paynl_payment_wijncadeau', component: defaultComponent},
             {type: 'paynl_payment_yehhpay', component: defaultComponent},
-            {type: 'paynl_payment_yourgift', component: defaultComponent}
+            {type: 'paynl_payment_yourgift', component: defaultComponent},
+            {type: 'paynl_payment_yourgreengift', component: defaultComponent},
         ];
 
         function isApplePayAvailable()
