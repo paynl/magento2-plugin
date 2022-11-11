@@ -36,6 +36,7 @@ class Config
         "paynl_payment_amazonpay" => "22",
         "paynl_payment_amex" => "9",
         "paynl_payment_applepay" => "114",
+        "paynl_payment_bataviacadeaukaart" => "255",
         "paynl_payment_biercheque" => "204",
         "paynl_payment_billink" => "16",
         "paynl_payment_capayable" => "18",
@@ -87,7 +88,8 @@ class Config
         "paynl_payment_wechatpay" => "23",
         "paynl_payment_wijncadeau" => "135",
         "paynl_payment_yehhpay" => "1",
-        "paynl_payment_yourgift" => "31"
+        "paynl_payment_yourgift" => "31",
+        "paynl_payment_yourgreengift" => "246"
     ];
 
     public function __construct(

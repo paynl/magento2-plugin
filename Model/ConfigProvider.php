@@ -18,6 +18,7 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_amazonpay',
         'paynl_payment_amex',
         'paynl_payment_applepay',
+        'paynl_payment_bataviacadeaukaart',
         'paynl_payment_biercheque',
         'paynl_payment_billink',
         'paynl_payment_decadeaukaart',
@@ -69,7 +70,8 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_wechatpay',
         'paynl_payment_wijncadeau',
         'paynl_payment_yehhpay',
-        'paynl_payment_yourgift'
+        'paynl_payment_yourgift',
+        'paynl_payment_yourgreengift'
     ];
 
     /**
