@@ -77,6 +77,7 @@ class Config
         "paynl_payment_podiumcadeaukaart" => "29",
         "paynl_payment_postepay" => "10",
         "paynl_payment_przelewy24" => "93",
+        "paynl_payment_shoesandsneakers" => "2937",
         "paynl_payment_sofortbanking" => "4",
         "paynl_payment_sofortbanking_hr" => "4",
         "paynl_payment_sofortbanking_ds" => "4",

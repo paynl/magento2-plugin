@@ -59,6 +59,7 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_podiumcadeaukaart',
         'paynl_payment_postepay',
         'paynl_payment_przelewy24',
+        'paynl_payment_shoesandsneakers',
         'paynl_payment_sofortbanking',
         'paynl_payment_sofortbanking_hr',
         'paynl_payment_sofortbanking_ds',

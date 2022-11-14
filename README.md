@@ -32,6 +32,7 @@ Trustly | Tikkie | De Cadeaukaart | Biller | Creditclick |
 | | | Good4Fun | | Apple Pay
 | | | YourGift | | 
 | | | Bataviastad Cadeaukaart | | 
+| | | Shoes & Sneakers Cadeau | |
 
 
 # Requirements
