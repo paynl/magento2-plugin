@@ -7,7 +7,7 @@
 ?>
 <?= $block->getVersion() ?>
 <?= $block->getButtonHtml() ?>
-<tr id="version">
+<tr id="version" class="paynl_version_check_row" style="display: none;">
     <td class="label"></td>
     <td class="value">
         <span id="paynl_version_check_loading" style="display: none;">Loading...</span>
@@ -24,11 +24,22 @@
                 asynchronous: true,
                 onCreate: function () {
                     jQuery('#paynl_version_check_result').hide();
+                    jQuery('.paynl_version_check_row').show();
                     jQuery('#paynl_version_check_loading').show();
                 },
                 onSuccess: function (response) {
                     var json = response.responseJSON;
-                    jQuery('#paynl_version_check_result').html(json.version);
+
+                    var check = json.version.substring(1);
+                    var version = "<?= $block->getVersion() ?>";
+
+                    if (check === version){
+                        result = check + " - You are up to date with the latest version"
+                    }else {
+                        result = check + " - There is a new version of the PAY. plugin available"
+                    }
+
+                    jQuery('#paynl_version_check_result').html(result);
                     jQuery('#paynl_version_check_result').show();
                     jQuery('#paynl_version_check_loading').hide();
                 }
