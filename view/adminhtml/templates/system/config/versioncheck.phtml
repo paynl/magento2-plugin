@@ -7,9 +7,9 @@
 ?>
 <?= $block->getVersion() ?>
 <?= $block->getButtonHtml() ?>
-<span id="version" class="paynl_version_check_row" style="display: none; margin-bottom:5px; padding-top:15px;">
-    <span id="paynl_version_check_loading" style="display: none;">Loading...</span>
-    <span id="paynl_version_check_result" style="display: none;"></span>
+<span id='version' class='paynl_version_check_row' style='display: none; margin-bottom:5px; padding-top:15px;'>
+    <span id='paynl_version_check_loading' style='display: none;'>Loading...</span>
+    <span id='paynl_version_check_result' style='display: none;'></span>
 </span>
 
 <script>
@@ -28,17 +28,21 @@
                 onSuccess: function(response) {
                     var json = response.responseJSON;
 
-                    var check = json.version.substring(1);
-                    var version = "<?= $block->getVersion() ?>";
-
-                    if (check === version) {
-                        result = "You are up to date with the latest version"
-                        jQuery('#paynl_version_check_result').css({
-                            "color": "#10723a",
-                            "font-weight": "bold"
-                        });
+                    if (!json.version) {
+                        result = 'Something went wrong, please try again later'
                     } else {
-                        result = "There is a new version of the Pay. plugin available (" + json.version + ")"
+                        var newest_version = json.version.substring(1);
+                        var current_version = '<?= $block->getVersion() ?>';
+
+                        if (newest_version > current_version) {
+                            result = 'There is a new version of the Pay. plugin available (' + json.version + ')'
+                        } else {
+                            result = 'You are up to date with the latest version'
+                            jQuery('#paynl_version_check_result').css({
+                                'color': '#10723a',
+                                'font-weight': 'bold'
+                            });
+                        }
                     }
 
                     jQuery('#paynl_version_check_result').html(result);

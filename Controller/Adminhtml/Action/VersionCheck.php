@@ -50,22 +50,24 @@ class VersionCheck extends Action
         $result = $this->resultJsonFactory->create();
         $output = json_decode($this->getVersion());
 
-        $version = $output[0]->tag_name;
+        $version = '';
+        if (isset($output[0])) {
+            $version = $output[0]->tag_name;
+        }
 
         return $result->setData(['version' => $version]);
     }
 
     private function getVersion()
     {
-        $url ='https://api.github.com/repos/paynl/magento2-plugin/releases';
+        $url = 'https://api.github.com/repos/paynl/magento2-plugin/releases';
         $options = array(
-            'http'=>array(
-                'method'=>"GET",
-                'header'=>"Accept-language: en\r\n" .
-                    "User-Agent:" . $this->httpHeader->getHttpUserAgent()));
+            'http' => array(
+                'method' => 'GET',
+                'header' => 'User-Agent:' . $this->httpHeader->getHttpUserAgent()));
 
         $context = stream_context_create($options);
 
-        return $this->file->fileGetContents($url, false, $context );
+        return $this->file->fileGetContents($url, false, $context);
     }
 }
