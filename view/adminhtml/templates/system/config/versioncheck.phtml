@@ -34,9 +34,10 @@
                     var version = "<?= $block->getVersion() ?>";
 
                     if (check === version){
-                        result = check + " - You are up to date with the latest version"
+                        result = "You are up to date with the latest version"
+                        jQuery('#paynl_version_check_result').css("color", "green");
                     }else {
-                        result = check + " - There is a new version of the PAY. plugin available"
+                        result = "There is a new version of the Pay. plugin available (" + json.version + ")"
                     }
 
                     jQuery('#paynl_version_check_result').html(result);
