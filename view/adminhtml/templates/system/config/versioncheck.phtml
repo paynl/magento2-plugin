@@ -7,41 +7,42 @@
 ?>
 <?= $block->getVersion() ?>
 <?= $block->getButtonHtml() ?>
-<tr id="version" class="paynl_version_check_row" style="display: none;">
-    <td class="label"></td>
-    <td class="value">
-        <span id="paynl_version_check_loading" style="display: none;">Loading...</span>
-        <span id="paynl_version_check_result" style="display: none;"></span>
-    </td>
-</tr>
+<span id="version" class="paynl_version_check_row" style="display: none; margin-bottom:5px; padding-top:15px;">
+    <span id="paynl_version_check_loading" style="display: none;">Loading...</span>
+    <span id="paynl_version_check_result" style="display: none;"></span>
+</span>
+
 <script>
     require([
         'jquery'
-    ], function (jQuery) {
-        jQuery('#version').click(function () {
+    ], function(jQuery) {
+        jQuery('#version').click(function() {
             new Ajax.Request('<?= $block->getAjaxUrl() ?>', {
                 loaderArea: false,
                 asynchronous: true,
-                onCreate: function () {
+                onCreate: function() {
                     jQuery('#paynl_version_check_result').hide();
-                    jQuery('.paynl_version_check_row').show();
-                    jQuery('#paynl_version_check_loading').show();
+                    jQuery('.paynl_version_check_row').css('display', 'block');
+                    jQuery('#paynl_version_check_loading').css('display', 'block');
                 },
-                onSuccess: function (response) {
+                onSuccess: function(response) {
                     var json = response.responseJSON;
 
                     var check = json.version.substring(1);
                     var version = "<?= $block->getVersion() ?>";
 
-                    if (check === version){
+                    if (check === version) {
                         result = "You are up to date with the latest version"
-                        jQuery('#paynl_version_check_result').css("color", "green");
-                    }else {
+                        jQuery('#paynl_version_check_result').css({
+                            "color": "#10723a",
+                            "font-weight": "bold"
+                        });
+                    } else {
                         result = "There is a new version of the Pay. plugin available (" + json.version + ")"
                     }
 
                     jQuery('#paynl_version_check_result').html(result);
-                    jQuery('#paynl_version_check_result').show();
+                    jQuery('#paynl_version_check_result').css('display', 'block');
                     jQuery('#paynl_version_check_loading').hide();
                 }
             });
