@@ -26,6 +26,8 @@ class Config
     /** @var  Resources */
     private $resources;
 
+    protected $helper;
+
     /** @array  Brands */
     public $brands = [
         "paynl_payment_afterpay" => "14",
@@ -34,8 +36,11 @@ class Config
         "paynl_payment_amazonpay" => "22",
         "paynl_payment_amex" => "9",
         "paynl_payment_applepay" => "114",
+        "paynl_payment_bataviacadeaukaart" => "255",
         "paynl_payment_biercheque" => "204",
+        "paynl_payment_biller" => "252",
         "paynl_payment_billink" => "16",
+        "paynl_payment_blik" => "234",
         "paynl_payment_capayable" => "18",
         "paynl_payment_capayable_gespreid" => "19",
         "paynl_payment_cartasi" => "76",
@@ -65,12 +70,14 @@ class Config
         "paynl_payment_mybank" => "5",
         "paynl_payment_nexi" => "76",
         "paynl_payment_overboeking" => "12",
+        "paynl_payment_onlinebankbetaling" => "258",
         "paynl_payment_payconiq" => "138",
         "paynl_payment_paypal" => "21",
         "paynl_payment_paysafecard" => "24",
         "paynl_payment_podiumcadeaukaart" => "29",
         "paynl_payment_postepay" => "10",
         "paynl_payment_przelewy24" => "93",
+        "paynl_payment_shoesandsneakers" => "2937",
         "paynl_payment_sofortbanking" => "4",
         "paynl_payment_sofortbanking_hr" => "4",
         "paynl_payment_sofortbanking_ds" => "4",
@@ -84,15 +91,18 @@ class Config
         "paynl_payment_wechatpay" => "23",
         "paynl_payment_wijncadeau" => "135",
         "paynl_payment_yehhpay" => "1",
-        "paynl_payment_yourgift" => "31"
+        "paynl_payment_yourgift" => "31",
+        "paynl_payment_yourgreengift" => "246"
     ];
 
     public function __construct(
         Store $store,
-        \Magento\Framework\View\Element\Template $resources
+        \Magento\Framework\View\Element\Template $resources,
+        \Paynl\Payment\Helper\PayHelper $helper
     ) {
         $this->store = $store;
         $this->resources = $resources;
+        $this->helper = $helper;
     }
 
     /**
@@ -143,8 +153,7 @@ class Config
 
     public function isTestMode()
     {
-        $remoteIP =  isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'];
-        $ip = isset($_SERVER['HTTP_CLIENT_IP']) ? $_SERVER['HTTP_CLIENT_IP'] : $remoteIP;
+        $ip = $this->helper->getClientIp();
 
         $ipconfig = $this->store->getConfig('payment/paynl/testipaddress');
 
@@ -274,7 +283,7 @@ class Config
 
     public function getApiToken()
     {
-        return $this->store->getConfig('payment/paynl/apitoken');
+        return $this->store->getConfig('payment/paynl/apitoken_encrypted');
     }
 
     public function getTokencode()
@@ -306,14 +315,6 @@ class Config
     public function getIconUrlIssuer($issuerId)
     {
         return $this->resources->getViewFileUrl("Paynl_Payment::logos_issuers/qr-" . $issuerId . ".svg");
-    }
-
-    public function getIconSize()
-    {
-        if ($this->store->getConfig('payment/paynl/pay_style_checkout') == 1) {
-            return $this->store->getConfig('payment/paynl/icon_size');
-        }
-        return false;
     }
 
     public function getUseAdditionalValidation()
