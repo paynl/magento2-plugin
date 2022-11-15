@@ -131,3 +131,4 @@
 "Set which product data to use as product ID in the PAY. backend.","Set which product data to use as product ID in the PAY. backend."
 "Leave shipping address unchanged (Default)","Leave shipping address unchanged (Default)"
 "Use billing address as shipping address","Use billing address as shipping address"
+"Check the latest PAY. plugin version","Check the latest PAY. plugin version"

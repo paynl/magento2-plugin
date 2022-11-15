@@ -18,9 +18,10 @@ class Version extends Field
 
     public function __construct(
         Context $context,
-        Config $paynlConfig,
-        array $data = []
-    ) {
+        Config  $paynlConfig,
+        array   $data = []
+    )
+    {
         parent::__construct($context, $data);
         $this->paynlConfig = $paynlConfig;
     }

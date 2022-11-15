@@ -5,6 +5,7 @@
  * @var \Paynl\Payment\Block\Adminhtml\Render\Version $block
  */
 ?>
+<?= $block->getVersion() ?>
 <?= $block->getButtonHtml() ?>
 <tr id="version">
     <td class="label"></td>
@@ -16,8 +17,8 @@
 <script>
     require([
         'jquery'
-    ], function(jQuery) {
-        jQuery('#version').click(function() {
+    ], function (jQuery) {
+        jQuery('#version').click(function () {
             new Ajax.Request('<?= $block->getAjaxUrl() ?>', {
                 loaderArea: false,
                 asynchronous: true,
@@ -25,7 +26,7 @@
                     jQuery('#paynl_version_check_result').hide();
                     jQuery('#paynl_version_check_loading').show();
                 },
-                onSuccess: function(response) {
+                onSuccess: function (response) {
                     var json = response.responseJSON;
                     jQuery('#paynl_version_check_result').html(json.version);
                     jQuery('#paynl_version_check_result').show();

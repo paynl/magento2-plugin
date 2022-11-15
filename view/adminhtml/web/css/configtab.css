@@ -15,3 +15,11 @@
 .config-nav .paynl-tab .admin__page-nav-title strong {
     margin-left: 40px;
 }
+
+#row_paynl_setup_paynl_general_settings_version button {
+    margin-left: 20px;
+}
+
+#row_paynl_setup_paynl_general_settings_version .value {
+    padding-top: 16px;
+}
