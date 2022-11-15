@@ -15,17 +15,17 @@
 <script>
     require([
         'jquery'
-    ], function(jQuery) {
-        jQuery('#version').click(function() {
+    ], function (jQuery) {
+        jQuery('#version').click(function () {
             new Ajax.Request('<?= $block->getAjaxUrl() ?>', {
                 loaderArea: false,
                 asynchronous: true,
-                onCreate: function() {
+                onCreate: function () {
                     jQuery('#paynl_version_check_result').hide();
                     jQuery('.paynl_version_check_row').css('display', 'block');
                     jQuery('#paynl_version_check_loading').css('display', 'block');
                 },
-                onSuccess: function(response) {
+                onSuccess: function (response) {
                     var json = response.responseJSON;
 
                     if (!json.version) {
