@@ -67,7 +67,7 @@ class Version extends Field
      */
     public function getButtonHtml()
     {
-        $button = $this->getLayout()->createBlock('Magento\Backend\Block\Widget\Button')->setData(['id' => 'version', 'label' => __('Check the latest Pay. plugin version')]);
+        $button = $this->getLayout()->createBlock('Magento\Backend\Block\Widget\Button')->setData(['id' => 'paynl_version_check_button', 'label' => __('Check version')]);
         return $button->toHtml();
     }
 }

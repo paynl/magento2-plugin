@@ -5,24 +5,23 @@
  * @var \Paynl\Payment\Block\Adminhtml\Render\Version $block
  */
 ?>
-<?= $block->getVersion() ?>
+<span id="paynl_version_check_current_version"><?= $block->getVersion() ?></span>
 <?= $block->getButtonHtml() ?>
-<span id='version' class='paynl_version_check_row' style='display: none; margin-bottom:5px; padding-top:15px;'>
-    <span id='paynl_version_check_loading' style='display: none;'>Loading...</span>
-    <span id='paynl_version_check_result' style='display: none;'></span>
+<span id="paynl_version_check_text" style="position: absolute; padding:7px;">
+    <span id="paynl_version_check_loading" style="display: none;">Loading...</span>
+    <span id="paynl_version_check_result" style="display: none;"></span>
 </span>
 
 <script>
     require([
         'jquery'
     ], function (jQuery) {
-        jQuery('#version').click(function () {
+        jQuery('#paynl_version_check_button').click(function () {
             new Ajax.Request('<?= $block->getAjaxUrl() ?>', {
                 loaderArea: false,
                 asynchronous: true,
                 onCreate: function () {
                     jQuery('#paynl_version_check_result').hide();
-                    jQuery('.paynl_version_check_row').css('display', 'block');
                     jQuery('#paynl_version_check_loading').css('display', 'block');
                 },
                 onSuccess: function (response) {
@@ -35,11 +34,12 @@
                         var current_version = '<?= $block->getVersion() ?>';
 
                         if (newest_version > current_version) {
-                            result = 'There is a new version of the Pay. plugin available (' + json.version + ')'
+                            result = 'There is a new version available (' + json.version + ')'
                         } else {
                             result = 'You are up to date with the latest version'
-                            jQuery('#paynl_version_check_result').css({
-                                'color': '#10723a',
+                            jQuery('#paynl_version_check_current_version').css({
+                                'color': 'white',
+                                'background-color': '#10723a',
                                 'font-weight': 'bold'
                             });
                         }

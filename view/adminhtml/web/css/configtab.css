@@ -17,8 +17,12 @@
 }
 
 #row_paynl_setup_paynl_general_settings_version button {
-    margin-left: 20px;
+    margin-left: 5px;
 }
 #row_paynl_setup_paynl_general_settings_version .value {
     padding-top: 16px;
+}
+#row_paynl_setup_paynl_general_settings_version #paynl_version_check_current_version{
+    padding: 6px;
+    border-radius: 2px;
 }
