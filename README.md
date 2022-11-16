@@ -3,11 +3,10 @@
 </p>
 <h1 align="center">PAY. Magento2 plugin</h1>
   
-# Description
+This plugin provides your Magento2 webshop with all the payment methods you need. 
 
-With the PAY. plugin you can easily add different payment methods to your Magento 2 webshop. You can go to https://www.pay.nl (Dutch) for an overview of all our features and services, you can also visit https://docs.pay.nl/plugins#magento-2 for more documentation of our plugin.
-
-- [Description](#description)
+For an overview off all features check https://docs.pay.nl/plugins#magento-2.
+## Index
 - [Available payment methods](#available-payment-methods)
 - [Requirements](#requirements)
 - [Installation](#installation)
@@ -28,18 +27,19 @@ Maestro | Dankort | Fashion Giftcard | Klarna | Instore Payments (POS) |
 Bank Transfer | Cartasi | GivaCard | SprayPay | Przelewy24 | 
 Trustly | Tikkie | De Cadeaukaart | Biller | Creditclick | 
 | Multibanco | Nexi | Paysafecard | | Payconiq
-| Blik |  | Huis en Tuin Cadeau| | Google Pay |
-| | | Good4Fun | | Apple Pay
+Blik |  | Huis en Tuin Cadeau| | Google Pay |
+Online Bankbetaling| | Good4Fun | | Apple Pay
 | | | YourGift | | 
 | | | Bataviastad Cadeaukaart | | 
 | | | Shoes & Sneakers Cadeau | |
+| | | Your Green Gift Cadeaukaart| |
 
 
 # Requirements
 
     PHP 7.2 or higher
     PHP tested up to 8.1
-    Magento tested up to 2.4.5
+    Magento tested up to 2.4.5p1
 
 
 # Installation
