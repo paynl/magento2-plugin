@@ -45,19 +45,20 @@ class VersionCheck extends Action
         return parent::__construct($context);
     }
 
+    /**
+     * @return mixed
+     */
     public function execute()
     {
         $result = $this->resultJsonFactory->create();
-        $output = json_decode($this->getVersion());
-
-        $version = '';
-        if (isset($output[0])) {
-            $version = $output[0]->tag_name;
-        }
+        $version = $this->getVersion();
 
         return $result->setData(['version' => $version]);
     }
 
+    /**
+     * @return string
+     */
     private function getVersion()
     {
         $url = 'https://api.github.com/repos/paynl/magento2-plugin/releases';
@@ -68,6 +69,18 @@ class VersionCheck extends Action
 
         $context = stream_context_create($options);
 
-        return $this->file->fileGetContents($url, false, $context);
+        try {
+            $output = $this->file->fileGetContents($url, false, $context);
+            $json = json_decode($output);
+
+            $response = '';
+            if (isset($json[0])) {
+                $response = $json[0]->tag_name;
+            }
+        } catch (\Exception $e) {
+            $response = '';
+        }
+
+        return $response;
     }
 }
