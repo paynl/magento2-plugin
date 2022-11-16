@@ -1,0 +1,55 @@
+<?php
+
+/**
+ * @see \Paynl\Payment\Block\Adminhtml\Render\Version
+ * @var \Paynl\Payment\Block\Adminhtml\Render\Version $block
+ */
+?>
+<span id="paynl_version_check_current_version"><?= $block->getVersion() ?></span>
+<?= $block->getButtonHtml() ?>
+<span id="paynl_version_check_text" style="position: absolute; padding:7px;">
+    <span id="paynl_version_check_loading" style="display: none;">Loading...</span>
+    <span id="paynl_version_check_result" style="display: none;"></span>
+</span>
+
+<script>
+    require([
+        'jquery'
+    ], function (jQuery) {
+        jQuery('#paynl_version_check_button').click(function () {
+            new Ajax.Request('<?= $block->getAjaxUrl() ?>', {
+                loaderArea: false,
+                asynchronous: true,
+                onCreate: function () {
+                    jQuery('#paynl_version_check_result').hide();
+                    jQuery('#paynl_version_check_loading').css('display', 'block');
+                },
+                onSuccess: function (response) {
+                    var json = response.responseJSON;
+
+                    if (!json.version) {
+                        result = 'Something went wrong, please try again later'
+                    } else {
+                        var newest_version = json.version.substring(1);
+                        var current_version = '<?= $block->getVersion() ?>';
+
+                        if (newest_version > current_version) {
+                            result = 'There is a new version available (' + json.version + ')'
+                        } else {
+                            result = 'You are up to date with the latest version'
+                            jQuery('#paynl_version_check_current_version').css({
+                                'color': 'white',
+                                'background-color': '#10723a',
+                                'font-weight': 'bold'
+                            });
+                        }
+                    }
+
+                    jQuery('#paynl_version_check_result').html(result);
+                    jQuery('#paynl_version_check_result').css('display', 'block');
+                    jQuery('#paynl_version_check_loading').hide();
+                }
+            });
+        });
+    });
+</script>
