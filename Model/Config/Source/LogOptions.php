@@ -36,10 +36,10 @@ class LogOptions implements ArrayInterface
     public function toArray()
     {
         return [
-            self::LOG_NONE => __('None'),
-            self::LOG_ONLY_CRITICAL => __('Only critical'),
-            self::LOG_CRITICAL_NOTICE => __('Critical + Notice'),
-            self::LOG_ALL => __('All'),
+            self::LOG_NONE => __('No logging'),
+            self::LOG_ONLY_CRITICAL => __('Only Critical errors are logged'),
+            self::LOG_CRITICAL_NOTICE => __('Only Critical errors and Notices are logged'),
+            self::LOG_ALL => __('Everything is logged, including Critical, Notice, Info and Debug'),
         ];
     }
 }

@@ -77,7 +77,9 @@ abstract class PaymentMethod extends AbstractMethod
      * @var \Magento\Framework\Stdlib\CookieManagerInterface
      */
     protected $cookieManager;
-    
+
+    protected $graphqlVersion;
+
     public function __construct(
         Context $context,
         Registry $registry,
@@ -242,6 +244,21 @@ abstract class PaymentMethod extends AbstractMethod
         }
 
         return $transferData;
+    }
+
+    public function setGraphqlVersion($version)
+    {
+        $this->graphqlVersion = $version;
+    }
+
+    public function getVersion()
+    {
+        $version = substr('magento2 ' . $this->paynlConfig->getVersion() . ' | ' . $this->paynlConfig->getMagentoVersion() . ' | ' . $this->paynlConfig->getPHPVersion(), 0, 64);
+        if (!empty($this->graphqlVersion)) {
+            $version .= ' | ' . $this->graphqlVersion;
+        }
+
+        return $version;
     }
 
     public function genderConversion($gender)
@@ -610,7 +627,7 @@ abstract class PaymentMethod extends AbstractMethod
             'transferData' => $this->getTransferData(),
             'exchangeUrl' => $exchangeUrl,
             'currency' => $currency,
-            'object' => substr('magento2 ' . $this->paynlConfig->getVersion() . ' | ' . $this->paynlConfig->getMagentoVersion() . ' | ' . $this->paynlConfig->getPHPVersion(), 0, 64),
+            'object' => $this->getVersion(),
         ];
         if (isset($shippingAddress)) {
             $data['address'] = $shippingAddress;
@@ -718,7 +735,7 @@ abstract class PaymentMethod extends AbstractMethod
         if ($shippingCost != 0) {
             $arrProducts[] = [
                 'id' => 'shipping',
-                'name' => $shippingDescription,
+                'name' => empty($shippingDescription) ? 'Shipping' : $shippingDescription,
                 'price' => $shippingCost,
                 'qty' => 1,
                 'tax' => $shippingTax,

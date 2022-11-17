@@ -9,8 +9,11 @@
     <include path="Paynl_Payment::paymentmethods/amazonpay.xml" />
     <include path="Paynl_Payment::paymentmethods/amex.xml" />
     <include path="Paynl_Payment::paymentmethods/applepay.xml" />
+    <include path="Paynl_Payment::paymentmethods/bataviacadeaukaart.xml" />
     <include path="Paynl_Payment::paymentmethods/biercheque.xml" />
+    <include path="Paynl_Payment::paymentmethods/biller.xml" />
     <include path="Paynl_Payment::paymentmethods/billink.xml" />
+    <include path="Paynl_Payment::paymentmethods/blik.xml" />
     <include path="Paynl_Payment::paymentmethods/capayable.xml" />
     <include path="Paynl_Payment::paymentmethods/capayable_gespreid.xml" />
     <include path="Paynl_Payment::paymentmethods/cartasi.xml" />
@@ -38,13 +41,16 @@
     <include path="Paynl_Payment::paymentmethods/mistercash.xml" />
     <include path="Paynl_Payment::paymentmethods/multibanco.xml" />
     <include path="Paynl_Payment::paymentmethods/mybank.xml" />
+    <include path="Paynl_Payment::paymentmethods/nexi.xml" />
     <include path="Paynl_Payment::paymentmethods/overboeking.xml" />
+    <include path="Paynl_Payment::paymentmethods/onlinebankbetaling.xml"/>
     <include path="Paynl_Payment::paymentmethods/payconiq.xml" />
     <include path="Paynl_Payment::paymentmethods/paypal.xml" />
     <include path="Paynl_Payment::paymentmethods/paysafecard.xml" />
     <include path="Paynl_Payment::paymentmethods/podiumcadeaukaart.xml" />
     <include path="Paynl_Payment::paymentmethods/postepay.xml" />
     <include path="Paynl_Payment::paymentmethods/przelewy24.xml" />
+    <include path="Paynl_Payment::paymentmethods/shoesandsneakers.xml" />
     <include path="Paynl_Payment::paymentmethods/sofortbanking.xml" />
     <include path="Paynl_Payment::paymentmethods/sofortbanking_hr.xml" />
     <include path="Paynl_Payment::paymentmethods/sofortbanking_ds.xml" />
@@ -59,4 +65,5 @@
     <include path="Paynl_Payment::paymentmethods/wijncadeau.xml" />
     <include path="Paynl_Payment::paymentmethods/yehhpay.xml" />
     <include path="Paynl_Payment::paymentmethods/yourgift.xml" />
+    <include path="Paynl_Payment::paymentmethods/yourgreengift.xml" />
 </include>

@@ -12,9 +12,11 @@ use Magento\Store\Model\Store;
 class Config
 {
     const FINISH_PAY = 'paynl/order/finish';
+    const PENDING_PAY = 'paynl/order/pending';
     const CANCEL_PAY = 'paynl/order/cancel';
     const FINISH_STANDARD = 'checkout/onepage/success';
     const ORDERSTATUS_PAID = 100;
+    const ORDERSTATUS_PENDING = 50;
     const ORDERSTATUS_DENIED = -63;
     const ORDERSTATUS_CANCELED = -90;
 
@@ -24,6 +26,8 @@ class Config
     /** @var  Resources */
     private $resources;
 
+    protected $helper;
+
     /** @array  Brands */
     public $brands = [
         "paynl_payment_afterpay" => "14",
@@ -32,8 +36,11 @@ class Config
         "paynl_payment_amazonpay" => "22",
         "paynl_payment_amex" => "9",
         "paynl_payment_applepay" => "114",
+        "paynl_payment_bataviacadeaukaart" => "255",
         "paynl_payment_biercheque" => "204",
+        "paynl_payment_biller" => "252",
         "paynl_payment_billink" => "16",
+        "paynl_payment_blik" => "234",
         "paynl_payment_capayable" => "18",
         "paynl_payment_capayable_gespreid" => "19",
         "paynl_payment_cartasi" => "76",
@@ -61,13 +68,16 @@ class Config
         "paynl_payment_mistercash" => "2",
         "paynl_payment_multibanco" => "141",
         "paynl_payment_mybank" => "5",
+        "paynl_payment_nexi" => "76",
         "paynl_payment_overboeking" => "12",
+        "paynl_payment_onlinebankbetaling" => "258",
         "paynl_payment_payconiq" => "138",
         "paynl_payment_paypal" => "21",
         "paynl_payment_paysafecard" => "24",
         "paynl_payment_podiumcadeaukaart" => "29",
         "paynl_payment_postepay" => "10",
         "paynl_payment_przelewy24" => "93",
+        "paynl_payment_shoesandsneakers" => "2937",
         "paynl_payment_sofortbanking" => "4",
         "paynl_payment_sofortbanking_hr" => "4",
         "paynl_payment_sofortbanking_ds" => "4",
@@ -81,15 +91,18 @@ class Config
         "paynl_payment_wechatpay" => "23",
         "paynl_payment_wijncadeau" => "135",
         "paynl_payment_yehhpay" => "1",
-        "paynl_payment_yourgift" => "31"
+        "paynl_payment_yourgift" => "31",
+        "paynl_payment_yourgreengift" => "246"
     ];
 
     public function __construct(
         Store $store,
-        \Magento\Framework\View\Element\Template $resources
+        \Magento\Framework\View\Element\Template $resources,
+        \Paynl\Payment\Helper\PayHelper $helper
     ) {
         $this->store = $store;
         $this->resources = $resources;
+        $this->helper = $helper;
     }
 
     /**
@@ -134,13 +147,13 @@ class Config
 
     public function isSkipFraudDetection()
     {
-        return $this->store->getConfig('payment/paynl/skip_fraud_detection') == 1;
+        return $this->sherpaEnabled() === true || $this->store->getConfig('payment/paynl/skip_fraud_detection') == 1;
     }
+
 
     public function isTestMode()
     {
-        $remoteIP =  isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'];
-        $ip = isset($_SERVER['HTTP_CLIENT_IP']) ? $_SERVER['HTTP_CLIENT_IP'] : $remoteIP;
+        $ip = $this->helper->getClientIp();
 
         $ipconfig = $this->store->getConfig('payment/paynl/testipaddress');
 
@@ -166,6 +179,11 @@ class Config
     public function isAlwaysBaseCurrency()
     {
         return $this->store->getConfig('payment/paynl/always_base_currency') == 1;
+    }
+
+    public function isPaymentMethodActive($paymentMethod)
+    {
+        return $this->store->getConfig('payment/' . $paymentMethod . '/active') == 1;
     }
 
     public function useSkuId()
@@ -205,9 +223,27 @@ class Config
         return $this->store->getConfig('payment/' . $methodCode . '/turn_off_invoices_b2b') == 1;
     }
 
+    /**
+     * @return bool
+     */
+    public function ignoreManualCapture()
+    {
+        return $this->store->getConfig('payment/paynl/auto_capture') != 0 && $this->store->getConfig('payment/paynl/auto_capture') != 1;
+    }
+
     public function autoCaptureEnabled()
     {
-        return $this->store->getConfig('payment/paynl/auto_capture') == 1;
+        return $this->store->getConfig('payment/paynl/auto_capture') >= 1;
+    }
+
+    public function wuunderAutoCaptureEnabled()
+    {
+        return $this->store->getConfig('payment/paynl/auto_capture') == 2;
+    }
+
+    public function sherpaEnabled()
+    {
+        return $this->store->getConfig('payment/paynl/auto_capture') == 3;
     }
 
     public function sendEcommerceAnalytics()
@@ -255,7 +291,7 @@ class Config
 
     public function getApiToken()
     {
-        return $this->store->getConfig('payment/paynl/apitoken');
+        return $this->store->getConfig('payment/paynl/apitoken_encrypted');
     }
 
     public function getTokencode()
@@ -275,33 +311,11 @@ class Config
 
     public function getIconUrl($methodCode, $paymentOptionId)
     {
-        if ($this->store->getConfig('payment/paynl/image_style') == 'newest') {
-            $brandId = $this->store->getConfig('payment/' . $methodCode . '/brand_id');
-            if (empty($brandId)) {
-                $brandId = $this->brands[$methodCode];
-            }
-            $iconUrl = $this->resources->getViewFileUrl("Paynl_Payment::logos/" . $brandId . ".png");
-        } else {
-            $iconsize = '50x32';
-            if ($this->store->getConfig('payment/paynl/pay_style_checkout') == 1) {
-                switch ($this->store->getConfig('payment/paynl/icon_size')) {
-                    case 'xlarge':
-                        $iconsize = '100x100';
-                        break;
-                    case 'large':
-                        $iconsize = '75x75';
-                        break;
-                    case 'medium':
-                        $iconsize = '50x50';
-                        break;
-                }
-            }
-            $iconUrl = 'https://static.pay.nl/payment_profiles/' . $iconsize . '/' . $paymentOptionId . '.png';
-            $customUrl = $this->store->getConfig('payment/paynl/iconurl');
-            if (!empty($customUrl)) {
-                $iconUrl = str_replace('#paymentOptionId#', $paymentOptionId, $customUrl);
-            }
+        $brandId = $this->store->getConfig('payment/' . $methodCode . '/brand_id');
+        if (empty($brandId)) {
+            $brandId = $this->brands[$methodCode];
         }
+        $iconUrl = $this->resources->getViewFileUrl("Paynl_Payment::logos/" . $brandId . ".png");
 
         return $iconUrl;
     }
@@ -309,14 +323,6 @@ class Config
     public function getIconUrlIssuer($issuerId)
     {
         return $this->resources->getViewFileUrl("Paynl_Payment::logos_issuers/qr-" . $issuerId . ".svg");
-    }
-
-    public function getIconSize()
-    {
-        if ($this->store->getConfig('payment/paynl/pay_style_checkout') == 1 && $this->store->getConfig('payment/paynl/image_style') == 'newest') {
-            return $this->store->getConfig('payment/paynl/icon_size');
-        }
-        return false;
     }
 
     public function getUseAdditionalValidation()

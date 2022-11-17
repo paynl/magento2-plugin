@@ -4,7 +4,10 @@ namespace Paynl\Payment\Helper;
 
 use Exception;
 use Psr\Log\LoggerInterface;
+use Magento\Framework\App\ResourceConnection;
 use \Paynl\Payment\Model\Config\Source\LogOptions;
+use Magento\Framework\HTTP\PhpEnvironment\RemoteAddress;
+use Magento\Framework\HTTP\Header;
 
 
 class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
@@ -13,6 +16,19 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
     private static $objectManager;
     private static $store;
+    private $resource;
+    private $remoteAddress;
+    private $httpHeader;
+
+    public function __construct(
+        ResourceConnection $resource,
+        RemoteAddress $remoteAddress,
+        Header $httpHeader
+    ) {
+        $this->remoteAddress = $remoteAddress;
+        $this->httpHeader = $httpHeader;
+        $this->resource = $resource;
+    }
 
     public static function getObjectManager()
     {
@@ -81,23 +97,21 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
     public static function log($text, $params = array(), $store = null)
     {
         $objectManager = self::getObjectManager();
-        $logger = $objectManager->get(\Psr\Log\LoggerInterface::class);
-        $logger->notice(PayHelper::PAY_LOG_PREFIX . $text, $params);
+        $logger = $objectManager->get(\Paynl\Payment\Logging\Logger::class);
+        $logger->notice($text, $params);
     }
 
     public static function writeLog($text, $type, $params, $store)
     {
         $objectManager = self::getObjectManager();
-        $logger = $objectManager->get(\Psr\Log\LoggerInterface::class);
-
         $store = self::getStore($store);
         $level = $store->getConfig('payment/paynl/logging_level');
 
         if (self::hasCorrectLevel($level, $type)) {
-            $text = PayHelper::PAY_LOG_PREFIX . $text;
             if (!is_array($params)) {
                 $params = array();
             }
+            $logger = $objectManager->get(\Paynl\Payment\Logging\Logger::class);
             switch ($type) {
                 case 'critical':
                     $logger->critical($text, $params);
@@ -115,10 +129,97 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
         }
     }
 
+    public static function setCookie($cookieName, $value)
+    {
+        $objectManager = self::getObjectManager();
+        $cookieManager = $objectManager->get(\Magento\Framework\Stdlib\CookieManagerInterface::class);
+        $cookieMetadataFactory = $objectManager->get(\Magento\Framework\Stdlib\Cookie\CookieMetadataFactory::class);
+
+        $metadata = $cookieMetadataFactory
+            ->createPublicCookieMetadata()
+            ->setDuration(300)
+            ->setSecure(false)
+            ->setPath('/')
+            ->setHttpOnly(false);
+
+        $cookieManager->setPublicCookie(
+            $cookieName,
+            $value,
+            $metadata
+        );
+    }
+
+    public static function getCookie($cookieName)
+    {
+        $objectManager = self::getObjectManager();
+        $cookieManager = $objectManager->get(\Magento\Framework\Stdlib\CookieManagerInterface::class);
+        return $cookieManager->getCookie($cookieName);
+    }
+
+    public static function deleteCookie($cookieName)
+    {
+        $objectManager = self::getObjectManager();
+        $cookieManager = $objectManager->get(\Magento\Framework\Stdlib\CookieManagerInterface::class);
+        $cookieMetadataFactory = $objectManager->get(\Magento\Framework\Stdlib\Cookie\CookieMetadataFactory::class);
+        if ($cookieManager->getCookie($cookieName)) {
+            $metadata = $cookieMetadataFactory->createPublicCookieMetadata();
+            $metadata->setPath('/');
+            return $cookieManager->deleteCookie($cookieName, $metadata);
+        }
+    }
+
+    /**
+     * Checks if new-ppt is already processing, mark as processing if not marked already
+     *
+     * @param $payOrderId
+     * @return bool
+     */
+    public function checkProcessing($payOrderId)
+    {
+        try {
+            $connection = $this->resource->getConnection();
+            $tableName = $this->resource->getTableName('pay_processing');
+
+            $select = $connection->select()->from([$tableName])->where('payOrderId = ?', $payOrderId)->where('created_at > date_sub(now(), interval 1 minute)');
+            $result = $connection->fetchAll($select);
+
+            $processing = !empty($result[0]);
+            if (!$processing) {
+                $connection->insertOnDuplicate(
+                    $tableName,
+                    ['payOrderId' => $payOrderId],
+                    ['payOrderId', 'created_at']
+                );
+            }
+        } catch (\Exception $e) {
+            $processing = false;
+        }
+        return $processing;
+    }
+
+    /**
+     * Removes processing mark after new-ppt is finished
+     *
+     * @param $payOrderId
+     */
+    public function removeProcessing($payOrderId)
+    {
+        $connection = $this->resource->getConnection();
+        $tableName = $this->resource->getTableName('pay_processing');
+        $connection->delete(
+            $tableName,
+            ['payOrderId = ?' => $payOrderId]
+        );
+    }
+
     public function getClientIp()
     {
-        $ipforward = !empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'];
-        return !empty($_SERVER['HTTP_CLIENT_IP']) ? $_SERVER['HTTP_CLIENT_IP'] : $ipforward;
+        return $this->remoteAddress->getRemoteAddress();
+    }
+
+    public function getHttpUserAgent()
+    {
+        return $this->httpHeader->getHttpUserAgent();
     }
 
     /**

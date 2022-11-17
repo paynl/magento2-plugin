@@ -18,8 +18,11 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_amazonpay',
         'paynl_payment_amex',
         'paynl_payment_applepay',
+        'paynl_payment_bataviacadeaukaart',
         'paynl_payment_biercheque',
+        'paynl_payment_biller',
         'paynl_payment_billink',
+        'paynl_payment_blik',
         'paynl_payment_decadeaukaart',
         'paynl_payment_capayable',
         'paynl_payment_capayable_gespreid',
@@ -47,13 +50,16 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_mistercash',
         'paynl_payment_multibanco',
         'paynl_payment_mybank',
+        'paynl_payment_nexi',
         'paynl_payment_overboeking',
+        'paynl_payment_onlinebankbetaling',
         'paynl_payment_payconiq',
         'paynl_payment_paypal',
         'paynl_payment_paysafecard',
         'paynl_payment_podiumcadeaukaart',
         'paynl_payment_postepay',
         'paynl_payment_przelewy24',
+        'paynl_payment_shoesandsneakers',
         'paynl_payment_sofortbanking',
         'paynl_payment_sofortbanking_hr',
         'paynl_payment_sofortbanking_ds',
@@ -67,7 +73,8 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_wechatpay',
         'paynl_payment_wijncadeau',
         'paynl_payment_yehhpay',
-        'paynl_payment_yourgift'
+        'paynl_payment_yourgift',
+        'paynl_payment_yourgreengift'
     ];
 
     /**
@@ -169,7 +176,6 @@ class ConfigProvider implements ConfigProviderInterface
 
         $config['payment']['testMode']                = $this->paynlConfig->isTestMode();
         $config['payment']['useAdditionalValidation'] = $this->paynlConfig->getUseAdditionalValidation();
-        $config['payment']['iconsize']                = $this->paynlConfig->getIconSize();
 
         return $config;
     }

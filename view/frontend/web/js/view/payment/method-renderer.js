@@ -10,6 +10,7 @@ define(
         var cseComponent     = 'Paynl_Payment/js/view/payment/method-renderer/cse';
         var defaultComponent = 'Paynl_Payment/js/view/payment/method-renderer/default';
 
+
         var cse_enabled = false;
         if (window.checkoutConfig.payment.hasOwnProperty('cse_enabled')) {
             var cse_enabled = window.checkoutConfig.payment.cse_enabled == 1;
@@ -21,8 +22,11 @@ define(
             {type: 'paynl_payment_alipay', component: defaultComponent},
             {type: 'paynl_payment_amazonpay', component: defaultComponent},
             {type: 'paynl_payment_amex', component: defaultComponent},
+            {type: 'paynl_payment_bataviacadeaukaart', component: defaultComponent},
             {type: 'paynl_payment_biercheque', component: defaultComponent},
+            {type: 'paynl_payment_biller', component: defaultComponent},
             {type: 'paynl_payment_billink', component: defaultComponent},
+            {type: 'paynl_payment_blik', component: defaultComponent},
             {type: 'paynl_payment_capayable', component: defaultComponent},
             {type: 'paynl_payment_capayable_gespreid', component: defaultComponent},
             {type: 'paynl_payment_cartasi', component: defaultComponent},
@@ -50,13 +54,16 @@ define(
             {type: 'paynl_payment_mistercash', component: defaultComponent},
             {type: 'paynl_payment_multibanco', component: defaultComponent},
             {type: 'paynl_payment_mybank', component: defaultComponent},
+            {type: 'paynl_payment_nexi', component: defaultComponent},
             {type: 'paynl_payment_overboeking', component: defaultComponent},
+            {type: 'paynl_payment_onlinebankbetaling', component: defaultComponent},
             {type: 'paynl_payment_payconiq', component: defaultComponent},
             {type: 'paynl_payment_paypal', component: defaultComponent},
             {type: 'paynl_payment_paysafecard', component: defaultComponent},
             {type: 'paynl_payment_podiumcadeaukaart', component: defaultComponent},
             {type: 'paynl_payment_postepay', component: defaultComponent},
             {type: 'paynl_payment_przelewy24', component: defaultComponent},
+            {type: 'paynl_payment_shoesandsneakers', component: defaultComponent},
             {type: 'paynl_payment_sofortbanking', component: defaultComponent},
             {type: 'paynl_payment_sofortbanking_hr', component: defaultComponent},
             {type: 'paynl_payment_sofortbanking_ds', component: defaultComponent},
@@ -70,7 +77,8 @@ define(
             {type: 'paynl_payment_wechatpay', component: defaultComponent},
             {type: 'paynl_payment_wijncadeau', component: defaultComponent},
             {type: 'paynl_payment_yehhpay', component: defaultComponent},
-            {type: 'paynl_payment_yourgift', component: defaultComponent}
+            {type: 'paynl_payment_yourgift', component: defaultComponent},
+            {type: 'paynl_payment_yourgreengift', component: defaultComponent},
         ];
 
         function isApplePayAvailable()

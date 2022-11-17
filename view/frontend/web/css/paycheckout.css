@@ -1,63 +1,48 @@
-.checkout-payment-method .paynl .paymentOptionsList li label .payment-icon{
-    width: 50px;
-    height: 50px;
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+
+.paynl .payment-method-title, .paynl .payment-method-content {
+    font-family: 'Lato', sans-serif;
 }
 
-.checkout-payment-method .paynl .payment-method-title .payment-icon.pay_icon_size_xsmall,
-.checkout-payment-method .paynl .paymentOptionsList li label .payment-icon.pay_icon_size_xsmall{
+.checkout-payment-method .payment-method-title .payment-icon {
     width: 35px;
-    height: 35px;
+    float: right;
+    margin-top: -7px;
 }
 
-.checkout-payment-method .paynl .payment-method-title .payment-icon.pay_icon_size_small,
-.checkout-payment-method .paynl .paymentOptionsList li label .payment-icon.pay_icon_size_small{
-    width: 50px;
+.paynl .payment-method-content .fieldset input, .paynl .payment-method-content select,
+.paynl .checkout-payment-method .billing-address-form input,
+.paynl .payment-method-content .field-select-billing input[type="text"],
+.paynl .payment-method-content .field-select-billing input[type="date"] {
+    position: relative;
+    font-family: 'Lato', sans-serif;
+    border-radius: 10px;
     height: 50px;
+    padding: 10px;
 }
 
-.checkout-payment-method .paynl .payment-method-title .payment-icon.pay_icon_size_medium,
-.checkout-payment-method .paynl .paymentOptionsList li label .payment-icon.pay_icon_size_medium{
-    width: 75px;
-    height: 75px;
+.paynl .payment-method-content .fieldset .label,
+.paynl .payment-method-content p,
+.paynl .payment-method-content .field-select-billing label[for="dob"],
+.paynl .payment-method-content .field-select-billing label[for="kvknummer"],
+.paynl .payment-method-content .field-select-billing label[for="vatnumber"] {
+    position: absolute;
+    z-index: 1;
+    margin: -10px 0 0 15px;
+    background-color: white;
+    padding: 0 3px 0 3px;
 }
 
-.checkout-payment-method .paynl .payment-method-title .payment-icon.pay_icon_size_large,
-.checkout-payment-method .paynl .paymentOptionsList li label .payment-icon.pay_icon_size_large{
-    width: 100px;
-    height: 100px;
+.paynl .actions-toolbar button {
+    border-radius: 10px;
 }
 
-.checkout-payment-method .paynl .payment-method-title .payment-icon.pay_icon_size_xlarge,
-.checkout-payment-method .paynl .paymentOptionsList li label .payment-icon.pay_icon_size_xlarge{
-    width: 125px;
-    height: 125px;
+.paynl .actions-toolbar .checkout {
+    margin-top: 10px;
 }
 
-.checkout-payment-method .paynl .paymentOptionsList{
-    list-style-type:none;
-    padding: 0;
-    padding-top:20px;
-}
-
-.checkout-payment-method .paynl .paymentOptionsList li{
-    border-top: 1px solid #cccccc;
-    margin: 0;
-    padding: 0;
-}
-
-.checkout-payment-method .paynl .paymentOptionsList li input,
-.checkout-payment-method .paynl .paymentOptionsList li label,
-.checkout-payment-method .paynl .paymentOptionsList li label .payment-icon,
-.checkout-payment-method .paynl .paymentOptionsList li label span{
-    display: inline-block;
-    vertical-align: middle;
-}
-
-.checkout-payment-method .paynl .paymentOptionsList li label{
-    width: calc(100% - 25px);
-    padding: 10px 0px;
-}
-
-.checkout-payment-method .paynl .paymentOptionsList li label .payment-icon{
-    margin-right: 5px;
+.paynl .payment-method-content .field-select-billing img {
+    height: 35px;
+    top: 10px;
+    position: relative;
 }

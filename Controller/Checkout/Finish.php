@@ -84,6 +84,7 @@ class Finish extends PayAction
         $orderStatusId = empty($params['orderStatusId']) ? null : (int)$params['orderStatusId'];
         $magOrderId = empty($params['entityid']) ? null : $params['entityid'];
         $bSuccess = $orderStatusId === Config::ORDERSTATUS_PAID;
+        $bPending = $orderStatusId === Config::ORDERSTATUS_PENDING;
         $bDenied = $orderStatusId === Config::ORDERSTATUS_DENIED;
         $bCanceled = $orderStatusId === Config::ORDERSTATUS_CANCELED;
         $isPinTransaction = false;
@@ -115,7 +116,7 @@ class Finish extends PayAction
                 $transaction = \Paynl\Transaction::get($payOrderId);
                 $orderNumber = $transaction->getExtra1();
                 $this->checkEmpty($order->getIncrementId() == $orderNumber, '', 104, 'order mismatch');
-                $bSuccess = ($transaction->isPaid() || $transaction->isAuthorized() || ($transaction->isPending() && !$bCanceled));
+                $bSuccess = ($transaction->isPaid() || $transaction->isAuthorized());
             }
 
             if ($bSuccess) {
@@ -140,6 +141,8 @@ class Finish extends PayAction
                 $quote = $session->getQuote();
                 $quote->setIsActive(false);
                 $this->quoteRepository->save($quote);
+            } elseif ($bPending) {
+                $resultRedirect->setPath(Config::PENDING_PAY);
             } else {
                 $cancelMessage = $bDenied ? __('Payment denied') : __('Payment canceled');
                 $this->messageManager->addNoticeMessage($cancelMessage);
