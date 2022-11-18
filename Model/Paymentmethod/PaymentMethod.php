@@ -93,8 +93,8 @@ abstract class PaymentMethod extends AbstractMethod
         Config $paynlConfig,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
-        PublicKeysHelper $publicKeysHelper,
-        \Magento\Framework\Json\Helper\Data $jsonHelper,
+        PublicKeysHelper $publicKeysHelper = null,
+        \Magento\Framework\Json\Helper\Data $jsonHelper = null,
         array $data = []
     ) {
         parent::__construct(
