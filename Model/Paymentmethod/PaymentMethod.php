@@ -91,10 +91,10 @@ abstract class PaymentMethod extends AbstractMethod
         \Magento\Sales\Model\Order\Config $orderConfig,
         OrderRepository $orderRepository,
         Config $paynlConfig,
+        PublicKeysHelper $publicKeysHelper,
+        \Magento\Framework\Json\Helper\Data $jsonHelper,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
-        PublicKeysHelper $publicKeysHelper = null,
-        \Magento\Framework\Json\Helper\Data $jsonHelper = null,
         array $data = []
     ) {
         parent::__construct(
