@@ -160,9 +160,10 @@ class Config
 
         $ipconfig = $this->store->getConfig('payment/paynl/testipaddress');
 
-        if(!empty($ipconfig)) {
+        if (!empty($ipconfig)) {
             $allowed_ips = explode(',', $ipconfig);
-            if (in_array($ip, $allowed_ips) && filter_var($ip, FILTER_VALIDATE_IP) && strlen($ip) > 0 && count($allowed_ips) > 0) {
+            if (in_array($ip, $allowed_ips) && filter_var($ip, FILTER_VALIDATE_IP) &&
+                strlen($ip) > 0 && count($allowed_ips) > 0) {
                 return true;
             }
         }
@@ -231,7 +232,8 @@ class Config
      */
     public function ignoreManualCapture()
     {
-        return $this->store->getConfig('payment/paynl/auto_capture') != 0 && $this->store->getConfig('payment/paynl/auto_capture') != 1;
+        return $this->store->getConfig('payment/paynl/auto_capture') != 0
+          && $this->store->getConfig('payment/paynl/auto_capture') != 1;
     }
 
     public function autoCaptureEnabled()
