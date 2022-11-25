@@ -66,7 +66,7 @@ class Config
         "paynl_payment_klarnakp" => "15",
         "paynl_payment_maestro" => "33",
         "paynl_payment_mistercash" => "2",
-        "paynl_payment_monizze" => "264",
+        "paynl_payment_monizze" => "264", 
         "paynl_payment_multibanco" => "141",
         "paynl_payment_mybank" => "5",
         "paynl_payment_nexi" => "76",
