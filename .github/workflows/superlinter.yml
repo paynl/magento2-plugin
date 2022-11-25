@@ -40,7 +40,7 @@ jobs:
       - name: Lint Code Base
         uses: github/super-linter@v4
         env:
-          DEFAULT_BRANCH: main
+          DEFAULT_BRANCH: master
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           VALIDATE_PHP: true
