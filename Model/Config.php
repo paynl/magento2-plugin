@@ -13,7 +13,7 @@ class Config
 {
     const FINISH_PAY = 'paynl/order/finish';
     public const PENDING_PAY = 'paynl/order/pending';
-    public const CANCEL_PAY = 'paynl/order/cancel';
+      const CANCEL_PAY = 'paynl/order/cancel';
     public const FINISH_STANDARD = 'checkout/onepage/success';
     public const ORDERSTATUS_PAID = 100;
     public const ORDERSTATUS_PENDING = 50;
