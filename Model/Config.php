@@ -166,8 +166,8 @@ class Config
                 in_array($ip, $allowed_ips) &&
                 filter_var($ip, FILTER_VALIDATE_IP) &&
                 strlen($ip) > 0 &&
-                count($allowed_ips) > 0)
-            {
+                count($allowed_ips) > 0
+            ) {
                 return true;
             }
         }
