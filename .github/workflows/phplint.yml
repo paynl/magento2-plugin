@@ -1,8 +1,15 @@
 ---
+#################################
+#################################
+## Super Linter GitHub Actions ##
+#################################
+#################################
 name: PHP Linter
 
+#############################
+# Start the job on all push #
+#############################
 on: pull_request
-
 jobs:
   build:
     name: Apply lint and PHP validation.
@@ -14,7 +21,7 @@ jobs:
           fetch-depth: 0
 
       - name: Lint Code Base
-        uses: github/super-linter:latest
+        uses: github/super-linter@v4.9.5
         env:
           DEFAULT_BRANCH: master
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
