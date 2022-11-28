@@ -11,7 +11,7 @@ use Magento\Store\Model\Store;
  */
 class Config
 {
-    public const FINISH_PAY = 'paynl/order/finish';
+    const FINISH_PAY = 'paynl/order/finish';
     public const PENDING_PAY = 'paynl/order/pending';
     public const CANCEL_PAY = 'paynl/order/cancel';
     public const FINISH_STANDARD = 'checkout/onepage/success';
