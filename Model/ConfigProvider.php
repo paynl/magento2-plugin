@@ -211,13 +211,11 @@ class ConfigProvider implements ConfigProviderInterface
     /**
      * Get payment method icon
      *
-     * @param string $code
-     *
-     * @return string
+     * @param $code
+     * @return mixed
      */
     protected function getIcon($code)
     {
-        $url = $this->paynlConfig->getIconUrl($code, $this->methods[$code]->getPaymentOptionId());
-        return $url;
+        return $this->paynlConfig->getIconUrl($code);
     }
 }

@@ -226,6 +226,10 @@ class Config
         return $this->store->getConfig('payment/' . $methodCode . '/order_status_processing');
     }
 
+    /**
+     * @param $methodCode
+     * @return bool
+     */
     public function ignoreB2BInvoice($methodCode)
     {
         return $this->store->getConfig('payment/' . $methodCode . '/turn_off_invoices_b2b') == 1;
@@ -236,25 +240,36 @@ class Config
      */
     public function ignoreManualCapture()
     {
-        return $this->store->getConfig('payment/paynl/auto_capture') != 0
-          && $this->store->getConfig('payment/paynl/auto_capture') != 1;
+        return $this->store->getConfig('payment/paynl/auto_capture') != 0 && $this->store->getConfig('payment/paynl/auto_capture') != 1;
     }
 
+    /**
+     * @return bool
+     */
     public function autoCaptureEnabled()
     {
         return $this->store->getConfig('payment/paynl/auto_capture') >= 1;
     }
 
+    /**
+     * @return bool
+     */
     public function wuunderAutoCaptureEnabled()
     {
         return $this->store->getConfig('payment/paynl/auto_capture') == 2;
     }
 
+    /**
+     * @return bool
+     */
     public function sherpaEnabled()
     {
         return $this->store->getConfig('payment/paynl/auto_capture') == 3;
     }
 
+    /**
+     * @return bool
+     */
     public function sendEcommerceAnalytics()
     {
         return $this->store->getConfig('payment/paynl/google_analytics_ecommerce') == 1;
@@ -318,15 +333,17 @@ class Config
         return $this->store->getConfig('payment/paynl/failover_gateway');
     }
 
-    public function getIconUrl($methodCode, $paymentOptionId)
+    /**
+     * @param $methodCode
+     * @return mixed
+     */
+    public function getIconUrl($methodCode)
     {
         $brandId = $this->store->getConfig('payment/' . $methodCode . '/brand_id');
         if (empty($brandId)) {
             $brandId = $this->brands[$methodCode];
         }
-        $iconUrl = $this->resources->getViewFileUrl("Paynl_Payment::logos/" . $brandId . ".png");
-
-        return $iconUrl;
+        return $this->resources->getViewFileUrl("Paynl_Payment::logos/" . $brandId . ".png");
     }
 
     public function getIconUrlIssuer($issuerId)
@@ -356,12 +373,11 @@ class Config
 
     public function getPaymentmethodCode($paymentProfileId)
     {
-
-        //Get all PAY. methods
+        # Get all PAY. methods
         $objectManager =  \Magento\Framework\App\ObjectManager::getInstance();
         $paymentHelper = $objectManager->get(\Magento\Payment\Helper\Data::class);
         $paymentMethodList = $paymentHelper->getPaymentMethods();
-        $pay_methods = [];
+
         foreach ($paymentMethodList as $key => $value) {
             if (strpos($key, 'paynl_') !== false && $key != 'paynl_payment_paylink') {
                 $code = $this->store->getConfig('payment/' . $key . '/payment_option_id');
