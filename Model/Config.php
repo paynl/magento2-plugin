@@ -11,14 +11,14 @@ use Magento\Store\Model\Store;
  */
 class Config
 {
-    const FINISH_PAY = 'paynl/order/finish';
-    const PENDING_PAY = 'paynl/order/pending';
-    const CANCEL_PAY = 'paynl/order/cancel';
-    const FINISH_STANDARD = 'checkout/onepage/success';
-    const ORDERSTATUS_PAID = 100;
-    const ORDERSTATUS_PENDING = 50;
-    const ORDERSTATUS_DENIED = -63;
-    const ORDERSTATUS_CANCELED = -90;
+    public const FINISH_PAY = 'paynl/order/finish';
+    public const PENDING_PAY = 'paynl/order/pending';
+    public const CANCEL_PAY = 'paynl/order/cancel';
+    public const FINISH_STANDARD = 'checkout/onepage/success';
+    public const ORDERSTATUS_PAID = 100;
+    public const ORDERSTATUS_PENDING = 50;
+    public const ORDERSTATUS_DENIED = -63;
+    public const ORDERSTATUS_CANCELED = -90;
 
     /** @var  Store */
     private $store;
@@ -66,6 +66,7 @@ class Config
         "paynl_payment_klarnakp" => "15",
         "paynl_payment_maestro" => "33",
         "paynl_payment_mistercash" => "2",
+        "paynl_payment_monizze" => "183",
         "paynl_payment_multibanco" => "141",
         "paynl_payment_mybank" => "5",
         "paynl_payment_nexi" => "76",
@@ -77,7 +78,9 @@ class Config
         "paynl_payment_podiumcadeaukaart" => "29",
         "paynl_payment_postepay" => "10",
         "paynl_payment_przelewy24" => "93",
+        "paynl_payment_prontowonen" => "270",
         "paynl_payment_shoesandsneakers" => "2937",
+        "paynl_payment_sodexo" => "186",
         "paynl_payment_sofortbanking" => "4",
         "paynl_payment_sofortbanking_hr" => "4",
         "paynl_payment_sofortbanking_ds" => "4",
@@ -157,9 +160,14 @@ class Config
 
         $ipconfig = $this->store->getConfig('payment/paynl/testipaddress');
 
-        if(!empty($ipconfig)) {
+        if (!empty($ipconfig)) {
             $allowed_ips = explode(',', $ipconfig);
-            if (in_array($ip, $allowed_ips) && filter_var($ip, FILTER_VALIDATE_IP) && strlen($ip) > 0 && count($allowed_ips) > 0) {
+            if (
+                in_array($ip, $allowed_ips) &&
+                filter_var($ip, FILTER_VALIDATE_IP) &&
+                strlen($ip) > 0 &&
+                count($allowed_ips) > 0
+            ) {
                 return true;
             }
         }
@@ -218,6 +226,10 @@ class Config
         return $this->store->getConfig('payment/' . $methodCode . '/order_status_processing');
     }
 
+    /**
+     * @param $methodCode
+     * @return bool
+     */
     public function ignoreB2BInvoice($methodCode)
     {
         return $this->store->getConfig('payment/' . $methodCode . '/turn_off_invoices_b2b') == 1;
@@ -231,21 +243,33 @@ class Config
         return $this->store->getConfig('payment/paynl/auto_capture') != 0 && $this->store->getConfig('payment/paynl/auto_capture') != 1;
     }
 
+    /**
+     * @return bool
+     */
     public function autoCaptureEnabled()
     {
         return $this->store->getConfig('payment/paynl/auto_capture') >= 1;
     }
 
+    /**
+     * @return bool
+     */
     public function wuunderAutoCaptureEnabled()
     {
         return $this->store->getConfig('payment/paynl/auto_capture') == 2;
     }
 
+    /**
+     * @return bool
+     */
     public function sherpaEnabled()
     {
         return $this->store->getConfig('payment/paynl/auto_capture') == 3;
     }
 
+    /**
+     * @return bool
+     */
     public function sendEcommerceAnalytics()
     {
         return $this->store->getConfig('payment/paynl/google_analytics_ecommerce') == 1;
@@ -309,15 +333,17 @@ class Config
         return $this->store->getConfig('payment/paynl/failover_gateway');
     }
 
-    public function getIconUrl($methodCode, $paymentOptionId)
+    /**
+     * @param $methodCode
+     * @return mixed
+     */
+    public function getIconUrl($methodCode)
     {
         $brandId = $this->store->getConfig('payment/' . $methodCode . '/brand_id');
         if (empty($brandId)) {
             $brandId = $this->brands[$methodCode];
         }
-        $iconUrl = $this->resources->getViewFileUrl("Paynl_Payment::logos/" . $brandId . ".png");
-
-        return $iconUrl;
+        return $this->resources->getViewFileUrl("Paynl_Payment::logos/" . $brandId . ".png");
     }
 
     public function getIconUrlIssuer($issuerId)
@@ -364,7 +390,7 @@ class Config
         $objectManager =  \Magento\Framework\App\ObjectManager::getInstance();
         $paymentHelper = $objectManager->get(\Magento\Payment\Helper\Data::class);
         $paymentMethodList = $paymentHelper->getPaymentMethods();
-        $pay_methods = [];
+
         foreach ($paymentMethodList as $key => $value) {
             if (strpos($key, 'paynl_') !== false && $key != 'paynl_payment_paylink') {
                 $code = $this->store->getConfig('payment/' . $key . '/payment_option_id');

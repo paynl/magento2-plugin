@@ -1,0 +1,24 @@
+---
+name: PHP Linter
+
+on: [pull_request, workflow_dispatch]
+jobs:
+  build:
+    name: Apply lint and PHP validation.
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      # https://github.com/github/super-linter
+      - name: Lint Code Base
+        uses: github/super-linter/slim@v4
+        env:
+          DEFAULT_BRANCH: master
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          VALIDATE_PHP: true
+          VALIDATE_PHP_PHPCS: true
+          VALIDATE_ALL_CODEBASE: false

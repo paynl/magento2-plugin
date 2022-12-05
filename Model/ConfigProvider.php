@@ -48,6 +48,7 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_klarnakp',
         'paynl_payment_maestro',
         'paynl_payment_mistercash',
+        'paynl_payment_monizze',
         'paynl_payment_multibanco',
         'paynl_payment_mybank',
         'paynl_payment_nexi',
@@ -59,7 +60,9 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_podiumcadeaukaart',
         'paynl_payment_postepay',
         'paynl_payment_przelewy24',
+        'paynl_payment_prontowonen',
         'paynl_payment_shoesandsneakers',
+        'paynl_payment_sodexo',
         'paynl_payment_sofortbanking',
         'paynl_payment_sofortbanking_hr',
         'paynl_payment_sofortbanking_ds',
@@ -269,13 +272,11 @@ class ConfigProvider implements ConfigProviderInterface
     /**
      * Get payment method icon
      *
-     * @param string $code
-     *
-     * @return string
+     * @param $code
+     * @return mixed
      */
     protected function getIcon($code)
     {
-        $url = $this->paynlConfig->getIconUrl($code, $this->methods[$code]->getPaymentOptionId());
-        return $url;
+        return $this->paynlConfig->getIconUrl($code);
     }
 }
