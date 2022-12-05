@@ -122,10 +122,6 @@ form[data-pay-encrypt-form] select option[value=""] {
     text-align: center;
 }
 
-.payment-method-cse #card-holder {
-    text-transform: uppercase;
-}
-
 .payment-method-cse.fieldStyle_borders [data-validation="invalid"] {
     border: 1px solid red;
 }
@@ -195,6 +191,21 @@ div#cse-status A {
 .payment-method-cse .checkout-payment-errors div.message.success A {
     color: white;
     text-decoration: none;
+}
+
+.payment-method-cse .payTooltip {
+    background-color: #65afe8;
+    display: inline-block;
+    padding: 1px 5px;
+    border-radius: 12px;
+    line-height: normal;
+    color: white;
+    font-size: 8px;
+    font-weight: bold;
+    position: relative;
+    top: -2px;
+    left: 3px;
+    cursor: default;
 }
 
 .paynl.payment-method-cse #pay-cse-custom-modal {

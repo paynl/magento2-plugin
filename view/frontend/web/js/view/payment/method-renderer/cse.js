@@ -343,6 +343,9 @@ define(
                     }
                 });
             },
+            getTooTipText: function () {
+                return $t('The three digits on the back of your creditcard');
+            },
             getLanguage: function () {
                 return window.checkoutConfig.payment.language[this.item.method];
             },

@@ -13,6 +13,7 @@
 .paynl .payment-method-content .fieldset input, .paynl .payment-method-content select,
 .paynl .checkout-payment-method .billing-address-form input,
 .paynl .payment-method-content .field-select-billing input[type="text"],
+.paynl input[type="text"],
 .paynl .payment-method-content .field-select-billing input[type="date"] {
     position: relative;
     font-family: 'Lato', sans-serif;
