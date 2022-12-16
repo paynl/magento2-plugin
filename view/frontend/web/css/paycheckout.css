@@ -46,3 +46,8 @@
     top: 10px;
     position: relative;
 }
+
+.paynl .payment-method-content .fieldset .label, .paynl .payment-method-content p{
+    margin-bottom: 10px;
+    position: inherit;
+}
