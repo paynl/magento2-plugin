@@ -154,7 +154,7 @@ define(
                     self.payDebug('event.onActionableResponseEvent');
                     let orderEntityId = event.subject.data.entityId;
                     let transid = event.subject.data.orderId;
-                    let newurl = url.build('paynl/checkout/finish/?entityid=' + orderEntityId + '&orderid=' + transid);
+                    let newurl = url.build('paynl/checkout/finish/?entityid=' + orderEntityId);
                     if (orderEntityId != 'undefined' && orderEntityId != undefined) {
                         self.payDebug('New complete url: ' + newurl);
                         self.encryptedForm.setPaymentCompleteUrl(newurl);

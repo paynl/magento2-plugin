@@ -231,6 +231,8 @@ class Cse
                 throw new Exception('Invalid json');
             }
 
+            $browserInfo = $payload['browserInfo'];
+
             if (!empty($transId)) {
                 $transaction = new Model\Authenticate\TransactionMethod();
                 $transaction->setOrderId($transId)->setEntranceCode($ecode);
@@ -252,13 +254,13 @@ class Cse
 
             $browser = new Model\Browser();
             $browser
-                ->setJavaEnabled('false')
-                ->setJavascriptEnabled('false')
-                ->setLanguage('nl-NL')
-                ->setColorDepth('24')
-                ->setScreenWidth('1920')
-                ->setScreenHeight('1080')
-                ->setTz('-120');
+                ->setJavaEnabled($browserInfo['browserJavaEnabled'] ? 'true' : 'false')
+                ->setJavascriptEnabled($browserInfo['browserJavascriptEnabled'] ? 'true' : 'false')
+                ->setLanguage($browserInfo['browserLanguage'])
+                ->setColorDepth($browserInfo['browserColorDepth'])
+                ->setScreenWidth($browserInfo['browserScreenWidth'])
+                ->setScreenHeight($browserInfo['browserScreenHeight'])
+                ->setTz($browserInfo['browserTZ']);
 
             $payment->setBrowser($browser);
 

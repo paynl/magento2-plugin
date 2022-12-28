@@ -11057,7 +11057,9 @@ define(['exports'], (function (exports) { 'use strict';
          */
         handleFormSubmission(element)
         {
-            let payload = {
+            console.log('handleFormSubmission');
+            let payload = {};
+            let browserInfo = {
                 'browserJavaEnabled': navigator.javaEnabled(),
                 'browserJavascriptEnabled': true,
                 'browserLanguage': navigator.language,
@@ -11092,6 +11094,7 @@ define(['exports'], (function (exports) { 'use strict';
                     'merchant_identifier': merchantIdentifier,
                     'language': language,
                     'payment_complete_url': encryptedForm.config.payment_complete_url,
+                    'browserInfo': browserInfo,
                     'data': cryptography.encrypt(
                         publicKey.getKey(),
                         JSON.stringify(payload)
