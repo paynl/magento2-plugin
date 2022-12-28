@@ -90,7 +90,7 @@ define(
                     'field_selector': 'data-pay-encrypt-field', // attribute to look for to identify the target form elements
                     'field_value_reader': 'name', // grabs the required data keys from this attribute*/
                     'bind': {
-                        'submit': false
+                        'submit': true,
                     },
                     'icons': {
                         'creditcard': {

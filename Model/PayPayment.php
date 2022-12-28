@@ -161,9 +161,9 @@ class PayPayment
         $payment->setIsTransactionClosed(0);
 
         $transactionPaid = [
-            $transaction->getCurrencyAmount(),
-            $transaction->getPaidCurrencyAmount(),
-            $transaction->getPaidAmount(),
+            $transaction->getAmountOriginal(),
+            $transaction->getAmountPaidOriginal(),
+            $transaction->getAmountPaid(),
         ];
 
         $orderAmount = round($order->getGrandTotal(), 2);
