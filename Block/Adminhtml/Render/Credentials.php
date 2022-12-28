@@ -7,6 +7,7 @@ use Magento\Backend\Block\Template\Context;
 use Magento\Framework\Data\Form\Element\AbstractElement;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Paynl\Payment\Helper\PayHelper;
 use \Paynl\Paymentmethods;
 
 class Credentials extends Field
@@ -26,11 +27,8 @@ class Credentials extends Field
      */
     protected $scopeConfig;
 
-    public function __construct(
-        Context $context,
-        RequestInterface $request,
-        ScopeConfigInterface $scopeConfig
-    ) {
+    public function __construct(Context $context, RequestInterface $request, ScopeConfigInterface $scopeConfig)
+    {
         $this->request = $request;
         $this->scopeConfig = $scopeConfig;
         parent::__construct($context);
@@ -81,7 +79,7 @@ class Credentials extends Field
         $serviceId = $this->scopeConfig->getValue('payment/paynl/serviceid', $scope, $scopeId);
         $gateway = $this->scopeConfig->getValue('payment/paynl/failover_gateway', $scope, $scopeId);
 
-        $error = null;
+        $error = '';
         $status = 1;
         if (!empty($apiToken) && !empty($serviceId) && !empty($tokencode)) {
             try {
@@ -102,19 +100,21 @@ class Credentials extends Field
             $status = 0;
         }
 
-        switch ($error) {
-            case 'HTTP/1.0 401 Unauthorized':
-                $error = __('Service-ID, API-Token or Tokencode invalid');
-                break;
-            case 'PAY-404 - Service not found':
-                $error = __('Service-ID is invalid.');
-                break;
-            case 'PAY-403 - Access denied: Token not valid for this company':
-                $error = __('Service-ID / API-Token combination is invalid.');
-                break;
-        }
-
         if (!empty($error)) {
+            switch ($error) {
+                case 'HTTP/1.0 401 Unauthorized':
+                    $error = __('Service-ID, API-Token or Tokencode invalid');
+                    break;
+                case 'PAY-404 - Service not found':
+                    $error = __('Service-ID is invalid.');
+                    break;
+                case 'PAY-403 - Access denied: Token not valid for this company':
+                    $error = __('Service-ID / API-Token combination is invalid.');
+                    break;
+                default :
+                    payHelper::logCritical('Pay. API exception: ' . $error);
+                    $error = __('Could not authorize');
+            }
             $status = 0;
         }
 
