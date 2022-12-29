@@ -13,8 +13,8 @@ use Paynl\Payment\Model\Config;
 
 class PublicKeysHelper
 {
-    const CACHE_KEY = 'paynl_public_encryption_keys';
-    const CACHE_TTL = 15768000;
+    public const CACHE_KEY = 'paynl_public_encryption_keys';
+    public const CACHE_TTL = 15768000;
 
     /**
      * @var Config

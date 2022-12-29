@@ -5,10 +5,9 @@ namespace Paynl\Payment\Helper;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Magento\Framework\App\ResourceConnection;
-use \Paynl\Payment\Model\Config\Source\LogOptions;
+use Paynl\Payment\Model\Config\Source\LogOptions;
 use Magento\Framework\HTTP\PhpEnvironment\RemoteAddress;
 use Magento\Framework\HTTP\Header;
-
 
 class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
 {
@@ -135,12 +134,7 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $cookieManager = $objectManager->get(\Magento\Framework\Stdlib\CookieManagerInterface::class);
         $cookieMetadataFactory = $objectManager->get(\Magento\Framework\Stdlib\Cookie\CookieMetadataFactory::class);
 
-        $metadata = $cookieMetadataFactory
-            ->createPublicCookieMetadata()
-            ->setDuration(300)
-            ->setSecure(false)
-            ->setPath('/')
-            ->setHttpOnly(false);
+        $metadata = $cookieMetadataFactory->createPublicCookieMetadata()->setDuration(300)->setSecure(false)->setPath('/')->setHttpOnly(false);
 
         $cookieManager->setPublicCookie(
             $cookieName,

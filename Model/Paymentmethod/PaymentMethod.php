@@ -313,14 +313,13 @@ abstract class PaymentMethod extends AbstractMethod
         try {
             Transaction::refund($transactionId, $amount);
         } catch (\Exception $e) {
-
             $docsLink = 'https://docs.pay.nl/plugins#magento2-errordefinitions';
 
             $message = strtolower($e->getMessage());
             if (substr($message, 0, 19) == '403 - access denied') {
                 $message = 'PAY. could not authorize this refund. Errorcode: PAY-MAGENTO2-001. See for more information ' . $docsLink;
             } else {
-                $message = 'PAY. could not process this refund (' . $message . '). Errorcode: PAY-MAGENTO2-002. Transaction: '.$transactionId.'. More info: ' . $docsLink;
+                $message = 'PAY. could not process this refund (' . $message . '). Errorcode: PAY-MAGENTO2-002. Transaction: ' . $transactionId . '. More info: ' . $docsLink;
             }
 
             throw new \Magento\Framework\Exception\LocalizedException(__($message));
@@ -374,7 +373,6 @@ abstract class PaymentMethod extends AbstractMethod
         try {
             $transaction = $this->doStartTransaction($order);
             payHelper::logDebug('Transaction: ' . $transaction->getTransactionId());
-
         } catch (\Exception $e) {
             $strMessage = $e->getMessage();
             payHelper::logDebug('Transactie start mislukt: ' . $strMessage . ' | ' . $e->getCode());
@@ -438,7 +436,7 @@ abstract class PaymentMethod extends AbstractMethod
             $invoice
                 ->setFirstName($transaction['invoiceAddress']['initials'])
                 ->setLastName($transaction['invoiceAddress']['lastName'])
-                ->setGender( $transaction['enduser']['gender'] ?? null )
+                ->setGender($transaction['enduser']['gender'] ?? null)
                 ->setAddress($address);
 
             $customer = new Model\Customer();
@@ -460,7 +458,7 @@ abstract class PaymentMethod extends AbstractMethod
             $browser = new Model\Browser();
             $paymentOrder = new Model\Order();
 
-            if(!empty($transaction['products']) && is_array($transaction['products'])) {
+            if (!empty($transaction['products']) && is_array($transaction['products'])) {
                 foreach ($transaction['products'] as $arrProduct) {
                     $product = new Model\Product();
                     $product->setId($arrProduct['id']);
@@ -478,7 +476,6 @@ abstract class PaymentMethod extends AbstractMethod
             $order->getPayment()->setAdditionalInformation('transactionId', $result['orderId']);
 
             $order->save();
-
         } catch (\Exception $e) {
             $result = array('result' => 0, 'errorMessage' => $e->getMessage());
         }
@@ -486,7 +483,7 @@ abstract class PaymentMethod extends AbstractMethod
         return $result;
     }
 
-    protected function doStartTransaction(Order $order,  $overwriteParameters = false)
+    protected function doStartTransaction(Order $order, $overwriteParameters = false)
     {
         $this->paynlConfig->setStore($order->getStore());
         $this->paynlConfig->configureSDK();
@@ -606,7 +603,6 @@ abstract class PaymentMethod extends AbstractMethod
             $shippingAddress['zipCode'] = $arrShippingAddress['postcode'];
             $shippingAddress['city'] = $arrShippingAddress['city'];
             $shippingAddress['country'] = $arrShippingAddress['country_id'];
-
         }
 
         $prefix = $this->_scopeConfig->getValue('payment/paynl/order_description_prefix', 'store');
@@ -691,7 +687,6 @@ abstract class PaymentMethod extends AbstractMethod
                     if (is_array($weeeArr)) {
                         foreach ($weeeArr as $weee) {
                             if (!empty($weee) && is_object($weee)) {
-
                                 $weee_title = $weee->title;
                                 $weee_price = $weee->row_amount_incl_tax;
                                 $weee_taxAmount = $weee->row_amount_incl_tax - $weee->row_amount;
@@ -840,7 +835,6 @@ abstract class PaymentMethod extends AbstractMethod
                 $this->getInfoInstance()->setAdditionalInformation('dob', $data['dob']);
             }
         } elseif ($data instanceof \Magento\Framework\DataObject) {
-
             $additional_data = $data->getAdditionalData();
 
             if (isset($additional_data['kvknummer'])) {

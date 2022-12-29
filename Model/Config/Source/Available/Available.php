@@ -126,6 +126,11 @@ abstract class Available implements ArrayInterface
         return $this->_scopeConfig->getValue($path, $scopeType, $scopeValue);
     }
 
+    /**
+     * @phpcs:disable PSR2.Methods.MethodDeclaration
+     * @return bool
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     protected function _isAvailable()
     {
         $storeId = $this->_request->getParam('store');

@@ -7,7 +7,6 @@ use Magento\Framework\Webapi\Rest\Response\Renderer\Json;
 
 class JsonPlugin
 {
-
     /** @var Request */
     private $request;
 
@@ -54,5 +53,4 @@ class JsonPlugin
         json_decode($data);
         return (json_last_error() == JSON_ERROR_NONE);
     }
-
 }
