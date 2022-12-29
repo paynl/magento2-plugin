@@ -66,13 +66,14 @@ class Cse
     protected $request;
     /**
      * Cse constructor.
-     * @param Context $context
-     * @param Config $config
-     * @param Session $checkoutSession
-     * @param PaymentHelper $paymentHelper
-     * @param QuoteRepository $quoteRepository
+     *
+     * @param Context               $context
+     * @param Config                $config
+     * @param Session               $checkoutSession
+     * @param PaymentHelper         $paymentHelper
+     * @param QuoteRepository       $quoteRepository
      * @param StoreManagerInterface $storeManager
-     * @param Data $jsonHelper
+     * @param Data                  $jsonHelper
      */
     public function __construct(
         Context $context,
@@ -82,8 +83,8 @@ class Cse
         QuoteRepository $quoteRepository,
         StoreManagerInterface $storeManager,
         Data $jsonHelper,
-        Request $request)
-    {
+        Request $request
+    ) {
         $this->config          = $config;
         $this->checkoutSession = $checkoutSession;
         $this->paymentHelper   = $paymentHelper;
@@ -202,10 +203,10 @@ class Cse
     }
 
      /**
-     * authentication()
-     *
-     * @return string
-     */
+      * authentication()
+      *
+      * @return string
+      */
     public function authentication()
     {
         $params = $this->request->getParams();
@@ -278,7 +279,6 @@ class Cse
      * authorization
      *
      * @return array|int[]
-     *
      */
     public function authorization()
     {
