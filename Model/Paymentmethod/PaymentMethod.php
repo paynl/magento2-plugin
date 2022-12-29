@@ -253,7 +253,8 @@ abstract class PaymentMethod extends AbstractMethod
 
     public function getVersion()
     {
-        $version = substr('magento2 ' . $this->paynlConfig->getVersion() . ' | ' . $this->paynlConfig->getMagentoVersion() . ' | ' . $this->paynlConfig->getPHPVersion(), 0, 64);
+        $version = substr('magento2 ' . $this->paynlConfig->getVersion() . ' | ' .
+                    $this->paynlConfig->getMagentoVersion() . ' | ' . $this->paynlConfig->getPHPVersion(), 0, 64);
         if (!empty($this->graphqlVersion)) {
             $version .= ' | ' . $this->graphqlVersion;
         }

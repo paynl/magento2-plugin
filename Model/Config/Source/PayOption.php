@@ -2,7 +2,7 @@
 
 namespace Paynl\Payment\Model\Config\Source;
 
-use \Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Option\ArrayInterface;
 
 class PayOption implements ArrayInterface
 {

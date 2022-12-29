@@ -7,7 +7,7 @@ use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment\Interceptor;
 use Magento\Sales\Model\OrderRepository;
 use Paynl\Result\Transaction\Transaction;
-use \Paynl\Payment\Helper\PayHelper;
+use Paynl\Payment\Helper\PayHelper;
 
 class PayPayment
 {
@@ -170,7 +170,8 @@ class PayPayment
         $orderBaseAmount = round($order->getBaseGrandTotal(), 2);
         if (!in_array($orderAmount, $transactionPaid) && !in_array($orderBaseAmount, $transactionPaid)) {
             payHelper::logCritical('Amount validation error.', array($transactionPaid, $orderAmount, $order->getGrandTotal(), $order->getBaseGrandTotal()));
-            return $this->result->setContents('FALSE| Amount validation error. Amounts: ' . print_r(array($transactionPaid, $orderAmount, $order->getGrandTotal(), $order->getBaseGrandTotal()), true));
+            return $this->result->setContents('FALSE| Amount validation error. Amounts: ' .
+                print_r(array($transactionPaid, $orderAmount, $order->getGrandTotal(), $order->getBaseGrandTotal()), true));
         }
 
         # Force order state to processing
@@ -189,7 +190,6 @@ class PayPayment
         if ($this->config->ignoreB2BInvoice($paymentMethod) && !empty($order->getBillingAddress()->getCompany())) {
             $returnResult = $this->processB2BPayment($transaction, $order, $payment);
         } else {
-
             if ($transaction->isAuthorized()) {
                 $payment->registerAuthorizationNotification($order->getBaseGrandTotal());
             } else {

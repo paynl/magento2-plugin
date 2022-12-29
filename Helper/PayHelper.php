@@ -11,7 +11,7 @@ use Magento\Framework\HTTP\Header;
 
 class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
 {
-    const PAY_LOG_PREFIX = 'PAY.: ';
+    public const PAY_LOG_PREFIX = 'PAY.: ';
 
     private static $objectManager;
     private static $store;
