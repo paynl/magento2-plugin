@@ -1,7 +1,4 @@
 <?php
-/**
- * Copyright © 2020 PAY. All rights reserved.
- */
 
 namespace Paynl\Payment\Cse;
 
@@ -65,6 +62,7 @@ class Cse
      * @var StoreManagerInterface
      */
     private $storageManager;
+
     protected $request;
     /**
      * Cse constructor.
@@ -84,8 +82,7 @@ class Cse
         QuoteRepository $quoteRepository,
         StoreManagerInterface $storeManager,
         Data $jsonHelper,
-        Request $request
-    )
+        Request $request)
     {
         $this->config          = $config;
         $this->checkoutSession = $checkoutSession;
@@ -112,7 +109,7 @@ class Cse
         try {
             $order = $this->checkoutSession->getLastRealOrder();
 
-            if(empty($order)) {
+            if (empty($order)) {
                 throw new Error('No order found in session, please try again');
             }
 
@@ -144,7 +141,8 @@ class Cse
                     } elseif (strtolower($mode) == 'error2') {
                         $arrEncryptedTransactionResult['result'] = 0;
                         $arrEncryptedTransactionResult['entityId'] = 1;
-                        $arrEncryptedTransactionResult['errorMessage'] = 'Helaas is het niet mogelijk om de betaling te voltooien. Het ingevoerde kaartnummer is onjuist. Probeer het nogmaals en controleer uw invoer zorgvuldig.';
+                        $arrEncryptedTransactionResult['errorMessage'] = 'Helaas is het niet mogelijk om de betaling te voltooien. Het ingevoerde kaartnummer is onjuist.' .
+                                ' Probeer het nogmaals en controleer uw invoer zorgvuldig.';
                     } elseif (strtolower($mode) == 'error3') {
                         throw new Exception('Exception occured');
                     } else {
@@ -203,7 +201,7 @@ class Cse
         return $this->jsonHelper->jsonEncode($data);
     }
 
-      /**
+     /**
      * authentication()
      *
      * @return string
@@ -268,9 +266,8 @@ class Cse
             $data = Payment::authenticateMethod($transaction, $payment)->getData();
 
             payHelper::logDebug('In authentication(). Response: ' . print_r($data, true));
-
         } catch (Exception $e) {
-            payHelper::logDebug('In authentication(). Exception:  ' . print_r($e->getMessage(), true));
+            payHelper::logDebug('In authentication(). Exception: ' . print_r($e->getMessage(), true));
             $data = array('result' => 0, 'errorMessage' => $e->getMessage());
         }
 
@@ -296,7 +293,7 @@ class Cse
         $threeds_transaction_id = $params['threeds_transaction_id'] ?? null;
 
         try {
-            if(empty($ped)) {
+            if (empty($ped)) {
                 throw new Exception('Missing payload');
             }
 
@@ -340,6 +337,8 @@ class Cse
 
     /**
      * Return checkout session object
+     *
+     * @phpcs:disable PSR2.Methods.MethodDeclaration
      *
      * @return Session
      */
