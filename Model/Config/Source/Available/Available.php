@@ -4,12 +4,12 @@ namespace Paynl\Payment\Model\Config\Source\Available;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\RequestInterface;
-use \Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Option\ArrayInterface;
 use Magento\Payment\Model\Method\Factory as PaymentMethodFactory;
 use Magento\Store\Model\ScopeInterface;
-use \Paynl\Payment\Model\Config;
+use Paynl\Payment\Model\Config;
 use Paynl\Payment\Model\Paymentmethod\PaymentMethod;
-use \Paynl\Paymentmethods;
+use Paynl\Paymentmethods;
 
 abstract class Available implements ArrayInterface
 {

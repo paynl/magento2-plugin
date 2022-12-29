@@ -321,7 +321,6 @@ class Cse
 
             $this->config->configureSDK();
             $data = Payment::authorize($transaction, $payment)->getData();
-
         } catch (Exception $e) {
             payHelper::logDebug('In authorization(). Exception: ' . print_r($e->getMessage(), true));
             $data = array(
