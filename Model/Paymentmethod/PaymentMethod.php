@@ -375,11 +375,10 @@ abstract class PaymentMethod extends AbstractMethod
             if ($this->shouldHoldOrder()) {
                 $order->hold();
             }
-
-            $this->orderRepository->save($order);
-
-            return $transaction->getRedirectUrl();
         }
+        $this->orderRepository->save($order);
+
+        return $transaction->getRedirectUrl();
     }
 
     /**
