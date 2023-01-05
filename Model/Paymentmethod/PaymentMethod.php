@@ -291,14 +291,13 @@ abstract class PaymentMethod extends AbstractMethod
         try {
             Transaction::refund($transactionId, $amount);
         } catch (\Exception $e) {
-
             $docsLink = 'https://docs.pay.nl/plugins#magento2-errordefinitions';
 
             $message = strtolower($e->getMessage());
             if (substr($message, 0, 19) == '403 - access denied') {
                 $message = 'PAY. could not authorize this refund. Errorcode: PAY-MAGENTO2-001. See for more information ' . $docsLink;
             } else {
-                $message = 'PAY. could not process this refund (' . $message . '). Errorcode: PAY-MAGENTO2-002. Transaction: '.$transactionId.'. More info: ' . $docsLink;
+                $message = 'PAY. could not process this refund (' . $message . '). Errorcode: PAY-MAGENTO2-002. Transaction: ' . $transactionId . '. More info: ' . $docsLink;
             }
 
             throw new \Magento\Framework\Exception\LocalizedException(__($message));
@@ -335,21 +334,57 @@ abstract class PaymentMethod extends AbstractMethod
         return $this;
     }
 
+    /**
+     * @param Order $order
+     * @return string|void
+     * @throws \Magento\Framework\Exception\AlreadyExistsException
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function startTransaction(Order $order)
     {
-        $transaction = $this->doStartTransaction($order);
+        try {
+            $transaction = $this->doStartTransaction($order);
+            payHelper::logDebug('Transaction: ' . $transaction->getTransactionId());
+        } catch (\Exception $e) {
+            $strMessage = $e->getMessage();
+            payHelper::logDebug('Transactie start mislukt: ' . $strMessage . ' | ' . $e->getCode());
+
+            if (strpos(strtolower($strMessage), 'minimum amount') !== false) {
+                $this->messageManager->addNoticeMessage(__('Unfortunately the order amount does not fit the requirements for this payment method.'));
+            } else {
+                $this->messageManager->addNoticeMessage(__('Unfortunately something went wrong'));
+            }
+
+            $store = $order->getStore();
+
+            return $store->getBaseUrl() . 'checkout/cart/index';
+        }
+
         $order->getPayment()->setAdditionalInformation('transactionId', $transaction->getTransactionId());
         $this->paynlConfig->setStore($order->getStore());
 
         $holded = $this->_scopeConfig->getValue('payment/' . $this->_code . '/holded', 'store');
         if ($holded) {
-            $order->hold();
-        }
-        $this->orderRepository->save($order);
+            if ($this->shouldHoldOrder()) {
+                $order->hold();
+            }
 
-        return $transaction->getRedirectUrl();
+            $this->orderRepository->save($order);
+
+            return $transaction->getRedirectUrl();
+        }
     }
 
+    /**
+     * @param Order $order
+     * @return \Paynl\Result\Transaction\Start
+     * @throws \Paynl\Error\Api
+     * @throws \Paynl\Error\Error
+     * @throws \Paynl\Error\Required\ApiToken
+     * @throws \Paynl\Error\Required\ServiceId
+     */
     protected function doStartTransaction(Order $order)
     {
         $this->paynlConfig->setStore($order->getStore());
@@ -470,7 +505,6 @@ abstract class PaymentMethod extends AbstractMethod
             $shippingAddress['zipCode'] = $arrShippingAddress['postcode'];
             $shippingAddress['city'] = $arrShippingAddress['city'];
             $shippingAddress['country'] = $arrShippingAddress['country_id'];
-
         }
 
         $prefix = $this->_scopeConfig->getValue('payment/paynl/order_description_prefix', 'store');
@@ -555,7 +589,6 @@ abstract class PaymentMethod extends AbstractMethod
                     if (is_array($weeeArr)) {
                         foreach ($weeeArr as $weee) {
                             if (!empty($weee) && is_object($weee)) {
-
                                 $weee_title = $weee->title;
                                 $weee_price = $weee->row_amount_incl_tax;
                                 $weee_taxAmount = $weee->row_amount_incl_tax - $weee->row_amount;
@@ -701,7 +734,6 @@ abstract class PaymentMethod extends AbstractMethod
                 $this->getInfoInstance()->setAdditionalInformation('dob', $data['dob']);
             }
         } elseif ($data instanceof \Magento\Framework\DataObject) {
-
             $additional_data = $data->getAdditionalData();
 
             if (isset($additional_data['kvknummer'])) {
