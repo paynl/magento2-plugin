@@ -370,12 +370,10 @@ abstract class PaymentMethod extends AbstractMethod
         $order->getPayment()->setAdditionalInformation('transactionId', $transaction->getTransactionId());
         $this->paynlConfig->setStore($order->getStore());
 
-        $holded = $this->_scopeConfig->getValue('payment/' . $this->_code . '/holded', 'store');
-        if ($holded) {
-            if ($this->shouldHoldOrder()) {
-                $order->hold();
-            }
+        if ($this->shouldHoldOrder()) {
+            $order->hold();
         }
+        
         $this->orderRepository->save($order);
 
         return $transaction->getRedirectUrl();
