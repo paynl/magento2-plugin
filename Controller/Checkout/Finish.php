@@ -10,7 +10,7 @@ use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderRepository;
 use Paynl\Payment\Controller\PayAction;
 use Paynl\Payment\Model\Config;
-use \Paynl\Payment\Helper\PayHelper;
+use Paynl\Payment\Helper\PayHelper;
 
 /**
  * Finishes up the payment and redirects the user to the thank you page.
@@ -63,7 +63,10 @@ class Finish extends PayAction
             $additionalInformation = $order->getPayment()->getAdditionalInformation();
             $transactionId = (isset($additionalInformation['transactionId'])) ? $additionalInformation['transactionId'] : null;
             if ($orderId == $transactionId) {
-                $this->checkoutSession->setLastQuoteId($order->getQuoteId())->setLastSuccessQuoteId($order->getQuoteId())->setLastOrderId($order->getId())->setLastRealOrderId($order->getIncrementId());
+                $this->checkoutSession->setLastQuoteId($order->getQuoteId())
+                    ->setLastSuccessQuoteId($order->getQuoteId())
+                    ->setLastOrderId($order->getId())
+                    ->setLastRealOrderId($order->getIncrementId());
             }
         }
     }
