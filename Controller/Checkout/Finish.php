@@ -127,7 +127,7 @@ class Finish extends PayAction
                 $resultRedirect->setPath($successUrl, ['_query' => ['utm_nooverride' => '1']]);
                 if ($isPinTransaction && $pinStatus->getTransactionState() !== 'approved') {
                     $this->messageManager->addNoticeMessage(__('Order has been made and the payment is pending.'));
-                }                
+                }
                 $this->deactivateCart($order, $magOrderId, $payOrderId);
             } elseif ($bPending) {
                 $resultRedirect->setPath(Config::PENDING_PAY);
@@ -137,7 +137,7 @@ class Finish extends PayAction
                 $this->messageManager->addNoticeMessage($cancelMessage);
                 $resultRedirect->setPath($payment->getMethod() == 'paynl_payment_paylink' ? Config::CANCEL_PAY : $this->config->getCancelURL());
             }
-        } catch (\Exception $e) { 
+        } catch (\Exception $e) {
             payHelper::logCritical($e->getCode() . ': ' . $e->getMessage(), $params, $order->getStore());
 
             if ($e->getCode() == 101) {
