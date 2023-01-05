@@ -84,7 +84,7 @@ class Finish extends PayAction
         $orderStatusId = empty($params['orderStatusId']) ? null : (int)$params['orderStatusId'];
         $magOrderId = empty($params['entityid']) ? null : $params['entityid'];
         $bSuccess = $orderStatusId === Config::ORDERSTATUS_PAID;
-        $bPending = $orderStatusId === Config::ORDERSTATUS_PENDING;
+        $bPending = in_array($orderStatusId, Config::ORDERSTATUS_PENDING);
         $bDenied = $orderStatusId === Config::ORDERSTATUS_DENIED;
         $bCanceled = $orderStatusId === Config::ORDERSTATUS_CANCELED;
         $isPinTransaction = false;
@@ -124,25 +124,14 @@ class Finish extends PayAction
                 if (empty($successUrl)) {
                     $successUrl = ($payment->getMethod() == 'paynl_payment_paylink' || $this->config->sendEcommerceAnalytics()) ? Config::FINISH_PAY : Config::FINISH_STANDARD;
                 }
-
                 $resultRedirect->setPath($successUrl, ['_query' => ['utm_nooverride' => '1']]);
-
                 if ($isPinTransaction && $pinStatus->getTransactionState() !== 'approved') {
                     $this->messageManager->addNoticeMessage(__('Order has been made and the payment is pending.'));
-                }
-
-                # Make the cart inactive
-                $session = $this->checkoutSession;
-                if (empty($order)) {
-                    $order = $this->getOrder($magOrderId, $payOrderId);
-                }
-                $this->checkSession($order, $payOrderId, $session);
-
-                $quote = $session->getQuote();
-                $quote->setIsActive(false);
-                $this->quoteRepository->save($quote);
+                }                
+                $this->deactivateCart($order, $magOrderId, $payOrderId);
             } elseif ($bPending) {
                 $resultRedirect->setPath(Config::PENDING_PAY);
+                $this->deactivateCart($order, $magOrderId, $payOrderId);
             } else {
                 $cancelMessage = $bDenied ? __('Payment denied') : __('Payment canceled');
                 $this->messageManager->addNoticeMessage($cancelMessage);
@@ -179,5 +168,22 @@ class Finish extends PayAction
             return false;
         }
         return $status;
+    }
+
+    /** 
+     * @param $order    
+     */
+    private function deactivateCart($order, $magOrderId, $payOrderId)
+    {
+        # Make the cart inactive
+        $session = $this->checkoutSession;
+        if (empty($order)) {
+            $order = $this->getOrder($magOrderId, $payOrderId);
+        }
+        $this->checkSession($order, $payOrderId, $session);
+
+        $quote = $session->getQuote();
+        $quote->setIsActive(false);
+        $this->quoteRepository->save($quote);
     }
 }
