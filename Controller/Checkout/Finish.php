@@ -173,8 +173,8 @@ class Finish extends PayAction
         return $status;
     }
 
-    /** 
-     * @param $order    
+    /**
+     * @param $order
      */
     private function deactivateCart($order, $magOrderId, $payOrderId)
     {
