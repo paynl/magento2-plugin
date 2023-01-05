@@ -178,6 +178,11 @@ abstract class PaymentMethod extends AbstractMethod
         return $this->_scopeConfig->getValue('payment/' . $this->_code . '/showforgroup', 'store');
     }
 
+    public function shouldHoldOrder()
+    {
+        return $this->_scopeConfig->getValue('payment/' . $this->_code . '/holded', 'store') == 1;
+    }
+
     /**
      * @return bool
      */
@@ -351,7 +356,7 @@ abstract class PaymentMethod extends AbstractMethod
             $strMessage = $e->getMessage();
             payHelper::logDebug('Transactie start mislukt: ' . $strMessage . ' | ' . $e->getCode());
 
-            if (strpos(strtolower($strMessage), 'minimum amount') !== false) {
+            if (stripos($strMessage, 'minimum amount') !== false) {
                 $this->messageManager->addNoticeMessage(__('Unfortunately the order amount does not fit the requirements for this payment method.'));
             } else {
                 $this->messageManager->addNoticeMessage(__('Unfortunately something went wrong'));
