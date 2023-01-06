@@ -17,7 +17,6 @@
         <exclude name="Squiz.Commenting.FunctionComment.EmptyThrows" />
         <exclude name="Squiz.Commenting.FunctionComment.SpacingAfterParamType" />
         <exclude name="Squiz.Commenting.FunctionComment.SpacingAfterParamName" />
-        <exclude name="Squiz.Commenting.FunctionComment.TypeHintMissing" />
         <exclude name="Squiz.Commenting.FunctionComment.ScalarTypeHintMissing" />
         <exclude name="Squiz.Commenting.FunctionComment.MissingParamComment" />
     </rule>
