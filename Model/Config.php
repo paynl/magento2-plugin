@@ -154,7 +154,7 @@ class Config
 
     /**
      * @param Store $store
-     * @return null
+     * @return void
      */
     public function setStore(Store $store)
     {
