@@ -63,7 +63,7 @@ class Finish extends PayAction
      * @param Order $order
      * @param string $orderId
      * @param Session $session
-     * @return null
+     * @return void
      */
     private function checkSession(Order $order, string $orderId, Session $session)
     {
@@ -87,7 +87,7 @@ class Finish extends PayAction
      * @param string|null $desc
      * @throws \Exception
      * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
-     * @return null
+     * @return void
      */
     private function checkEmpty($field, string $name, int $errorCode, string $desc = null)
     {
@@ -199,7 +199,7 @@ class Finish extends PayAction
      * @param Order $order
      * @param integer $magOrderId
      * @param string $payOrderId
-     * @return null
+     * @return void
      */
     private function deactivateCart(Order $order, int $magOrderId, string $payOrderId)
     {
