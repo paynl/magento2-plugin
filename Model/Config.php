@@ -98,6 +98,12 @@ class Config
         "paynl_payment_yourgreengift" => "246"
     ];
 
+    /**
+     * Index constructor.
+     * @param Store $store
+     * @param \Magento\Framework\View\Element\Template $resources
+     * @param \Paynl\Payment\Helper\PayHelper $helper
+     */
     public function __construct(
         Store $store,
         \Magento\Framework\View\Element\Template $resources,
@@ -112,7 +118,7 @@ class Config
      * @param string $defaultValue
      * @return mixed|string
      */
-    public function getVersion($defaultValue = '')
+    public function getVersion(string $defaultValue = '')
     {
         $composerFilePath = sprintf('%s/%s', rtrim(__DIR__, '/'), '../composer.json');
         if (file_exists($composerFilePath)) {
@@ -126,6 +132,9 @@ class Config
         return $defaultValue;
     }
 
+    /**
+     * @return string
+     */
     public function getMagentoVersion()
     {
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
@@ -135,6 +144,9 @@ class Config
         return $version;
     }
 
+    /**
+     * @return string
+     */
     public function getPHPVersion()
     {
         return substr(phpversion(), 0, 3);
@@ -148,12 +160,17 @@ class Config
         $this->store = $store;
     }
 
+    /**
+     * @return boolean
+     */
     public function isSkipFraudDetection()
     {
         return $this->sherpaEnabled() === true || $this->store->getConfig('payment/paynl/skip_fraud_detection') == 1;
     }
 
-
+    /**
+     * @return boolean
+     */
     public function isTestMode()
     {
         $ip = $this->helper->getClientIp();
@@ -174,31 +191,50 @@ class Config
         return $this->store->getConfig('payment/paynl/testmode') == 1;
     }
 
+    /**
+     * @return boolean
+     */
     public function isSendDiscountTax()
     {
         return $this->store->getConfig('payment/paynl/discount_tax') == 1;
     }
 
+    /**
+     * @return boolean
+     */
     public function isNeverCancel()
     {
         return $this->store->getConfig('payment/paynl/never_cancel') == 1;
     }
 
+    /**
+     * @return boolean
+     */
     public function isAlwaysBaseCurrency()
     {
         return $this->store->getConfig('payment/paynl/always_base_currency') == 1;
     }
 
-    public function isPaymentMethodActive($paymentMethod)
+    /**
+     * @param string $paymentMethod
+     * @return boolean
+     */
+    public function isPaymentMethodActive(string $paymentMethod)
     {
         return $this->store->getConfig('payment/' . $paymentMethod . '/active') == 1;
     }
 
+    /**
+     * @return boolean
+     */
     public function useSkuId()
     {
         return $this->store->getConfig('payment/paynl/use_sku_id') == 1;
     }
 
+    /**
+     * @return string
+     */
     public function getLanguage()
     {
         $language = $this->store->getConfig('payment/paynl/language');
@@ -206,37 +242,53 @@ class Config
         return $language ? $language : 'nl'; //default nl
     }
 
-    public function getPaymentOptionId($methodCode)
+    /**
+     * @param string $methodCode
+     * @return string
+     */
+    public function getPaymentOptionId(string $methodCode)
     {
         return $this->store->getConfig('payment/' . $methodCode . '/payment_option_id');
     }
 
-    public function getPendingStatus($methodCode)
+    /**
+     * @param string $methodCode
+     * @return string
+     */
+    public function getPendingStatus(string $methodCode)
     {
         return $this->store->getConfig('payment/' . $methodCode . '/order_status');
     }
 
-    public function getAuthorizedStatus($methodCode)
+    /**
+     * @param string $methodCode
+     * @return string
+     */
+    public function getAuthorizedStatus(string $methodCode)
     {
         return $this->store->getConfig('payment/' . $methodCode . '/order_status_authorized');
     }
 
-    public function getPaidStatus($methodCode)
+    /**
+     * @param string $methodCode
+     * @return string
+     */
+    public function getPaidStatus(string $methodCode)
     {
         return $this->store->getConfig('payment/' . $methodCode . '/order_status_processing');
     }
 
     /**
-     * @param $methodCode
-     * @return bool
+     * @param string $methodCode
+     * @return boolean
      */
-    public function ignoreB2BInvoice($methodCode)
+    public function ignoreB2BInvoice(string $methodCode)
     {
         return $this->store->getConfig('payment/' . $methodCode . '/turn_off_invoices_b2b') == 1;
     }
 
     /**
-     * @return bool
+     * @return boolean
      */
     public function ignoreManualCapture()
     {
@@ -244,7 +296,7 @@ class Config
     }
 
     /**
-     * @return bool
+     * @return boolean
      */
     public function autoCaptureEnabled()
     {
@@ -252,7 +304,7 @@ class Config
     }
 
     /**
-     * @return bool
+     * @return boolean
      */
     public function wuunderAutoCaptureEnabled()
     {
@@ -260,7 +312,7 @@ class Config
     }
 
     /**
-     * @return bool
+     * @return boolean
      */
     public function sherpaEnabled()
     {
@@ -268,7 +320,7 @@ class Config
     }
 
     /**
-     * @return bool
+     * @return boolean
      */
     public function sendEcommerceAnalytics()
     {
@@ -279,7 +331,7 @@ class Config
      * @param $methodCode string
      * @return string
      */
-    public function getSuccessPage($methodCode)
+    public function getSuccessPage(string $methodCode)
     {
         return $this->store->getConfig('payment/' . $methodCode . '/custom_success_page');
     }
@@ -313,31 +365,43 @@ class Config
         return false;
     }
 
+    /**
+     * @return string
+     */
     public function getApiToken()
     {
         return $this->store->getConfig('payment/paynl/apitoken_encrypted');
     }
 
+    /**
+     * @return string
+     */
     public function getTokencode()
     {
         return $this->store->getConfig('payment/paynl/tokencode');
     }
 
+    /**
+     * @return string
+     */
     public function getServiceId()
     {
         return $this->store->getConfig('payment/paynl/serviceid');
     }
 
+    /**
+     * @return string
+     */
     public function getFailoverGateway()
     {
         return $this->store->getConfig('payment/paynl/failover_gateway');
     }
 
     /**
-     * @param $methodCode
+     * @param string $methodCode
      * @return mixed
      */
-    public function getIconUrl($methodCode)
+    public function getIconUrl(string $methodCode)
     {
         $brandId = $this->store->getConfig('payment/' . $methodCode . '/brand_id');
         if (empty($brandId)) {
@@ -346,32 +410,51 @@ class Config
         return $this->resources->getViewFileUrl("Paynl_Payment::logos/" . $brandId . ".png");
     }
 
+    /**
+     * @return mixed
+     */
     public function getIconUrlIssuer($issuerId)
     {
         return $this->resources->getViewFileUrl("Paynl_Payment::logos_issuers/qr-" . $issuerId . ".svg");
     }
 
+    /**
+     * @return string
+     */
     public function getUseAdditionalValidation()
     {
         return $this->store->getConfig('payment/paynl/use_additional_validation');
     }
 
+    /**
+     * @return string
+     */
     public function getCancelURL()
     {
         return $this->store->getConfig('payment/paynl/cancelurl');
     }
 
+    /**
+     * @return string
+     */
     public function getDefaultPaymentOption()
     {
         return $this->store->getConfig('payment/paynl/default_payment_option');
     }
 
+    /**
+     * @return string
+     */
     public function registerPartialPayments()
     {
         return $this->store->getConfig('payment/paynl/register_partial_payments');
     }
 
-    public function getPaymentmethodCode($paymentProfileId)
+    /**
+     * @param string $paymentProfileId
+     * @return string
+     */
+    public function getPaymentmethodCode(string $paymentProfileId)
     {
         # Get all PAY. methods
         $objectManager =  \Magento\Framework\App\ObjectManager::getInstance();

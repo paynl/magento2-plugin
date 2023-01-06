@@ -46,6 +46,7 @@ class Finish extends PayAction
      * @param Config $config
      * @param Session $checkoutSession
      * @param OrderRepository $orderRepository
+     * @param QuoteRepository $quoteRepository
      */
     public function __construct(Context $context, Config $config, Session $checkoutSession, OrderRepository $orderRepository, QuoteRepository $quoteRepository)
     {
@@ -57,7 +58,13 @@ class Finish extends PayAction
         parent::__construct($context);
     }
 
-    private function checkSession(Order $order, $orderId, $session)
+    /**
+     * Check if session is active.
+     * @param Order $order
+     * @param string $session
+     * @param Session $session
+     */
+    private function checkSession(Order $order, string $orderId, Session $session)
     {
         if ($session->getLastOrderId() != $order->getId()) {
             $additionalInformation = $order->getPayment()->getAdditionalInformation();
@@ -71,7 +78,16 @@ class Finish extends PayAction
         }
     }
 
-    private function checkEmpty($field, $name, $errorCode, $desc = null)
+    /**
+     * Check if field is empty.
+     * @param mixed $field
+     * @param string $name
+     * @param int $errorCode
+     * @param string|null $desc
+     * @throws \Exception
+     * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
+     */
+    private function checkEmpty($field, string $name, int $errorCode, string $desc = null)
     {
         if (empty($field)) {
             $desc = empty($desc) ? $name . ' is empty' : $desc;
@@ -79,6 +95,9 @@ class Finish extends PayAction
         }
     }
 
+    /**
+     * @return resultRedirectFactory
+     */
     public function execute()
     {
         $resultRedirect = $this->resultRedirectFactory->create();
@@ -155,13 +174,14 @@ class Finish extends PayAction
     }
 
     /**
-     * @param $hash
-     * @param $order
+     * @param string $hash
+     * @param Order $order
      * @throws \Magento\Framework\Exception\AlreadyExistsException
      * @throws \Magento\Framework\Exception\InputException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @return \Paynl\Instore::status
      */
-    private function handlePin($hash, $order)
+    private function handlePin(string $hash, Order $order)
     {
         $status = \Paynl\Instore::status(['hash' => $hash]);
         if (in_array($status->getTransactionState(), ['cancelled', 'expired', 'error'])) {
@@ -174,9 +194,11 @@ class Finish extends PayAction
     }
 
     /**
-     * @param object $order
+     * @param Order $order
+     * @param int $magOrderId
+     * @param string $payOrderId
      */
-    private function deactivateCart($order, $magOrderId, $payOrderId)
+    private function deactivateCart(Order $order, int $magOrderId, string $payOrderId)
     {
         # Make the cart inactive
         $session = $this->checkoutSession;
