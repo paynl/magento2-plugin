@@ -61,8 +61,9 @@ class Finish extends PayAction
     /**
      * Check if session is active.
      * @param Order $order
-     * @param string $session
+     * @param string $orderId
      * @param Session $session
+     * @return
      */
     private function checkSession(Order $order, string $orderId, Session $session)
     {
@@ -82,10 +83,11 @@ class Finish extends PayAction
      * Check if field is empty.
      * @param mixed $field
      * @param string $name
-     * @param int $errorCode
+     * @param integer $errorCode
      * @param string|null $desc
      * @throws \Exception
      * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
+     * @return
      */
     private function checkEmpty($field, string $name, int $errorCode, string $desc = null)
     {
@@ -195,8 +197,9 @@ class Finish extends PayAction
 
     /**
      * @param Order $order
-     * @param int $magOrderId
+     * @param integer $magOrderId
      * @param string $payOrderId
+     * @return
      */
     private function deactivateCart(Order $order, int $magOrderId, string $payOrderId)
     {

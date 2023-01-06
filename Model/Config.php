@@ -154,8 +154,9 @@ class Config
 
     /**
      * @param Store $store
+     * @return
      */
-    public function setStore($store)
+    public function setStore(Store $store)
     {
         $this->store = $store;
     }
@@ -328,7 +329,7 @@ class Config
     }
 
     /**
-     * @param $methodCode string
+     * @param string $methodCode 
      * @return string
      */
     public function getSuccessPage(string $methodCode)
@@ -339,7 +340,7 @@ class Config
     /**
      * Configures the sdk with the API token and serviceId
      *
-     * @return bool TRUE when config loaded, FALSE when the apitoken or serviceId are empty
+     * @return boolean TRUE when config loaded, FALSE when the apitoken or serviceId are empty
      */
     public function configureSDK()
     {
@@ -411,9 +412,10 @@ class Config
     }
 
     /**
+     * @param string $issuerId
      * @return mixed
      */
-    public function getIconUrlIssuer($issuerId)
+    public function getIconUrlIssuer(string $issuerId)
     {
         return $this->resources->getViewFileUrl("Paynl_Payment::logos_issuers/qr-" . $issuerId . ".svg");
     }
