@@ -154,7 +154,7 @@ class Config
 
     /**
      * @param Store $store
-     * @return
+     * @return null
      */
     public function setStore(Store $store)
     {
@@ -329,7 +329,7 @@ class Config
     }
 
     /**
-     * @param string $methodCode 
+     * @param string $methodCode
      * @return string
      */
     public function getSuccessPage(string $methodCode)
