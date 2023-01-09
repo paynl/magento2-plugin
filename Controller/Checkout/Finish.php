@@ -204,10 +204,8 @@ class Finish extends PayAction
     private function deactivateCart(Order $order, int $magOrderId, string $payOrderId)
     {
         # Make the cart inactive
-        $session = $this->checkoutSession;
-        if (empty($order)) {
-            $order = $this->getOrder($magOrderId, $payOrderId);
-        }
+        $session = $this->checkoutSession;        
+      
         $this->checkSession($order, $payOrderId, $session);
 
         $quote = $session->getQuote();
