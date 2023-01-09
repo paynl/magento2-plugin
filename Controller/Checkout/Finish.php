@@ -152,10 +152,10 @@ class Finish extends PayAction
                 if ($isPinTransaction && $pinStatus->getTransactionState() !== 'approved') {
                     $this->messageManager->addNoticeMessage(__('Order has been made and the payment is pending.'));
                 }
-                $this->deactivateCart($order, $magOrderId, $payOrderId);
+                $this->deactivateCart($order, $payOrderId);
             } elseif ($bPending) {
                 $resultRedirect->setPath(Config::PENDING_PAY);
-                $this->deactivateCart($order, $magOrderId, $payOrderId);
+                $this->deactivateCart($order, $payOrderId);
             } else {
                 $cancelMessage = $bDenied ? __('Payment denied') : __('Payment canceled');
                 $this->messageManager->addNoticeMessage($cancelMessage);
@@ -197,15 +197,14 @@ class Finish extends PayAction
 
     /**
      * @param Order $order
-     * @param integer $magOrderId
      * @param string $payOrderId
      * @return void
      */
-    private function deactivateCart(Order $order, int $magOrderId, string $payOrderId)
+    private function deactivateCart(Order $order, string $payOrderId)
     {
         # Make the cart inactive
-        $session = $this->checkoutSession;        
-      
+        $session = $this->checkoutSession;
+
         $this->checkSession($order, $payOrderId, $session);
 
         $quote = $session->getQuote();
