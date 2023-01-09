@@ -10,7 +10,7 @@ use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderRepository;
 use Paynl\Payment\Controller\PayAction;
 use Paynl\Payment\Model\Config;
-use \Paynl\Payment\Helper\PayHelper;
+use Paynl\Payment\Helper\PayHelper;
 
 /**
  * Finishes up the payment and redirects the user to the thank you page.
@@ -46,6 +46,7 @@ class Finish extends PayAction
      * @param Config $config
      * @param Session $checkoutSession
      * @param OrderRepository $orderRepository
+     * @param QuoteRepository $quoteRepository
      */
     public function __construct(Context $context, Config $config, Session $checkoutSession, OrderRepository $orderRepository, QuoteRepository $quoteRepository)
     {
@@ -57,18 +58,38 @@ class Finish extends PayAction
         parent::__construct($context);
     }
 
-    private function checkSession(Order $order, $orderId, $session)
+    /**
+     * Check if session is active.
+     * @param Order $order
+     * @param string $orderId
+     * @param Session $session
+     * @return void
+     */
+    private function checkSession(Order $order, string $orderId, Session $session)
     {
         if ($session->getLastOrderId() != $order->getId()) {
             $additionalInformation = $order->getPayment()->getAdditionalInformation();
             $transactionId = (isset($additionalInformation['transactionId'])) ? $additionalInformation['transactionId'] : null;
             if ($orderId == $transactionId) {
-                $this->checkoutSession->setLastQuoteId($order->getQuoteId())->setLastSuccessQuoteId($order->getQuoteId())->setLastOrderId($order->getId())->setLastRealOrderId($order->getIncrementId());
+                $this->checkoutSession->setLastQuoteId($order->getQuoteId())
+                    ->setLastSuccessQuoteId($order->getQuoteId())
+                    ->setLastOrderId($order->getId())
+                    ->setLastRealOrderId($order->getIncrementId());
             }
         }
     }
 
-    private function checkEmpty($field, $name, $errorCode, $desc = null)
+    /**
+     * Check if field is empty.
+     * @param mixed $field
+     * @param string $name
+     * @param integer $errorCode
+     * @param string|null $desc
+     * @throws \Exception
+     * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
+     * @return void
+     */
+    private function checkEmpty($field, string $name, int $errorCode, string $desc = null)
     {
         if (empty($field)) {
             $desc = empty($desc) ? $name . ' is empty' : $desc;
@@ -76,6 +97,9 @@ class Finish extends PayAction
         }
     }
 
+    /**
+     * @return resultRedirectFactory
+     */
     public function execute()
     {
         $resultRedirect = $this->resultRedirectFactory->create();
@@ -84,7 +108,7 @@ class Finish extends PayAction
         $orderStatusId = empty($params['orderStatusId']) ? null : (int)$params['orderStatusId'];
         $magOrderId = empty($params['entityid']) ? null : $params['entityid'];
         $bSuccess = $orderStatusId === Config::ORDERSTATUS_PAID;
-        $bPending = $orderStatusId === Config::ORDERSTATUS_PENDING;
+        $bPending = in_array($orderStatusId, Config::ORDERSTATUS_PENDING);
         $bDenied = $orderStatusId === Config::ORDERSTATUS_DENIED;
         $bCanceled = $orderStatusId === Config::ORDERSTATUS_CANCELED;
         $isPinTransaction = false;
@@ -124,31 +148,20 @@ class Finish extends PayAction
                 if (empty($successUrl)) {
                     $successUrl = ($payment->getMethod() == 'paynl_payment_paylink' || $this->config->sendEcommerceAnalytics()) ? Config::FINISH_PAY : Config::FINISH_STANDARD;
                 }
-
                 $resultRedirect->setPath($successUrl, ['_query' => ['utm_nooverride' => '1']]);
-
                 if ($isPinTransaction && $pinStatus->getTransactionState() !== 'approved') {
                     $this->messageManager->addNoticeMessage(__('Order has been made and the payment is pending.'));
                 }
-
-                # Make the cart inactive
-                $session = $this->checkoutSession;
-                if (empty($order)) {
-                    $order = $this->getOrder($magOrderId, $payOrderId);
-                }
-                $this->checkSession($order, $payOrderId, $session);
-
-                $quote = $session->getQuote();
-                $quote->setIsActive(false);
-                $this->quoteRepository->save($quote);
+                $this->deactivateCart($order, $payOrderId);
             } elseif ($bPending) {
                 $resultRedirect->setPath(Config::PENDING_PAY);
+                $this->deactivateCart($order, $payOrderId);
             } else {
                 $cancelMessage = $bDenied ? __('Payment denied') : __('Payment canceled');
                 $this->messageManager->addNoticeMessage($cancelMessage);
                 $resultRedirect->setPath($payment->getMethod() == 'paynl_payment_paylink' ? Config::CANCEL_PAY : $this->config->getCancelURL());
             }
-        } catch (\Exception $e) { 
+        } catch (\Exception $e) {
             payHelper::logCritical($e->getCode() . ': ' . $e->getMessage(), $params, $order->getStore());
 
             if ($e->getCode() == 101) {
@@ -163,13 +176,14 @@ class Finish extends PayAction
     }
 
     /**
-     * @param $hash
-     * @param $order
+     * @param string $hash
+     * @param Order $order
      * @throws \Magento\Framework\Exception\AlreadyExistsException
      * @throws \Magento\Framework\Exception\InputException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @return \Paynl\Instore::status
      */
-    private function handlePin($hash, $order)
+    private function handlePin(string $hash, Order $order)
     {
         $status = \Paynl\Instore::status(['hash' => $hash]);
         if (in_array($status->getTransactionState(), ['cancelled', 'expired', 'error'])) {
@@ -179,5 +193,22 @@ class Finish extends PayAction
             return false;
         }
         return $status;
+    }
+
+    /**
+     * @param Order $order
+     * @param string $payOrderId
+     * @return void
+     */
+    private function deactivateCart(Order $order, string $payOrderId)
+    {
+        # Make the cart inactive
+        $session = $this->checkoutSession;
+
+        $this->checkSession($order, $payOrderId, $session);
+
+        $quote = $session->getQuote();
+        $quote->setIsActive(false);
+        $this->quoteRepository->save($quote);
     }
 }

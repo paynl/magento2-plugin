@@ -167,6 +167,7 @@
 "PAY.: Unable to send E-mail", "PAY.: Kan geen e-mail verzenden"
 "PAY.: Customer E-mail is empty cannot send E-mail.", "PAY.: E-mail klant is leeg kan geen e-mail verzenden."
 "Payment pending","Betaling in behandeling"
+"Your payment is pending.","Uw betaling is in afwachting"
 "Pay. Successfully connected.","Pay. Verbinding geslaagd."
 "Pay. Connection failed.","Pay. Verbinding mislukt."
 "Pay. Not connected.","Pay. Niet verbonden"
