@@ -7,7 +7,7 @@ use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment\Interceptor;
 use Magento\Sales\Model\OrderRepository;
 use Paynl\Result\Transaction\Transaction;
-use \Paynl\Payment\Helper\PayHelper;
+use Paynl\Payment\Helper\PayHelper;
 
 class PayPayment
 {
@@ -48,14 +48,15 @@ class PayPayment
     private $paynlConfig;
 
     /**
-     * Exchange constructor.
+     * Constructor.
      *
-     * @param \Magento\Framework\App\Action\Context $context
      * @param \Paynl\Payment\Model\Config $config
-     * @param \Magento\Sales\Model\OrderFactory $orderFactory
      * @param \Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender
      * @param \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender
-     * @param \Magento\Framework\Controller\Result\Raw $result
+     * @param \Magento\Framework\Event\ManagerInterface $eventManager
+     * @param OrderRepository $orderRepository
+     * @param \Paynl\Payment\Model\Config $paynlConfig
+     * @param \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $builderInterface
      */
     public function __construct(
         \Paynl\Payment\Model\Config $config,
@@ -75,6 +76,10 @@ class PayPayment
         $this->builderInterface = $builderInterface;
     }
 
+    /**
+     * @param Order $order
+     * @return boolean
+     */
     public function cancelOrder(Order $order)
     {
         $returnResult = false;
@@ -95,6 +100,7 @@ class PayPayment
 
     /**
      * @param Order $order
+     * @return void
      */
     public function uncancelOrder(Order $order)
     {
@@ -140,7 +146,7 @@ class PayPayment
     /**
      * @param Transaction $transaction
      * @param Order $order
-     * @return bool
+     * @return boolean
      * @throws \Magento\Framework\Exception\AlreadyExistsException
      * @throws \Magento\Framework\Exception\InputException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
@@ -189,7 +195,6 @@ class PayPayment
         if ($this->config->ignoreB2BInvoice($paymentMethod) && !empty($order->getBillingAddress()->getCompany())) {
             $returnResult = $this->processB2BPayment($transaction, $order, $payment);
         } else {
-
             if ($transaction->isAuthorized()) {
                 $payment->registerAuthorizationNotification($order->getBaseGrandTotal());
             } else {
@@ -218,6 +223,7 @@ class PayPayment
      * @param Transaction $transaction
      * @param Order $order
      * @param Interceptor $payment
+     * @return boolean
      */
     private function processB2BPayment(Transaction $transaction, Order $order, Interceptor $payment)
     {
@@ -242,10 +248,10 @@ class PayPayment
 
     /**
      * @param Order $order
-     * @param $payOrderId
-     * @return \Magento\Framework\Controller\Result\Raw
+     * @param string $payOrderId
+     * @return boolean
      */
-    public function processPartiallyPaidOrder(Order $order, $payOrderId)
+    public function processPartiallyPaidOrder(Order $order, string $payOrderId)
     {
         $returnResult = false;
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();

@@ -46,11 +46,21 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
      */
     private $paynlHelper;
 
+    /**
+     *
+     * @param RequestInterface $request
+     * @return null
+     */
     public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
     {
         return null;
     }
 
+    /**
+     *
+     * @param RequestInterface $request
+     * @return boolean
+     */
     public function validateForCsrf(RequestInterface $request): bool
     {
         return true;
@@ -61,10 +71,10 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
      *
      * @param \Magento\Framework\App\Action\Context $context
      * @param \Paynl\Payment\Model\Config $config
-     * @param \Magento\Sales\Model\OrderFactory $orderFactory
-     * @param \Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender
-     * @param \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender
      * @param \Magento\Framework\Controller\Result\Raw $result
+     * @param OrderRepository $orderRepository
+     * @param PayPayment $payPayment
+     * @param PayHelper $paynlHelper
      */
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
@@ -83,6 +93,10 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         parent::__construct($context);
     }
 
+    /**
+     *
+     * @return \Magento\Framework\Controller\Result\Raw
+     */
     public function execute()
     {
         $params = $this->getRequest()->getParams();
@@ -220,10 +234,11 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
     }
 
     /**
-     * @param $payOrderId
-     * @param $action
+     * @param string $payOrderId
+     * @param string $action
+     * @return void
      */
-    private function removeProcessing($payOrderId, $action)
+    private function removeProcessing(string $payOrderId, string $action)
     {
         if ($action == 'new_ppt') {
             $this->paynlHelper->removeProcessing($payOrderId);
