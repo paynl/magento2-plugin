@@ -47,7 +47,7 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_klarna',
         'paynl_payment_klarnakp',
         'paynl_payment_maestro',
-        'paynl_payment_mistercash',
+        'paynl_payment_bancontact',
         'paynl_payment_monizze',
         'paynl_payment_multibanco',
         'paynl_payment_mybank',

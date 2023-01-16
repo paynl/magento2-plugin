@@ -2,9 +2,9 @@
 
 namespace Paynl\Payment\Model\Paymentmethod;
 
-class Mistercash extends PaymentMethod
+class Bancontact extends PaymentMethod
 {
-    protected $_code = 'paynl_payment_mistercash';
+    protected $_code = 'paynl_payment_bancontact';
 
     protected function getDefaultPaymentOptionId()
     {
