@@ -15,17 +15,14 @@
     <include path="Paynl_Payment::paymentmethods/biller.xml" />
     <include path="Paynl_Payment::paymentmethods/billink.xml" />
     <include path="Paynl_Payment::paymentmethods/blik.xml" />
-    <include path="Paynl_Payment::paymentmethods/cartasi.xml" />
     <include path="Paynl_Payment::paymentmethods/cartebleue.xml" />
     <include path="Paynl_Payment::paymentmethods/cashly.xml" />
-    <include path="Paynl_Payment::paymentmethods/clickandbuy.xml" />
     <include path="Paynl_Payment::paymentmethods/creditclick.xml" />
     <include path="Paynl_Payment::paymentmethods/dankort.xml" />
     <include path="Paynl_Payment::paymentmethods/decadeaukaart.xml" />
     <include path="Paynl_Payment::paymentmethods/eps.xml" />
     <include path="Paynl_Payment::paymentmethods/fashioncheque.xml" />
     <include path="Paynl_Payment::paymentmethods/fashiongiftcard.xml" />
-    <include path="Paynl_Payment::paymentmethods/focum.xml" />
     <include path="Paynl_Payment::paymentmethods/gezondheidsbon.xml" />
     <include path="Paynl_Payment::paymentmethods/giropay.xml" />
     <include path="Paynl_Payment::paymentmethods/givacard.xml" />
@@ -40,7 +37,6 @@
     <include path="Paynl_Payment::paymentmethods/maestro.xml" />
     <include path="Paynl_Payment::paymentmethods/monizze.xml" />
     <include path="Paynl_Payment::paymentmethods/multibanco.xml" />
-    <include path="Paynl_Payment::paymentmethods/mybank.xml" />
     <include path="Paynl_Payment::paymentmethods/nexi.xml" />
     <include path="Paynl_Payment::paymentmethods/overboeking.xml" />
     <include path="Paynl_Payment::paymentmethods/onlinebankbetaling.xml"/>
@@ -58,14 +54,12 @@
     <include path="Paynl_Payment::paymentmethods/sofortbanking_ds.xml" />
     <include path="Paynl_Payment::paymentmethods/spraypay.xml" />
     <include path="Paynl_Payment::paymentmethods/telefonischbetalen.xml" />
-    <include path="Paynl_Payment::paymentmethods/tikkie.xml" />
     <include path="Paynl_Payment::paymentmethods/trustly.xml" />
     <include path="Paynl_Payment::paymentmethods/visamastercard.xml" />
     <include path="Paynl_Payment::paymentmethods/vvvgiftcard.xml" />
     <include path="Paynl_Payment::paymentmethods/webshopgiftcard.xml" />
     <include path="Paynl_Payment::paymentmethods/wechatpay.xml" />
     <include path="Paynl_Payment::paymentmethods/wijncadeau.xml" />
-    <include path="Paynl_Payment::paymentmethods/yehhpay.xml" />
     <include path="Paynl_Payment::paymentmethods/yourgift.xml" />
     <include path="Paynl_Payment::paymentmethods/yourgreengift.xml" />
 </include>

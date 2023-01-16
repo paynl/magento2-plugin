@@ -194,18 +194,6 @@ In order to pay for your order click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_in3>
-            <paynl_payment_cartasi>
-                <active>0</active>
-                <title>CartaSi</title>
-                <payment_option_id>1945</payment_option_id>
-                <order_status>pending_payment</order_status>
-                <order_status_authorized>processing</order_status_authorized>
-                <order_status_processing>processing</order_status_processing>
-                <payment_action>order</payment_action>
-                <model>Paynl\Payment\Model\Paymentmethod\Cartasi</model>
-                <group>paynl_payment</group>
-                <send_new_order_email>after_payment</send_new_order_email>
-            </paynl_payment_cartasi>
             <paynl_payment_cartebleue>
                 <active>0</active>
                 <title>Cartebleue</title>
@@ -230,18 +218,6 @@ In order to pay for your order click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_cashly>
-            <paynl_payment_clickandbuy>
-                <active>0</active>
-                <title>Clickandbuy</title>
-                <payment_option_id>139</payment_option_id>
-                <order_status>pending_payment</order_status>
-                <order_status_authorized>processing</order_status_authorized>
-                <order_status_processing>processing</order_status_processing>
-                <payment_action>order</payment_action>
-                <model>Paynl\Payment\Model\Paymentmethod\Clickandbuy</model>
-                <group>paynl_payment</group>
-                <send_new_order_email>after_payment</send_new_order_email>
-            </paynl_payment_clickandbuy>
             <paynl_payment_creditclick>
                 <active>0</active>
                 <title>Creditclick</title>
@@ -314,18 +290,6 @@ In order to pay for your order click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_fashiongiftcard>
-            <paynl_payment_focum>
-                <active>0</active>
-                <title>Focum</title>
-                <payment_option_id>1702</payment_option_id>
-                <order_status>pending_payment</order_status>
-                <order_status_authorized>processing</order_status_authorized>
-                <order_status_processing>processing</order_status_processing>
-                <payment_action>order</payment_action>
-                <model>Paynl\Payment\Model\Paymentmethod\Focum</model>
-                <group>paynl_payment</group>
-                <send_new_order_email>after_payment</send_new_order_email>
-            </paynl_payment_focum>
             <paynl_payment_gezondheidsbon>
                 <active>0</active>
                 <title>Gezondheidsbon</title>
@@ -483,18 +447,6 @@ In order to pay for your order click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_multibanco>
-            <paynl_payment_mybank>
-                <active>0</active>
-                <title>Mybank</title>
-                <payment_option_id>1588</payment_option_id>
-                <order_status>pending_payment</order_status>
-                <order_status_authorized>processing</order_status_authorized>
-                <order_status_processing>processing</order_status_processing>
-                <payment_action>order</payment_action>
-                <model>Paynl\Payment\Model\Paymentmethod\Mybank</model>
-                <group>paynl_payment</group>
-                <send_new_order_email>after_payment</send_new_order_email>
-            </paynl_payment_mybank>
             <paynl_payment_nexi>
                 <active>0</active>
                 <title>Nexi</title>
@@ -703,18 +655,6 @@ In order to pay for your order click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_telefonischbetalen>
-            <paynl_payment_tikkie>
-                <active>0</active>
-                <title>Tikkie</title>
-                <payment_option_id>2104</payment_option_id>
-                <order_status>pending_payment</order_status>
-                <order_status_authorized>processing</order_status_authorized>
-                <order_status_processing>processing</order_status_processing>
-                <payment_action>order</payment_action>
-                <model>Paynl\Payment\Model\Paymentmethod\Tikkie</model>
-                <group>paynl_payment</group>
-                <send_new_order_email>after_payment</send_new_order_email>
-            </paynl_payment_tikkie>
             <paynl_payment_trustly>
                 <active>0</active>
                 <title>Trustly</title>
@@ -787,18 +727,6 @@ In order to pay for your order click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_wijncadeau>
-            <paynl_payment_yehhpay>
-                <active>0</active>
-                <title>Yehhpay</title>
-                <payment_option_id>1877</payment_option_id>
-                <order_status>pending_payment</order_status>
-                <order_status_authorized>processing</order_status_authorized>
-                <order_status_processing>processing</order_status_processing>
-                <payment_action>order</payment_action>
-                <model>Paynl\Payment\Model\Paymentmethod\Yehhpay</model>
-                <group>paynl_payment</group>
-                <send_new_order_email>after_payment</send_new_order_email>
-            </paynl_payment_yehhpay>
             <paynl_payment_yourgift>
                 <active>0</active>
                 <title>Yourgift.nl</title>

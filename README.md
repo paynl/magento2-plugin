@@ -20,15 +20,15 @@ Bank Payments  | Creditcards | Gift cards & Vouchers | Pay by invoice | Others |
 :-----------: | :-----------: | :-----------: | :-----------: | :-----------: |
 iDEAL + QR |Visa | VVV Cadeaukaart | AfterPay (by Riverty) | PayPal |
 Bancontact + QR |  Mastercard | Webshop Giftcard | Achteraf betalen via Billink | WeChatPay | 
-Giropay |American Express | FashionCheque | Focum AchterafBetalen.nl | AmazonPay |
-MyBank | Carte Bancaire | Podium Cadeaukaart | in3 keer betalen, 0% rente | Cashly | 
-SOFORT | PostePay | Gezondheidsbon | Klarna | Pay Fixed Price (phone) |
-Maestro | Dankort | Fashion Giftcard | SprayPay | Instore Payments (POS) |
-Bank Transfer | Cartasi | GivaCard | Biller | Przelewy24 | 
-Trustly | Tikkie | De Cadeaukaart |  | Creditclick | 
-| Multibanco | Nexi | Paysafecard | | Payconiq
-Blik |  | Huis en Tuin Cadeau| | Google Pay |
-Online Bankbetaling| | Good4Fun | | Apple Pay
+Giropay |American Express | FashionCheque | Cashly | AmazonPay |
+ | Carte Bancaire | Podium Cadeaukaart | in3 keer betalen, 0% rente | Klarna | Pay Fixed Price (phone) |
+SOFORT | PostePay | Gezondheidsbon | SprayPay | Instore Payments (POS) |
+Maestro | Dankort | Fashion Giftcard | Biller | Przelewy24 |
+Bank Transfer | Nexi | GivaCard |  | Creditclick | 
+Trustly |  | De Cadeaukaart |  | Payconiq | 
+| Multibanco |  | Paysafecard | | Google Pay |
+Blik |  | Huis en Tuin Cadeau| | Apple Pay |
+Online Bankbetaling| | Good4Fun | | |
 | | | YourGift | | 
 | | | Bataviastad Cadeaukaart | | 
 | | | Shoes & Sneakers Cadeau | |

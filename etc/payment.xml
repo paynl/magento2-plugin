@@ -51,9 +51,6 @@
         <method name="paynl_payment_cashly">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
-        <method name="paynl_payment_clickandbuy">
-            <allow_multiple_address>0</allow_multiple_address>
-        </method>
         <method name="paynl_payment_creditclick">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
@@ -111,9 +108,6 @@
         <method name="paynl_payment_multibanco">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
-        <method name="paynl_payment_mybank">
-            <allow_multiple_address>0</allow_multiple_address>
-        </method>
         <method name="paynl_payment_nexi">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
@@ -163,9 +157,6 @@
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_telefonischbetalen">
-            <allow_multiple_address>0</allow_multiple_address>
-        </method>
-        <method name="paynl_payment_tikkie">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_trustly">
