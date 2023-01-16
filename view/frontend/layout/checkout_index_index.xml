@@ -51,12 +51,6 @@
                                                                         <item name="paynl_payment_blik" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
-                                                                        <item name="paynl_payment_capayable" xsi:type="array">
-                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
-                                                                        </item>
-                                                                        <item name="paynl_payment_capayable_gespreid" xsi:type="array">
-                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
-                                                                        </item>
                                                                         <item name="paynl_payment_cartasi" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
@@ -109,6 +103,9 @@
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
                                                                         <item name="paynl_payment_ideal" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                                                        </item>
+                                                                        <item name="paynl_payment_in3" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>
                                                                         <item name="paynl_payment_instore" xsi:type="array">

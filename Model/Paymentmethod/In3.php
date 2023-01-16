@@ -2,9 +2,9 @@
 
 namespace Paynl\Payment\Model\Paymentmethod;
 
-class CapayableGespreid extends PaymentMethod
+class In3 extends PaymentMethod
 {
-    protected $_code = 'paynl_payment_capayable_gespreid';
+    protected $_code = 'paynl_payment_in3';
 
     protected function getDefaultPaymentOptionId()
     {

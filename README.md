@@ -21,11 +21,11 @@ Bank Payments  | Creditcards | Gift cards & Vouchers | Pay by invoice | Others |
 iDEAL + QR |Visa | VVV Cadeaukaart | AfterPay (by Riverty) | PayPal |
 Bancontact + QR |  Mastercard | Webshop Giftcard | Achteraf betalen via Billink | WeChatPay | 
 Giropay |American Express | FashionCheque | Focum AchterafBetalen.nl | AmazonPay |
-MyBank | Carte Bancaire | Podium Cadeaukaart | Capayable Achteraf Betalen | Cashly | 
-SOFORT | PostePay | Gezondheidsbon | in3 keer betalen, 0% rente | Pay Fixed Price (phone) |
-Maestro | Dankort | Fashion Giftcard | Klarna | Instore Payments (POS) |
-Bank Transfer | Cartasi | GivaCard | SprayPay | Przelewy24 | 
-Trustly | Tikkie | De Cadeaukaart | Biller | Creditclick | 
+MyBank | Carte Bancaire | Podium Cadeaukaart | in3 keer betalen, 0% rente | Cashly | 
+SOFORT | PostePay | Gezondheidsbon | Klarna | Pay Fixed Price (phone) |
+Maestro | Dankort | Fashion Giftcard | SprayPay | Instore Payments (POS) |
+Bank Transfer | Cartasi | GivaCard | Biller | Przelewy24 | 
+Trustly | Tikkie | De Cadeaukaart |  | Creditclick | 
 | Multibanco | Nexi | Paysafecard | | Payconiq
 Blik |  | Huis en Tuin Cadeau| | Google Pay |
 Online Bankbetaling| | Good4Fun | | Apple Pay
