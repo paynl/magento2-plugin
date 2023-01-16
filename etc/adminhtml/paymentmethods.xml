@@ -9,6 +9,7 @@
     <include path="Paynl_Payment::paymentmethods/amazonpay.xml" />
     <include path="Paynl_Payment::paymentmethods/amex.xml" />
     <include path="Paynl_Payment::paymentmethods/applepay.xml" />
+    <include path="Paynl_Payment::paymentmethods/bancontact.xml" />
     <include path="Paynl_Payment::paymentmethods/bataviacadeaukaart.xml" />
     <include path="Paynl_Payment::paymentmethods/biercheque.xml" />
     <include path="Paynl_Payment::paymentmethods/biller.xml" />
@@ -38,7 +39,6 @@
     <include path="Paynl_Payment::paymentmethods/klarna.xml" />
     <include path="Paynl_Payment::paymentmethods/klarnakp.xml" />
     <include path="Paynl_Payment::paymentmethods/maestro.xml" />
-    <include path="Paynl_Payment::paymentmethods/bancontact.xml" />
     <include path="Paynl_Payment::paymentmethods/monizze.xml" />
     <include path="Paynl_Payment::paymentmethods/multibanco.xml" />
     <include path="Paynl_Payment::paymentmethods/mybank.xml" />

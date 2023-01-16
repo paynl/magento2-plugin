@@ -27,6 +27,9 @@
         <method name="paynl_payment_applepay">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
+        <method name="paynl_payment_bancontact">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
         <method name="paynl_payment_biercheque">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
@@ -103,9 +106,6 @@
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_maestro">
-            <allow_multiple_address>0</allow_multiple_address>
-        </method>
-        <method name="paynl_payment_bancontact">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_monizze">
