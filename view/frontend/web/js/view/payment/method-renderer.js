@@ -12,8 +12,6 @@ define(
         var defaultComponent = 'Paynl_Payment/js/view/payment/method-renderer/default';
 
         var methods = [
-            {type: 'paynl_payment_afterpay', component: defaultComponent},
-            {type: 'paynl_payment_afterpay_international', component: defaultComponent},
             {type: 'paynl_payment_alipay', component: defaultComponent},
             {type: 'paynl_payment_amazonpay', component: defaultComponent},
             {type: 'paynl_payment_amex', component: defaultComponent},
@@ -61,6 +59,8 @@ define(
             {type: 'paynl_payment_postepay', component: defaultComponent},
             {type: 'paynl_payment_prontowonen', component: defaultComponent},
             {type: 'paynl_payment_przelewy24', component: defaultComponent},
+            {type: 'paynl_payment_riverty', component: defaultComponent},
+            {type: 'paynl_payment_rivertywasafterpay', component: defaultComponent},
             {type: 'paynl_payment_shoesandsneakers', component: defaultComponent},
             {type: 'paynl_payment_sodexo', component: defaultComponent},
             {type: 'paynl_payment_sofortbanking', component: defaultComponent},

@@ -3,8 +3,6 @@
 -->
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
     <include path="Paynl_Payment::paymentmethods/paylink.xml" />
-    <include path="Paynl_Payment::paymentmethods/afterpay.xml" />
-    <include path="Paynl_Payment::paymentmethods/afterpay_international.xml" />
     <include path="Paynl_Payment::paymentmethods/alipay.xml" />
     <include path="Paynl_Payment::paymentmethods/amazonpay.xml" />
     <include path="Paynl_Payment::paymentmethods/amex.xml" />
@@ -53,6 +51,8 @@
     <include path="Paynl_Payment::paymentmethods/postepay.xml" />
     <include path="Paynl_Payment::paymentmethods/przelewy24.xml" />
     <include path="Paynl_Payment::paymentmethods/prontowonen.xml" />
+    <include path="Paynl_Payment::paymentmethods/riverty.xml" />
+    <include path="Paynl_Payment::paymentmethods/rivertywasafterpay.xml" />
     <include path="Paynl_Payment::paymentmethods/shoesandsneakers.xml" />
     <include path="Paynl_Payment::paymentmethods/sodexo.xml" />
     <include path="Paynl_Payment::paymentmethods/sofortbanking.xml" />

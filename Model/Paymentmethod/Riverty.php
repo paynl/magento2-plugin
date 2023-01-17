@@ -2,9 +2,9 @@
 
 namespace Paynl\Payment\Model\Paymentmethod;
 
-class AfterpayInternational extends PaymentMethod
+class Riverty extends PaymentMethod
 {
-    protected $_code = 'paynl_payment_afterpay_international';
+    protected $_code = 'paynl_payment_riverty';
 
     protected function getDefaultPaymentOptionId()
     {

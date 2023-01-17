@@ -18,7 +18,7 @@ For an overview off all features check https://docs.pay.nl/plugins#magento-2.
 
 Bank Payments  | Creditcards | Gift cards & Vouchers | Pay by invoice | Others | 
 :-----------: | :-----------: | :-----------: | :-----------: | :-----------: |
-iDEAL + QR |Visa | VVV Cadeaukaart | AfterPay (by Riverty) | PayPal |
+iDEAL + QR |Visa | VVV Cadeaukaart | AfterPay (was Riverty) | PayPal |
 Bancontact + QR |  Mastercard | Webshop Giftcard | Achteraf betalen via Billink | WeChatPay | 
 Giropay |American Express | FashionCheque | Cashly | AmazonPay |
  | Carte Bancaire | Podium Cadeaukaart | in3 keer betalen, 0% rente | Klarna | Pay Fixed Price (phone) |
@@ -32,7 +32,14 @@ Online Bankbetaling| | Good4Fun | | |
 | | | YourGift | | 
 | | | Bataviastad Cadeaukaart | | 
 | | | Shoes & Sneakers Cadeau | |
-| | | Your Green Gift Cadeaukaart| |
+| | | Your Green Gift Cadeaukaart | |
+| | | Bioscoopbon | |
+| | | Bloemen Cadeaukaart | |
+| | | Boekenbon | |
+| | | Dinerbon | |
+| | | Festival Cadeaukaart | |
+| | | Parfum Cadeaukaart | |
+| | | Winkelcheque | |
 
 
 # Requirements

@@ -12,8 +12,6 @@ class ConfigProvider implements ConfigProviderInterface
      * @var string[]
      */
     protected $methodCodes = [
-        'paynl_payment_afterpay',
-        'paynl_payment_afterpay_international',
         'paynl_payment_alipay',
         'paynl_payment_amazonpay',
         'paynl_payment_amex',
@@ -62,6 +60,8 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_postepay',
         'paynl_payment_przelewy24',
         'paynl_payment_prontowonen',
+        'paynl_payment_riverty',
+        'paynl_payment_rivertywasafterpay',
         'paynl_payment_shoesandsneakers',
         'paynl_payment_sodexo',
         'paynl_payment_sofortbanking',

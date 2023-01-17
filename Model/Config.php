@@ -30,8 +30,6 @@ class Config
 
     /** @array  Brands */
     public $brands = [
-        "paynl_payment_afterpay" => "14",
-        "paynl_payment_afterpay_international" => "14",
         "paynl_payment_alipay" => "82",
         "paynl_payment_amazonpay" => "22",
         "paynl_payment_amex" => "9",
@@ -80,6 +78,8 @@ class Config
         "paynl_payment_postepay" => "10",
         "paynl_payment_przelewy24" => "93",
         "paynl_payment_prontowonen" => "270",
+        "paynl_payment_riverty" => "14",
+        "paynl_payment_rivertywasafterpay" => "14",
         "paynl_payment_shoesandsneakers" => "2937",
         "paynl_payment_sodexo" => "186",
         "paynl_payment_sofortbanking" => "4",
