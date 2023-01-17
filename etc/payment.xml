@@ -39,7 +39,16 @@
         <method name="paynl_payment_billink">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
+        <method name="paynl_payment_bioscoopbon">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
         <method name="paynl_payment_blik">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_bloemencadeaukaart">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_boekenbon">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_biller">
@@ -60,6 +69,9 @@
         <method name="paynl_payment_decadeaukaart">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
+        <method name="paynl_payment_dinerbon">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
         <method name="paynl_payment_eps">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
@@ -67,6 +79,9 @@
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_fashiongiftcard">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_festivalcadeaukaart">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_gezondheidsbon">
@@ -115,6 +130,9 @@
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_onlinebankbetaling">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_parfumcadeaukaart">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_payconiq">
@@ -175,6 +193,9 @@
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_wijncadeau">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_winkelcheque">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_yourgift">
