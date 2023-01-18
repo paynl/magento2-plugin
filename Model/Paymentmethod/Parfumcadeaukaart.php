@@ -7,7 +7,7 @@ class Parfumcadeaukaart extends PaymentMethod
     protected $_code = 'paynl_payment_parfumcadeaukaart';
 
     /**
-     * @return int
+     * @return integer
      */
     protected function getDefaultPaymentOptionId()
     {

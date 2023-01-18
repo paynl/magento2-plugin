@@ -7,7 +7,7 @@ class Bioscoopbon extends PaymentMethod
     protected $_code = 'paynl_payment_bioscoopbon';
 
     /**
-     * @return int
+     * @return integer
      */
     protected function getDefaultPaymentOptionId()
     {

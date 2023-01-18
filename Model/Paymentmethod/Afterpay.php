@@ -2,15 +2,15 @@
 
 namespace Paynl\Payment\Model\Paymentmethod;
 
-class Bancontact extends PaymentMethod
+class Afterpay extends PaymentMethod
 {
-    protected $_code = 'paynl_payment_bancontact';
+    protected $_code = 'paynl_payment_afterpay';
 
     /**
-     * @return int
+     * @return integer
      */
     protected function getDefaultPaymentOptionId()
     {
-        return 436;
+        return 739;
     }
 }

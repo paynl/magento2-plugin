@@ -7,7 +7,7 @@ class Boekenbon extends PaymentMethod
     protected $_code = 'paynl_payment_boekenbon';
 
     /**
-     * @return int
+     * @return integer
      */
     protected function getDefaultPaymentOptionId()
     {

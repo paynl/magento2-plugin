@@ -12,11 +12,12 @@ class ConfigProvider implements ConfigProviderInterface
      * @var string[]
      */
     protected $methodCodes = [
+        'paynl_payment_afterpay',
+        'paynl_payment_afterpay_international',
         'paynl_payment_alipay',
         'paynl_payment_amazonpay',
         'paynl_payment_amex',
         'paynl_payment_applepay',
-        'paynl_payment_bancontact',
         'paynl_payment_bataviacadeaukaart',
         'paynl_payment_biercheque',
         'paynl_payment_biller',
@@ -25,6 +26,7 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_blik',
         "paynl_payment_bloemencadeaukaart",
         "paynl_payment_boekenbon",
+        'paynl_payment_capayable_gespreid',
         'paynl_payment_cartebleue',
         'paynl_payment_cashly',
         'paynl_payment_creditclick',
@@ -42,11 +44,11 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_googlepay',
         'paynl_payment_huisentuincadeau',
         'paynl_payment_ideal',
-        'paynl_payment_in3',
         'paynl_payment_instore',
         'paynl_payment_klarna',
         'paynl_payment_klarnakp',
         'paynl_payment_maestro',
+        'paynl_payment_mistercash',
         'paynl_payment_monizze',
         'paynl_payment_multibanco',
         'paynl_payment_nexi',
@@ -60,8 +62,6 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_postepay',
         'paynl_payment_przelewy24',
         'paynl_payment_prontowonen',
-        'paynl_payment_riverty',
-        'paynl_payment_rivertywasafterpay',
         'paynl_payment_shoesandsneakers',
         'paynl_payment_sodexo',
         'paynl_payment_sofortbanking',
@@ -160,8 +160,8 @@ class ConfigProvider implements ConfigProviderInterface
     }
 
     /**
-     * @param $code
-     * @return mixed
+     * @param string $code
+     * @return string
      */
     protected function getPaymentOptions($code)
     {
@@ -169,8 +169,8 @@ class ConfigProvider implements ConfigProviderInterface
     }
 
     /**
-     * @param $code
-     * @return mixed
+     * @param string $code
+     * @return string
      */
     protected function showPaymentOptions($code)
     {
@@ -178,8 +178,8 @@ class ConfigProvider implements ConfigProviderInterface
     }
 
     /**
-     * @param $code
-     * @return mixed
+     * @param string $code
+     * @return string
      */
     protected function getDefaultPaymentOption($code)
     {
@@ -187,8 +187,8 @@ class ConfigProvider implements ConfigProviderInterface
     }
 
     /**
-     * @param $code
-     * @return mixed
+     * @param string $code
+     * @return string
      */
     protected function hidePaymentOptions($code)
     {
@@ -196,8 +196,8 @@ class ConfigProvider implements ConfigProviderInterface
     }
 
     /**
-     * @param $code
-     * @return mixed
+     * @param string $code
+     * @return string
      */
     protected function getKVK($code)
     {
@@ -205,8 +205,8 @@ class ConfigProvider implements ConfigProviderInterface
     }
 
     /**
-     * @param $code
-     * @return mixed
+     * @param string $code
+     * @return string
      */
     protected function getVAT($code)
     {
@@ -214,22 +214,26 @@ class ConfigProvider implements ConfigProviderInterface
     }
 
     /**
-     * @param $code
-     * @return mixed
+     * @param string $code
+     * @return string
      */
     protected function getDOB($code)
     {
         return $this->methods[$code]->getDOB();
     }
 
+    /**
+     * @param string $code
+     * @return string
+     */
     protected function getDisallowedShippingMethods($code)
     {
         return $this->methods[$code]->getDisallowedShippingMethods();
     }
 
     /**
-     * @param $code
-     * @return mixed
+     * @param string $code
+     * @return string
      */
     protected function getCompany($code)
     {
@@ -237,8 +241,8 @@ class ConfigProvider implements ConfigProviderInterface
     }
 
     /**
-     * @param $code
-     * @return mixed
+     * @param string $code
+     * @return string
      */
     protected function getCustomerGroup($code)
     {
@@ -246,8 +250,8 @@ class ConfigProvider implements ConfigProviderInterface
     }
 
     /**
-     * @param $code
-     * @return mixed
+     * @param string $code
+     * @return string
      */
     protected function getIcon($code)
     {

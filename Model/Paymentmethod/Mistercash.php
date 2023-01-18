@@ -2,15 +2,15 @@
 
 namespace Paynl\Payment\Model\Paymentmethod;
 
-class Rivertywasafterpay extends PaymentMethod
+class Mistercash extends PaymentMethod
 {
-    protected $_code = 'paynl_payment_rivertywasafterpay';
+    protected $_code = 'paynl_payment_mistercash';
 
     /**
      * @return int
      */
     protected function getDefaultPaymentOptionId()
     {
-        return 739;
+        return 436;
     }
 }

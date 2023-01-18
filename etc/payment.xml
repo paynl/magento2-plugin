@@ -9,6 +9,12 @@
         </group>
     </groups>
     <methods>
+        <method name="paynl_payment_afterpay">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_afterpay_international">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
         <method name="paynl_payment_alipay">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
@@ -19,9 +25,6 @@
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_applepay">
-            <allow_multiple_address>0</allow_multiple_address>
-        </method>
-        <method name="paynl_payment_bancontact">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_biercheque">
@@ -46,6 +49,9 @@
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_biller">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_capayable_gespreid">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_cartebleue">
@@ -99,9 +105,6 @@
         <method name="paynl_payment_ideal">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
-        <method name="paynl_payment_in3">
-            <allow_multiple_address>0</allow_multiple_address>
-        </method>
         <method name="paynl_payment_instore">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
@@ -109,6 +112,9 @@
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_maestro">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_mistercash">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_monizze">
@@ -148,12 +154,6 @@
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_przelewy24">
-            <allow_multiple_address>0</allow_multiple_address>
-        </method>
-        <method name="paynl_payment_riverty">
-            <allow_multiple_address>0</allow_multiple_address>
-        </method>
-        <method name="paynl_payment_rivertywasafterpay">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_shoesandsneakers">

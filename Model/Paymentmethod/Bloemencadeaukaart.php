@@ -7,7 +7,7 @@ class Bloemencadeaukaart extends PaymentMethod
     protected $_code = 'paynl_payment_bloemencadeaukaart';
 
     /**
-     * @return int
+     * @return integer
      */
     protected function getDefaultPaymentOptionId()
     {

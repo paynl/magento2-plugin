@@ -36,6 +36,30 @@ In order to pay for your order click the link below
                 </paylink_body>
 
             </paynl_payment_paylink>
+            <paynl_payment_afterpay>
+                <active>0</active>
+                <title>Riverty (was AfterPay)</title>
+                <payment_option_id>739</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Afterpay</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_afterpay>
+            <paynl_payment_afterpay_international>
+                <active>0</active>
+                <title>Riverty</title>
+                <payment_option_id>2561</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\AfterpayInternational</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_afterpay_international>
             <paynl_payment_alipay>
                 <active>0</active>
                 <title>Alipay</title>
@@ -84,18 +108,6 @@ In order to pay for your order click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_applepay>
-            <paynl_payment_bancontact>
-                <active>0</active>
-                <title>Bancontact</title>
-                <payment_option_id>436</payment_option_id>
-                <order_status>pending_payment</order_status>
-                <order_status_authorized>processing</order_status_authorized>
-                <order_status_processing>processing</order_status_processing>
-                <payment_action>order</payment_action>
-                <model>Paynl\Payment\Model\Paymentmethod\Bancontact</model>
-                <group>paynl_payment</group>
-                <send_new_order_email>after_payment</send_new_order_email>
-            </paynl_payment_bancontact>
             <paynl_payment_biercheque>
                 <active>0</active>
                 <title>Biercheque</title>
@@ -194,7 +206,7 @@ In order to pay for your order click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_boekenbon>
-            <paynl_payment_in3>
+            <paynl_payment_capayable_gespreid>
                 <active>0</active>
                 <title>in3 keer betalen, 0% rente</title>
                 <payment_option_id>1813</payment_option_id>
@@ -202,10 +214,10 @@ In order to pay for your order click the link below
                 <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
                 <payment_action>order</payment_action>
-                <model>Paynl\Payment\Model\Paymentmethod\In3</model>
+                <model>Paynl\Payment\Model\Paymentmethod\CapayableGespreid</model>
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
-            </paynl_payment_in3>
+            </paynl_payment_capayable_gespreid>
             <paynl_payment_cartebleue>
                 <active>0</active>
                 <title>Cartebleue</title>
@@ -459,6 +471,18 @@ In order to pay for your order click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_maestro>
+            <paynl_payment_mistercash>
+                <active>0</active>
+                <title>Bancontact</title>
+                <payment_option_id>436</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Mistercash</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_mistercash>
             <paynl_payment_monizze>
                 <active>0</active>
                 <title>Monizze</title>
@@ -616,30 +640,6 @@ In order to pay for your order click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_przelewy24>
-            <paynl_payment_riverty>
-                <active>0</active>
-                <title>Riverty</title>
-                <payment_option_id>2561</payment_option_id>
-                <order_status>pending_payment</order_status>
-                <order_status_authorized>processing</order_status_authorized>
-                <order_status_processing>processing</order_status_processing>
-                <payment_action>order</payment_action>
-                <model>Paynl\Payment\Model\Paymentmethod\Riverty</model>
-                <group>paynl_payment</group>
-                <send_new_order_email>after_payment</send_new_order_email>
-            </paynl_payment_riverty>
-            <paynl_payment_rivertywasafterpay>
-                <active>0</active>
-                <title>Riverty (was AfterPay)</title>
-                <payment_option_id>739</payment_option_id>
-                <order_status>pending_payment</order_status>
-                <order_status_authorized>processing</order_status_authorized>
-                <order_status_processing>processing</order_status_processing>
-                <payment_action>order</payment_action>
-                <model>Paynl\Payment\Model\Paymentmethod\Rivertywasafterpay</model>
-                <group>paynl_payment</group>
-                <send_new_order_email>after_payment</send_new_order_email>
-            </paynl_payment_rivertywasafterpay>
             <paynl_payment_shoesandsneakers>
                 <active>0</active>
                 <title>Shoes &amp; Sneakers Cadeau</title>

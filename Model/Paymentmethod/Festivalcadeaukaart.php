@@ -7,7 +7,7 @@ class Festivalcadeaukaart extends PaymentMethod
     protected $_code = 'paynl_payment_festivalcadeaukaart';
 
     /**
-     * @return int
+     * @return integer
      */
     protected function getDefaultPaymentOptionId()
     {
