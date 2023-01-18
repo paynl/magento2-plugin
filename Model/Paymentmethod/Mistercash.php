@@ -7,7 +7,7 @@ class Mistercash extends PaymentMethod
     protected $_code = 'paynl_payment_mistercash';
 
     /**
-     * @return interger
+     * @return integer
      */
     protected function getDefaultPaymentOptionId()
     {
