@@ -116,6 +116,7 @@ class ConfigProvider implements ConfigProviderInterface
 
     /**
      * {@inheritdoc}
+     * @return array
      */
     public function getConfig()
     {
@@ -158,36 +159,64 @@ class ConfigProvider implements ConfigProviderInterface
         return nl2br($this->escaper->escapeHtml($this->methods[$code]->getInstructions()));
     }
 
+    /**
+     * @param $code
+     * @return mixed
+     */
     protected function getPaymentOptions($code)
     {
         return $this->methods[$code]->getPaymentOptions();
     }
 
+    /**
+     * @param $code
+     * @return mixed
+     */
     protected function showPaymentOptions($code)
     {
         return $this->methods[$code]->showPaymentOptions();
     }
 
+    /**
+     * @param $code
+     * @return mixed
+     */
     protected function getDefaultPaymentOption($code)
     {
         return $this->methods[$code]->getDefaultPaymentOption();
     }
 
+    /**
+     * @param $code
+     * @return mixed
+     */
     protected function hidePaymentOptions($code)
     {
         return $this->methods[$code]->hidePaymentOptions();
     }
 
+    /**
+     * @param $code
+     * @return mixed
+     */
     protected function getKVK($code)
     {
         return $this->methods[$code]->getKVK();
     }
 
+    /**
+     * @param $code
+     * @return mixed
+     */
     protected function getVAT($code)
     {
         return $this->methods[$code]->getVAT();
     }
 
+    /**
+     * @param $code
+     * @return mixed
+     */
     protected function getDOB($code)
     {
         return $this->methods[$code]->getDOB();
@@ -198,19 +227,25 @@ class ConfigProvider implements ConfigProviderInterface
         return $this->methods[$code]->getDisallowedShippingMethods();
     }
 
+    /**
+     * @param $code
+     * @return mixed
+     */
     protected function getCompany($code)
     {
         return $this->methods[$code]->getCompany();
     }
 
+    /**
+     * @param $code
+     * @return mixed
+     */
     protected function getCustomerGroup($code)
     {
         return $this->methods[$code]->getCustomerGroup();
     }
 
     /**
-     * Get payment method icon
-     *
      * @param $code
      * @return mixed
      */
