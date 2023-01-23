@@ -121,7 +121,6 @@ class Finish extends PayAction
             $this->checkEmpty($order, 'order', 1013);
 
             $this->config->setStore($order->getStore());
-            \Paynl\Config::setApiToken($this->config->getApiToken());
 
             $payment = $order->getPayment();
             $information = $payment->getAdditionalInformation();
@@ -137,6 +136,7 @@ class Finish extends PayAction
             }
 
             if (empty($bSuccess) && !$isPinTransaction) {
+                $this->config->configureSDK();
                 $transaction = \Paynl\Transaction::get($payOrderId);
                 $orderNumber = $transaction->getExtra1();
                 $this->checkEmpty($order->getIncrementId() == $orderNumber, '', 104, 'order mismatch');

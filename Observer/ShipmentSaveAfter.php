@@ -65,7 +65,7 @@ class ShipmentSaveAfter implements ObserverInterface
                             # Handles Picqer
                             # Handles Sherpa
                             # Handles Manual made shipment
-                            \Paynl\Config::setApiToken($this->config->getApiToken());
+                            $this->config->configureSDK();
                             $bCaptureResult = \Paynl\Transaction::capture($payOrderId);
                             if ($bCaptureResult) {
                                 $transaction = \Paynl\Transaction::get($payOrderId);

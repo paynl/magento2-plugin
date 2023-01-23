@@ -11,7 +11,6 @@ use Paynl\Payment\Controller\PayAction;
 use Paynl\Payment\Helper\PayHelper;
 use Paynl\Payment\Model\PayPayment;
 use Paynl\Transaction;
-use Paynl\Config as PAYSDK;
 
 /**
  * Communicates with PAY. in order to update payment statuses in magento
@@ -131,9 +130,9 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         }
 
         $this->config->setStore($order->getStore());
-        PAYSDK::setApiToken($this->config->getApiToken());
 
         try {
+            $this->config->configureSDK();
             $transaction = Transaction::get($payOrderId);
         } catch (\Exception $e) {
             payHelper::logCritical($e, $params, $order->getStore());
