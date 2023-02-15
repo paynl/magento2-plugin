@@ -336,7 +336,7 @@ abstract class PaymentMethod extends AbstractMethod
 
     /**
      * @param string $paymentAction
-     * @param mixed $stateObject
+     * @param object $stateObject
      * @return object
      */
     public function initialize($paymentAction, $stateObject)
