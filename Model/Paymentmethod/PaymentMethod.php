@@ -67,6 +67,23 @@ abstract class PaymentMethod extends AbstractMethod
 
     protected $graphqlVersion;
 
+    /**
+     * PaymentMethod constructor.
+     *
+     * @param \Magento\Framework\App\Action\Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory
+     * @param \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory
+     * @param \Magento\Payment\Helper\Data $paymentData
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param \Magento\Payment\Model\Method\Logger $methodLogger
+     * @param \Magento\Sales\Model\Order\Config $orderConfig
+     * @param \Magento\Sales\Model\OrderRepository $orderRepository
+     * @param \Paynl\Payment\Model\Config $paynlConfig
+     * @param \Magento\Framework\Model\ResourceModel\AbstractResource $resource
+     * @param \Magento\Framework\Data\Collection\AbstractDb $resourceCollection
+     * @param array $data
+     */
     public function __construct(
         Context $context,
         Registry $registry,
@@ -106,12 +123,16 @@ abstract class PaymentMethod extends AbstractMethod
         $this->cookieManager = $objectManager->create('\Magento\Framework\Stdlib\CookieManagerInterface');
     }
 
+    /**
+     * @param string $status
+     * @return mixed
+     */
     protected function getState($status)
     {
         $validStates = [
             Order::STATE_NEW,
             Order::STATE_PENDING_PAYMENT,
-            Order::STATE_HOLDED
+            Order::STATE_HOLDED,
         ];
 
         foreach ($validStates as $state) {
@@ -133,80 +154,122 @@ abstract class PaymentMethod extends AbstractMethod
         return $this->getConfigData('instructions');
     }
 
+    /**
+     * @return array
+     */
     public function getPaymentOptions()
     {
         return [];
     }
 
+    /**
+     * @return boolean
+     */
     public function showPaymentOptions()
     {
         return false;
     }
 
+    /**
+     * @return integer
+     */
     public function hidePaymentOptions()
     {
         return 0;
     }
 
+    /**
+     * @return integer
+     */
     public function getKVK()
     {
         return $this->_scopeConfig->getValue('payment/' . $this->_code . '/showkvk', 'store');
     }
 
+    /**
+     * @return integer
+     */
     public function getVAT()
     {
         return $this->_scopeConfig->getValue('payment/' . $this->_code . '/showvat', 'store');
     }
 
+    /**
+     * @return integer
+     */
     public function getDOB()
     {
         return $this->_scopeConfig->getValue('payment/' . $this->_code . '/showdob', 'store');
     }
 
+    /**
+     * @return integer
+     */
     public function getDisallowedShippingMethods()
     {
         return $this->_scopeConfig->getValue('payment/' . $this->_code . '/disallowedshipping', 'store');
     }
 
+    /**
+     * @return integer
+     */
     public function getCompany()
     {
         return $this->_scopeConfig->getValue('payment/' . $this->_code . '/showforcompany', 'store');
     }
 
+    /**
+     * @return string
+     */
     public function getCustomerGroup()
     {
         return $this->_scopeConfig->getValue('payment/' . $this->_code . '/showforgroup', 'store');
     }
 
+    /**
+     * @return integer
+     */
     public function shouldHoldOrder()
     {
         return $this->_scopeConfig->getValue('payment/' . $this->_code . '/holded', 'store') == 1;
     }
 
     /**
-     * @return bool
+     * @return integer
      */
     public function useBillingAddressInstorePickup()
     {
         return $this->_scopeConfig->getValue('payment/' . $this->_code . '/useBillingAddressInstorePickup', 'store') == 1;
     }
 
+    /**
+     * @return boolean
+     */
     public function isCurrentIpValid()
     {
         return true;
     }
 
+    /**
+     * @return boolean
+     */
     public function isCurrentAgentValid()
     {
         return true;
     }
 
+    /**
+     * @return boolean
+     */
     public function isDefaultPaymentOption()
     {
         $default_payment_option = $this->paynlConfig->getDefaultPaymentOption();
         return ($default_payment_option == $this->_code);
     }
 
+    /**
+     * @return array
+     */
     public function getTransferData()
     {
         $transferData = array();
@@ -229,11 +292,18 @@ abstract class PaymentMethod extends AbstractMethod
         return $transferData;
     }
 
+    /**
+     * @param string $version
+     * @return void
+     */
     public function setGraphqlVersion($version)
     {
         $this->graphqlVersion = $version;
     }
 
+    /**
+     * @return string
+     */
     public function getVersion()
     {
         $version = substr('magento2 ' . $this->paynlConfig->getVersion() . ' | ' . $this->paynlConfig->getMagentoVersion() . ' | ' . $this->paynlConfig->getPHPVersion(), 0, 64);
@@ -244,6 +314,10 @@ abstract class PaymentMethod extends AbstractMethod
         return $version;
     }
 
+    /**
+     * @param string $gender
+     * @return string|null
+     */
     public function genderConversion($gender)
     {
         switch ($gender) {
@@ -260,6 +334,11 @@ abstract class PaymentMethod extends AbstractMethod
         return $gender;
     }
 
+    /**
+     * @param string $paymentAction
+     * @param mixed $stateObject
+     * @return object
+     */
     public function initialize($paymentAction, $stateObject)
     {
         $status = $this->getConfigData('order_status');
@@ -284,6 +363,11 @@ abstract class PaymentMethod extends AbstractMethod
         return parent::initialize($paymentAction, $stateObject);
     }
 
+    /**
+     * @param InfoInterface $payment
+     * @param float $amount
+     * @return object
+     */
     public function refund(InfoInterface $payment, $amount)
     {
         $order = $payment->getOrder();
@@ -311,31 +395,44 @@ abstract class PaymentMethod extends AbstractMethod
         return $this;
     }
 
+    /**
+     * @param InfoInterface $payment
+     * @param float $amount
+     * @return object
+     */
     public function capture(InfoInterface $payment, $amount)
     {
-        $payment->setAdditionalInformation('manual_capture', 'true');
-        $order = $payment->getOrder();
-        $order->save();
-        $this->paynlConfig->setStore($order->getStore());
-        $this->paynlConfig->configureSDK();
-
-        $transactionId = $payment->getParentTransactionId();
-
-        Transaction::capture($transactionId);
-
+        try {
+            $payment->setAdditionalInformation('manual_capture', 'true');
+            $order = $payment->getOrder();
+            $order->save();
+            $this->paynlConfig->setStore($order->getStore());
+            $this->paynlConfig->configureSDK();
+            $transactionId = $payment->getParentTransactionId();
+            Transaction::capture($transactionId);
+        } catch (\Exception $e) {
+            $message = strtolower($e->getMessage());
+            payHelper::logCritical('Pay. could not process capture (' . $message . '). Transaction: ' . $transactionId . '. OrderId: ' . $order->getIncrementId());
+        }
         return $this;
     }
 
+    /**
+     * @param InfoInterface $payment
+     * @return object
+     */
     public function void(InfoInterface $payment)
     {
-        $order = $payment->getOrder();
-        $this->paynlConfig->setStore($order->getStore());
-        $this->paynlConfig->configureSDK();
-
-        $transactionId = $payment->getParentTransactionId();
-
-        Transaction::void($transactionId);
-
+        try {
+            $order = $payment->getOrder();
+            $this->paynlConfig->setStore($order->getStore());
+            $this->paynlConfig->configureSDK();
+            $transactionId = $payment->getParentTransactionId();
+            Transaction::void($transactionId);
+        } catch (\Exception $e) {
+            $message = strtolower($e->getMessage());
+            payHelper::logCritical('Pay. could not process void (' . $message . '). Transaction: ' . $transactionId . '. OrderId: ' . $order->getIncrementId());
+        }
         return $this;
     }
 
@@ -454,7 +551,7 @@ abstract class PaymentMethod extends AbstractMethod
             }
 
             if (!empty($arrBillingAddress['country_id'])) {
-                $enduser['company']['countryCode'] =  $arrBillingAddress['country_id'];
+                $enduser['company']['countryCode'] = $arrBillingAddress['country_id'];
             }
 
             if (!empty($kvknummer)) {
@@ -469,7 +566,7 @@ abstract class PaymentMethod extends AbstractMethod
 
             $invoiceAddress = [
                 'initials' => $arrBillingAddress['firstname'],
-                'lastName' => $arrBillingAddress['lastname']
+                'lastName' => $arrBillingAddress['lastname'],
             ];
 
             $arrAddress = \Paynl\Helper::splitAddress($arrBillingAddress['street']);
@@ -499,7 +596,7 @@ abstract class PaymentMethod extends AbstractMethod
 
             $shippingAddress = [
                 'initials' => $arrShippingAddress['firstname'],
-                'lastName' => $arrShippingAddress['lastname']
+                'lastName' => $arrShippingAddress['lastname'],
             ];
             $arrAddress2 = \Paynl\Helper::splitAddress($arrShippingAddress['street']);
             $shippingAddress['streetName'] = $arrAddress2[0];
@@ -563,7 +660,7 @@ abstract class PaymentMethod extends AbstractMethod
                     'price' => $price,
                     'qty' => $arrItem['qty_ordered'],
                     'tax' => $taxAmount,
-                    'type' => \Paynl\Transaction::PRODUCT_TYPE_ARTICLE
+                    'type' => \Paynl\Transaction::PRODUCT_TYPE_ARTICLE,
                 ];
 
                 # Product id's must be unique. Combinations of a "Configurable products" share the same product id.
@@ -610,7 +707,7 @@ abstract class PaymentMethod extends AbstractMethod
                                         'price' => $weee_price,
                                         'tax' => $weee_taxAmount,
                                         'qty' => 1,
-                                        'type' => \Paynl\Transaction::PRODUCT_TYPE_HANDLING
+                                        'type' => \Paynl\Transaction::PRODUCT_TYPE_HANDLING,
                                     );
                                 }
                             }
@@ -638,7 +735,7 @@ abstract class PaymentMethod extends AbstractMethod
                 'price' => $shippingCost,
                 'qty' => 1,
                 'tax' => $shippingTax,
-                'type' => \Paynl\Transaction::PRODUCT_TYPE_SHIPPING
+                'type' => \Paynl\Transaction::PRODUCT_TYPE_SHIPPING,
             ];
         }
 
@@ -658,7 +755,7 @@ abstract class PaymentMethod extends AbstractMethod
                 'price' => $gwCost,
                 'qty' => 1,
                 'tax' => $gwTax,
-                'type' => \Paynl\Transaction::PRODUCT_TYPE_HANDLING
+                'type' => \Paynl\Transaction::PRODUCT_TYPE_HANDLING,
             ];
         }
 
@@ -684,7 +781,7 @@ abstract class PaymentMethod extends AbstractMethod
                 'price' => $discount,
                 'qty' => 1,
                 'tax' => $discountTax,
-                'type' => \Paynl\Transaction::PRODUCT_TYPE_DISCOUNT
+                'type' => \Paynl\Transaction::PRODUCT_TYPE_DISCOUNT,
             ];
         }
 
@@ -710,6 +807,9 @@ abstract class PaymentMethod extends AbstractMethod
         return $transaction;
     }
 
+    /**
+     * @return integer
+     */
     public function getPaymentOptionId()
     {
         $paymentOptionId = $this->getConfigData('payment_option_id');
@@ -721,6 +821,10 @@ abstract class PaymentMethod extends AbstractMethod
         return $paymentOptionId;
     }
 
+    /**
+     * @param \Magento\Framework\DataObject $data
+     * @return object
+     */
     public function assignData(\Magento\Framework\DataObject $data)
     {
         parent::assignData($data);
@@ -758,7 +862,7 @@ abstract class PaymentMethod extends AbstractMethod
     }
 
     /**
-     * @return int the default payment option id
+     * @return integer the default payment option id
      */
     abstract protected function getDefaultPaymentOptionId();
 }
