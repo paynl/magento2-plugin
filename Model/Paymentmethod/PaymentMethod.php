@@ -337,6 +337,7 @@ abstract class PaymentMethod extends AbstractMethod
     /**
      * @param string $paymentAction
      * @param object $stateObject
+     * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
      * @return object
      */
     public function initialize($paymentAction, $stateObject)
