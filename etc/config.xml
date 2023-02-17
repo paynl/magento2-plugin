@@ -38,7 +38,7 @@ In order to pay for your order click the link below
             </paynl_payment_paylink>
             <paynl_payment_afterpay>
                 <active>0</active>
-                <title>AfterPay (by Riverty)</title>
+                <title>Riverty (was AfterPay)</title>
                 <payment_option_id>739</payment_option_id>
                 <order_status>pending_payment</order_status>
                 <order_status_authorized>processing</order_status_authorized>
@@ -50,7 +50,7 @@ In order to pay for your order click the link below
             </paynl_payment_afterpay>
             <paynl_payment_afterpay_international>
                 <active>0</active>
-                <title>AfterPay (by Riverty)</title>
+                <title>Riverty</title>
                 <payment_option_id>2561</payment_option_id>
                 <order_status>pending_payment</order_status>
                 <order_status_authorized>processing</order_status_authorized>
@@ -158,6 +158,18 @@ In order to pay for your order click the link below
                 <send_new_order_email>after_payment</send_new_order_email>
                 <turn_off_invoices_b2b>No</turn_off_invoices_b2b>
             </paynl_payment_billink>
+            <paynl_payment_bioscoopbon>
+                <active>0</active>
+                <title>Bioscoopbon</title>
+                <payment_option_id>2133</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Bioscoopbon</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_bioscoopbon>
             <paynl_payment_blik>
                 <active>0</active>
                 <title>Blik</title>
@@ -170,18 +182,30 @@ In order to pay for your order click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_blik>
-            <paynl_payment_capayable>
+            <paynl_payment_bloemencadeaukaart>
                 <active>0</active>
-                <title>Capayable Achteraf Betalen</title>
-                <payment_option_id>1744</payment_option_id>
+                <title>Bloemen Cadeaukaart</title>
+                <payment_option_id>2607</payment_option_id>
                 <order_status>pending_payment</order_status>
                 <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
                 <payment_action>order</payment_action>
-                <model>Paynl\Payment\Model\Paymentmethod\Capayable</model>
+                <model>Paynl\Payment\Model\Paymentmethod\Bloemencadeaukaart</model>
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
-            </paynl_payment_capayable>
+            </paynl_payment_bloemencadeaukaart>
+            <paynl_payment_boekenbon>
+                <active>0</active>
+                <title>Boekenbon</title>
+                <payment_option_id>2838</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Boekenbon</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_boekenbon>
             <paynl_payment_capayable_gespreid>
                 <active>0</active>
                 <title>in3 keer betalen, 0% rente</title>
@@ -194,18 +218,6 @@ In order to pay for your order click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_capayable_gespreid>
-            <paynl_payment_cartasi>
-                <active>0</active>
-                <title>CartaSi</title>
-                <payment_option_id>1945</payment_option_id>
-                <order_status>pending_payment</order_status>
-                <order_status_authorized>processing</order_status_authorized>
-                <order_status_processing>processing</order_status_processing>
-                <payment_action>order</payment_action>
-                <model>Paynl\Payment\Model\Paymentmethod\Cartasi</model>
-                <group>paynl_payment</group>
-                <send_new_order_email>after_payment</send_new_order_email>
-            </paynl_payment_cartasi>
             <paynl_payment_cartebleue>
                 <active>0</active>
                 <title>Cartebleue</title>
@@ -230,18 +242,6 @@ In order to pay for your order click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_cashly>
-            <paynl_payment_clickandbuy>
-                <active>0</active>
-                <title>Clickandbuy</title>
-                <payment_option_id>139</payment_option_id>
-                <order_status>pending_payment</order_status>
-                <order_status_authorized>processing</order_status_authorized>
-                <order_status_processing>processing</order_status_processing>
-                <payment_action>order</payment_action>
-                <model>Paynl\Payment\Model\Paymentmethod\Clickandbuy</model>
-                <group>paynl_payment</group>
-                <send_new_order_email>after_payment</send_new_order_email>
-            </paynl_payment_clickandbuy>
             <paynl_payment_creditclick>
                 <active>0</active>
                 <title>Creditclick</title>
@@ -278,6 +278,18 @@ In order to pay for your order click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_decadeaukaart>
+            <paynl_payment_dinerbon>
+                <active>0</active>
+                <title>Dinerbon</title>
+                <payment_option_id>2670</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Dinerbon</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_dinerbon>
             <paynl_payment_eps>
                 <active>0</active>
                 <title>EPS Überweisung</title>
@@ -314,18 +326,18 @@ In order to pay for your order click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_fashiongiftcard>
-            <paynl_payment_focum>
+            <paynl_payment_festivalcadeaukaart>
                 <active>0</active>
-                <title>Focum</title>
-                <payment_option_id>1702</payment_option_id>
+                <title>Festival Cadeaukaart</title>
+                <payment_option_id>2511</payment_option_id>
                 <order_status>pending_payment</order_status>
                 <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
                 <payment_action>order</payment_action>
-                <model>Paynl\Payment\Model\Paymentmethod\Focum</model>
+                <model>Paynl\Payment\Model\Paymentmethod\Festivalcadeaukaart</model>
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
-            </paynl_payment_focum>
+            </paynl_payment_festivalcadeaukaart>
             <paynl_payment_gezondheidsbon>
                 <active>0</active>
                 <title>Gezondheidsbon</title>
@@ -495,18 +507,6 @@ In order to pay for your order click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_multibanco>
-            <paynl_payment_mybank>
-                <active>0</active>
-                <title>Mybank</title>
-                <payment_option_id>1588</payment_option_id>
-                <order_status>pending_payment</order_status>
-                <order_status_authorized>processing</order_status_authorized>
-                <order_status_processing>processing</order_status_processing>
-                <payment_action>order</payment_action>
-                <model>Paynl\Payment\Model\Paymentmethod\Mybank</model>
-                <group>paynl_payment</group>
-                <send_new_order_email>after_payment</send_new_order_email>
-            </paynl_payment_mybank>
             <paynl_payment_nexi>
                 <active>0</active>
                 <title>Nexi</title>
@@ -544,6 +544,18 @@ In order to pay for your order click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_onlinebankbetaling>
+            <paynl_payment_parfumcadeaukaart>
+                <active>0</active>
+                <title>Parfum Cadeaukaart</title>
+                <payment_option_id>2682</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Parfumcadeaukaart</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_parfumcadeaukaart>
             <paynl_payment_payconiq>
                 <active>0</active>
                 <title>Payconiq</title>
@@ -715,18 +727,6 @@ In order to pay for your order click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_telefonischbetalen>
-            <paynl_payment_tikkie>
-                <active>0</active>
-                <title>Tikkie</title>
-                <payment_option_id>2104</payment_option_id>
-                <order_status>pending_payment</order_status>
-                <order_status_authorized>processing</order_status_authorized>
-                <order_status_processing>processing</order_status_processing>
-                <payment_action>order</payment_action>
-                <model>Paynl\Payment\Model\Paymentmethod\Tikkie</model>
-                <group>paynl_payment</group>
-                <send_new_order_email>after_payment</send_new_order_email>
-            </paynl_payment_tikkie>
             <paynl_payment_trustly>
                 <active>0</active>
                 <title>Trustly</title>
@@ -799,18 +799,18 @@ In order to pay for your order click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_wijncadeau>
-            <paynl_payment_yehhpay>
+            <paynl_payment_winkelcheque>
                 <active>0</active>
-                <title>Yehhpay</title>
-                <payment_option_id>1877</payment_option_id>
+                <title>Winkelcheque</title>
+                <payment_option_id>2616</payment_option_id>
                 <order_status>pending_payment</order_status>
                 <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
                 <payment_action>order</payment_action>
-                <model>Paynl\Payment\Model\Paymentmethod\Yehhpay</model>
+                <model>Paynl\Payment\Model\Paymentmethod\Winkelcheque</model>
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
-            </paynl_payment_yehhpay>
+            </paynl_payment_winkelcheque>
             <paynl_payment_yourgift>
                 <active>0</active>
                 <title>Yourgift.nl</title>

@@ -2,15 +2,15 @@
 
 namespace Paynl\Payment\Model\Paymentmethod;
 
-class Afterpay extends PaymentMethod
+class Bloemencadeaukaart extends PaymentMethod
 {
-    protected $_code = 'paynl_payment_afterpay';
+    protected $_code = 'paynl_payment_bloemencadeaukaart';
 
     /**
      * @return integer
      */
     protected function getDefaultPaymentOptionId()
     {
-        return 739;
+        return 2607;
     }
 }

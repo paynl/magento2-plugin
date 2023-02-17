@@ -2,15 +2,15 @@
 
 namespace Paynl\Payment\Model\Paymentmethod;
 
-class Afterpay extends PaymentMethod
+class Festivalcadeaukaart extends PaymentMethod
 {
-    protected $_code = 'paynl_payment_afterpay';
+    protected $_code = 'paynl_payment_festivalcadeaukaart';
 
     /**
      * @return integer
      */
     protected function getDefaultPaymentOptionId()
     {
-        return 739;
+        return 2511;
     }
 }

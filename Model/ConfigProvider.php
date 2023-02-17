@@ -22,20 +22,21 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_biercheque',
         'paynl_payment_biller',
         'paynl_payment_billink',
+        'paynl_payment_bioscoopbon',
         'paynl_payment_blik',
-        'paynl_payment_decadeaukaart',
-        'paynl_payment_capayable',
+        'paynl_payment_bloemencadeaukaart',
+        'paynl_payment_boekenbon',
         'paynl_payment_capayable_gespreid',
-        'paynl_payment_cartasi',
         'paynl_payment_cartebleue',
         'paynl_payment_cashly',
-        'paynl_payment_clickandbuy',
         'paynl_payment_creditclick',
         'paynl_payment_dankort',
+        'paynl_payment_decadeaukaart',
+        'paynl_payment_dinerbon',
         'paynl_payment_eps',
         'paynl_payment_fashioncheque',
         'paynl_payment_fashiongiftcard',
-        'paynl_payment_focum',
+        'paynl_payment_festivalcadeaukaart',
         'paynl_payment_gezondheidsbon',
         'paynl_payment_giropay',
         'paynl_payment_givacard',
@@ -50,10 +51,10 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_mistercash',
         'paynl_payment_monizze',
         'paynl_payment_multibanco',
-        'paynl_payment_mybank',
         'paynl_payment_nexi',
         'paynl_payment_overboeking',
         'paynl_payment_onlinebankbetaling',
+        'paynl_payment_parfumcadeaukaart',
         'paynl_payment_payconiq',
         'paynl_payment_paypal',
         'paynl_payment_paysafecard',
@@ -68,14 +69,13 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_sofortbanking_ds',
         'paynl_payment_spraypay',
         'paynl_payment_telefonischbetalen',
-        'paynl_payment_tikkie',
         'paynl_payment_trustly',
         'paynl_payment_visamastercard',
         'paynl_payment_vvvgiftcard',
         'paynl_payment_webshopgiftcard',
         'paynl_payment_wechatpay',
         'paynl_payment_wijncadeau',
-        'paynl_payment_yehhpay',
+        'paynl_payment_winkelcheque',
         'paynl_payment_yourgift',
         'paynl_payment_yourgreengift'
     ];
@@ -116,6 +116,7 @@ class ConfigProvider implements ConfigProviderInterface
 
     /**
      * {@inheritdoc}
+     * @return array
      */
     public function getConfig()
     {
@@ -158,61 +159,99 @@ class ConfigProvider implements ConfigProviderInterface
         return nl2br($this->escaper->escapeHtml($this->methods[$code]->getInstructions()));
     }
 
+    /**
+     * @param string $code
+     * @return string
+     */
     protected function getPaymentOptions($code)
     {
         return $this->methods[$code]->getPaymentOptions();
     }
 
+    /**
+     * @param string $code
+     * @return string
+     */
     protected function showPaymentOptions($code)
     {
         return $this->methods[$code]->showPaymentOptions();
     }
 
+    /**
+     * @param string $code
+     * @return string
+     */
     protected function getDefaultPaymentOption($code)
     {
         return $this->methods[$code]->getDefaultPaymentOption();
     }
 
+    /**
+     * @param string $code
+     * @return string
+     */
     protected function hidePaymentOptions($code)
     {
         return $this->methods[$code]->hidePaymentOptions();
     }
 
+    /**
+     * @param string $code
+     * @return string
+     */
     protected function getKVK($code)
     {
         return $this->methods[$code]->getKVK();
     }
 
+    /**
+     * @param string $code
+     * @return string
+     */
     protected function getVAT($code)
     {
         return $this->methods[$code]->getVAT();
     }
 
+    /**
+     * @param string $code
+     * @return string
+     */
     protected function getDOB($code)
     {
         return $this->methods[$code]->getDOB();
     }
 
+    /**
+     * @param string $code
+     * @return string
+     */
     protected function getDisallowedShippingMethods($code)
     {
         return $this->methods[$code]->getDisallowedShippingMethods();
     }
 
+    /**
+     * @param string $code
+     * @return string
+     */
     protected function getCompany($code)
     {
         return $this->methods[$code]->getCompany();
     }
 
+    /**
+     * @param string $code
+     * @return string
+     */
     protected function getCustomerGroup($code)
     {
         return $this->methods[$code]->getCustomerGroup();
     }
 
     /**
-     * Get payment method icon
-     *
-     * @param $code
-     * @return mixed
+     * @param string $code
+     * @return string
      */
     protected function getIcon($code)
     {
