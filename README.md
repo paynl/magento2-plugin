@@ -48,6 +48,12 @@ Online Bankbetaling| | Good4Fun | | |
     PHP tested up to 8.1
     Magento tested up to 2.4.5p1
 
+For manual installation (non-composer), include:
+
+    Pay. SDK: https://github.com/paynl/sdk
+    Minimum version: 1.5.19
+    Maximum version: Lower then 2.0.0 
+
 
 # Installation
 #### Installing
