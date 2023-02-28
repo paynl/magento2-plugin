@@ -103,9 +103,9 @@ class ShipmentSaveAfter implements ObserverInterface
                         }
                     } else {
                         payHelper::logDebug(
-                          'Auto-Capture conditions not met (yet). Amountpaid:' . $amountPaid . ' bHasAmountAuthorized: ' . ($bHasAmountAuthorized ? '1' : '0'),
-                          [],
-                          $order->getStore()
+                            'Auto-Capture conditions not met (yet). Amountpaid:' . $amountPaid . ' bHasAmountAuthorized: ' . ($bHasAmountAuthorized ? '1' : '0'),
+                             [],
+                            $order->getStore()
                         );
                     }
                 } else {
