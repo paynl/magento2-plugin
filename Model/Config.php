@@ -293,7 +293,7 @@ class Config
      */
     public function ignoreManualCapture()
     {
-        return $this->store->getConfig('payment/paynl/auto_capture') != 0 && $this->store->getConfig('payment/paynl/auto_capture') != 1;
+        return $this->store->getConfig('payment/paynl/auto_capture') != 0;
     }
 
     /**
