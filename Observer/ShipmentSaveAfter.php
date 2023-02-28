@@ -36,9 +36,9 @@ class ShipmentSaveAfter implements ObserverInterface
      * @param PayPayment $payPayment
      */
     public function __construct(
-      Config $config,
-      Store $store,
-      PayPayment $payPayment
+        Config $config,
+        Store $store,
+        PayPayment $payPayment
     ) {
         $this->config = $config;
         $this->store = $store;
@@ -93,7 +93,7 @@ class ShipmentSaveAfter implements ObserverInterface
                         }
 
                         $order->addStatusHistoryComment(
-                          __('PAY. - Performed auto-capture. Result: ') . ($bCaptureResult ? 'Success' : 'Failed') . (empty($strFriendlyMessage) ? '' : '. ' . $strFriendlyMessage)
+                            __('PAY. - Performed auto-capture. Result: ') . ($bCaptureResult ? 'Success' : 'Failed') . (empty($strFriendlyMessage) ? '' : '. ' . $strFriendlyMessage)
                         )->save();
 
                         # Whether capture failed or succeeded, we still might have to process paid order
@@ -104,7 +104,7 @@ class ShipmentSaveAfter implements ObserverInterface
                     } else {
                         payHelper::logDebug(
                             'Auto-Capture conditions not met (yet). Amountpaid:' . $amountPaid . ' bHasAmountAuthorized: ' . ($bHasAmountAuthorized ? '1' : '0'),
-                             [],
+                            [],
                             $order->getStore()
                         );
                     }
