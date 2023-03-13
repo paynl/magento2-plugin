@@ -35,11 +35,11 @@
     padding: 1px 8px
 }
 
-.pay-orderinformation{
-    width: calc( (100%) * .5 - 30px );
+.pay-orderinformation {
+    width: calc((100%) * .5 - 30px);
 }
 
-.pay-link-icon{
+.pay-link-icon {
     color: black;
     margin-left: 2px;
     font-size: 17px;

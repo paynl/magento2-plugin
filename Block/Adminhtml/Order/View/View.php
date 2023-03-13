@@ -12,10 +12,8 @@ class View extends Template
     private $orderRepository;
 
     /**
-     * Order constructor.
-     *
-     * @param Magento\Sales\Model\OrderRepository $orderRepository
-     *
+     * @param Context $context
+     * @param OrderRepository $orderRepository
      */
     public function __construct(
         Context $context,
@@ -24,6 +22,10 @@ class View extends Template
         parent::__construct($context);
         $this->orderRepository = $orderRepository;
     }
+
+    /**
+     * @return string
+     */
     public function getPayUrl()
     {
         $baseUrl = "https://my.pay.nl/transactions/info/";
@@ -34,6 +36,9 @@ class View extends Template
         return $payUrl;
     }
 
+    /**
+     * @return mixed
+     */
     public function getOrder()
     {
         $params = $this->getRequest()->getParams();
@@ -50,6 +55,9 @@ class View extends Template
         return $getPayment;
     }
 
+    /**
+     * @return mixed
+     */
     public function getId()
     {
         $id = $this->getOrder()->getAdditionalInformation()['transactionId'];
@@ -57,6 +65,9 @@ class View extends Template
         return $id;
     }
 
+    /**
+     * @return mixed
+     */
     public function getPaymentMethod()
     {
         $paymentmethod = $this->getOrder()->getAdditionalInformation()['method_title'];

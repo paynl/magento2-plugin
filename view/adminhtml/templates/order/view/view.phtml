@@ -13,11 +13,11 @@
             <tbody>
             <tr>
                 <th><?= /* @noEscape */__("Payment method") ?></th>
-                <td><?php echo $block->getPaymentMethod()?></td>
+                <td><?php echo $block->getPaymentMethod() ?></td>
             </tr>
             <tr>
-                <th><?= /* @noEscape */__("Pay. Transaction-ID") ?></th>
-                <td><a href="<?php echo $block->getPayUrl()?>" target="_blank"><?php echo $block->getId()?><span class="pay-link-icon">&#129149;</span></a></td>
+                <th><?= /* @noEscape */ __("Pay. Transaction-ID") ?></th>
+                <td><a href="<?php echo $block->getPayUrl() ?>" target="_blank"><?php echo $block->getId() ?><span class="pay-link-icon">&#129149;</span></a></td>
             </tr>
             </tbody>
         </table>
