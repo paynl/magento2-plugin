@@ -42,12 +42,11 @@ class View extends Template
     public function getOrder()
     {
         $params = $this->getRequest()->getParams();
-        $orderId = isset($params['order_id']) ? $params['order_id'] : null;;
+        $orderId = isset($params['order_id']) ? $params['order_id'] : null;
 
         try {
             $order = $this->orderRepository->get($orderId);
             $getPayment = $order->getPayment();
-
         } catch (\Exception $e) {
             payHelper::logCritical($e, $params);
         }
