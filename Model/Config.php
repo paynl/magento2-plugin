@@ -19,6 +19,7 @@ class Config
     public const ORDERSTATUS_PENDING = array(20, 25, 40, 50, 90);
     public const ORDERSTATUS_DENIED = -63;
     public const ORDERSTATUS_CANCELED = -90;
+    public const ORDERSTATUS_VERIFY = 85;
 
     /** @var  Store */
     private $store;
