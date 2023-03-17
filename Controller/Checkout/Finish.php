@@ -154,7 +154,7 @@ class Finish extends PayAction
                     $this->messageManager->addNoticeMessage(__('Order has been made and the payment is pending.'));
                 }
                 if ($bVerify) {
-                    $order->addStatusHistoryComment(__('PAY. - This payment has been flagged as possibly fraudulent. Please Verify this transaction in the Pay. portal.'));
+                    $order->addStatusHistoryComment(__('PAY. - This payment has been flagged as possibly fraudulent. Please verify this transaction in the Pay. portal.'));
                     $this->orderRepository->save($order);
                 }
                 $this->deactivateCart($order, $payOrderId);
