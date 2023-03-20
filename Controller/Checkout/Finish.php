@@ -111,6 +111,7 @@ class Finish extends PayAction
         $bPending = in_array($orderStatusId, Config::ORDERSTATUS_PENDING);
         $bDenied = $orderStatusId === Config::ORDERSTATUS_DENIED;
         $bCanceled = $orderStatusId === Config::ORDERSTATUS_CANCELED;
+        $bVerify = $orderStatusId === Config::ORDERSTATUS_VERIFY;
         $isPinTransaction = false;
 
         try {
@@ -143,7 +144,7 @@ class Finish extends PayAction
                 $bSuccess = ($transaction->isPaid() || $transaction->isAuthorized());
             }
 
-            if ($bSuccess) {
+            if ($bSuccess || $bVerify) {
                 $successUrl = $this->config->getSuccessPage($payment->getMethod());
                 if (empty($successUrl)) {
                     $successUrl = ($payment->getMethod() == 'paynl_payment_paylink' || $this->config->sendEcommerceAnalytics()) ? Config::FINISH_PAY : Config::FINISH_STANDARD;
@@ -151,6 +152,10 @@ class Finish extends PayAction
                 $resultRedirect->setPath($successUrl, ['_query' => ['utm_nooverride' => '1']]);
                 if ($isPinTransaction && $pinStatus->getTransactionState() !== 'approved') {
                     $this->messageManager->addNoticeMessage(__('Order has been made and the payment is pending.'));
+                }
+                if ($bVerify) {
+                    $order->addStatusHistoryComment(__('PAY. - This payment has been flagged as possibly fraudulent. Please verify this transaction in the Pay. portal.'));
+                    $this->orderRepository->save($order);
                 }
                 $this->deactivateCart($order, $payOrderId);
             } elseif ($bPending) {
