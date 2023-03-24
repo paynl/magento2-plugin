@@ -330,6 +330,14 @@ class Config
     }
 
     /**
+     * @return boolean
+     */
+    public function getPendingPage()
+    {
+        return $this->store->getConfig('payment/paynl/pay_pending_page') == 1;
+    }
+
+    /**
      * @param string $methodCode
      * @return string
      */

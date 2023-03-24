@@ -159,7 +159,8 @@ class Finish extends PayAction
                 }
                 $this->deactivateCart($order, $payOrderId);
             } elseif ($bPending) {
-                $resultRedirect->setPath(Config::PENDING_PAY);
+                $successUrl = ($this->config->getPendingPage() || $this->config->sendEcommerceAnalytics()) ? Config::PENDING_PAY : Config::FINISH_STANDARD;
+                $resultRedirect->setPath($successUrl, ['_query' => ['utm_nooverride' => '1']]);
                 $this->deactivateCart($order, $payOrderId);
             } else {
                 $cancelMessage = $bDenied ? __('Payment denied') : __('Payment canceled');

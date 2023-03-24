@@ -21,7 +21,7 @@
                     <frontend_model>Paynl\Payment\Block\Adminhtml\Render\Credentials</frontend_model>
                 </field>
                 <field id="tokencode" translate="label, comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Tokencode</label>
+                    <label>Token code</label>
                     <comment>
                         <![CDATA[Get your AT-code <a target='_blank' href='https://admin.pay.nl/company/tokens'>here</a>. Not registered at PAY? Sign up <a target='_blank' href='https://www.pay.nl/en?register'>here</a>!]]>
                     </comment>
@@ -189,6 +189,12 @@
                     <comment><![CDATA[Select whether you want to use PAY. as Google Analytics proxy.]]></comment>
                     <source_model>Paynl\Payment\Model\Config\Source\GoogleAnalytics</source_model>
                     <config_path>payment/paynl/google_analytics_ecommerce</config_path>
+                </field>
+                <field id="pay_pending_page" translate="label,comment" type="select" sortOrder="109" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Pending page</label>
+                    <comment><![CDATA[Select whether you want to use the PAY. thank you page when transaction is pending.]]></comment>
+                    <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
+                    <config_path>payment/paynl/pay_pending_page</config_path>
                 </field>
             </group>
         </section>
