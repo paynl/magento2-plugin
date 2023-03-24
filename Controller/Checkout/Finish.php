@@ -3,13 +3,14 @@
 namespace Paynl\Payment\Controller\Checkout;
 
 use Magento\Checkout\Model\Session;
+use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Quote\Model\QuoteRepository;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderRepository;
 use Paynl\Payment\Controller\PayAction;
-use Paynl\Payment\Helper\PayHelper;
 use Paynl\Payment\Model\Config;
+use Paynl\Payment\Helper\PayHelper;
 
 /**
  * Finishes up the payment and redirects the user to the thank you page.
@@ -104,7 +105,7 @@ class Finish extends PayAction
         $resultRedirect = $this->resultRedirectFactory->create();
         $params = $this->getRequest()->getParams();
         $payOrderId = empty($params['orderId']) ? (empty($params['orderid']) ? null : $params['orderid']) : $params['orderId'];
-        $orderStatusId = empty($params['orderStatusId']) ? null : (int) $params['orderStatusId'];
+        $orderStatusId = empty($params['orderStatusId']) ? null : (int)$params['orderStatusId'];
         $magOrderId = empty($params['entityid']) ? null : $params['entityid'];
         $bSuccess = $orderStatusId === Config::ORDERSTATUS_PAID;
         $bPending = in_array($orderStatusId, Config::ORDERSTATUS_PENDING);
