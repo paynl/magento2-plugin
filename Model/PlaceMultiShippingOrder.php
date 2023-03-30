@@ -36,19 +36,9 @@ class PlaceMultiShippingOrder implements PlaceOrderInterface
     private $paynlHelper;
 
     /**
-     * @var MultishippingTransaction
-     */
-    private $multishippingTransaction;
-
-    /**
      * @var CheckoutUrl
      */
     private $checkoutUrl;
-
-    /**
-     * @var TransactionDescription
-     */
-    private $transactionDescription;
 
     /**
      * @var UrlInterface
@@ -91,18 +81,15 @@ class PlaceMultiShippingOrder implements PlaceOrderInterface
     public function place(array $orderList): array
     {
         $totalOrderAmount = 0;
-        $currencyCode = null;
 
         try {
             foreach ($orderList as $order) {
                 $this->orderManagement->place($order);
                 $totalOrderAmount += $order->getBaseGrandTotal();
-                $currencyCode = $order->getBaseCurrencyCode();
             }
 
             $totalOrderAmount = number_format($totalOrderAmount ?? 0.0, 2, '.', '');
             $order = reset($orderList);
-            $storeId = $order->getStoreId();
             $payment = $order->getPayment();
 
             $methodInstance = $this->paymentHelper->getMethodInstance($payment->getMethod());
@@ -110,7 +97,6 @@ class PlaceMultiShippingOrder implements PlaceOrderInterface
             if ($methodInstance instanceof \Paynl\Payment\Model\Paymentmethod\Paymentmethod) {
                 payHelper::logNotice('Start new payment for multishipping order ' . $order->getId(), array(), $order->getStore());
                 $transaction = $methodInstance->startMultiShippingOrder($order, $totalOrderAmount, $this->getRedirectUrl($orderList));
-                $payment->setAdditionalInformation('eteww', json_encode($this->getOrderIds($orderList)));
                 $payment->setAdditionalInformation('transactionId', $transaction->getTransactionId());
                 $payment->setAdditionalInformation('order_ids', json_encode($this->getOrderIds($orderList)));
                 $this->orderRepository->save($order);
@@ -156,9 +142,6 @@ class PlaceMultiShippingOrder implements PlaceOrderInterface
             'order_ids' => $this->getOrderIds($orders),
             'entityid' => $order->getEntityId()
         ]);
-
-        $store = $order->getStore();
-        $baseUrl = $store->getBaseUrl();
 
         $this->urlBuilder->setScope($order->getStoreId());
         return $this->urlBuilder->getUrl('paynl/checkout/finish/', ['_query' => $parameters]);
