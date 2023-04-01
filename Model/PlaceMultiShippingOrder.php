@@ -96,7 +96,13 @@ class PlaceMultiShippingOrder implements PlaceOrderInterface
 
             if ($methodInstance instanceof \Paynl\Payment\Model\Paymentmethod\Paymentmethod) {
                 payHelper::logNotice('Start new payment for multishipping order ' . $order->getId(), array(), $order->getStore());
-                $transaction = $methodInstance->startMultiShippingOrder($order, $totalOrderAmount, $this->getRedirectUrl($orderList));
+
+                $newPayment = new PayPaymentCreate($order, $methodInstance);
+                $newPayment->setAmount($totalOrderAmount);
+                $newPayment->setFinishURL($this->getRedirectUrl($orderList));
+
+                $transaction = $newPayment->create();
+
                 $payment->setAdditionalInformation('transactionId', $transaction->getTransactionId());
                 $payment->setAdditionalInformation('order_ids', json_encode($this->getOrderIds($orderList)));
                 $this->orderRepository->save($order);

@@ -38,7 +38,7 @@ abstract class PaymentMethod extends AbstractMethod
     /**
      * @var Config
      */
-    protected $paynlConfig;
+    public $paynlConfig;
 
     /**
      * @var OrderRepository
@@ -122,6 +122,22 @@ abstract class PaymentMethod extends AbstractMethod
         $this->orderConfig = $orderConfig;
         $this->storeManager = $objectManager->create(\Magento\Store\Model\StoreManagerInterface::class);
         $this->cookieManager = $objectManager->create('\Magento\Framework\Stdlib\CookieManagerInterface');
+    }
+
+    /**
+     * @return ScopeConfigInterface
+     */
+    public function getScopeConfig()
+    {
+        return $this->_scopeConfig;
+    }
+
+    /**
+     * @return mixed|string
+     */
+    public function getCode()
+    {
+        return $this->_code;
     }
 
     /**
@@ -316,26 +332,6 @@ abstract class PaymentMethod extends AbstractMethod
     }
 
     /**
-     * @param string $gender
-     * @return string|null
-     */
-    public function genderConversion($gender)
-    {
-        switch ($gender) {
-            case '1':
-                $gender = 'M';
-                break;
-            case '2':
-                $gender = 'F';
-                break;
-            default:
-                $gender = null;
-                break;
-        }
-        return $gender;
-    }
-
-    /**
      * @param string $paymentAction
      * @param object $stateObject
      * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
@@ -449,23 +445,14 @@ abstract class PaymentMethod extends AbstractMethod
     public function startTransaction(Order $order)
     {
         try {
-            $transaction = $this->doStartTransaction($order);
-            payHelper::logDebug('Transaction: ' . $transaction->getTransactionId());
+            $transaction = (new PayPaymentCreate($order, $this))->create();
         } catch (\Exception $e) {
-            $strMessage = $e->getMessage();
-            payHelper::logDebug('Transactie start mislukt: ' . $strMessage . ' | ' . $e->getCode());
-
-            if (stripos($strMessage, 'minimum amount') !== false) {
-                $this->messageManager->addNoticeMessage(__('Unfortunately the order amount does not fit the requirements for this payment method.'));
-            } else {
-                $this->messageManager->addNoticeMessage(__('Unfortunately something went wrong'));
-            }
-
-            $store = $order->getStore();
-
-            return $store->getBaseUrl() . 'checkout/cart/index';
+            payHelper::logCritical('Transaction start failed: ' . $e->getMessage() . ' | ' . $e->getCode());
+            $this->messageManager->addNoticeMessage(payHelper::getFriendlyMessage($e->getMessage()));
+            return $order->getStore()->getBaseUrl() . 'checkout/cart/index';
         }
 
+        payHelper::logDebug('Transaction: ' . $transaction->getTransactionId());
         $order->getPayment()->setAdditionalInformation('transactionId', $transaction->getTransactionId());
         $this->paynlConfig->setStore($order->getStore());
 
@@ -479,38 +466,6 @@ abstract class PaymentMethod extends AbstractMethod
     }
 
     /**
-     * @param PayPaymentCreate $payment
-     * @return false|\Paynl\Result\Transaction\Start
-     */
-    public function createPayPayment(PayPaymentCreate $payment)
-    {
-        $payTransction = false;
-        try {
-            $payTransction = \Paynl\Transaction::start($payment->getData());
-        } catch (\Exception $exception) {
-            payHelper::logCritical('Transaction start failed: ' . $e->getMessage() . ' | ' . $e->getCode());
-            $this->messageManager->addNoticeMessage(payHelper::getFriendlyMessage($e->getMessage()));
-        }
-
-        return $payTransction;
-    }
-
-    /**
-     * @param Order $order
-     * @param integer $multipleOrderAmount Total amount of orders
-     * @param string $finishUrl Optional finish URL
-     * @return \Paynl\Result\Transaction\Start
-     * @throws \Paynl\Error\Api
-     * @throws \Paynl\Error\Error
-     * @throws \Paynl\Error\Required\ApiToken
-     * @throws \Paynl\Error\Required\ServiceId
-     */
-    public function startMultiShippingOrder(Order $order, $multipleOrderAmount = null, $finishUrl = null)
-    {
-        return $this->doStartTransaction($order, $multipleOrderAmount, $finishUrl);
-    }
-
-    /**
      * @param Order $order
      * @param integer $multipleOrderAmount
      * @param string $finishUrl
@@ -520,7 +475,7 @@ abstract class PaymentMethod extends AbstractMethod
      * @throws \Paynl\Error\Required\ApiToken
      * @throws \Paynl\Error\Required\ServiceId
      */
-    protected function doStartTransaction(Order $order, $multipleOrderAmount = null, $finishUrl = null)
+    protected function doStartTransactionOld(Order $order, $multipleOrderAmount = null, $finishUrl = null)
     {
         $this->paynlConfig->setStore($order->getStore());
         $this->paynlConfig->configureSDK();

@@ -220,4 +220,45 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
     {
         return $this->httpHeader->getHttpUserAgent();
     }
+
+    /**
+     * @param $exceptionMessage
+     * @return \Magento\Framework\Phrase
+     */
+    public static function getFriendlyMessage($exceptionMessage)
+    {
+        $exceptionMessage = strtolower(trim($exceptionMessage));
+
+        if (stripos($exceptionMessage, 'minimum amount') !== false) {
+            $strMessage = __('Unfortunately the order amount does not fit the requirements for this payment method.');
+        }
+        elseif (stripos($exceptionMessage, 'not enabled for this service') !== false) {
+            $strMessage = __('The selected payment method is not enabled. Please select another payment method.');
+        } else {
+            $strMessage = __('Unfortunately something went wrong.');
+        }
+
+        return $strMessage;
+    }
+
+    /**
+     * @param string $gender
+     * @return string|null
+     */
+    public static function genderConversion($gender)
+    {
+        switch ($gender) {
+            case '1':
+                $gender = 'M';
+                break;
+            case '2':
+                $gender = 'F';
+                break;
+            default:
+                $gender = null;
+                break;
+        }
+        return $gender;
+    }
+
 }
