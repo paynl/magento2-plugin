@@ -3,8 +3,8 @@
 namespace Paynl\Payment\Plugin;
 
 use Magento\Sales\Block\Adminhtml\Order\View as OrderView;
-use \Paynl\Payment\Helper\PayHelper;
-use \Magento\Framework\UrlInterface;
+use Paynl\Payment\Helper\PayHelper;
+use Magento\Framework\UrlInterface;
 use Magento\Framework\App\RequestInterface;
 
 class InstoreButton
@@ -19,6 +19,13 @@ class InstoreButton
      */
     protected $_request;
 
+    /**
+     * @param \Magento\Framework\Message\ManagerInterface $messageManager
+     * @param \Magento\Sales\Model\Order $order
+     * @param \Magento\Backend\Model\Url $backendUrl
+     * @param UrlInterface $urlInterface
+     * @param RequestInterface $request
+     */
     public function __construct(
         \Magento\Framework\Message\ManagerInterface $messageManager,
         \Magento\Sales\Model\Order $order,
@@ -33,6 +40,12 @@ class InstoreButton
         $this->_request = $request;
     }
 
+    /**
+     * @param \Magento\Backend\Block\Widget\Button\Toolbar\Interceptor $subject
+     * @param \Magento\Framework\View\Element\AbstractBlock $context
+     * @param \Magento\Backend\Block\Widget\Button\ButtonList $buttonList
+     * @return array
+     */
     public function beforePushButtons(
         \Magento\Backend\Block\Widget\Button\Toolbar\Interceptor $subject,
         \Magento\Framework\View\Element\AbstractBlock $context,
