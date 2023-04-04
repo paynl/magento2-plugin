@@ -88,18 +88,20 @@ class PlaceMultiShippingOrder implements PlaceOrderInterface
                 $totalOrderAmount += $order->getBaseGrandTotal();
             }
 
+            $jsonOrders = json_encode($this->getOrderIds($orderList));
+            foreach ($orderList as $order) {
+                $order->getPayment()->setAdditionalInformation('order_ids', $jsonOrders)->save();
+            }
+
             $totalOrderAmount = number_format($totalOrderAmount ?? 0.0, 2, '.', '');
             $order = reset($orderList);
             $payment = $order->getPayment();
-
             $methodInstance = $this->paymentHelper->getMethodInstance($payment->getMethod());
 
             if ($methodInstance instanceof \Paynl\Payment\Model\Paymentmethod\Paymentmethod) {
                 payHelper::logNotice('Start new payment for multishipping order ' . $order->getId(), array(), $order->getStore());
                 $transaction = $methodInstance->startMultiShippingOrder($order, $totalOrderAmount, $this->getRedirectUrl($orderList));
-                $payment->setAdditionalInformation('transactionId', $transaction->getTransactionId());
-                $payment->setAdditionalInformation('order_ids', json_encode($this->getOrderIds($orderList)));
-                $this->orderRepository->save($order);
+                $order->getPayment()->setAdditionalInformation('transactionId', $transaction->getTransactionId())->save();
                 $this->checkoutUrl->setUrl($transaction->getRedirectUrl());
             } else {
                 throw new Error('PAY.: Method is not a paynl payment method');
