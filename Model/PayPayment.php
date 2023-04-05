@@ -242,12 +242,12 @@ class PayPayment
     }
 
     /**
-     * @param Transaction $transaction
+     * @param PayTransaction $transaction
      * @param Order $order
      * @param Interceptor $payment
      * @return boolean
      */
-    private function processB2BPayment(Transaction $transaction, Order $order, Interceptor $payment)
+    private function processB2BPayment(PayTransaction $transaction, Order $order, Interceptor $payment)
     {
         # Create transaction
         $formatedPrice = $order->getBaseCurrency()->formatTxt($order->getGrandTotal());
