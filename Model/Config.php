@@ -19,6 +19,7 @@ class Config
     public const ORDERSTATUS_PENDING = array(20, 25, 40, 50, 90);
     public const ORDERSTATUS_DENIED = -63;
     public const ORDERSTATUS_CANCELED = -90;
+    public const ORDERSTATUS_VERIFY = 85;
 
     /** @var  Store */
     private $store;
@@ -326,6 +327,14 @@ class Config
     public function sendEcommerceAnalytics()
     {
         return $this->store->getConfig('payment/paynl/google_analytics_ecommerce') == 1;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getPendingPage()
+    {
+        return $this->store->getConfig('payment/paynl/pay_pending_page') == 1;
     }
 
     /**

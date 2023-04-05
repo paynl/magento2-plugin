@@ -45,6 +45,12 @@ class PayPayment
      */
     private $builderInterface;
 
+    /**
+     *
+     * @var Magento\Sales\Model\Order\PaymentFactory
+     */
+    private $paymentFactory;
+
     private $paynlConfig;
 
     /**
@@ -57,6 +63,7 @@ class PayPayment
      * @param OrderRepository $orderRepository
      * @param \Paynl\Payment\Model\Config $paynlConfig
      * @param \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $builderInterface
+     * @param \Magento\Sales\Model\Order\PaymentFactory $paymentFactory
      */
     public function __construct(
         \Paynl\Payment\Model\Config $config,
@@ -65,7 +72,8 @@ class PayPayment
         \Magento\Framework\Event\ManagerInterface $eventManager,
         OrderRepository $orderRepository,
         \Paynl\Payment\Model\Config $paynlConfig,
-        \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $builderInterface
+        \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $builderInterface,
+        \Magento\Sales\Model\Order\PaymentFactory $paymentFactory
     ) {
         $this->eventManager = $eventManager;
         $this->config = $config;
@@ -74,6 +82,7 @@ class PayPayment
         $this->orderRepository = $orderRepository;
         $this->paynlConfig = $paynlConfig;
         $this->builderInterface = $builderInterface;
+        $this->paymentFactory = $paymentFactory;
     }
 
     /**
@@ -254,9 +263,6 @@ class PayPayment
     public function processPartiallyPaidOrder(Order $order, string $payOrderId)
     {
         $returnResult = false;
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $orderPaymentFactory = $objectManager->get(\Magento\Sales\Model\Order\PaymentFactory::class);
-
         try {
             $details = \Paynl\Transaction::details($payOrderId);
 
@@ -278,7 +284,7 @@ class PayPayment
 
             /** @var Interceptor $orderPayment */
             if (!$firstPayment) {
-                $orderPayment = $orderPaymentFactory->create();
+                $orderPayment = $this->paymentFactory->create();
             } else {
                 $orderPayment = $order->getPayment();
             }

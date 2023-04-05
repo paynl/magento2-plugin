@@ -135,3 +135,5 @@
 "You are up to date with the latest version","You are up to date with the latest version"
 "There is a new version available (","There is a new version available ("
 "Pay. Transaction-ID: ","Pay. Transaction-ID: "
+"PAY. - This payment has been flagged as possibly fraudulent. Please verify this transaction in the Pay. portal.","PAY. - This payment has been flagged as possibly fraudulent. Please verify this transaction in the Pay. portal."
+"Select whether you want to use the PAY. thank you page when transaction is pending.","Select whether you want to use the PAY. thank you page when transaction is pending."
