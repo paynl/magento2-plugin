@@ -37,10 +37,13 @@
 
 .pay-orderinformation {
     width: calc((100%) * .5 - 30px);
+    margin: -40px 0px 20px 0px;
 }
 
 .pay-link-icon {
     color: black;
     margin-left: 2px;
     font-size: 17px;
+    text-decoration: none;
+    display: inline-block;
 }

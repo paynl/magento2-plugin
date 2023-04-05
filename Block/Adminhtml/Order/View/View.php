@@ -63,14 +63,4 @@ class View extends Template
 
         return $id;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getPaymentMethod()
-    {
-        $paymentmethod = $this->getOrder()->getAdditionalInformation()['method_title'];
-
-        return $paymentmethod;
-    }
 }
