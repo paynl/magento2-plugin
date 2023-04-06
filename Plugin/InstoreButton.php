@@ -5,7 +5,6 @@ namespace Paynl\Payment\Plugin;
 use Magento\Sales\Block\Adminhtml\Order\View as OrderView;
 use Paynl\Payment\Helper\PayHelper;
 use Magento\Framework\UrlInterface;
-use Magento\Framework\App\RequestInterface;
 
 class InstoreButton
 {
@@ -13,10 +12,6 @@ class InstoreButton
     protected $order;
     protected $backendUrl;
     protected $urlInterface;
-
-    /**
-     * @var RequestInterface
-     */
     protected $_request;
 
     /**
@@ -24,20 +19,17 @@ class InstoreButton
      * @param \Magento\Sales\Model\Order $order
      * @param \Magento\Backend\Model\Url $backendUrl
      * @param UrlInterface $urlInterface
-     * @param RequestInterface $request
      */
     public function __construct(
         \Magento\Framework\Message\ManagerInterface $messageManager,
         \Magento\Sales\Model\Order $order,
         \Magento\Backend\Model\Url $backendUrl,
         UrlInterface $urlInterface,
-        RequestInterface $request
     ) {
         $this->messageManager = $messageManager;
         $this->order = $order;
         $this->backendUrl = $backendUrl;
         $this->urlInterface = $urlInterface;
-        $this->_request = $request;
     }
 
     /**
