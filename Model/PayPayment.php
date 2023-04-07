@@ -6,6 +6,7 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment\Interceptor;
 use Magento\Sales\Model\OrderRepository;
+use Magento\SalesRule\Model\Coupon\UpdateCouponUsages;
 use Paynl\Result\Transaction\Transaction;
 use Paynl\Payment\Helper\PayHelper;
 
@@ -51,6 +52,12 @@ class PayPayment
      */
     private $paymentFactory;
 
+    /**
+     *
+     * @var Magento\SalesRule\Model\Coupon\UpdateCouponUsages
+     */
+    private $updateCouponUsages;
+
     private $paynlConfig;
 
     /**
@@ -64,6 +71,7 @@ class PayPayment
      * @param \Paynl\Payment\Model\Config $paynlConfig
      * @param \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $builderInterface
      * @param \Magento\Sales\Model\Order\PaymentFactory $paymentFactory
+     * @param UpdateCouponUsages $updateCouponUsages
      */
     public function __construct(
         \Paynl\Payment\Model\Config $config,
@@ -73,7 +81,8 @@ class PayPayment
         OrderRepository $orderRepository,
         \Paynl\Payment\Model\Config $paynlConfig,
         \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $builderInterface,
-        \Magento\Sales\Model\Order\PaymentFactory $paymentFactory
+        \Magento\Sales\Model\Order\PaymentFactory $paymentFactory,
+        UpdateCouponUsages $updateCouponUsages
     ) {
         $this->eventManager = $eventManager;
         $this->config = $config;
@@ -83,6 +92,7 @@ class PayPayment
         $this->paynlConfig = $paynlConfig;
         $this->builderInterface = $builderInterface;
         $this->paymentFactory = $paymentFactory;
+        $this->updateCouponUsages = $updateCouponUsages;
     }
 
     /**
@@ -99,6 +109,9 @@ class PayPayment
             $order->cancel();
             $order->addStatusHistoryComment(__('PAY. - Canceled the order'));
             $this->orderRepository->save($order);
+            if (!empty($order->getCouponCode())) {
+                $this->updateCouponUsages->execute($order, false);
+            }
             $returnResult = true;
         } catch (\Exception $e) {
             throw new \Exception('Cannot cancel order: ' . $e->getMessage());
@@ -148,7 +161,9 @@ class PayPayment
         $order->setState($state);
         $order->setStatus($state);
         $order->addStatusHistoryComment(__('PAY. - Uncanceled order'), false);
-
+        if (!empty($order->getCouponCode())) {
+            $this->updateCouponUsages->execute($order, false);
+        }
         $this->eventManager->dispatch('order_uncancel_after', ['order' => $order]);
     }
 
