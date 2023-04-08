@@ -10,7 +10,7 @@ use Magento\Framework\HTTP\Header;
 
 class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
 {
-    const PAY_LOG_PREFIX = 'PAY.: ';
+    public const PAY_LOG_PREFIX = 'PAY.: ';
 
     private static $objectManager;
     private static $store;
@@ -43,10 +43,10 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
-     * @param Magento\Store\Model\Store $store
+     * @param \Magento\Store\Model\Store $store
      * @return mixed
      */
-    public static function getStore($store)
+    public static function getStore(\Magento\Store\Model\Store $store)
     {
         if (empty($store)) {
             if (empty(self::$store)) {
@@ -62,7 +62,7 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
     /**
      * @param integer $level
      * @param string $type
-     * @return bool
+     * @return boolean
      */
     public static function hasCorrectLevel($level, $type)
     {
@@ -91,8 +91,8 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
-     * @param $text
-     * @param $params
+     * @param string $text
+     * @param array $params
      * @param Magento\Store\Model\Store $store
      * @return void
      */
@@ -129,6 +129,7 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
      * @param string $text
      * @param array $params
      * @param Magento\Store\Model\Store|null $store
+     * @return void
      */
     public static function log($text, $params = array(), $store = null)
     {
@@ -257,6 +258,7 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
      * Removes processing mark after new-ppt is finished
      *
      * @param string $payOrderId
+     * @return void
      */
     public function removeProcessing($payOrderId)
     {

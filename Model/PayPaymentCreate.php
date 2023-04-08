@@ -203,7 +203,7 @@ class PayPaymentCreate
     }
 
     /**
-     * @param string currency Currency code
+     * @param string $currency Currency code
      * @return $this
      */
     public function setCurrency($currency)
@@ -282,7 +282,7 @@ class PayPaymentCreate
     }
 
     /**
-     * @return bool
+     * @return boolean
      */
     private function useBillingAddressInstorePickup()
     {
