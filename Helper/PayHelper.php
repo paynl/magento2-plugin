@@ -96,7 +96,7 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
      * @param \Magento\Store\Model\Store  $store
      * @return void
      */
-    public static function logNotice($text, $params = array(), \Magento\Store\Model\Store $store = null)
+    public static function logNotice($text, array $params = array(), \Magento\Store\Model\Store $store = null)
     {
         self::writeLog($text, 'notice', $params, $store);
     }
@@ -107,7 +107,7 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
      * @param \Magento\Store\Model\Store  $store
      * @return void
      */
-    public static function logInfo($text, $params = array(), \Magento\Store\Model\Store $store = null)
+    public static function logInfo($text, array $params = array(), \Magento\Store\Model\Store $store = null)
     {
         self::writeLog($text, 'info', $params, $store);
     }
@@ -118,7 +118,7 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
      * @param \Magento\Store\Model\Store  $store
      * @return void
      */
-    public static function logDebug($text, $params = array(), \Magento\Store\Model\Store $store = null)
+    public static function logDebug($text, array $params = array(), \Magento\Store\Model\Store $store = null)
     {
         self::writeLog($text, 'debug', $params, $store);
     }
@@ -131,7 +131,7 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
      * @param \Magento\Store\Model\Store |null $store
      * @return void
      */
-    public static function log($text, $params = array(), \Magento\Store\Model\Store $store = null)
+    public static function log($text, array $params = array(), \Magento\Store\Model\Store $store = null)
     {
         $objectManager = self::getObjectManager();
         $logger = $objectManager->get(\Paynl\Payment\Logging\Logger::class);
@@ -145,7 +145,7 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
      * @param \Magento\Store\Model\Store $store
      * @return void
      */
-    public static function writeLog($text, $type, $params, \Magento\Store\Model\Store $store)
+    public static function writeLog($text, $type, array $params, \Magento\Store\Model\Store $store)
     {
         $store = self::getStore($store);
         $level = $store->getConfig('payment/paynl/logging_level');
@@ -211,10 +211,6 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
     /**
      * @param string $cookieName
-     * @return void
-     */
-    /**
-     * @param $cookieName
      * @return void
      * // phpcs:ignore
      */
