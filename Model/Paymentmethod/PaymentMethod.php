@@ -18,6 +18,7 @@ use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderRepository;
 use Paynl\Payment\Helper\PayHelper;
 use Paynl\Payment\Model\Config;
+use Paynl\Payment\Model\PayPaymentCreate;
 use Paynl\Transaction;
 use Magento\InventoryInStorePickupShippingApi\Model\Carrier\InStorePickup;
 
@@ -478,14 +479,48 @@ abstract class PaymentMethod extends AbstractMethod
     }
 
     /**
+     * @param PayPaymentCreate $payment
+     * @return false|\Paynl\Result\Transaction\Start
+     */
+    public function createPayPayment(PayPaymentCreate $payment)
+    {
+        $payTransction = false;
+        try {
+            $payTransction = \Paynl\Transaction::start($payment->getData());
+        } catch (\Exception $exception) {
+            payHelper::logCritical('Transaction start failed: ' . $e->getMessage() . ' | ' . $e->getCode());
+            $this->messageManager->addNoticeMessage(payHelper::getFriendlyMessage($e->getMessage()));
+        }
+
+        return $payTransction;
+    }
+
+    /**
      * @param Order $order
+     * @param integer $multipleOrderAmount Total amount of orders
+     * @param string $finishUrl Optional finish URL
      * @return \Paynl\Result\Transaction\Start
      * @throws \Paynl\Error\Api
      * @throws \Paynl\Error\Error
      * @throws \Paynl\Error\Required\ApiToken
      * @throws \Paynl\Error\Required\ServiceId
      */
-    protected function doStartTransaction(Order $order)
+    public function startMultiShippingOrder(Order $order, $multipleOrderAmount = null, $finishUrl = null)
+    {
+        return $this->doStartTransaction($order, $multipleOrderAmount, $finishUrl);
+    }
+
+    /**
+     * @param Order $order
+     * @param integer $multipleOrderAmount
+     * @param string $finishUrl
+     * @return \Paynl\Result\Transaction\Start
+     * @throws \Paynl\Error\Api
+     * @throws \Paynl\Error\Error
+     * @throws \Paynl\Error\Required\ApiToken
+     * @throws \Paynl\Error\Required\ServiceId
+     */
+    protected function doStartTransaction(Order $order, $multipleOrderAmount = null, $finishUrl = null)
     {
         $this->paynlConfig->setStore($order->getStore());
         $this->paynlConfig->configureSDK();
@@ -514,7 +549,9 @@ abstract class PaymentMethod extends AbstractMethod
             $currency = $order->getOrderCurrencyCode();
         }
 
-        $items = $order->getAllVisibleItems();
+        if (!is_null($multipleOrderAmount)) {
+            $total = $multipleOrderAmount;
+        }
 
         $orderId = $order->getIncrementId();
         $quoteId = $order->getQuoteId();
@@ -524,6 +561,10 @@ abstract class PaymentMethod extends AbstractMethod
 
         $returnUrl = $additionalData['returnUrl'] ?? $baseUrl . 'paynl/checkout/finish/?entityid=' . $order->getEntityId();
         $exchangeUrl = $additionalData['exchangeUrl'] ?? $baseUrl . 'paynl/checkout/exchange/';
+
+        if (!empty($finishUrl)) {
+            $returnUrl = $finishUrl;
+        }
 
         $paymentOptionId = $this->getPaymentOptionId();
 
@@ -638,6 +679,7 @@ abstract class PaymentMethod extends AbstractMethod
         }
         $arrProducts = [];
         $arrWEEETax = [];
+        $items = $order->getAllVisibleItems();
         foreach ($items as $item) {
             $arrItem = $item->toArray();
             if ($arrItem['price_incl_tax'] != null) {
@@ -786,7 +828,6 @@ abstract class PaymentMethod extends AbstractMethod
             ];
         }
 
-        // WEEE
         if (!empty($arrWEEETax)) {
             $arrProducts = array_merge($arrProducts, $arrWEEETax);
         }
