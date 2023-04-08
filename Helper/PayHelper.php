@@ -212,7 +212,6 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
     /**
      * @param string $cookieName
      * @phpcs:disable PSR12.Functions.ReturnTypeDeclaration
-     * @return void
      */
     public static function deleteCookie($cookieName)
     {
@@ -222,8 +221,7 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
         if ($cookieManager->getCookie($cookieName)) {
             $metadata = $cookieMetadataFactory->createPublicCookieMetadata();
             $metadata->setPath('/');
-            // phpcs:ignore
-            return $cookieManager->deleteCookie($cookieName, $metadata);
+            return $cookieManager->deleteCookie($cookieName, $metadata); // phpcs:ignore
         }
     }
 
