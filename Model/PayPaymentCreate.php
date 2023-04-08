@@ -121,7 +121,7 @@ class PayPaymentCreate
 
     /**
      * @param integer $paymentMethodId Setting the method, like iDEAL or banktransfer...
-     * @return void
+     * @return $this
      */
     public function setPaymentMethod($paymentMethodId)
     {
@@ -130,8 +130,8 @@ class PayPaymentCreate
     }
 
     /**
-     * @param $cocNumber
-     * @return void
+     * @param string $cocNumber
+     * @return $this
      */
     public function setCocNumber($cocNumber)
     {
@@ -140,7 +140,7 @@ class PayPaymentCreate
     }
 
     /**
-     * @param $vatNumber
+     * @param string $vatNumber
      * @return $this
      */
     public function setVatNumber($vatNumber)
@@ -150,8 +150,8 @@ class PayPaymentCreate
     }
 
     /**
-     * @param $issuer
-     * @return void
+     * @param string $issuer
+     * @return $this
      */
     public function setIssuer($issuer)
     {
@@ -180,7 +180,7 @@ class PayPaymentCreate
     }
 
     /**
-     * @param int $valid_days
+     * @param integer $valid_days
      * @return $this
      * @throws \Exception
      */
@@ -193,7 +193,7 @@ class PayPaymentCreate
     }
 
     /**
-     * @param $amount
+     * @param integer $amount
      * @return $this
      */
     public function setAmount($amount)
@@ -212,12 +212,18 @@ class PayPaymentCreate
         return $this;
     }
 
+    /**
+     * @return float|string|null
+     */
     private function getDescription()
     {
         $prefix = $this->scopeConfig->getValue('payment/paynl/order_description_prefix', 'store');
         return !empty($prefix) ? $prefix . $this->orderId : $this->orderId;
     }
 
+    /**
+     * @return array
+     */
     public function getData()
     {
         $shippingAddress = $this->getShippingAddress();
@@ -261,6 +267,9 @@ class PayPaymentCreate
         return $data;
     }
 
+    /**
+     * @return float|string|null
+     */
     private function getIpAddress()
     {
         $ipAddress = $this->order->getRemoteIp();
@@ -272,11 +281,17 @@ class PayPaymentCreate
         return $ipAddress;
     }
 
+    /**
+     * @return bool
+     */
     private function useBillingAddressInstorePickup()
     {
         return $this->scopeConfig->getValue('payment/' . $this->methodInstance->getCode() . '/useBillingAddressInstorePickup', 'store') == 1;
     }
 
+    /**
+     * @return array
+     */
     private function getShippingAddress()
     {
         $shippingAddress = null;
@@ -309,6 +324,9 @@ class PayPaymentCreate
         return $shippingAddress;
     }
 
+    /**
+     * @return array
+     */
     private function getEnduserData()
     {
         $arrBillingAddress = $this->order->getBillingAddress();
@@ -348,6 +366,9 @@ class PayPaymentCreate
         return $enduser;
     }
 
+    /**
+     * @return array
+     */
     private function getInvoiceAddress()
     {
         $arrBillingAddress = $this->order->getBillingAddress();
@@ -372,6 +393,9 @@ class PayPaymentCreate
         return $invoiceAddress;
     }
 
+    /**
+     * @return array
+     */
     private function getProductData()
     {
         $arrProducts = [];
@@ -531,5 +555,4 @@ class PayPaymentCreate
 
         return $arrProducts;
     }
-
 }

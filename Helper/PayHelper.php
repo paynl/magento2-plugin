@@ -4,10 +4,9 @@ namespace Paynl\Payment\Helper;
 
 use Psr\Log\LoggerInterface;
 use Magento\Framework\App\ResourceConnection;
-use \Paynl\Payment\Model\Config\Source\LogOptions;
+use Paynl\Payment\Model\Config\Source\LogOptions;
 use Magento\Framework\HTTP\PhpEnvironment\RemoteAddress;
 use Magento\Framework\HTTP\Header;
-
 
 class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
 {
@@ -19,16 +18,21 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
     private $remoteAddress;
     private $httpHeader;
 
-    public function __construct(
-        ResourceConnection $resource,
-        RemoteAddress $remoteAddress,
-        Header $httpHeader
-    ) {
+    /**
+     * @param ResourceConnection $resource
+     * @param RemoteAddress $remoteAddress
+     * @param Header $httpHeader
+     */
+    public function __construct(ResourceConnection $resource, RemoteAddress $remoteAddress, Header $httpHeader)
+    {
         $this->remoteAddress = $remoteAddress;
         $this->httpHeader = $httpHeader;
         $this->resource = $resource;
     }
 
+    /**
+     * @return \Magento\Framework\App\ObjectManager
+     */
     public static function getObjectManager()
     {
         if (empty(self::$objectManager)) {
@@ -38,6 +42,10 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
         return self::$objectManager;
     }
 
+    /**
+     * @param Magento\Store\Model\Store $store
+     * @return mixed
+     */
     public static function getStore($store)
     {
         if (empty($store)) {
@@ -51,6 +59,11 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
         return $store;
     }
 
+    /**
+     * @param integer $level
+     * @param string $type
+     * @return bool
+     */
     public static function hasCorrectLevel($level, $type)
     {
         if ($level == LogOptions::LOG_ONLY_CRITICAL && $type == 'critical') {
@@ -66,21 +79,45 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
         return false;
     }
 
+    /**
+     * @param string $text
+     * @param array $params
+     * @param Magento\Store\Model\Store $store
+     * @return void
+     */
     public static function logCritical($text, $params = array(), $store = null)
     {
         self::writeLog($text, 'critical', $params, $store);
     }
 
+    /**
+     * @param $text
+     * @param $params
+     * @param Magento\Store\Model\Store $store
+     * @return void
+     */
     public static function logNotice($text, $params = array(), $store = null)
     {
         self::writeLog($text, 'notice', $params, $store);
     }
 
+    /**
+     * @param string $text
+     * @param array $params
+     * @param Magento\Store\Model\Store $store
+     * @return void
+     */
     public static function logInfo($text, $params = array(), $store = null)
     {
         self::writeLog($text, 'info', $params, $store);
     }
 
+    /**
+     * @param string $text
+     * @param array $params
+     * @param Magento\Store\Model\Store $store
+     * @return void
+     */
     public static function logDebug($text, $params = array(), $store = null)
     {
         self::writeLog($text, 'debug', $params, $store);
@@ -89,9 +126,9 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
     /**
      * Logs while bypassing the loglevel setting.
      *
-     * @param $text
+     * @param string $text
      * @param array $params
-     * @param null $store
+     * @param Magento\Store\Model\Store|null $store
      */
     public static function log($text, $params = array(), $store = null)
     {
@@ -100,9 +137,15 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $logger->notice($text, $params);
     }
 
+    /**
+     * @param string $text
+     * @param string $type
+     * @param array $params
+     * @param Magento\Store\Model\Store $store
+     * @return void
+     */
     public static function writeLog($text, $type, $params, $store)
     {
-        $objectManager = self::getObjectManager();
         $store = self::getStore($store);
         $level = $store->getConfig('payment/paynl/logging_level');
 
@@ -110,6 +153,7 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
             if (!is_array($params)) {
                 $params = array();
             }
+            $objectManager = self::getObjectManager();
             $logger = $objectManager->get(\Paynl\Payment\Logging\Logger::class);
             switch ($type) {
                 case 'critical':
@@ -128,6 +172,11 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
         }
     }
 
+    /**
+     * @param string $cookieName
+     * @param string $value
+     * @return void
+     */
     public static function setCookie($cookieName, $value)
     {
         $objectManager = self::getObjectManager();
@@ -148,6 +197,10 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
         );
     }
 
+    /**
+     * @param string $cookieName
+     * @return mixed
+     */
     public static function getCookie($cookieName)
     {
         $objectManager = self::getObjectManager();
@@ -155,6 +208,10 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
         return $cookieManager->getCookie($cookieName);
     }
 
+    /**
+     * @param string $cookieName
+     * @return void
+     */
     public static function deleteCookie($cookieName)
     {
         $objectManager = self::getObjectManager();
@@ -170,8 +227,8 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
     /**
      * Checks if new-ppt is already processing, mark as processing if not marked already
      *
-     * @param $payOrderId
-     * @return bool
+     * @param string $payOrderId
+     * @return boolean
      */
     public function checkProcessing($payOrderId)
     {
@@ -199,7 +256,7 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
     /**
      * Removes processing mark after new-ppt is finished
      *
-     * @param $payOrderId
+     * @param string $payOrderId
      */
     public function removeProcessing($payOrderId)
     {
@@ -211,18 +268,24 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
         );
     }
 
+    /**
+     * @return false|string
+     */
     public function getClientIp()
     {
         return $this->remoteAddress->getRemoteAddress();
     }
 
+    /**
+     * @return string
+     */
     public function getHttpUserAgent()
     {
         return $this->httpHeader->getHttpUserAgent();
     }
 
     /**
-     * @param $exceptionMessage
+     * @param string $exceptionMessage
      * @return \Magento\Framework\Phrase
      */
     public static function getFriendlyMessage($exceptionMessage)
@@ -231,8 +294,7 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
         if (stripos($exceptionMessage, 'minimum amount') !== false) {
             $strMessage = __('Unfortunately the order amount does not fit the requirements for this payment method.');
-        }
-        elseif (stripos($exceptionMessage, 'not enabled for this service') !== false) {
+        } elseif (stripos($exceptionMessage, 'not enabled for this service') !== false) {
             $strMessage = __('The selected payment method is not enabled. Please select another payment method.');
         } else {
             $strMessage = __('Unfortunately something went wrong.');
@@ -260,5 +322,4 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
         }
         return $gender;
     }
-
 }
