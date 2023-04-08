@@ -38,7 +38,7 @@ class Paylink extends PaymentMethod
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function initialize($paymentAction, $stateObject)
+    public function initialize($paymentAction, object $stateObject)
     {
         if ($paymentAction == 'order') {
             /** @var Order $order */
@@ -187,7 +187,7 @@ class Paylink extends PaymentMethod
     }
 
     /**
-     * @param DataObject $data
+     * @param \Magento\Framework\DataObject $data
      * @return object
      * @throws \Magento\Framework\Exception\LocalizedException
      */

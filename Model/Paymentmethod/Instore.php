@@ -31,7 +31,7 @@ class Instore extends PaymentMethod
      * @return object|void
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function initialize($paymentAction, $stateObject)
+    public function initialize($paymentAction, object $stateObject)
     {
         if ($paymentAction == 'order') {
             /** @var Order $order */
