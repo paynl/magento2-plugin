@@ -5,11 +5,15 @@ namespace Paynl\Payment\Model\Paymentmethod;
 use Magento\Sales\Model\Order;
 use Magento\Framework\DataObject;
 use Paynl\Payment\Helper\PayHelper;
+use Paynl\Payment\Model\PayPaymentCreate;
 
 class Paylink extends PaymentMethod
 {
     protected $_code = 'paynl_payment_paylink';
 
+    /**
+     * @return integer
+     */
     protected function getDefaultPaymentOptionId()
     {
         return 961;
@@ -25,6 +29,15 @@ class Paylink extends PaymentMethod
     // this is an admin only method
     protected $_canUseCheckout = false;
 
+    /**
+     * @param string $paymentAction
+     * @param object $stateObject
+     * @return false|void
+     * @throws \Magento\Framework\Exception\AlreadyExistsException
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function initialize($paymentAction, $stateObject)
     {
         if ($paymentAction == 'order') {
@@ -32,7 +45,7 @@ class Paylink extends PaymentMethod
             $order = $this->getInfoInstance()->getOrder();
             $this->orderRepository->save($order);
 
-            $transaction = $this->doStartTransaction($order);
+            $transaction = (new PayPaymentCreate($order, $this))->create();
 
             $order->getPayment()->setAdditionalInformation('transactionId', $transaction->getTransactionId());
 
@@ -160,6 +173,12 @@ class Paylink extends PaymentMethod
         }
     }
 
+    /**
+     * @param string $order
+     * @param string $url
+     * @param string $status
+     * @return void
+     */
     public function addPaylinkComment($order, $url, $status)
     {
         $paylinktext = __('PAY.: Here is your ');
@@ -167,6 +186,11 @@ class Paylink extends PaymentMethod
         $order->addStatusHistoryComment($paylinktext . '<A href="' . $url . '">PAY. Link</a>. ' . $postText, $status)->save();
     }
 
+    /**
+     * @param DataObject $data
+     * @return object
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
     public function assignData(\Magento\Framework\DataObject $data)
     {
         $this->getInfoInstance()->setAdditionalInformation('valid_days', $data->getData('additional_data')['valid_days']);

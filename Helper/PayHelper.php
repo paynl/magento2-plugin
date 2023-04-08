@@ -43,10 +43,10 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
-     * @param \Magento\Store\Model\Store $store
-     * @return mixed
+     * @param \Magento\Store\Model\Store|null $store
+     * @return \Magento\Store\Model\Store|mixed
      */
-    public static function getStore(\Magento\Store\Model\Store $store)
+    public static function getStore(\Magento\Store\Model\Store $store = null)
     {
         if (empty($store)) {
             if (empty(self::$store)) {
@@ -115,7 +115,7 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
     /**
      * @param string $text
      * @param array $params
-     * @param \Magento\Store\Model\Store  $store
+     * @param \Magento\Store\Model\Store|null $store
      * @return void
      */
     public static function logDebug($text, array $params = array(), \Magento\Store\Model\Store $store = null)
@@ -142,10 +142,10 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
      * @param string $text
      * @param string $type
      * @param array $params
-     * @param \Magento\Store\Model\Store $store
+     * @param \Magento\Store\Model\Store|null $store
      * @return void
      */
-    public static function writeLog($text, $type, array $params, \Magento\Store\Model\Store $store)
+    public static function writeLog($text, $type, array $params, \Magento\Store\Model\Store $store = null)
     {
         $store = self::getStore($store);
         $level = $store->getConfig('payment/paynl/logging_level');
