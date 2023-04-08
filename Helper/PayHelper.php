@@ -212,6 +212,7 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
     /**
      * @param string $cookieName
      * @phpcs:disable PSR12.Functions.ReturnTypeDeclaration
+     * @phpcs:disable PEAR.Commenting.FunctionComment.MissingReturn
      */
     public static function deleteCookie($cookieName)
     {
