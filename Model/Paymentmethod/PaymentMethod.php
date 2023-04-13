@@ -855,11 +855,13 @@ abstract class PaymentMethod extends AbstractMethod
      */
     public function validatePhoneNumber($phone)
     {
-        $phone = trim($phone);
-        $phone = filter_var($phone, FILTER_SANITIZE_NUMBER_INT);
-        $valid_number = preg_match('/^(\+\s*)?(?=([.,\s()-]*\d){5})([\d(][\d.,\s()-]*)([[:alpha:]#][^\d]*\d.*)?$/', $phone, $matches) && preg_match('/\d{2}/', $phone);
-        if ($valid_number) {
-            return trim($matches[1]) . trim($matches[3]) . (!empty($matches[4]) ? ' ' . $matches[4] : '');
+        if (!empty($phone)) {
+            $phone = trim($phone);
+            $phone = filter_var($phone, FILTER_SANITIZE_NUMBER_INT);
+            $valid_number = preg_match('/^(\+\s*)?(?=([.,\s()-]*\d){5})([\d(][\d.,\s()-]*)([[:alpha:]#][^\d]*\d.*)?$/', $phone, $matches) && preg_match('/\d{2}/', $phone);
+            if ($valid_number) {
+                return trim($matches[1]) . trim($matches[3]) . (!empty($matches[4]) ? ' ' . $matches[4] : '');
+            }
         }
         return null;
     }
