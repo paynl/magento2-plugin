@@ -27,7 +27,7 @@ class Instore extends PaymentMethod
 
     /**
      * @param string $paymentAction
-     * @param object $stateObjects
+     * @param object $stateObject
      * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
      * @return object|void
      * @throws \Magento\Framework\Exception\LocalizedException
