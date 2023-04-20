@@ -37,8 +37,9 @@ class Paylink extends PaymentMethod
      * @throws \Magento\Framework\Exception\InputException
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
      */
-    public function initialize($paymentAction, object $stateObject)
+    public function initialize($paymentAction, $stateObject)
     {
         if ($paymentAction == 'order') {
             /** @var Order $order */

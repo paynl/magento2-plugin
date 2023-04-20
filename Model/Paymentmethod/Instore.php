@@ -27,11 +27,12 @@ class Instore extends PaymentMethod
 
     /**
      * @param string $paymentAction
-     * @param object $stateObject
+     * @param object $stateObjects
+     * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
      * @return object|void
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function initialize($paymentAction, object $stateObject)
+    public function initialize($paymentAction, $stateObject)
     {
         if ($paymentAction == 'order') {
             /** @var Order $order */
