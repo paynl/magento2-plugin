@@ -464,7 +464,7 @@ abstract class PaymentMethod extends AbstractMethod
 
         return $transaction->getRedirectUrl();
     }
-
+ 
     /**
      * @return integer
      */
