@@ -324,6 +324,14 @@ class Config
     /**
      * @return boolean
      */
+    public function autoVoidEnabled()
+    {
+        return $this->store->getConfig('payment/paynl/auto_void') == 1;
+    }
+
+    /**
+     * @return boolean
+     */
     public function sendEcommerceAnalytics()
     {
         return $this->store->getConfig('payment/paynl/google_analytics_ecommerce') == 1;

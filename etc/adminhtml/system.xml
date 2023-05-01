@@ -79,6 +79,14 @@
                     <source_model>Paynl\Payment\Model\Config\Source\AutoCapture</source_model>
                     <config_path>payment/paynl/auto_capture</config_path>
                 </field>
+                <field id="auto_void" translate="label" type="select" sortOrder="106" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Auto Void</label>
+                    <comment>
+                        <![CDATA[Automatically void authorisation-transactions when cancelling an order.]]>
+                    </comment>
+                    <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
+                    <config_path>payment/paynl/auto_void</config_path>
+                </field>
                 <field id="order_description_prefix" translate="label" type="text" sortOrder="107" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Order description prefix</label>
                     <comment>
