@@ -7,7 +7,7 @@ use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment\Interceptor;
 use Magento\Sales\Model\OrderRepository;
 use Magento\SalesRule\Model\Coupon\UpdateCouponUsages;
-use Paynl\Result\Transaction\Transaction;
+use Paynl\Result\Transaction\Transaction as PayTransaction;
 use Paynl\Payment\Helper\PayHelper;
 
 class PayPayment
@@ -168,27 +168,38 @@ class PayPayment
     }
 
     /**
-     * @param Transaction $transaction
+     * @param PayTransaction $transaction
      * @param Order $order
      * @return boolean
      * @throws \Magento\Framework\Exception\AlreadyExistsException
      * @throws \Magento\Framework\Exception\InputException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function processPaidOrder(Transaction $transaction, Order $order)
+    public function processPaidOrder(PayTransaction $transaction, Order $order)
     {
         $returnResult = false;
+        $multiShippingOrder = false;
+        $orderProcessList = [];
 
         # Before processing the payment, check if we should uncancel the corresponding order
         if ($order->isCanceled() || $order->getTotalCanceled() == $order->getGrandTotal()) {
             $this->uncancelOrder($order);
         }
 
-        /** @var Interceptor $payment */
-        $payment = $order->getPayment();
-        $payment->setTransactionId($transaction->getId());
-        $payment->setPreparedMessage('PAY. - ');
-        $payment->setIsTransactionClosed(0);
+        $paymentMethod = $order->getPayment()->getMethod();
+        $newStatus = ($transaction->isAuthorized()) ? $this->config->getAuthorizedStatus($paymentMethod) : $this->config->getPaidStatus($paymentMethod);
+        $order_ids = $order->getPayment()->getAdditionalInformation('order_ids');
+
+        if (!empty($order_ids)) {
+            $orderids = json_decode($order_ids, true);
+            $multiShippingOrder = true;
+            foreach ($orderids as $orderId) {
+                payHelper::logDebug('Multishipping order:', ['orderid: ' => $orderId]);
+                $orderProcessList[] = $this->orderRepository->get($orderId);
+            }
+        } else {
+            $orderProcessList[] = $order;
+        }
 
         $transactionPaid = [
             $transaction->getCurrencyAmount(),
@@ -196,60 +207,62 @@ class PayPayment
             $transaction->getPaidAmount(),
         ];
 
-        $orderAmount = round($order->getGrandTotal(), 2);
-        $orderBaseAmount = round($order->getBaseGrandTotal(), 2);
-        if (!in_array($orderAmount, $transactionPaid) && !in_array($orderBaseAmount, $transactionPaid)) {
-            payHelper::logCritical('Amount validation error.', array($transactionPaid, $orderAmount, $order->getGrandTotal(), $order->getBaseGrandTotal()));
-            return $this->result->setContents('FALSE| Amount validation error. Amounts: ' . print_r(array($transactionPaid, $orderAmount, $order->getGrandTotal(), $order->getBaseGrandTotal()), true));
-        }
+        foreach ($orderProcessList as $order) {
+            $payment = $order->getPayment();
+            $payment->setTransactionId($transaction->getId());
+            $payment->setPreparedMessage('PAY. - ');
+            $payment->setIsTransactionClosed(0);
 
-        # Force order state to processing
-        $order->setState(Order::STATE_PROCESSING);
-        $paymentMethod = $order->getPayment()->getMethod();
+            $orderAmount = round($order->getGrandTotal(), 2);
+            $orderBaseAmount = round($order->getBaseGrandTotal(), 2);
+            if (!in_array($orderAmount, $transactionPaid) && !in_array($orderBaseAmount, $transactionPaid) && $multiShippingOrder === false) {
+                payHelper::logCritical('Amount validation error.', array($transactionPaid, $orderAmount, $order->getGrandTotal(), $order->getBaseGrandTotal()));
+                throw new \Exception('Amount validation error. Amounts: ' . print_r(array($transactionPaid, $orderAmount, $order->getGrandTotal(), $order->getBaseGrandTotal()), true));
+            }
 
-        # Notify customer
-        if ($order && !$order->getEmailSent()) {
-            $this->orderSender->send($order);
-            $order->addStatusHistoryComment(__('PAY. - New order email sent'))->setIsCustomerNotified(true)->save();
-        }
+            # Force order state to processing
+            $order->setState(Order::STATE_PROCESSING);
 
-        $newStatus = ($transaction->isAuthorized()) ? $this->config->getAuthorizedStatus($paymentMethod) : $this->config->getPaidStatus($paymentMethod);
+            # Notify customer
+            if ($order && !$order->getEmailSent()) {
+                $this->orderSender->send($order);
+                $order->addStatusHistoryComment(__('PAY. - New order email sent'))->setIsCustomerNotified(true)->save();
+            }
 
-        # Skip creation of invoice for B2B if enabled
-        if ($this->config->ignoreB2BInvoice($paymentMethod) && !empty($order->getBillingAddress()->getCompany())) {
-            $returnResult = $this->processB2BPayment($transaction, $order, $payment);
-        } else {
-            if ($transaction->isAuthorized()) {
-                $payment->registerAuthorizationNotification($order->getBaseGrandTotal());
+            # Skip creation of invoice for B2B if enabled
+            if ($this->config->ignoreB2BInvoice($paymentMethod) && !empty($order->getBillingAddress()->getCompany())) {
+                $returnResult = $this->processB2BPayment($transaction, $order, $payment);
             } else {
-                $payment->registerCaptureNotification($order->getBaseGrandTotal(), $this->config->isSkipFraudDetection());
+                if ($transaction->isAuthorized()) {
+                    $payment->registerAuthorizationNotification($order->getBaseGrandTotal());
+                } else {
+                    $payment->registerCaptureNotification($order->getBaseGrandTotal(), $this->config->isSkipFraudDetection());
+                }
+
+                $order->setStatus(!empty($newStatus) ? $newStatus : Order::STATE_PROCESSING);
+
+                $this->orderRepository->save($order);
+
+                $invoice = $payment->getCreatedInvoice();
+                if ($invoice && !$invoice->getEmailSent()) {
+                    $this->invoiceSender->send($invoice);
+                    $order->addStatusHistoryComment(__('PAY. - You notified customer about invoice #%1.', $invoice->getIncrementId()))->setIsCustomerNotified(true)->save();
+                }
+
+                $returnResult = true;
             }
-
-            $order->setStatus(!empty($newStatus) ? $newStatus : Order::STATE_PROCESSING);
-
-            $this->orderRepository->save($order);
-
-            $invoice = $payment->getCreatedInvoice();
-            if ($invoice && !$invoice->getEmailSent()) {
-                $this->invoiceSender->send($invoice);
-                $order->addStatusHistoryComment(__('PAY. - You notified customer about invoice #%1.', $invoice->getIncrementId()))
-                    ->setIsCustomerNotified(true)
-                    ->save();
-            }
-
-            $returnResult = true;
         }
 
         return $returnResult;
     }
 
     /**
-     * @param Transaction $transaction
+     * @param PayTransaction $transaction
      * @param Order $order
      * @param Interceptor $payment
      * @return boolean
      */
-    private function processB2BPayment(Transaction $transaction, Order $order, Interceptor $payment)
+    private function processB2BPayment(PayTransaction $transaction, Order $order, Interceptor $payment)
     {
         # Create transaction
         $formatedPrice = $order->getBaseCurrency()->formatTxt($order->getGrandTotal());

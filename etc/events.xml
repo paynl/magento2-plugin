@@ -12,4 +12,7 @@
     <event name="sales_order_shipment_save_after">
         <observer name="sales_order_shipment_save_after" instance="Paynl\Payment\Observer\ShipmentSaveAfter" />
     </event>
+    <event name="checkout_submit_all_after">
+        <observer name="paynl_redirect_multishipping_order_to_the_checkout_url" instance="Paynl\Payment\Observer\CheckoutSubmitAllAfter\PayCheckoutUrl" />
+    </event>
 </config>
