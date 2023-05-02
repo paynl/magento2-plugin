@@ -9,7 +9,9 @@ use Paynl\Payment\Helper\PayHelper;
 
 class View extends Template
 {
+    public const PAY_TRANSACTION_URL = 'https://my.pay.nl/transactions/info/';
     private $orderRepository;
+
 
     /**
      * @param Context $context
@@ -28,12 +30,7 @@ class View extends Template
      */
     public function getPayUrl()
     {
-        $baseUrl = "https://my.pay.nl/transactions/info/";
-        $transactionId = $this->getId();
-
-        $payUrl = $baseUrl . $transactionId;
-
-        return $payUrl;
+        return self::PAY_TRANSACTION_URL . $this->getId();
     }
 
     /**
@@ -55,12 +52,11 @@ class View extends Template
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getId()
     {
-        $id = $this->getOrder()->getAdditionalInformation()['transactionId'];
-
-        return $id;
+        $additionalInformation = $this->getOrder()->getAdditionalInformation();
+        return $additionalInformation['transactionId'] ?? '';
     }
 }
