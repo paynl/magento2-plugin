@@ -3,7 +3,8 @@
 namespace Paynl\Payment\Model\Paymentmethod;
 
 use Magento\Sales\Model\Order;
-use \Paynl\Payment\Helper\PayHelper;
+use Paynl\Payment\Helper\PayHelper;
+use Paynl\Payment\Model\PayPaymentCreate;
 
 class Instore extends PaymentMethod
 {
@@ -16,11 +17,21 @@ class Instore extends PaymentMethod
      */
     protected $_formBlockType = \Paynl\Payment\Block\Form\Instore::class;
 
+    /**
+     * @return integer
+     */
     protected function getDefaultPaymentOptionId()
     {
         return 1729;
     }
 
+    /**
+     * @param string $paymentAction
+     * @param object $stateObject
+     * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
+     * @return object|void
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
     public function initialize($paymentAction, $stateObject)
     {
         if ($paymentAction == 'order') {
@@ -40,6 +51,12 @@ class Instore extends PaymentMethod
         }
     }
 
+    /**
+     * @param Order $order
+     * @param boolean $fromAdmin
+     * @return string|void
+     * @throws \Exception
+     */
     public function startTransaction(Order $order, $fromAdmin = false)
     {
         $store = $order->getStore();
@@ -56,7 +73,8 @@ class Instore extends PaymentMethod
             if (empty($terminalId)) {
                 throw new \Exception(__('Please select a pin-terminal'), 201);
             }
-            $transaction = $this->doStartTransaction($order);
+
+            $transaction = (new PayPaymentCreate($order, $this))->create();
 
             $instorePayment = \Paynl\Instore::payment(['transactionId' => $transaction->getTransactionId(), 'terminalId' => $terminalId]);
 
@@ -71,13 +89,13 @@ class Instore extends PaymentMethod
         } catch (\Exception $e) {
             payHelper::logCritical($e->getMessage(), [], $store);
 
-            if ($e->getCode() == 201) {                
+            if ($e->getCode() == 201) {
                 if ($fromAdmin) {
                     throw new \Exception(__($e->getMessage()));
                 } else {
                     $this->messageManager->addNoticeMessage($e->getMessage());
                 }
-            } else {                
+            } else {
                 if ($fromAdmin) {
                     throw new \Exception(__('Pin transaction could not be started'));
                 } else {
@@ -89,6 +107,11 @@ class Instore extends PaymentMethod
         return $url;
     }
 
+    /**
+     * @param \Magento\Framework\DataObject $data
+     * @return $this|object
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
     public function assignData(\Magento\Framework\DataObject $data)
     {
         parent::assignData($data);
@@ -105,6 +128,10 @@ class Instore extends PaymentMethod
         return $this;
     }
 
+    /**
+     * @return array|false|mixed
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function getPaymentOptions()
     {
         $cache = $this->getCache();
@@ -148,6 +175,9 @@ class Instore extends PaymentMethod
         return $terminalsArr;
     }
 
+    /**
+     * @return integer|mixed
+     */
     public function hidePaymentOptions()
     {
         if (!empty($this->getDefaultPaymentOption()) && $this->getDefaultPaymentOption() != '0') {
@@ -156,6 +186,9 @@ class Instore extends PaymentMethod
         return 0;
     }
 
+    /**
+     * @return mixed
+     */
     public function getDefaultPaymentOption()
     {
         return $this->_scopeConfig->getValue('payment/' . $this->_code . '/default_terminal', 'store');
@@ -173,6 +206,9 @@ class Instore extends PaymentMethod
         return $cache;
     }
 
+    /**
+     * @return boolean
+     */
     public function isCurrentIpValid()
     {
         $onlyAllowedIPs = $this->_scopeConfig->getValue('payment/' . $this->_code . '/exclusiveforipaddress', 'store');
@@ -184,6 +220,9 @@ class Instore extends PaymentMethod
         return in_array($this->helper->getClientIp(), explode(",", $onlyAllowedIPs));
     }
 
+    /**
+     * @return boolean
+     */
     public function isCurrentAgentValid()
     {
         $specifiedUserAgent = $this->_scopeConfig->getValue('payment/' . $this->_code . '/exclusiveforuseragent', 'store');
