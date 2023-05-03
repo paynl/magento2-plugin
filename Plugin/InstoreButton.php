@@ -24,7 +24,7 @@ class InstoreButton
         \Magento\Framework\Message\ManagerInterface $messageManager,
         \Magento\Sales\Model\Order $order,
         \Magento\Backend\Model\Url $backendUrl,
-        UrlInterface $urlInterface,
+        UrlInterface $urlInterface
     ) {
         $this->messageManager = $messageManager;
         $this->order = $order;

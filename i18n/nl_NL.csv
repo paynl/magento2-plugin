@@ -182,5 +182,7 @@
 "Check version","Check versie"
 "You are up to date with the latest version","U bent up to date met de laatste versie"
 "There is a new version available (","Er is een nieuwe versie beschikbaar ("
+"Pay. Transaction-ID: ","Pay. Transactie-ID: "
 "PAY. - This payment has been flagged as possibly fraudulent. Please verify this transaction in the Pay. portal.","PAY. - Deze betaling is gemarkeerd als mogelijk frauduleus. Controleer deze transactie in het Pay. portaal."
 "Select whether you want to use the PAY. thank you page when transaction is pending.","Selecteer of u gebruik wilt maken van de PAY. bedankpagina wanneer de transactie in behandeling is."
+"Automatically void authorisation-transactions when cancelling an order.","Authorize-transacties automatisch vrijgeven bij het annuleren van een bestelling."

@@ -40,7 +40,6 @@ class PayCheckoutUrl implements ObserverInterface
             $response = $this->responseFactory->create();
             $response->setRedirect($url);
             $response->sendResponse();
-            exit;
         }
     }
 }

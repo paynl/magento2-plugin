@@ -15,4 +15,7 @@
     <event name="checkout_submit_all_after">
         <observer name="paynl_redirect_multishipping_order_to_the_checkout_url" instance="Paynl\Payment\Observer\CheckoutSubmitAllAfter\PayCheckoutUrl" />
     </event>
+    <event name="order_cancel_after">
+        <observer name="paynl_order_cancel_after" instance="Paynl\Payment\Observer\OrderCancelAfter" />
+    </event>
 </config>

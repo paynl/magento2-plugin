@@ -4,6 +4,7 @@ namespace Paynl\Payment\Model\Paymentmethod;
 
 use Magento\Sales\Model\Order;
 use Paynl\Payment\Helper\PayHelper;
+use Paynl\Payment\Model\PayPaymentCreate;
 
 class Instore extends PaymentMethod
 {
@@ -26,8 +27,10 @@ class Instore extends PaymentMethod
 
     /**
      * @param string $paymentAction
-     * @param string $stateObject
-     * @return void
+     * @param object $stateObject
+     * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
+     * @return object|void
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function initialize($paymentAction, $stateObject)
     {
@@ -51,7 +54,8 @@ class Instore extends PaymentMethod
     /**
      * @param Order $order
      * @param boolean $fromAdmin
-     * @return string
+     * @return string|void
+     * @throws \Exception
      */
     public function startTransaction(Order $order, $fromAdmin = false)
     {
@@ -69,7 +73,8 @@ class Instore extends PaymentMethod
             if (empty($terminalId)) {
                 throw new \Exception(__('Please select a pin-terminal'), 201);
             }
-            $transaction = $this->doStartTransaction($order);
+
+            $transaction = (new PayPaymentCreate($order, $this))->create();
 
             $instorePayment = \Paynl\Instore::payment(['transactionId' => $transaction->getTransactionId(), 'terminalId' => $terminalId]);
 
@@ -104,7 +109,8 @@ class Instore extends PaymentMethod
 
     /**
      * @param \Magento\Framework\DataObject $data
-     * @return object
+     * @return $this|object
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function assignData(\Magento\Framework\DataObject $data)
     {
@@ -124,7 +130,8 @@ class Instore extends PaymentMethod
 
     /**
      * @param boolean $graphql
-     * @return array
+     * @return array|false|mixed
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getPaymentOptions($graphql = false)
     {
@@ -172,7 +179,7 @@ class Instore extends PaymentMethod
     }
 
     /**
-     * @return integer
+     * @return integer|mixed
      */
     public function hidePaymentOptions()
     {
@@ -183,7 +190,7 @@ class Instore extends PaymentMethod
     }
 
     /**
-     * @return string
+     * @return mixed
      */
     public function getDefaultPaymentOption()
     {
