@@ -9,11 +9,4 @@
             </argument>
         </arguments>
     </type>
-    <type name="Magento\Multishipping\Model\Checkout\Type\Multishipping\PlaceOrderPool">
-        <arguments>
-            <argument name="services" xsi:type="array">
-                <item name="paynl_payment_ideal" xsi:type="string">Paynl\Payment\Model\PlaceMultiShippingOrder</item>
-            </argument>
-        </arguments>
-    </type>
 </config>
