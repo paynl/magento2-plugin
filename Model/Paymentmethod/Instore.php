@@ -3,7 +3,7 @@
 namespace Paynl\Payment\Model\Paymentmethod;
 
 use Magento\Sales\Model\Order;
-use \Paynl\Payment\Helper\PayHelper;
+use Paynl\Payment\Helper\PayHelper;
 
 class Instore extends PaymentMethod
 {
@@ -16,11 +16,19 @@ class Instore extends PaymentMethod
      */
     protected $_formBlockType = \Paynl\Payment\Block\Form\Instore::class;
 
+    /**
+     * @return integer
+     */
     protected function getDefaultPaymentOptionId()
     {
         return 1729;
     }
 
+    /**
+     * @param string $paymentAction
+     * @param string $stateObject
+     * @return void
+     */
     public function initialize($paymentAction, $stateObject)
     {
         if ($paymentAction == 'order') {
@@ -40,6 +48,11 @@ class Instore extends PaymentMethod
         }
     }
 
+    /**
+     * @param Order $order
+     * @param boolean $fromAdmin
+     * @return string
+     */
     public function startTransaction(Order $order, $fromAdmin = false)
     {
         $store = $order->getStore();
@@ -71,13 +84,13 @@ class Instore extends PaymentMethod
         } catch (\Exception $e) {
             payHelper::logCritical($e->getMessage(), [], $store);
 
-            if ($e->getCode() == 201) {                
+            if ($e->getCode() == 201) {
                 if ($fromAdmin) {
                     throw new \Exception(__($e->getMessage()));
                 } else {
                     $this->messageManager->addNoticeMessage($e->getMessage());
                 }
-            } else {                
+            } else {
                 if ($fromAdmin) {
                     throw new \Exception(__('Pin transaction could not be started'));
                 } else {
@@ -89,6 +102,10 @@ class Instore extends PaymentMethod
         return $url;
     }
 
+    /**
+     * @param \Magento\Framework\DataObject $data
+     * @return object
+     */
     public function assignData(\Magento\Framework\DataObject $data)
     {
         parent::assignData($data);
@@ -105,7 +122,11 @@ class Instore extends PaymentMethod
         return $this;
     }
 
-    public function getPaymentOptions()
+    /**
+     * @param boolean $graphql
+     * @return array
+     */
+    public function getPaymentOptions($graphql = false)
     {
         $cache = $this->getCache();
         $store = $this->storeManager->getStore();
@@ -140,14 +161,19 @@ class Instore extends PaymentMethod
                 return false;
             }
         }
-        array_unshift($terminalsArr, [
-            'id' => '',
-            'name' => __('Choose the pin terminal'),
-            'visibleName' => __('Choose the pin terminal')
-        ]);
+        if (!$graphql) {
+            array_unshift($terminalsArr, [
+                'id' => '',
+                'name' => __('Choose the pin terminal'),
+                'visibleName' => __('Choose the pin terminal'),
+            ]);
+        }
         return $terminalsArr;
     }
 
+    /**
+     * @return integer
+     */
     public function hidePaymentOptions()
     {
         if (!empty($this->getDefaultPaymentOption()) && $this->getDefaultPaymentOption() != '0') {
@@ -156,6 +182,9 @@ class Instore extends PaymentMethod
         return 0;
     }
 
+    /**
+     * @return string
+     */
     public function getDefaultPaymentOption()
     {
         return $this->_scopeConfig->getValue('payment/' . $this->_code . '/default_terminal', 'store');
@@ -173,6 +202,9 @@ class Instore extends PaymentMethod
         return $cache;
     }
 
+    /**
+     * @return boolean
+     */
     public function isCurrentIpValid()
     {
         $onlyAllowedIPs = $this->_scopeConfig->getValue('payment/' . $this->_code . '/exclusiveforipaddress', 'store');
@@ -184,6 +216,9 @@ class Instore extends PaymentMethod
         return in_array($this->helper->getClientIp(), explode(",", $onlyAllowedIPs));
     }
 
+    /**
+     * @return boolean
+     */
     public function isCurrentAgentValid()
     {
         $specifiedUserAgent = $this->_scopeConfig->getValue('payment/' . $this->_code . '/exclusiveforuseragent', 'store');

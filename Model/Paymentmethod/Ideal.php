@@ -2,20 +2,24 @@
 
 namespace Paynl\Payment\Model\Paymentmethod;
 
-use Paynl\Payment\Model\Config;
-
 class Ideal extends PaymentMethod
 {
-
-    const BANKSDISPLAYTYPE_DROPDOWN = 1;
-    const BANKSDISPLAYTYPE_LIST = 2;
+    public const BANKSDISPLAYTYPE_DROPDOWN = 1;
+    public const BANKSDISPLAYTYPE_LIST = 2;
     protected $_code = 'paynl_payment_ideal';
 
+    /**
+     * @return integer
+     */
     protected function getDefaultPaymentOptionId()
     {
         return 10;
     }
 
+    /**
+     * @param \Magento\Framework\DataObject $data
+     * @return object
+     */
     public function assignData(\Magento\Framework\DataObject $data)
     {
         parent::assignData($data);
@@ -32,15 +36,22 @@ class Ideal extends PaymentMethod
         return $this;
     }
 
+    /**
+     * @return integer
+     */
     public function showPaymentOptions()
     {
         return $this->_scopeConfig->getValue('payment/' . $this->_code . '/bank_selection', 'store');
     }
 
-    public function getPaymentOptions()
+    /**
+     * @param boolean $graphql
+     * @return array
+     */
+    public function getPaymentOptions($graphql = false)
     {
         $show_banks = $this->_scopeConfig->getValue('payment/' . $this->_code . '/bank_selection', 'store');
-        if (!$show_banks) {
+        if (!$show_banks && !$graphql) {
             return [];
         }
 
@@ -59,11 +70,11 @@ class Ideal extends PaymentMethod
             $banks = \Paynl\Paymentmethods::getBanks($this->getPaymentOptionId());
             $cache->save(json_encode($banks), $cacheName);
         }
-        if ($this->showPaymentOptions() != self::BANKSDISPLAYTYPE_LIST) {
+        if ($this->showPaymentOptions() != self::BANKSDISPLAYTYPE_LIST && !$graphql) {
             array_unshift($banks, array(
                 'id' => '',
                 'name' => __('Choose your bank'),
-                'visibleName' => __('Choose your bank')
+                'visibleName' => __('Choose your bank'),
             ));
         } else {
             foreach ($banks as $key => $bank) {
