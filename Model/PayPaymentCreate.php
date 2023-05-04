@@ -99,7 +99,7 @@ class PayPaymentCreate
         $this->setCocNumber($this->additionalData['kvknummer'] ?? '');
         $this->setVatNumber($this->additionalData['vatnumber'] ?? '');
         $this->setIssuer($this->additionalData['payment_option'] ?? '');
-        $this->setExpireData((int)($this->additionalData['valid_days'] ?? ''));
+        $this->setExpireData((int) ($this->additionalData['valid_days'] ?? ''));
         $this->setFinishURL($this->additionalData['returnUrl'] ?? $order->getStore()->getBaseUrl() . 'paynl/checkout/finish/?entityid=' . $order->getEntityId());
         $this->setExchangeURL($this->additionalData['exchangeUrl'] ?? $order->getStore()->getBaseUrl() . 'paynl/checkout/exchange/');
         $this->setPaymentMethod($this->methodInstance->getPaymentOptionId());
@@ -337,7 +337,7 @@ class PayPaymentCreate
             $enduser = [
                 'initials' => $arrBillingAddress['firstname'],
                 'lastName' => $arrBillingAddress['lastname'],
-                'phoneNumber' => $arrBillingAddress['telephone'],
+                'phoneNumber' => $this->validatePhoneNumber($arrBillingAddress['telephone']),
                 'emailAddress' => $arrBillingAddress['email'],
             ];
             if (isset($this->additionalData['dob'])) {
@@ -554,5 +554,22 @@ class PayPaymentCreate
         }
 
         return $arrProducts;
+    }
+
+    /**
+     * @param string $phone
+     * @return string|null
+     */
+    public function validatePhoneNumber($phone)
+    {
+        if (!empty($phone)) {
+            $phone = trim($phone);
+            $phone = filter_var($phone, FILTER_SANITIZE_NUMBER_INT);
+            $valid_number = preg_match('/^(\+\s*)?(?=([.,\s()-]*\d){5})([\d(][\d.,\s()-]*)([[:alpha:]#][^\d]*\d.*)?$/', $phone, $matches) && preg_match('/\d{2}/', $phone);
+            if ($valid_number) {
+                return trim($matches[1]) . trim($matches[3]) . (!empty($matches[4]) ? ' ' . $matches[4] : '');
+            }
+        }
+        return null;
     }
 }
