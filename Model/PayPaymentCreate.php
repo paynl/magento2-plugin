@@ -337,7 +337,7 @@ class PayPaymentCreate
             $enduser = [
                 'initials' => $arrBillingAddress['firstname'],
                 'lastName' => $arrBillingAddress['lastname'],
-                'phoneNumber' => $arrBillingAddress['telephone'],
+                'phoneNumber' => payHelper::validatePhoneNumber($arrBillingAddress['telephone']),
                 'emailAddress' => $arrBillingAddress['email'],
             ];
             if (isset($this->additionalData['dob'])) {
