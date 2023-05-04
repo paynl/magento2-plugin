@@ -554,5 +554,5 @@ class PayPaymentCreate
         }
 
         return $arrProducts;
-    }    
+    }
 }
