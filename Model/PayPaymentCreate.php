@@ -99,7 +99,7 @@ class PayPaymentCreate
         $this->setCocNumber($this->additionalData['kvknummer'] ?? '');
         $this->setVatNumber($this->additionalData['vatnumber'] ?? '');
         $this->setIssuer($this->additionalData['payment_option'] ?? '');
-        $this->setExpireData((int) ($this->additionalData['valid_days'] ?? ''));
+        $this->setExpireData((int)($this->additionalData['valid_days'] ?? ''));
         $this->setFinishURL($this->additionalData['returnUrl'] ?? $order->getStore()->getBaseUrl() . 'paynl/checkout/finish/?entityid=' . $order->getEntityId());
         $this->setExchangeURL($this->additionalData['exchangeUrl'] ?? $order->getStore()->getBaseUrl() . 'paynl/checkout/exchange/');
         $this->setPaymentMethod($this->methodInstance->getPaymentOptionId());
