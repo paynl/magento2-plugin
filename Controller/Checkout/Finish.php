@@ -11,7 +11,6 @@ use Magento\Sales\Model\OrderRepository;
 use Paynl\Payment\Controller\PayAction;
 use Paynl\Payment\Model\Config;
 use Paynl\Payment\Helper\PayHelper;
-use Magento\Multishipping\Model\Checkout\Type\Multishipping\State;
 
 /**
  * Finishes up the payment and redirects the user to the thank you page.
@@ -42,27 +41,19 @@ class Finish extends PayAction
     private $quoteRepository;
 
     /**
-     * @var State
-     */
-    private $state;
-
-    /**
      * Index constructor.
      * @param Context $context
      * @param Config $config
      * @param Session $checkoutSession
      * @param OrderRepository $orderRepository
      * @param QuoteRepository $quoteRepository
-     * @param State $state
      */
-    public function __construct(Context $context, Config $config, Session $checkoutSession, OrderRepository $orderRepository, QuoteRepository $quoteRepository, State $state)
+    public function __construct(Context $context, Config $config, Session $checkoutSession, OrderRepository $orderRepository, QuoteRepository $quoteRepository)
     {
         $this->config = $config;
         $this->checkoutSession = $checkoutSession;
         $this->orderRepository = $orderRepository;
         $this->quoteRepository = $quoteRepository;
-        $this->state = $state;
-
         parent::__construct($context);
     }
 
@@ -166,13 +157,6 @@ class Finish extends PayAction
                 if ($bVerify) {
                     $order->addStatusHistoryComment(__('PAY. - This payment has been flagged as possibly fraudulent. Please verify this transaction in the Pay. portal.'));
                     $this->orderRepository->save($order);
-                }
-                if ($multiShipFinish) {
-                    $this->state->setCompleteStep(State::STEP_OVERVIEW);
-                    $this->state->setActiveStep(State::STEP_SUCCESS);
-                    $successUrl = 'multishipping/checkout/success?utm_nooverride=1';
-                    payHelper::logDebug('successUrl: ' . $successUrl, $params, $order->getStore());
-                    return $this->_redirect($successUrl);
                 }
                 $this->deactivateCart($order, $payOrderId);
             } elseif ($bPending) {
