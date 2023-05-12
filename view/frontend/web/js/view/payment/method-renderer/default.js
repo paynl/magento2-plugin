@@ -151,17 +151,17 @@ define(
                 var paymentOptions = window.checkoutConfig.payment.paymentoptions[this.item.method];
                 var message = null;
                 if (this.item.method == 'paynl_payment_ideal') {
-                    message = $.mage.__('Choose your bank');      
-                } 
-                if (this.item.method == 'paynl_payment_instore') {
-                    message = $.mage.__('Choose the pin terminal'); 
+                    message = $.mage.__('Choose your bank');
                 }
-                if(message && this.showPaymentOptions() === true){
-                    var firstArray = [];
-                    firstArray['id'] = '';
-                    firstArray['name'] = message;
-                    firstArray['visibleName'] = message;
-                    paymentOptions.unshift(firstArray);
+                if (this.item.method == 'paynl_payment_instore') {
+                    message = $.mage.__('Choose the pin terminal');
+                }
+                if (message && this.showPaymentOptions() === true) {
+                    var paymentOption = [];
+                    paymentOption['id'] = '';
+                    paymentOption['name'] = message;
+                    paymentOption['visibleName'] = message;
+                    paymentOptions.unshift(paymentOption);
                 }
                 return paymentOptions;
             },
