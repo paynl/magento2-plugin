@@ -180,7 +180,7 @@ class Instore extends PaymentMethod
                 return false;
             }
         }
-        
+
         return $terminalsArr;
     }
 
