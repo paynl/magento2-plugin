@@ -172,10 +172,9 @@ abstract class PaymentMethod extends AbstractMethod
     }
 
     /**
-     * @param boolean $graphql
      * @return array
      */
-    public function getPaymentOptions($graphql = false)
+    public function getPaymentOptions()
     {
         return [];
     }
