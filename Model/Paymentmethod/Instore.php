@@ -129,6 +129,19 @@ class Instore extends PaymentMethod
     }
 
     /**
+     * @return integer|mixed
+     */
+    public function showPaymentOptions()
+    {
+        if (!empty($this->getDefaultPaymentOption()) && $this->getDefaultPaymentOption() != '0') {
+            if ($this->_scopeConfig->getValue('payment/' . $this->_code . '/hide_terminal_selection', 'store') == 1) {
+                return 0;
+            }
+        }
+        return 1;
+    }
+
+    /**
      * @return array|false|mixed
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
@@ -167,23 +180,8 @@ class Instore extends PaymentMethod
                 return false;
             }
         }
-        array_unshift($terminalsArr, [
-            'id' => '',
-            'name' => __('Choose the pin terminal'),
-            'visibleName' => __('Choose the pin terminal')
-        ]);
-        return $terminalsArr;
-    }
 
-    /**
-     * @return integer|mixed
-     */
-    public function hidePaymentOptions()
-    {
-        if (!empty($this->getDefaultPaymentOption()) && $this->getDefaultPaymentOption() != '0') {
-            return $this->_scopeConfig->getValue('payment/' . $this->_code . '/hide_terminal_selection', 'store');
-        }
-        return 0;
+        return $terminalsArr;
     }
 
     /**

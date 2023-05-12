@@ -142,16 +142,28 @@ define(
                 return (this.getDOB() > 0 && this.getKVK() > 0);
             },
             showPaymentOptions: function () {
-                if (window.checkoutConfig.payment.hidepaymentoptions[this.item.method] == 1) {
-                    return false;
-                }
-                return window.checkoutConfig.payment.paymentoptions[this.item.method].length > 0 && window.checkoutConfig.payment.showpaymentoptions[this.item.method] != 2;
+                return window.checkoutConfig.payment.paymentoptions[this.item.method].length > 0 && window.checkoutConfig.payment.showpaymentoptions[this.item.method] == 1;
             },
             showPaymentOptionsList: function () {
                 return window.checkoutConfig.payment.paymentoptions[this.item.method].length >= 1 && window.checkoutConfig.payment.showpaymentoptions[this.item.method] == 2;
             },
             getPaymentOptions: function () {
-                return window.checkoutConfig.payment.paymentoptions[this.item.method];
+                var paymentOptions = window.checkoutConfig.payment.paymentoptions[this.item.method];
+                var message = null;
+                if (this.item.method == 'paynl_payment_ideal') {
+                    message = $.mage.__('Choose your bank');
+                }
+                if (this.item.method == 'paynl_payment_instore') {
+                    message = $.mage.__('Choose the pin terminal');
+                }
+                if (message && this.showPaymentOptions() === true) {
+                    var paymentOption = [];
+                    paymentOption['id'] = '';
+                    paymentOption['name'] = message;
+                    paymentOption['visibleName'] = message;
+                    paymentOptions.unshift(paymentOption);
+                }
+                return paymentOptions;
             },
             getPaymentOptionsList: function(){
                 if(!this.showPaymentOptionsList){

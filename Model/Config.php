@@ -425,7 +425,12 @@ class Config
         if (empty($brandId)) {
             $brandId = $this->brands[$methodCode];
         }
-        return $this->resources->getViewFileUrl("Paynl_Payment::logos/" . $brandId . ".png");
+        return $this->resources->getViewFileUrl(
+            "Paynl_Payment::logos/" . $brandId . ".png",
+            array(
+                'area' => 'frontend'
+            )
+        );
     }
 
     /**
@@ -434,7 +439,12 @@ class Config
      */
     public function getIconUrlIssuer(string $issuerId)
     {
-        return $this->resources->getViewFileUrl("Paynl_Payment::logos_issuers/qr-" . $issuerId . ".svg");
+        return $this->resources->getViewFileUrl(
+            "Paynl_Payment::logos_issuers/qr-" . $issuerId . ".svg",
+            array(
+                'area' => 'frontend'
+            )
+        );
     }
 
     /**
