@@ -29,14 +29,22 @@ class InvoiceSaveCommitAfter implements ObserverInterface
      */
     protected $_request;
 
+    /**
+     *
+     * @var \Paynl\Payment\Helper\PayHelper;
+     */
+    protected $payHelper;
+
     public function __construct(
         LoggerInterface $logger,
         Config $config,
-        \Magento\Framework\App\RequestInterface $request
+        \Magento\Framework\App\RequestInterface $request,
+        PayHelper $payHelper
     ) {
         $this->logger = $logger;
         $this->config = $config;
         $this->_request = $request;
+        $this->payHelper = $payHelper;
     }
 
     public function execute(\Magento\Framework\Event\Observer $observer)
@@ -50,7 +58,7 @@ class InvoiceSaveCommitAfter implements ObserverInterface
             $paymentMethod = $order->getPayment()->getMethod();
             $customStatus = $this->config->getPaidStatus($paymentMethod);
             if (!empty($customStatus)) {
-                payHelper::logNotice('PAY.: Updating order status from ' . $order->getStatus() . ' to ' . $customStatus, [], $order->getStore());
+                $this->payHelper->logNotice('PAY.: Updating order status from ' . $order->getStatus() . ' to ' . $customStatus, [], $order->getStore());
                 $order->setStatus($customStatus)->save();
             }
         }

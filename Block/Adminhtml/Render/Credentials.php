@@ -27,10 +27,25 @@ class Credentials extends Field
      */
     protected $scopeConfig;
 
-    public function __construct(Context $context, RequestInterface $request, ScopeConfigInterface $scopeConfig)
+    /**
+     *
+     * @var \Paynl\Payment\Helper\PayHelper;
+     */
+    protected $payHelper;
+
+    /**
+     * Constructor.
+     *
+     * @param Context $context
+     * @param RequestInterface $request
+     * @param ScopeConfigInterface $scopeConfig
+     * @param PayHelper $payHelper
+     */
+    public function __construct(Context $context, RequestInterface $request, ScopeConfigInterface $scopeConfig, PayHelper $payHelper)
     {
         $this->request = $request;
         $this->scopeConfig = $scopeConfig;
+        $this->payHelper = $payHelper;
         parent::__construct($context);
     }
 
@@ -112,7 +127,7 @@ class Credentials extends Field
                     $error = __('Service-ID / API-Token combination is invalid.');
                     break;
                 default :
-                    payHelper::logCritical('Pay. API exception: ' . $error);
+                    $this->payHelper->logCritical('Pay. API exception: ' . $error);
                     $error = __('Could not authorize');
             }
             $status = 0;

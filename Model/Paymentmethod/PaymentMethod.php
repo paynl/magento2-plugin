@@ -47,9 +47,7 @@ abstract class PaymentMethod extends AbstractMethod
     /**
      * @var \Magento\Sales\Model\Order\Config
      */
-    protected $orderConfig;
-
-    protected $helper;
+    protected $orderConfig;   
 
     /**
      * @var Magento\Framework\Message\ManagerInterface
@@ -69,6 +67,12 @@ abstract class PaymentMethod extends AbstractMethod
     protected $graphqlVersion;
 
     /**
+     *
+     * @var \Paynl\Payment\Helper\PayHelper;
+     */
+    private $payHelper;
+
+    /**
      * PaymentMethod constructor.
      *
      * @param \Magento\Framework\App\Action\Context $context
@@ -83,6 +87,7 @@ abstract class PaymentMethod extends AbstractMethod
      * @param \Paynl\Payment\Model\Config $paynlConfig
      * @param \Magento\Framework\Model\ResourceModel\AbstractResource $resource
      * @param \Magento\Framework\Data\Collection\AbstractDb $resourceCollection
+     * @param PayHelper $payHelper
      * @param array $data
      */
     public function __construct(
@@ -96,8 +101,9 @@ abstract class PaymentMethod extends AbstractMethod
         \Magento\Sales\Model\Order\Config $orderConfig,
         OrderRepository $orderRepository,
         Config $paynlConfig,
+        PayHelper $payHelper,
         AbstractResource $resource = null,
-        AbstractDb $resourceCollection = null,
+        AbstractDb $resourceCollection = null,        
         array $data = []
     ) {
         parent::__construct(
@@ -116,12 +122,12 @@ abstract class PaymentMethod extends AbstractMethod
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
 
         $this->messageManager = $objectManager->get(\Magento\Framework\Message\ManagerInterface::class);
-        $this->helper = $objectManager->create(\Paynl\Payment\Helper\PayHelper::class);
         $this->paynlConfig = $paynlConfig;
         $this->orderRepository = $orderRepository;
         $this->orderConfig = $orderConfig;
         $this->storeManager = $objectManager->create(\Magento\Store\Model\StoreManagerInterface::class);
         $this->cookieManager = $objectManager->create('\Magento\Framework\Stdlib\CookieManagerInterface');
+        $this->payHelper = $payHelper; 
     }
 
     /**
@@ -300,10 +306,10 @@ abstract class PaymentMethod extends AbstractMethod
                     $transferData['gaClientId'] = $_gaSplit[2] . '.' . $_gaSplit[3];
                 }
             } else {
-                payHelper::logDebug('Cookie empty for GA', array());
+                $this->payHelper->logDebug('Cookie empty for GA', array());
             }
         } else {
-            payHelper::logDebug('GA to PAY. not enabled.', array());
+            $this->payHelper->logDebug('GA to PAY. not enabled.', array());
         }
 
         return $transferData;
@@ -410,7 +416,7 @@ abstract class PaymentMethod extends AbstractMethod
             Transaction::capture($transactionId);
         } catch (\Exception $e) {
             $message = strtolower($e->getMessage());
-            payHelper::logCritical('Pay. could not process capture (' . $message . '). Transaction: ' . $transactionId . '. OrderId: ' . $order->getIncrementId());
+            $this->payHelper->logCritical('Pay. could not process capture (' . $message . '). Transaction: ' . $transactionId . '. OrderId: ' . $order->getIncrementId());
         }
         return $this;
     }
@@ -429,7 +435,7 @@ abstract class PaymentMethod extends AbstractMethod
             Transaction::void($transactionId);
         } catch (\Exception $e) {
             $message = strtolower($e->getMessage());
-            payHelper::logCritical('Pay. could not process void (' . $message . '). Transaction: ' . $transactionId . '. OrderId: ' . $order->getIncrementId());
+            $this->payHelper->logCritical('Pay. could not process void (' . $message . '). Transaction: ' . $transactionId . '. OrderId: ' . $order->getIncrementId());
         }
         return $this;
     }
@@ -447,12 +453,12 @@ abstract class PaymentMethod extends AbstractMethod
         try {
             $transaction = (new PayPaymentCreate($order, $this))->create();
         } catch (\Exception $e) {
-            payHelper::logCritical('Transaction start failed: ' . $e->getMessage() . ' | ' . $e->getCode());
-            $this->messageManager->addNoticeMessage(payHelper::getFriendlyMessage($e->getMessage()));
+            $this->payHelper->logCritical('Transaction start failed: ' . $e->getMessage() . ' | ' . $e->getCode());
+            $this->messageManager->addNoticeMessage($this->payHelper->getFriendlyMessage($e->getMessage()));
             return $order->getStore()->getBaseUrl() . 'checkout/cart/index';
         }
 
-        payHelper::logDebug('Transaction: ' . $transaction->getTransactionId());
+        $this->payHelper->logDebug('Transaction: ' . $transaction->getTransactionId());
         $order->getPayment()->setAdditionalInformation('transactionId', $transaction->getTransactionId());
         $this->paynlConfig->setStore($order->getStore());
 

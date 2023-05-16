@@ -15,21 +15,30 @@ class InstoreButton
     protected $_request;
 
     /**
+     *
+     * @var \Paynl\Payment\Helper\PayHelper;
+     */
+    protected $payHelper;
+
+    /**
      * @param \Magento\Framework\Message\ManagerInterface $messageManager
      * @param \Magento\Sales\Model\Order $order
      * @param \Magento\Backend\Model\Url $backendUrl
      * @param UrlInterface $urlInterface
+     * @param PayHelper $payHelper
      */
     public function __construct(
         \Magento\Framework\Message\ManagerInterface $messageManager,
         \Magento\Sales\Model\Order $order,
         \Magento\Backend\Model\Url $backendUrl,
-        UrlInterface $urlInterface
+        UrlInterface $urlInterface,
+        PayHelper $payHelper
     ) {
         $this->messageManager = $messageManager;
         $this->order = $order;
         $this->backendUrl = $backendUrl;
         $this->urlInterface = $urlInterface;
+        $this->payHelper = $payHelper;
     }
 
     /**
@@ -66,13 +75,13 @@ class InstoreButton
                         'paynl'
                     );
                 }
-                $error = PayHelper::getCookie('pinError');
+                $error = $this->payHelper->getCookie('pinError');
 
                 if (!empty($error)) {
                     $this->messageManager->addError($error);
                 }
 
-                PayHelper::deleteCookie('pinError');
+                $this->payHelper->deleteCookie('pinError');
             }
         }
 

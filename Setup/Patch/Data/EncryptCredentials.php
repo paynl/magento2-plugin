@@ -39,17 +39,25 @@ class EncryptCredentials implements DataPatchInterface
     private $resource;
 
     /**
+     *
+     * @var \Paynl\Payment\Helper\PayHelper;
+     */
+    private $payHelper;
+
+    /**
      * @param ModuleDataSetupInterface $moduleDataSetup
      * @param ConfigInterface $scopeConfig
      * @param EncryptorInterface $encryptor    
+     * @param PayHelper $payHelper
      */
-    public function __construct(ModuleDataSetupInterface $moduleDataSetup, ScopeConfigInterface $scopeConfig, ConfigInterface $config, EncryptorInterface $encryptor, ResourceConnection $resource)
+    public function __construct(ModuleDataSetupInterface $moduleDataSetup, ScopeConfigInterface $scopeConfig, ConfigInterface $config, EncryptorInterface $encryptor, ResourceConnection $resource, PayHelper $payHelper)
     {
         $this->moduleDataSetup = $moduleDataSetup;
         $this->scopeConfig = $scopeConfig;
         $this->config = $config;
         $this->encryptor = $encryptor;
         $this->resource = $resource;
+        $this->payHelper = $payHelper;
     }
 
     /**
@@ -59,7 +67,7 @@ class EncryptCredentials implements DataPatchInterface
     {
         $this->moduleDataSetup->startSetup();
 
-        payHelper::log('Encrypting Credentials');
+        $this->payHelper->log('Encrypting Credentials');
         $connection = $this->resource->getConnection();
         $tableName = $this->resource->getTableName('core_config_data');
 
@@ -74,7 +82,7 @@ class EncryptCredentials implements DataPatchInterface
                         $this->config->deleteConfig('payment/paynl/apitoken', $result['scope'], $result['scope_id']);
                     }
                 } catch (\Exception $e) {
-                    payHelper::log('Couldn\'t encrypt \'payment/paynl/apitoken\' - ' . $e->getMessage());
+                    $this->payHelper->log('Couldn\'t encrypt \'payment/paynl/apitoken\' - ' . $e->getMessage());
                 }
             }
         }

@@ -34,16 +34,33 @@ class PinTerminals implements ArrayInterface
      */
     protected $_config;
 
+    /**
+     *
+     * @var \Paynl\Payment\Helper\PayHelper;
+     */
+    protected $payHelper;
+
+    /**
+     * Constructor.
+     *    
+     * @param Config $config
+     * @param RequestInterface $request
+     * @param ScopeConfigInterface $scopeConfig
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param PayHelper $payHelper
+     */
     public function __construct(
         Config $config,
         RequestInterface $request,
         ScopeConfigInterface $scopeConfig,
-        \Magento\Store\Model\StoreManagerInterface $storeManager
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
+        PayHelper $payHelper
     ) {
         $this->_config = $config;
         $this->_request = $request;
         $this->_scopeConfig = $scopeConfig;
         $this->_storeManager = $storeManager;
+        $this->payHelper = $payHelper;
     }
 
     /**
@@ -96,7 +113,7 @@ class PinTerminals implements ArrayInterface
                         }
                         $cache->save(json_encode($terminalArr), $cacheName);
                     } catch (\Paynl\Error\Error $e) {
-                        payHelper::logNotice('PAY.: Pinterminal error, ' . $e->getMessage());
+                        $this->payHelper->logNotice('PAY.: Pinterminal error, ' . $e->getMessage());
                     }
                 }
             }

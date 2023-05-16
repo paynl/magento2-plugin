@@ -42,9 +42,16 @@ class Redirect extends PayAction
     private $orderRepository;
 
     /**
+     *
+     * @var \Paynl\Payment\Helper\PayHelper;
+     */
+    private $payHelper;
+
+    /**
      * @param \Magento\Framework\App\Action\Context $context
      * @param \Paynl\Payment\Model\Config $config
      * @param \Magento\Framework\Message\ManagerInterface $messageManager
+     * @param PayHelper $payHelper
      */
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
@@ -52,13 +59,15 @@ class Redirect extends PayAction
         \Magento\Checkout\Model\Session $checkoutSession,
         PaymentHelper $paymentHelper,
         QuoteRepository $quoteRepository,
-        OrderRepository $orderRepository
+        OrderRepository $orderRepository,
+        PayHelper $payHelper
     ) {
         $this->config          = $config; // PAY. config helper
         $this->checkoutSession = $checkoutSession;
         $this->paymentHelper   = $paymentHelper;
         $this->quoteRepository = $quoteRepository;
         $this->orderRepository = $orderRepository;
+        $this->payHelper = $payHelper;
 
         parent::__construct($context);
     }
@@ -87,7 +96,7 @@ class Redirect extends PayAction
 
             $methodInstance = $this->paymentHelper->getMethodInstance($payment->getMethod());
             if ($methodInstance instanceof \Paynl\Payment\Model\Paymentmethod\Paymentmethod) {
-                payHelper::logNotice('Start new payment for order ' . $order->getId(), array(), $order->getStore());
+                $this->payHelper->logNotice('Start new payment for order ' . $order->getId(), array(), $order->getStore());
                 $redirectUrl = $methodInstance->startTransaction($order);
                 $this->getResponse()->setNoCacheHeaders();
                 $this->getResponse()->setRedirect($redirectUrl);
@@ -99,7 +108,7 @@ class Redirect extends PayAction
             $this->_getCheckoutSession()->restoreQuote();
             $this->messageManager->addExceptionMessage($e, __('Something went wrong, please try again later'));
             $this->messageManager->addExceptionMessage($e, $e->getMessage());
-            payHelper::logCritical($e, array(), $order->getStore());
+            $this->payHelper->logCritical($e, array(), $order->getStore());
 
             $this->_redirect('checkout/cart');
         }

@@ -61,6 +61,12 @@ class PayPayment
     private $paynlConfig;
 
     /**
+     *
+     * @var \Paynl\Payment\Helper\PayHelper;
+     */
+    private $payHelper;
+
+    /**
      * Constructor.
      *
      * @param \Paynl\Payment\Model\Config $config
@@ -72,6 +78,7 @@ class PayPayment
      * @param \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $builderInterface
      * @param \Magento\Sales\Model\Order\PaymentFactory $paymentFactory
      * @param UpdateCouponUsages $updateCouponUsages
+     * @param PayHelper $payHelper
      */
     public function __construct(
         \Paynl\Payment\Model\Config $config,
@@ -82,7 +89,8 @@ class PayPayment
         \Paynl\Payment\Model\Config $paynlConfig,
         \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $builderInterface,
         \Magento\Sales\Model\Order\PaymentFactory $paymentFactory,
-        UpdateCouponUsages $updateCouponUsages
+        UpdateCouponUsages $updateCouponUsages,
+        PayHelper $payHelper
     ) {
         $this->eventManager = $eventManager;
         $this->config = $config;
@@ -93,6 +101,7 @@ class PayPayment
         $this->builderInterface = $builderInterface;
         $this->paymentFactory = $paymentFactory;
         $this->updateCouponUsages = $updateCouponUsages;
+        $this->payHelper = $payHelper;
     }
 
     /**
@@ -162,7 +171,7 @@ class PayPayment
         $order->setStatus($state);
         $order->addStatusHistoryComment(__('PAY. - Uncanceled order'), false);
         if (!empty($order->getCouponCode())) {
-            $this->updateCouponUsages->execute($order, true);
+            $this->updateCouponUsages->execute($order, false);
         }
         $this->eventManager->dispatch('order_uncancel_after', ['order' => $order]);
     }
@@ -194,7 +203,7 @@ class PayPayment
             $orderids = json_decode($order_ids, true);
             $multiShippingOrder = true;
             foreach ($orderids as $orderId) {
-                payHelper::logDebug('Multishipping order:', ['orderid: ' => $orderId]);
+                $this->payHelper->logDebug('Multishipping order:', ['orderid: ' => $orderId]);
                 $orderProcessList[] = $this->orderRepository->get($orderId);
             }
         } else {
@@ -216,7 +225,7 @@ class PayPayment
             $orderAmount = round($order->getGrandTotal(), 2);
             $orderBaseAmount = round($order->getBaseGrandTotal(), 2);
             if (!in_array($orderAmount, $transactionPaid) && !in_array($orderBaseAmount, $transactionPaid) && $multiShippingOrder === false) {
-                payHelper::logCritical('Amount validation error.', array($transactionPaid, $orderAmount, $order->getGrandTotal(), $order->getBaseGrandTotal()));
+                $this->payHelper->logCritical('Amount validation error.', array($transactionPaid, $orderAmount, $order->getGrandTotal(), $order->getBaseGrandTotal()));
                 throw new \Exception('Amount validation error. Amounts: ' . print_r(array($transactionPaid, $orderAmount, $order->getGrandTotal(), $order->getBaseGrandTotal()), true));
             }
 

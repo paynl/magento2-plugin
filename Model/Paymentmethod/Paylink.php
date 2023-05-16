@@ -146,7 +146,7 @@ class Paylink extends PaymentMethod
 
                     $transportBuilder = $objectManager->create(\Magento\Framework\Mail\Template\TransportBuilder::class);
 
-                    payHelper::logDebug('Sending Paylink E-mail with the following user data: ', array("sender" => $sender, "customer_email" => $customerEmail, "support_email" => $supportEmail));
+                    $this->payHelper->logDebug('Sending Paylink E-mail with the following user data: ', array("sender" => $sender, "customer_email" => $customerEmail, "support_email" => $supportEmail));
                     $template = 'paylink_email_template';
                     if ($show_order_in_mail) {
                         $template = 'paylink_email_order_template';
@@ -164,7 +164,7 @@ class Paylink extends PaymentMethod
                     $paylinktext = __('A PAY. Paylink has been send to');
                     $order->addStatusHistoryComment($paylinktext . ' ' . $order->getCustomerEmail() . '.', $status)->save();
                 } catch (\Exception $e) {
-                    payHelper::logDebug('Paylink exception: ' . $e->getMessage());
+                    $this->payHelper->logDebug('Paylink exception: ' . $e->getMessage());
                     $order->addStatusHistoryComment(__('PAY.: Unable to send E-mail'), $status)->save();
                     $this->addPaylinkComment($order, $url, $status);
                 }

@@ -31,18 +31,27 @@ class ShipmentSaveAfter implements ObserverInterface
     private $payPayment;
 
     /**
+     *
+     * @var \Paynl\Payment\Helper\PayHelper;
+     */
+    private $payHelper;
+
+    /**
      * @param Config $config
      * @param Store $store
      * @param PayPayment $payPayment
+     * @param PayHelper $payHelper
      */
     public function __construct(
         Config $config,
         Store $store,
-        PayPayment $payPayment
+        PayPayment $payPayment,
+        PayHelper $payHelper
     ) {
         $this->config = $config;
         $this->store = $store;
         $this->payPayment = $payPayment;
+        $this->payHelper = $payHelper;
     }
 
     /**
@@ -68,7 +77,7 @@ class ShipmentSaveAfter implements ObserverInterface
                     $amountPaidCheck =  $this->config->sherpaEnabled() ? true : $amountPaid === null;
 
                     if ($bHasAmountAuthorized && $amountPaidCheck === true && $amountRefunded === null) {
-                        payHelper::logDebug('AUTO-CAPTURING(shipment-save-after) ' . $payOrderId, [], $order->getStore());
+                        $this->payHelper->logDebug('AUTO-CAPTURING(shipment-save-after) ' . $payOrderId, [], $order->getStore());
                         $bCaptureResult = false;
                         try {
                             # Handles Wuunder
@@ -83,7 +92,7 @@ class ShipmentSaveAfter implements ObserverInterface
                             }
                         } catch (\Exception $e) {
                             $strMessage = $e->getMessage();
-                            payHelper::logDebug('Order PAY error(rest): ' . $strMessage . ' EntityId: ' . $order->getEntityId(), [], $order->getStore());
+                            $this->payHelper->logDebug('Order PAY error(rest): ' . $strMessage . ' EntityId: ' . $order->getEntityId(), [], $order->getStore());
 
                             $strFriendlyMessage = 'Failed. Errorcode: PAY-MAGENTO2-004. See docs.pay.nl for more information';
 
@@ -102,17 +111,17 @@ class ShipmentSaveAfter implements ObserverInterface
                             $this->payPayment->processPaidOrder($transaction, $order);
                         }
                     } else {
-                        payHelper::logDebug(
+                        $this->payHelper->logDebug(
                             'Auto-Capture conditions not met (yet). Amountpaid:' . $amountPaid . ' bHasAmountAuthorized: ' . ($bHasAmountAuthorized ? '1' : '0'),
                             [],
                             $order->getStore()
                         );
                     }
                 } else {
-                    payHelper::logDebug('Auto-Capture conditions not met (yet). No PAY-Order-id.', [], $order->getStore());
+                    $this->payHelper->logDebug('Auto-Capture conditions not met (yet). No PAY-Order-id.', [], $order->getStore());
                 }
             } else {
-                payHelper::logDebug('Auto-capture conditions not met (yet). State: ' . $order->getState(), [], $order->getStore());
+                $this->payHelper->logDebug('Auto-capture conditions not met (yet). State: ' . $order->getState(), [], $order->getStore());
             }
         }
     }
