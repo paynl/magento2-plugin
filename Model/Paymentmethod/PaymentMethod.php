@@ -47,7 +47,7 @@ abstract class PaymentMethod extends AbstractMethod
     /**
      * @var \Magento\Sales\Model\Order\Config
      */
-    protected $orderConfig;   
+    protected $orderConfig;
 
     /**
      * @var Magento\Framework\Message\ManagerInterface
@@ -85,9 +85,9 @@ abstract class PaymentMethod extends AbstractMethod
      * @param \Magento\Sales\Model\Order\Config $orderConfig
      * @param \Magento\Sales\Model\OrderRepository $orderRepository
      * @param \Paynl\Payment\Model\Config $paynlConfig
+     * @param PayHelper $payHelper
      * @param \Magento\Framework\Model\ResourceModel\AbstractResource $resource
      * @param \Magento\Framework\Data\Collection\AbstractDb $resourceCollection
-     * @param PayHelper $payHelper
      * @param array $data
      */
     public function __construct(
@@ -103,7 +103,7 @@ abstract class PaymentMethod extends AbstractMethod
         Config $paynlConfig,
         PayHelper $payHelper,
         AbstractResource $resource = null,
-        AbstractDb $resourceCollection = null,        
+        AbstractDb $resourceCollection = null,
         array $data = []
     ) {
         parent::__construct(
@@ -127,7 +127,7 @@ abstract class PaymentMethod extends AbstractMethod
         $this->orderConfig = $orderConfig;
         $this->storeManager = $objectManager->create(\Magento\Store\Model\StoreManagerInterface::class);
         $this->cookieManager = $objectManager->create('\Magento\Framework\Stdlib\CookieManagerInterface');
-        $this->payHelper = $payHelper; 
+        $this->payHelper = $payHelper;
     }
 
     /**

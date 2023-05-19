@@ -2,13 +2,13 @@
 
 namespace Paynl\Payment\Setup\Patch\Data;
 
+use Magento\Framework\App\Config\ConfigResource\ConfigInterface;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\Encryption\EncryptorInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\Patch\DataPatchInterface;
-use Magento\Framework\App\Config\ConfigResource\ConfigInterface;
-use \Paynl\Payment\Helper\PayHelper;
-use Magento\Framework\Encryption\EncryptorInterface;
-use Magento\Framework\App\ResourceConnection;
-use Magento\Framework\App\Config\ScopeConfigInterface;
+use Paynl\Payment\Helper\PayHelper;
 
 class EncryptCredentials implements DataPatchInterface
 {
@@ -46,12 +46,20 @@ class EncryptCredentials implements DataPatchInterface
 
     /**
      * @param ModuleDataSetupInterface $moduleDataSetup
-     * @param ConfigInterface $scopeConfig
-     * @param EncryptorInterface $encryptor    
+     * @param ScopeConfigInterface $scopeConfig
+     * @param ConfigInterface $config
+     * @param EncryptorInterface $encryptor
+     * @param ResourceConnection $resource
      * @param PayHelper $payHelper
      */
-    public function __construct(ModuleDataSetupInterface $moduleDataSetup, ScopeConfigInterface $scopeConfig, ConfigInterface $config, EncryptorInterface $encryptor, ResourceConnection $resource, PayHelper $payHelper)
-    {
+    public function __construct(
+        ModuleDataSetupInterface $moduleDataSetup,
+        ScopeConfigInterface $scopeConfig,
+        ConfigInterface $config,
+        EncryptorInterface $encryptor,
+        ResourceConnection $resource,
+        PayHelper $payHelper
+    ) {
         $this->moduleDataSetup = $moduleDataSetup;
         $this->scopeConfig = $scopeConfig;
         $this->config = $config;
@@ -62,6 +70,7 @@ class EncryptCredentials implements DataPatchInterface
 
     /**
      * @inheritdoc
+     * @return void
      */
     public function apply()
     {
@@ -90,11 +99,17 @@ class EncryptCredentials implements DataPatchInterface
         $this->moduleDataSetup->endSetup();
     }
 
+    /**
+     * @return array
+     */
     public static function getDependencies()
     {
         return [];
     }
 
+    /**
+     * @return array
+     */
     public function getAliases()
     {
         return [];

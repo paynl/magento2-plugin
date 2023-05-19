@@ -2,7 +2,7 @@
 
 namespace Paynl\Payment\Block\Form;
 
-use \Paynl\Payment\Helper\PayHelper;
+use Paynl\Payment\Helper\PayHelper;
 
 /**
  * Block for Instore payment method form
@@ -24,7 +24,7 @@ class Instore extends \Magento\Payment\Block\Form
 
     /**
      * @param \Magento\Framework\View\Element\Template\Context $context
-     * @param \Magento\Payment\Model\Config $paymentConfig
+     * @param PayHelper $payHelper
      * @param array $data
      */
     public function __construct(
@@ -92,6 +92,9 @@ class Instore extends \Magento\Payment\Block\Form
         return $optionArr;
     }
 
+    /**
+     * @return string
+     */
     public function getDefaultTerminal()
     {
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
@@ -99,6 +102,9 @@ class Instore extends \Magento\Payment\Block\Form
         return $store->getConfig('payment/paynl_payment_instore/default_terminal');
     }
 
+    /**
+     * @return interger|string
+     */
     public function hidePaymentOptions()
     {
         if (!empty($this->getDefaultTerminal())) {

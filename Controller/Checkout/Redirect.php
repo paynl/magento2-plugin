@@ -7,7 +7,7 @@ use Magento\Quote\Model\QuoteRepository;
 use Magento\Sales\Model\OrderRepository;
 use Paynl\Error\Error;
 use Paynl\Payment\Controller\PayAction;
-use \Paynl\Payment\Helper\PayHelper;
+use Paynl\Payment\Helper\PayHelper;
 
 /**
  * Redirects the user.
@@ -50,7 +50,10 @@ class Redirect extends PayAction
     /**
      * @param \Magento\Framework\App\Action\Context $context
      * @param \Paynl\Payment\Model\Config $config
-     * @param \Magento\Framework\Message\ManagerInterface $messageManager
+     * @param \Magento\Checkout\Model\Session $checkoutSession
+     * @param PaymentHelper $paymentHelper
+     * @param QuoteRepository $quoteRepository
+     * @param OrderRepository $orderRepository
      * @param PayHelper $payHelper
      */
     public function __construct(
@@ -72,6 +75,9 @@ class Redirect extends PayAction
         parent::__construct($context);
     }
 
+    /**
+     * @return void
+     */
     public function execute()
     {
         try {
@@ -103,9 +109,8 @@ class Redirect extends PayAction
             } else {
                 throw new Error('PAY.: Method is not a paynl payment method');
             }
-
         } catch (\Exception $e) {
-            $this->_getCheckoutSession()->restoreQuote();
+            $this->_getCheckoutSession()->restoreQuote(); // phpcs:ignore
             $this->messageManager->addExceptionMessage($e, __('Something went wrong, please try again later'));
             $this->messageManager->addExceptionMessage($e, $e->getMessage());
             $this->payHelper->logCritical($e, array(), $order->getStore());
@@ -119,7 +124,7 @@ class Redirect extends PayAction
      *
      * @return \Magento\Checkout\Model\Session
      */
-    protected function _getCheckoutSession()
+    protected function _getCheckoutSession() // phpcs:ignore
     {
         return $this->checkoutSession;
     }

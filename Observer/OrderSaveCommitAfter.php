@@ -7,12 +7,11 @@ use Magento\Store\Model\Store;
 use Paynl\Result\Transaction\Transaction;
 use Paynl\Payment\Model\Config;
 use Magento\Sales\Model\Order;
-use \Paynl\Payment\Helper\PayHelper;
-use \Paynl\Payment\Model\PayPayment;
+use Paynl\Payment\Helper\PayHelper;
+use Paynl\Payment\Model\PayPayment;
 
 class OrderSaveCommitAfter implements ObserverInterface
 {
-
     /**
      *
      * @var Magento\Store\Model\Store;
@@ -56,6 +55,10 @@ class OrderSaveCommitAfter implements ObserverInterface
         $this->payHelper = $payHelper;
     }
 
+    /**
+     * @param \Magento\Framework\Event\Observer $observer
+     * @return void
+     */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
         $order = $observer->getEvent()->getOrder();
@@ -87,8 +90,7 @@ class OrderSaveCommitAfter implements ObserverInterface
                                 $transaction = \Paynl\Transaction::get($payOrderId);
                                 $this->payPayment->processPaidOrder($transaction, $order);
                                 $this->payHelper->logDebug('wuunderAutoCaptureEnabled but in OrderSaveCommitAfter(why am i here) ');
-                            }
-                            else {
+                            } else {
                                 \Paynl\Transaction::capture($payOrderId);
                                 $transaction = \Paynl\Transaction::get($payOrderId);
                                 $this->payPayment->processPaidOrder($transaction, $order);

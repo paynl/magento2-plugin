@@ -6,11 +6,10 @@ use Magento\Framework\Event\ObserverInterface;
 use Psr\Log\LoggerInterface;
 use Paynl\Payment\Model\Config;
 use Magento\Sales\Model\Order;
-use \Paynl\Payment\Helper\PayHelper;
+use Paynl\Payment\Helper\PayHelper;
 
 class InvoiceSaveCommitAfter implements ObserverInterface
 {
-
     /**
      *
      * @var Psr\Log\LoggerInterface
@@ -35,6 +34,14 @@ class InvoiceSaveCommitAfter implements ObserverInterface
      */
     protected $payHelper;
 
+    /**
+     * Constructor.
+     *
+     * @param LoggerInterface $logger
+     * @param Config $config
+     * @param \Magento\Framework\App\RequestInterface $request
+     * @param PayHelper $payHelper
+     */
     public function __construct(
         LoggerInterface $logger,
         Config $config,
@@ -47,6 +54,10 @@ class InvoiceSaveCommitAfter implements ObserverInterface
         $this->payHelper = $payHelper;
     }
 
+    /**
+     * @param \Magento\Framework\Event\Observer $observer
+     * @return void
+     */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
         $invoice = $observer->getEvent()->getInvoice();

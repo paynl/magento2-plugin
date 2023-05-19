@@ -2,18 +2,17 @@
 
 namespace Paynl\Payment\Model\Config\Source;
 
-use \Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Option\ArrayInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Framework\App\RequestInterface;
-use \Paynl\Payment\Model\Config;
+use Paynl\Payment\Model\Config;
 use Paynl\Payment\Model\Paymentmethod\PaymentMethod;
-use \Paynl\Paymentmethods;
-use \Paynl\Payment\Helper\PayHelper;
+use Paynl\Paymentmethods;
+use Paynl\Payment\Helper\PayHelper;
 
 class PinTerminals implements ArrayInterface
 {
-
     /**
      * @var RequestInterface
      */
@@ -42,7 +41,7 @@ class PinTerminals implements ArrayInterface
 
     /**
      * Constructor.
-     *    
+     *
      * @param Config $config
      * @param RequestInterface $request
      * @param ScopeConfigInterface $scopeConfig
@@ -87,7 +86,7 @@ class PinTerminals implements ArrayInterface
     public function toArray()
     {
         $terminalArr = [];
-        if ($this->_isConfigured()) {
+        if ($this->_isConfigured()) { // phpcs:ignore
             $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
             $config = $objectManager->get(\Paynl\Payment\Model\Config::class);
 
@@ -128,7 +127,10 @@ class PinTerminals implements ArrayInterface
         return $optionArr;
     }
 
-    protected function _isConfigured()
+    /**
+     * @return boolean
+     */
+    protected function _isConfigured() // phpcs:ignore
     {
         $storeId = $this->_request->getParam('store');
         if ($storeId) {
@@ -143,6 +145,10 @@ class PinTerminals implements ArrayInterface
         return false;
     }
 
+    /**
+     * @param string $path
+     * @return string
+     */
     protected function getConfigValue($path)
     {
         $scopeType = ScopeConfigInterface::SCOPE_TYPE_DEFAULT;

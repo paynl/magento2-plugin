@@ -17,11 +17,19 @@ class Instore extends \Magento\Backend\App\Action implements CsrfAwareActionInte
     private $paymentHelper;
     protected $resultFactory;
 
+    /**
+     * @param RequestInterface $request
+     * @return boolean
+     */
     public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
     {
         return null;
     }
 
+    /**
+     * @param RequestInterface $request
+     * @return boolean
+     */
     public function validateForCsrf(RequestInterface $request): bool
     {
         return true;
@@ -36,10 +44,11 @@ class Instore extends \Magento\Backend\App\Action implements CsrfAwareActionInte
     /**
      * Instore constructor.
      *
-     * @param \Magento\Framework\App\Action\Context $context
+     * @param \Magento\Backend\App\Action\Context $context
      * @param Magento\Sales\Model\OrderRepository $orderRepository
+     * @param PaymentHelper $paymentHelper
      * @param Magento\Quote\Model\QuoteRepository $quoteRepository
-     * @param Magento\Payment\Helper\Data $paymentHelper
+     * @param \Magento\Framework\Controller\ResultFactory $resultFactory
      * @param PayHelper $payHelper
      */
     public function __construct(
@@ -59,6 +68,9 @@ class Instore extends \Magento\Backend\App\Action implements CsrfAwareActionInte
         parent::__construct($context);
     }
 
+    /**
+     * @return string
+     */
     public function execute()
     {
         $params = $this->getRequest()->getParams();
