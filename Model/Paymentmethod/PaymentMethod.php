@@ -70,7 +70,7 @@ abstract class PaymentMethod extends AbstractMethod
      *
      * @var \Paynl\Payment\Helper\PayHelper;
      */
-    private $payHelper;
+    public $payHelper;
 
     /**
      * PaymentMethod constructor.
