@@ -162,7 +162,6 @@ abstract class PaymentMethod extends AbstractMethod
         $this->paynlConfig = $paynlConfig;
         $this->orderRepository = $orderRepository;
         $this->orderConfig = $orderConfig;
-        $this->cookieManager = $objectManager->create('\Magento\Framework\Stdlib\CookieManagerInterface');
         $this->storeManager = $storeManager;
         $this->cookieManager = $cookieManager;
         $this->cache = $cache;
