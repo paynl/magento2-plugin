@@ -147,17 +147,14 @@ class Instore extends PaymentMethod
      */
     public function getPaymentOptions()
     {
-        $cache = $this->getCache();
         $store = $this->storeManager->getStore();
         $storeId = $store->getId();
         $cacheName = 'paynl_terminals_' . $this->getPaymentOptionId() . '_' . $storeId;
-        $terminalsJson = $cache->load($cacheName);
+        $terminalsJson = $this->cache->load($cacheName);
 
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $config = $objectManager->get(\Paynl\Payment\Model\Config::class);
-        $config->setStore($store);
+        $this->paynlConfig->setStore($store);
 
-        if (!$config->isPaymentMethodActive('paynl_payment_instore')) {
+        if (!$this->paynlConfig->isPaymentMethodActive('paynl_payment_instore')) {
             return false;
         }
         if ($terminalsJson) {
@@ -175,7 +172,7 @@ class Instore extends PaymentMethod
                     $terminal['visibleName'] = $terminal['name'];
                     array_push($terminalsArr, $terminal);
                 }
-                $cache->save(json_encode($terminalsArr), $cacheName);
+                $this->cache->save(json_encode($terminalsArr), $cacheName);
             } catch (\Paynl\Error\Error $e) {
                 return false;
             }
@@ -190,18 +187,6 @@ class Instore extends PaymentMethod
     public function getDefaultPaymentOption()
     {
         return $this->_scopeConfig->getValue('payment/' . $this->_code . '/default_terminal', 'store');
-    }
-
-    /**
-     * @return \Magento\Framework\App\CacheInterface
-     */
-    private function getCache()
-    {
-        /** @var \Magento\Framework\ObjectManagerInterface $om */
-        $om = \Magento\Framework\App\ObjectManager::getInstance();
-        /** @var \Magento\Framework\App\CacheInterface $cache */
-        $cache = $om->get(\Magento\Framework\App\CacheInterface::class);
-        return $cache;
     }
 
     /**

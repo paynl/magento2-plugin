@@ -49,12 +49,11 @@ class Ideal extends PaymentMethod
      */
     public function getPaymentOptions()
     {
-        $cache = $this->getCache();
         $store = $this->storeManager->getStore();
         $storeId = $store->getId();
         $cacheName = 'paynl_banks_' . $this->getPaymentOptionId() . '_' . $storeId;
 
-        $banksJson = $cache->load($cacheName);
+        $banksJson = $this->cache->load($cacheName);
         if ($banksJson) {
             $banks = json_decode($banksJson, true);
         } else {
@@ -62,7 +61,7 @@ class Ideal extends PaymentMethod
             $this->paynlConfig->configureSDK();
 
             $banks = \Paynl\Paymentmethods::getBanks($this->getPaymentOptionId());
-            $cache->save(json_encode($banks), $cacheName);
+            $this->cache->save(json_encode($banks), $cacheName);
         }
 
         foreach ($banks as $key => $bank) {
@@ -70,17 +69,5 @@ class Ideal extends PaymentMethod
         }
 
         return $banks;
-    }
-
-    /**
-     * @return \Magento\Framework\App\CacheInterface
-     */
-    private function getCache()
-    {
-        /** @var \Magento\Framework\ObjectManagerInterface $om */
-        $om = \Magento\Framework\App\ObjectManager::getInstance();
-        /** @var \Magento\Framework\App\CacheInterface $cache */
-        $cache = $om->get(\Magento\Framework\App\CacheInterface::class);
-        return $cache;
     }
 }
