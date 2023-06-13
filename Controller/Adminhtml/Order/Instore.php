@@ -2,14 +2,13 @@
 
 namespace Paynl\Payment\Controller\Adminhtml\Order;
 
-use Magento\Framework\App\Request\InvalidRequestException;
 use Magento\Framework\App\RequestInterface;
-use Magento\Sales\Model\OrderRepository;
-use Magento\Quote\Model\QuoteRepository;
+use Magento\Framework\App\Request\InvalidRequestException;
 use Magento\Payment\Helper\Data as PaymentHelper;
-
+use Magento\Quote\Model\QuoteRepository;
+use Magento\Sales\Model\OrderRepository;
 use Paynl\Payment\Controller\CsrfAwareActionInterface;
-use \Paynl\Payment\Helper\PayHelper;
+use Paynl\Payment\Helper\PayHelper;
 
 class Instore extends \Magento\Backend\App\Action implements CsrfAwareActionInterface
 {
@@ -18,40 +17,60 @@ class Instore extends \Magento\Backend\App\Action implements CsrfAwareActionInte
     private $paymentHelper;
     protected $resultFactory;
 
+    /**
+     * @param RequestInterface $request
+     * @return boolean
+     */
     public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
     {
         return null;
     }
 
+    /**
+     * @param RequestInterface $request
+     * @return boolean
+     */
     public function validateForCsrf(RequestInterface $request): bool
     {
         return true;
     }
 
     /**
+     *
+     * @var \Paynl\Payment\Helper\PayHelper;
+     */
+    protected $payHelper;
+
+    /**
      * Instore constructor.
      *
-     * @param \Magento\Framework\App\Action\Context $context
+     * @param \Magento\Backend\App\Action\Context $context
      * @param Magento\Sales\Model\OrderRepository $orderRepository
+     * @param PaymentHelper $paymentHelper
      * @param Magento\Quote\Model\QuoteRepository $quoteRepository
-     * @param Magento\Payment\Helper\Data $paymentHelper
+     * @param \Magento\Framework\Controller\ResultFactory $resultFactory
+     * @param PayHelper $payHelper
      */
     public function __construct(
         \Magento\Backend\App\Action\Context $context,
         OrderRepository $orderRepository,
         PaymentHelper $paymentHelper,
         QuoteRepository $quoteRepository,
-        \Magento\Framework\Controller\ResultFactory $resultFactory
+        \Magento\Framework\Controller\ResultFactory $resultFactory,
+        PayHelper $payHelper
     ) {
         $this->orderRepository = $orderRepository;
         $this->paymentHelper = $paymentHelper;
         $this->quoteRepository = $quoteRepository;
         $this->resultFactory = $resultFactory;
+        $this->payHelper = $payHelper;
 
         parent::__construct($context);
     }
 
-
+    /**
+     * @return string
+     */
     public function execute()
     {
         $params = $this->getRequest()->getParams();
@@ -74,7 +93,7 @@ class Instore extends \Magento\Backend\App\Action implements CsrfAwareActionInte
                 $redirectUrl = $methodInstance->startTransaction($order, true);
             }
         } catch (\Exception $e) {
-            PayHelper::setCookie('pinError', $e->getMessage());
+            $this->payHelper->setCookie('pinError', $e->getMessage());
         }
 
         $redirect = $this->resultFactory->create(\Magento\Framework\Controller\ResultFactory::TYPE_REDIRECT);

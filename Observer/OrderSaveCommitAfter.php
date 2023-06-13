@@ -7,12 +7,11 @@ use Magento\Store\Model\Store;
 use Paynl\Result\Transaction\Transaction;
 use Paynl\Payment\Model\Config;
 use Magento\Sales\Model\Order;
-use \Paynl\Payment\Helper\PayHelper;
-use \Paynl\Payment\Model\PayPayment;
+use Paynl\Payment\Helper\PayHelper;
+use Paynl\Payment\Model\PayPayment;
 
 class OrderSaveCommitAfter implements ObserverInterface
 {
-
     /**
      *
      * @var Magento\Store\Model\Store;
@@ -30,16 +29,36 @@ class OrderSaveCommitAfter implements ObserverInterface
      */
     private $payPayment;
 
+    /**
+     *
+     * @var \Paynl\Payment\Helper\PayHelper;
+     */
+    private $payHelper;
+
+    /**
+     * Constructor.
+     *
+     * @param Config $config
+     * @param Store $store
+     * @param PayPayment $payPayment
+     * @param PayHelper $payHelper
+     */
     public function __construct(
         Config $config,
         Store $store,
-        PayPayment $payPayment
+        PayPayment $payPayment,
+        PayHelper $payHelper
     ) {
         $this->config = $config;
         $this->store = $store;
         $this->payPayment = $payPayment;
+        $this->payHelper = $payHelper;
     }
 
+    /**
+     * @param \Magento\Framework\Event\Observer $observer
+     * @return void
+     */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
         $order = $observer->getEvent()->getOrder();
@@ -59,10 +78,10 @@ class OrderSaveCommitAfter implements ObserverInterface
                     $amountRefunded = isset($data['amount_refunded']) ? $data['amount_refunded'] : null;
 
                     if ($bHasAmountAuthorized && $amountPaid === null && $amountRefunded === null) {
-                        payHelper::logDebug('DISABLED handling AUTO-CAPTURING in order-save-commit-after' . $payOrderId, [], $order->getStore());
+                        $this->payHelper->logDebug('DISABLED handling AUTO-CAPTURING in order-save-commit-after' . $payOrderId, [], $order->getStore());
                         return;
 
-                        payHelper::logDebug('AUTO-CAPTURING (order-save-commit-after) ' . $payOrderId, [], $order->getStore());
+                        $this->payHelper->logDebug('AUTO-CAPTURING (order-save-commit-after) ' . $payOrderId, [], $order->getStore());
                         try {
                             \Paynl\Config::setApiToken($this->config->getApiToken());
                             # Auto Capture for Wuunder
@@ -70,16 +89,15 @@ class OrderSaveCommitAfter implements ObserverInterface
                                 \Paynl\Transaction::capture($payOrderId);
                                 $transaction = \Paynl\Transaction::get($payOrderId);
                                 $this->payPayment->processPaidOrder($transaction, $order);
-                                payHelper::logDebug('wuunderAutoCaptureEnabled but in OrderSaveCommitAfter(why am i here) ');
-                            }
-                            else {
+                                $this->payHelper->logDebug('wuunderAutoCaptureEnabled but in OrderSaveCommitAfter(why am i here) ');
+                            } else {
                                 \Paynl\Transaction::capture($payOrderId);
                                 $transaction = \Paynl\Transaction::get($payOrderId);
                                 $this->payPayment->processPaidOrder($transaction, $order);
                             }
                             $strResult = 'Success';
                         } catch (\Exception $e) {
-                            payHelper::logDebug('Order PAY error: ' . $e->getMessage() . ' EntityId: ' . $order->getEntityId() . ' PAY. OrderID: ' . $payOrderId, [], $order->getStore());
+                            $this->payHelper->logDebug('Order PAY error: ' . $e->getMessage() . ' EntityId: ' . $order->getEntityId() . ' PAY. OrderID: ' . $payOrderId, [], $order->getStore());
                             $strResult = 'Failed. Errorcode: PAY-MAGENTO2-003. See docs.pay.nl for more information';
                         }
                         $order->addStatusHistoryComment(__('PAY. - Performed auto-capture. Result: ') . $strResult, false)->save();

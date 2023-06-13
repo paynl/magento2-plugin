@@ -8,11 +8,10 @@ use Magento\Framework\Data\Form\Element\AbstractElement;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Paynl\Payment\Helper\PayHelper;
-use \Paynl\Paymentmethods;
+use Paynl\Paymentmethods;
 
 class Credentials extends Field
 {
-
     protected $_template = 'Paynl_Payment::system/config/credentials.phtml';
 
     /**
@@ -27,17 +26,32 @@ class Credentials extends Field
      */
     protected $scopeConfig;
 
-    public function __construct(Context $context, RequestInterface $request, ScopeConfigInterface $scopeConfig)
+    /**
+     *
+     * @var \Paynl\Payment\Helper\PayHelper;
+     */
+    protected $payHelper;
+
+    /**
+     * Constructor.
+     *
+     * @param Context $context
+     * @param RequestInterface $request
+     * @param ScopeConfigInterface $scopeConfig
+     * @param PayHelper $payHelper
+     */
+    public function __construct(Context $context, RequestInterface $request, ScopeConfigInterface $scopeConfig, PayHelper $payHelper)
     {
         $this->request = $request;
         $this->scopeConfig = $scopeConfig;
+        $this->payHelper = $payHelper;
         parent::__construct($context);
     }
 
     /**
      * @return $this
      */
-    protected function _prepareLayout()
+    protected function _prepareLayout() // phpcs:ignore
     {
         parent::_prepareLayout();
         return $this;
@@ -47,7 +61,7 @@ class Credentials extends Field
      * @param AbstractElement $element
      * @return string
      */
-    protected function _getElementHtml(AbstractElement $element)
+    protected function _getElementHtml(AbstractElement $element) // phpcs:ignore
     {
         $this->setNamePrefix($element->getName())->setHtmlId($element->getHtmlId());
         return $this->_toHtml();
@@ -94,7 +108,7 @@ class Credentials extends Field
             } catch (\Exception $e) {
                 $error = $e->getMessage();
             }
-        } else if (!empty($apiToken) || !empty($serviceId) || !empty($tokencode)) {
+        } elseif (!empty($apiToken) || !empty($serviceId) || !empty($tokencode)) {
             $error = __('Pay. Tokencode, API token and serviceId are required.');
         } else {
             $status = 0;
@@ -111,8 +125,8 @@ class Credentials extends Field
                 case 'PAY-403 - Access denied: Token not valid for this company':
                     $error = __('Service-ID / API-Token combination is invalid.');
                     break;
-                default :
-                    payHelper::logCritical('Pay. API exception: ' . $error);
+                default:
+                    $this->payHelper->logCritical('Pay. API exception: ' . $error);
                     $error = __('Could not authorize');
             }
             $status = 0;

@@ -7,7 +7,7 @@ use Magento\Quote\Model\QuoteRepository;
 use Magento\Sales\Model\OrderRepository;
 use Paynl\Error\Error;
 use Paynl\Payment\Controller\PayAction;
-use \Paynl\Payment\Helper\PayHelper;
+use Paynl\Payment\Helper\PayHelper;
 
 /**
  * Redirects the user.
@@ -42,9 +42,19 @@ class Redirect extends PayAction
     private $orderRepository;
 
     /**
+     *
+     * @var \Paynl\Payment\Helper\PayHelper;
+     */
+    private $payHelper;
+
+    /**
      * @param \Magento\Framework\App\Action\Context $context
      * @param \Paynl\Payment\Model\Config $config
-     * @param \Magento\Framework\Message\ManagerInterface $messageManager
+     * @param \Magento\Checkout\Model\Session $checkoutSession
+     * @param PaymentHelper $paymentHelper
+     * @param QuoteRepository $quoteRepository
+     * @param OrderRepository $orderRepository
+     * @param PayHelper $payHelper
      */
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
@@ -52,17 +62,22 @@ class Redirect extends PayAction
         \Magento\Checkout\Model\Session $checkoutSession,
         PaymentHelper $paymentHelper,
         QuoteRepository $quoteRepository,
-        OrderRepository $orderRepository
+        OrderRepository $orderRepository,
+        PayHelper $payHelper
     ) {
         $this->config          = $config; // PAY. config helper
         $this->checkoutSession = $checkoutSession;
         $this->paymentHelper   = $paymentHelper;
         $this->quoteRepository = $quoteRepository;
         $this->orderRepository = $orderRepository;
+        $this->payHelper = $payHelper;
 
         parent::__construct($context);
     }
 
+    /**
+     * @return void
+     */
     public function execute()
     {
         try {
@@ -87,19 +102,18 @@ class Redirect extends PayAction
 
             $methodInstance = $this->paymentHelper->getMethodInstance($payment->getMethod());
             if ($methodInstance instanceof \Paynl\Payment\Model\Paymentmethod\Paymentmethod) {
-                payHelper::logNotice('Start new payment for order ' . $order->getId(), array(), $order->getStore());
+                $this->payHelper->logNotice('Start new payment for order ' . $order->getId(), array(), $order->getStore());
                 $redirectUrl = $methodInstance->startTransaction($order);
                 $this->getResponse()->setNoCacheHeaders();
                 $this->getResponse()->setRedirect($redirectUrl);
             } else {
                 throw new Error('PAY.: Method is not a paynl payment method');
             }
-
         } catch (\Exception $e) {
-            $this->_getCheckoutSession()->restoreQuote();
+            $this->_getCheckoutSession()->restoreQuote(); // phpcs:ignore
             $this->messageManager->addExceptionMessage($e, __('Something went wrong, please try again later'));
             $this->messageManager->addExceptionMessage($e, $e->getMessage());
-            payHelper::logCritical($e, array(), $order->getStore());
+            $this->payHelper->logCritical($e, array(), $order->getStore());
 
             $this->_redirect('checkout/cart');
         }
@@ -110,7 +124,7 @@ class Redirect extends PayAction
      *
      * @return \Magento\Checkout\Model\Session
      */
-    protected function _getCheckoutSession()
+    protected function _getCheckoutSession() // phpcs:ignore
     {
         return $this->checkoutSession;
     }

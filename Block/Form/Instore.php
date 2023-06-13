@@ -2,7 +2,7 @@
 
 namespace Paynl\Payment\Block\Form;
 
-use \Paynl\Payment\Helper\PayHelper;
+use Paynl\Payment\Helper\PayHelper;
 
 /**
  * Block for Instore payment method form
@@ -16,6 +16,25 @@ class Instore extends \Magento\Payment\Block\Form
      */
     protected $_template = 'form/instore.phtml';
 
+    /**
+     *
+     * @var \Paynl\Payment\Helper\PayHelper;
+     */
+    protected $payHelper;
+
+    /**
+     * @param \Magento\Framework\View\Element\Template\Context $context
+     * @param PayHelper $payHelper
+     * @param array $data
+     */
+    public function __construct(
+        \Magento\Framework\View\Element\Template\Context $context,
+        PayHelper $payHelper,
+        array $data = []
+    ) {
+        parent::__construct($context, $data);
+        $this->payHelper = $payHelper;
+    }
 
     /**
      * Get Terminals in "key-value" format
@@ -58,7 +77,7 @@ class Instore extends \Magento\Payment\Block\Form
                         }
                         $cache->save(json_encode($terminalArr), $cacheName);
                     } catch (\Paynl\Error\Error $e) {
-                        payHelper::logNotice('PAY.: Pinterminal error, ' . $e->getMessage());
+                        $this->payHelper->logNotice('PAY.: Pinterminal error, ' . $e->getMessage());
                     }
                 }
             }
@@ -66,13 +85,16 @@ class Instore extends \Magento\Payment\Block\Form
         $optionArr = [];
         $optionArr[0] = __('Choose the pin terminal');
         foreach ($terminalArr as $terminal) {
-            $arr = (array)$terminal;
+            $arr = (array) $terminal;
             $optionArr[$arr['id']] = $arr['visibleName'];
         }
 
         return $optionArr;
     }
 
+    /**
+     * @return string
+     */
     public function getDefaultTerminal()
     {
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
@@ -80,6 +102,9 @@ class Instore extends \Magento\Payment\Block\Form
         return $store->getConfig('payment/paynl_payment_instore/default_terminal');
     }
 
+    /**
+     * @return interger|string
+     */
     public function hidePaymentOptions()
     {
         if (!empty($this->getDefaultTerminal())) {

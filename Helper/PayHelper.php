@@ -2,61 +2,52 @@
 
 namespace Paynl\Payment\Helper;
 
-use Psr\Log\LoggerInterface;
 use Magento\Framework\App\ResourceConnection;
-use Paynl\Payment\Model\Config\Source\LogOptions;
-use Magento\Framework\HTTP\PhpEnvironment\RemoteAddress;
 use Magento\Framework\HTTP\Header;
+use Magento\Framework\HTTP\PhpEnvironment\RemoteAddress;
+use Magento\Framework\Stdlib\CookieManagerInterface;
+use Magento\Framework\Stdlib\Cookie\CookieMetadataFactory;
+use Magento\Store\Model\Store;
+use Paynl\Payment\Logging\Logger;
+use Paynl\Payment\Model\Config\Source\LogOptions;
 
 class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
 {
     public const PAY_LOG_PREFIX = 'PAY.: ';
 
-    private static $objectManager;
-    private static $store;
+    private $store;
     private $resource;
     private $remoteAddress;
     private $httpHeader;
+    private $logger;
+    private $cookieManager;
+    private $cookieMetadataFactory;
 
     /**
      * @param ResourceConnection $resource
      * @param RemoteAddress $remoteAddress
      * @param Header $httpHeader
+     * @param Store $store
+     * @param Logger $logger
+     * @param CookieManagerInterface $cookieManager
+     * @param CookieMetadataFactory $cookieMetadataFactory
      */
-    public function __construct(ResourceConnection $resource, RemoteAddress $remoteAddress, Header $httpHeader)
-    {
+    public function __construct(
+        ResourceConnection $resource,
+        RemoteAddress $remoteAddress,
+        Header $httpHeader,
+        Store $store,
+        Logger $logger,
+        CookieManagerInterface $cookieManager,
+        CookieMetadataFactory $cookieMetadataFactory
+    ) {
         $this->remoteAddress = $remoteAddress;
         $this->httpHeader = $httpHeader;
         $this->resource = $resource;
-    }
-
-    /**
-     * @return \Magento\Framework\App\ObjectManager
-     */
-    public static function getObjectManager()
-    {
-        if (empty(self::$objectManager)) {
-            $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-            self::$objectManager = $objectManager;
-        }
-        return self::$objectManager;
-    }
-
-    /**
-     * @param \Magento\Store\Model\Store|null $store
-     * @return \Magento\Store\Model\Store|mixed
-     */
-    public static function getStore(\Magento\Store\Model\Store $store = null)
-    {
-        if (empty($store)) {
-            if (empty(self::$store)) {
-                $objectManager = self::getObjectManager();
-                $store = $objectManager->get(\Magento\Store\Model\Store::class);
-                self::$store = $store;
-            }
-            return self::$store;
-        }
-        return $store;
+        $this->store = $store;
+        $this->logger = $logger;
+        $this->cookieManager = $cookieManager;
+        $this->cookieMetadataFactory = $cookieMetadataFactory;
     }
 
     /**
@@ -64,7 +55,7 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
      * @param string $type
      * @return boolean
      */
-    public static function hasCorrectLevel($level, $type)
+    public function hasCorrectLevel($level, $type)
     {
         if ($level == LogOptions::LOG_ONLY_CRITICAL && $type == 'critical') {
             return true;
@@ -85,9 +76,9 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
      * @param \Magento\Store\Model\Store  $store
      * @return void
      */
-    public static function logCritical($text, array $params = array(), \Magento\Store\Model\Store $store = null)
+    public function logCritical($text, array $params = array(), \Magento\Store\Model\Store $store = null)
     {
-        self::writeLog($text, 'critical', $params, $store);
+        $this->writeLog($text, 'critical', $params, $store);
     }
 
     /**
@@ -96,9 +87,9 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
      * @param \Magento\Store\Model\Store  $store
      * @return void
      */
-    public static function logNotice($text, array $params = array(), \Magento\Store\Model\Store $store = null)
+    public function logNotice($text, array $params = array(), \Magento\Store\Model\Store $store = null)
     {
-        self::writeLog($text, 'notice', $params, $store);
+        $this->writeLog($text, 'notice', $params, $store);
     }
 
     /**
@@ -107,9 +98,9 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
      * @param \Magento\Store\Model\Store  $store
      * @return void
      */
-    public static function logInfo($text, array $params = array(), \Magento\Store\Model\Store $store = null)
+    public function logInfo($text, array $params = array(), \Magento\Store\Model\Store $store = null)
     {
-        self::writeLog($text, 'info', $params, $store);
+        $this->writeLog($text, 'info', $params, $store);
     }
 
     /**
@@ -118,9 +109,9 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
      * @param \Magento\Store\Model\Store|null $store
      * @return void
      */
-    public static function logDebug($text, array $params = array(), \Magento\Store\Model\Store $store = null)
+    public function logDebug($text, array $params = array(), \Magento\Store\Model\Store $store = null)
     {
-        self::writeLog($text, 'debug', $params, $store);
+        $this->writeLog($text, 'debug', $params, $store);
     }
 
     /**
@@ -131,11 +122,9 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
      * @param \Magento\Store\Model\Store |null $store
      * @return void
      */
-    public static function log($text, array $params = array(), \Magento\Store\Model\Store $store = null)
+    public function log($text, array $params = array(), \Magento\Store\Model\Store $store = null)
     {
-        $objectManager = self::getObjectManager();
-        $logger = $objectManager->get(\Paynl\Payment\Logging\Logger::class);
-        $logger->notice($text, $params);
+        $this->logger->notice($text, $params);
     }
 
     /**
@@ -145,29 +134,25 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
      * @param \Magento\Store\Model\Store|null $store
      * @return void
      */
-    public static function writeLog($text, $type, array $params, \Magento\Store\Model\Store $store = null)
+    public function writeLog($text, $type, array $params, \Magento\Store\Model\Store $store = null)
     {
-        $store = self::getStore($store);
-        $level = $store->getConfig('payment/paynl/logging_level');
-
+        $level = $this->store->getConfig('payment/paynl/logging_level');
         if (self::hasCorrectLevel($level, $type)) {
             if (!is_array($params)) {
                 $params = array();
             }
-            $objectManager = self::getObjectManager();
-            $logger = $objectManager->get(\Paynl\Payment\Logging\Logger::class);
             switch ($type) {
                 case 'critical':
-                    $logger->critical($text, $params);
+                    $this->logger->critical($text, $params);
                     break;
                 case 'notice':
-                    $logger->notice($text, $params);
+                    $this->logger->notice($text, $params);
                     break;
                 case 'info':
-                    $logger->info($text, $params);
+                    $this->logger->info($text, $params);
                     break;
                 case 'debug':
-                    $logger->debug($text, $params);
+                    $this->logger->debug($text, $params);
                     break;
             }
         }
@@ -178,20 +163,16 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
      * @param string $value
      * @return void
      */
-    public static function setCookie($cookieName, $value)
+    public function setCookie($cookieName, $value)
     {
-        $objectManager = self::getObjectManager();
-        $cookieManager = $objectManager->get(\Magento\Framework\Stdlib\CookieManagerInterface::class);
-        $cookieMetadataFactory = $objectManager->get(\Magento\Framework\Stdlib\Cookie\CookieMetadataFactory::class);
-
-        $metadata = $cookieMetadataFactory
+        $metadata = $this->cookieMetadataFactory
             ->createPublicCookieMetadata()
             ->setDuration(300)
             ->setSecure(false)
             ->setPath('/')
             ->setHttpOnly(false);
 
-        $cookieManager->setPublicCookie(
+        $this->cookieManager->setPublicCookie(
             $cookieName,
             $value,
             $metadata
@@ -202,11 +183,9 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
      * @param string $cookieName
      * @return mixed
      */
-    public static function getCookie($cookieName)
+    public function getCookie($cookieName)
     {
-        $objectManager = self::getObjectManager();
-        $cookieManager = $objectManager->get(\Magento\Framework\Stdlib\CookieManagerInterface::class);
-        return $cookieManager->getCookie($cookieName);
+        return $this->cookieManager->getCookie($cookieName);
     }
 
     /**
@@ -215,15 +194,12 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
      * @phpcs:disable PEAR.Commenting.FunctionComment.MissingReturn
      * @return void|mixed
      */
-    public static function deleteCookie($cookieName)
+    public function deleteCookie($cookieName)
     {
-        $objectManager = self::getObjectManager();
-        $cookieManager = $objectManager->get(\Magento\Framework\Stdlib\CookieManagerInterface::class);
-        $cookieMetadataFactory = $objectManager->get(\Magento\Framework\Stdlib\Cookie\CookieMetadataFactory::class);
-        if ($cookieManager->getCookie($cookieName)) {
-            $metadata = $cookieMetadataFactory->createPublicCookieMetadata();
+        if ($this->cookieManager->getCookie($cookieName)) {
+            $metadata = $this->cookieMetadataFactory->createPublicCookieMetadata();
             $metadata->setPath('/');
-            return $cookieManager->deleteCookie($cookieName, $metadata); // phpcs:ignore
+            return $this->cookieManager->deleteCookie($cookieName, $metadata); // phpcs:ignore
         }
     }
 
