@@ -2,25 +2,32 @@
 
 namespace Paynl\Payment\Model\Paymentmethod;
 
-use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Magento\Framework\Api\AttributeValueFactory;
 use Magento\Framework\Api\ExtensionAttributesFactory;
+use Magento\Framework\App\CacheInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
+use Magento\Framework\Locale\Resolver;
+use Magento\Framework\Mail\Template\TransportBuilder;
+use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
+use Magento\Framework\Stdlib\CookieManagerInterface;
 use Magento\Payment\Helper\Data;
 use Magento\Payment\Model\InfoInterface;
 use Magento\Payment\Model\Method\AbstractMethod;
 use Magento\Payment\Model\Method\Logger;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderRepository;
+use Magento\Sales\Model\Order\Address\Renderer;
+use Magento\Store\Model\StoreManagerInterface;
 use Paynl\Payment\Helper\PayHelper;
 use Paynl\Payment\Model\Config;
 use Paynl\Payment\Model\PayPaymentCreate;
 use Paynl\Transaction;
 use Magento\InventoryInStorePickupShippingApi\Model\Carrier\InStorePickup;
+use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 
 abstract class PaymentMethod extends AbstractMethod
 {
@@ -49,24 +56,53 @@ abstract class PaymentMethod extends AbstractMethod
      */
     protected $orderConfig;
 
+    /**
+     * @var PayHelper
+     */
     protected $helper;
 
     /**
-     * @var Magento\Framework\Message\ManagerInterface
+     * @var ManagerInterface
      */
     protected $messageManager;
 
     /**
-     * @var \Magento\Store\Model\StoreManagerInterface
+     * @var StoreManagerInterface
      */
     protected $storeManager;
 
     /**
-     * @var \Magento\Framework\Stdlib\CookieManagerInterface
+     * @var CookieManagerInterface
      */
     protected $cookieManager;
 
     protected $graphqlVersion;
+
+    /**
+     * @var CacheInterface
+     */
+    public $cache;
+
+    /**
+     * @var Magento\Payment\Helper\Data
+     */
+    public $paymentData;
+
+    /**
+     * @var Resolver
+     */
+    public $getLocale;
+
+    /**
+     * @var Renderer
+     */
+    public $addressRenderer;
+
+    /**
+     * @var TransportBuilder
+     */
+    public $transportBuilder;
+
 
     /**
      * PaymentMethod constructor.
@@ -96,6 +132,14 @@ abstract class PaymentMethod extends AbstractMethod
         \Magento\Sales\Model\Order\Config $orderConfig,
         OrderRepository $orderRepository,
         Config $paynlConfig,
+        PayHelper $helper,
+        ManagerInterface $messageManager,
+        StoreManagerInterface $storeManager,
+        CookieManagerInterface $cookieManager,
+        CacheInterface $cache,
+        Resolver $getLocale,
+        Renderer $addressRenderer,
+        TransportBuilder $transportBuilder,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = []
@@ -113,15 +157,18 @@ abstract class PaymentMethod extends AbstractMethod
             $data
         );
 
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-
-        $this->messageManager = $objectManager->get(\Magento\Framework\Message\ManagerInterface::class);
-        $this->helper = $objectManager->create(\Paynl\Payment\Helper\PayHelper::class);
+        $this->messageManager = $messageManager;
+        $this->helper = $helper;
         $this->paynlConfig = $paynlConfig;
         $this->orderRepository = $orderRepository;
         $this->orderConfig = $orderConfig;
-        $this->storeManager = $objectManager->create(\Magento\Store\Model\StoreManagerInterface::class);
-        $this->cookieManager = $objectManager->create('\Magento\Framework\Stdlib\CookieManagerInterface');
+        $this->storeManager = $storeManager;
+        $this->cookieManager = $cookieManager;
+        $this->cache = $cache;
+        $this->paymentData = $paymentData;
+        $this->getLocale = $getLocale;
+        $this->addressRenderer = $addressRenderer;
+        $this->transportBuilder = $transportBuilder;
     }
 
     /**
