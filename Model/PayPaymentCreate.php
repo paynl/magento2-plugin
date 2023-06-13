@@ -300,7 +300,7 @@ class PayPaymentCreate
         if (!empty($orderShippingAddress)) {
             $arrShippingAddress = $orderShippingAddress->toArray();
 
-            if ($this->useBillingAddressInstorePickup() && class_exists('InStorePickup')) {
+            if ($this->useBillingAddressInstorePickup() && class_exists(InStorePickup::class)) {
                 if ($this->order->getShippingMethod() === InStorePickup::DELIVERY_METHOD) {
                     $arrBillingAddress = $this->order->getBillingAddress();
                     if (!empty($arrBillingAddress)) {

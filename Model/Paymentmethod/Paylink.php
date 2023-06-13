@@ -53,10 +53,7 @@ class Paylink extends PaymentMethod
             $status = $this->getConfigData('order_status');
             $url = $transaction->getRedirectUrl();
 
-            $objectManager = \Magento\Framework\App\ObjectManager::GetInstance();
-
-            $getLocale = $objectManager->get(\Magento\Framework\Locale\Resolver::class);
-            $haystack  = $getLocale->getLocale();
+            $haystack  = $this->getLocale->getLocale();
             $lang = strstr($haystack, '_', true);
 
             $pos = strrpos($url, 'NL');
@@ -90,14 +87,10 @@ class Paylink extends PaymentMethod
                         'email' => $senderEmail,
                     ];
 
-                    $paymentHelper = $objectManager->create(\Magento\Payment\Helper\Data::class);
-
-                    $orderHTML = $paymentHelper->getInfoBlockHtml(
+                    $orderHTML = $this->paymentData->getInfoBlockHtml(
                         $order->getPayment(),
                         $storeId
                     );
-
-                    $addressRenderer = $objectManager->create(\Magento\Sales\Model\Order\Address\Renderer::class);
 
                     $show_order_in_mail = $this->_scopeConfig->getValue('payment/paynl_payment_paylink/show_order_in_mail', 'store', $storeId);
                     if ($show_order_in_mail) {
@@ -134,8 +127,8 @@ class Paylink extends PaymentMethod
                         'order_increment_id' =>  $order->getIncrementId(),
                         'billing' => $order->getBillingAddress(),
                         'payment_html' => $orderHTML,
-                        'formattedShippingAddress' => $order->getIsVirtual() ? null : $addressRenderer->format($order->getShippingAddress(), 'html'),
-                        'formattedBillingAddress' => $addressRenderer->format($order->getBillingAddress(), 'html'),
+                        'formattedShippingAddress' => $order->getIsVirtual() ? null : $this->addressRenderer->format($order->getShippingAddress(), 'html'),
+                        'formattedBillingAddress' => $this->addressRenderer->format($order->getBillingAddress(), 'html'),
                         'created_at_formatted' => $order->getCreatedAtFormatted(1),
                         'customer_name' => $order->getCustomerName(),
                         'is_not_virtual' => $order->getIsNotVirtual(),
@@ -143,8 +136,6 @@ class Paylink extends PaymentMethod
                         'frontend_status_label' => $order->getFrontendStatusLabel(),
                         'show_order_in_mail' => $show_order_in_mail,
                     ];
-
-                    $transportBuilder = $objectManager->create(\Magento\Framework\Mail\Template\TransportBuilder::class);
 
                     $this->payHelper->logDebug(
                         'Sending Paylink E-mail with the following user data: ',
@@ -155,7 +146,7 @@ class Paylink extends PaymentMethod
                         $template = 'paylink_email_order_template';
                     }
 
-                    $transport = $transportBuilder->setTemplateIdentifier($template)
+                    $transport = $this->transportBuilder->setTemplateIdentifier($template)
                         ->setTemplateOptions(['area' => \Magento\Framework\App\Area::AREA_FRONTEND, 'store' => $storeId])
                         ->setTemplateVars($templateVars)
                         ->setFrom($sender)
