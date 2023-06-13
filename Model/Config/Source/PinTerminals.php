@@ -2,7 +2,7 @@
 
 namespace Paynl\Payment\Model\Config\Source;
 
-use Magento\Framework\Option\ArrayInterface;
+
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\RequestInterface;
 use Paynl\Payment\Model\Config;
@@ -12,10 +12,6 @@ use Paynl\Payment\Helper\PayHelper;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Framework\App\CacheInterface;
 use Magento\Framework\Option\ArrayInterface;
-use Paynl\Payment\Helper\PayHelper;
-use Paynl\Payment\Model\Config;
-use Paynl\Payment\Model\Paymentmethod\PaymentMethod;
-use Paynl\Paymentmethods;
 
 class PinTerminals implements ArrayInterface
 {
