@@ -171,7 +171,7 @@ class PayPayment
         $order->setStatus($state);
         $order->addStatusHistoryComment(__('PAY. - Uncanceled order'), false);
         if (!empty($order->getCouponCode())) {
-            $this->updateCouponUsages->execute($order, false);
+            $this->updateCouponUsages->execute($order, true);
         }
         $this->eventManager->dispatch('order_uncancel_after', ['order' => $order]);
     }
