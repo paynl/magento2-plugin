@@ -41,19 +41,27 @@ class Finish extends PayAction
     private $quoteRepository;
 
     /**
+     *
+     * @var \Paynl\Payment\Helper\PayHelper;
+     */
+    private $payHelper;
+
+    /**
      * Index constructor.
      * @param Context $context
      * @param Config $config
      * @param Session $checkoutSession
      * @param OrderRepository $orderRepository
      * @param QuoteRepository $quoteRepository
+     * @param PayHelper $payHelper
      */
-    public function __construct(Context $context, Config $config, Session $checkoutSession, OrderRepository $orderRepository, QuoteRepository $quoteRepository)
+    public function __construct(Context $context, Config $config, Session $checkoutSession, OrderRepository $orderRepository, QuoteRepository $quoteRepository, PayHelper $payHelper)
     {
         $this->config = $config;
         $this->checkoutSession = $checkoutSession;
         $this->orderRepository = $orderRepository;
         $this->quoteRepository = $quoteRepository;
+        $this->payHelper = $payHelper;
         parent::__construct($context);
     }
 
@@ -174,7 +182,7 @@ class Finish extends PayAction
                 $resultRedirect->setPath($payment->getMethod() == 'paynl_payment_paylink' ? Config::CANCEL_PAY : $this->config->getCancelURL());
             }
         } catch (\Exception $e) {
-            payHelper::logCritical($e->getCode() . ': ' . $e->getMessage(), $params, $order->getStore());
+            $this->payHelper->logCritical($e->getCode() . ': ' . $e->getMessage(), $params, $order->getStore());
 
             if ($e->getCode() == 101) {
                 $this->messageManager->addNoticeMessage(__('Invalid return, no transactionId specified'));

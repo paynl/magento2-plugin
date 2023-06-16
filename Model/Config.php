@@ -2,6 +2,8 @@
 
 namespace Paynl\Payment\Model;
 
+use Magento\Framework\App\ProductMetadataInterface;
+use Magento\Payment\Helper\Data;
 use Magento\Store\Model\Store;
 
 /**
@@ -27,7 +29,18 @@ class Config
     /** @var  Resources */
     private $resources;
 
+    /** @var  Paynl\Payment\Helper\PayHelper */
     protected $helper;
+
+    /**
+     * @var ProductMetadataInterface
+     */
+    protected $productMetadata;
+
+    /**
+     * @var Data
+     */
+    protected $paymentHelper;
 
     /** @array  Brands */
     public $brands = [
@@ -96,7 +109,7 @@ class Config
         "paynl_payment_wijncadeau" => "135",
         "paynl_payment_winkelcheque" => "195",
         "paynl_payment_yourgift" => "31",
-        "paynl_payment_yourgreengift" => "246"
+        "paynl_payment_yourgreengift" => "246",
     ];
 
     /**
@@ -104,15 +117,21 @@ class Config
      * @param Store $store
      * @param \Magento\Framework\View\Element\Template $resources
      * @param \Paynl\Payment\Helper\PayHelper $helper
+     * @param ProductMetadataInterface $productMetadata
+     * @param Data $paymentHelper
      */
     public function __construct(
         Store $store,
         \Magento\Framework\View\Element\Template $resources,
-        \Paynl\Payment\Helper\PayHelper $helper
+        \Paynl\Payment\Helper\PayHelper $helper,
+        ProductMetadataInterface $productMetadata,
+        Data $paymentHelper
     ) {
         $this->store = $store;
         $this->resources = $resources;
         $this->helper = $helper;
+        $this->productMetadata = $productMetadata;
+        $this->paymentHelper = $paymentHelper;
     }
 
     /**
@@ -138,10 +157,7 @@ class Config
      */
     public function getMagentoVersion()
     {
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $productMetadata = $objectManager->get(\Magento\Framework\App\ProductMetadataInterface::class);
-        $version = $productMetadata->getVersion();
-
+        $version = $this->productMetadata->getVersion();
         return $version;
     }
 
@@ -361,7 +377,7 @@ class Config
      */
     public function configureSDK()
     {
-        $apiToken  = $this->getApiToken();
+        $apiToken = $this->getApiToken();
         $serviceId = $this->getServiceId();
         $tokencode = $this->getTokencode();
         $gateway = $this->getFailoverGateway();
@@ -428,7 +444,7 @@ class Config
         return $this->resources->getViewFileUrl(
             "Paynl_Payment::logos/" . $brandId . ".png",
             array(
-                'area' => 'frontend'
+                'area' => 'frontend',
             )
         );
     }
@@ -442,7 +458,7 @@ class Config
         return $this->resources->getViewFileUrl(
             "Paynl_Payment::logos_issuers/qr-" . $issuerId . ".svg",
             array(
-                'area' => 'frontend'
+                'area' => 'frontend',
             )
         );
     }
@@ -486,9 +502,7 @@ class Config
     public function getPaymentmethodCode(string $paymentProfileId)
     {
         # Get all PAY. methods
-        $objectManager =  \Magento\Framework\App\ObjectManager::getInstance();
-        $paymentHelper = $objectManager->get(\Magento\Payment\Helper\Data::class);
-        $paymentMethodList = $paymentHelper->getPaymentMethods();
+        $paymentMethodList = $this->paymentHelper->getPaymentMethods();
 
         foreach ($paymentMethodList as $key => $value) {
             if (strpos($key, 'paynl_') !== false && $key != 'paynl_payment_paylink') {

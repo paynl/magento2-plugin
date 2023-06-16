@@ -12,17 +12,25 @@ class View extends Template
     public const PAY_TRANSACTION_URL = 'https://my.pay.nl/transactions/info/';
     private $orderRepository;
 
+    /**
+     *
+     * @var \Paynl\Payment\Helper\PayHelper;
+     */
+    protected $payHelper;
 
     /**
      * @param Context $context
      * @param OrderRepository $orderRepository
+     * @param PayHelper $payHelper
      */
     public function __construct(
         Context $context,
-        OrderRepository $orderRepository
+        OrderRepository $orderRepository,
+        PayHelper $payHelper
     ) {
         parent::__construct($context);
         $this->orderRepository = $orderRepository;
+        $this->payHelper = $payHelper;
     }
 
     /**
@@ -45,7 +53,7 @@ class View extends Template
             $order = $this->orderRepository->get($orderId);
             $getPayment = $order->getPayment();
         } catch (\Exception $e) {
-            payHelper::logCritical($e, $params);
+            $this->payHelper->logCritical($e, $params);
         }
 
         return $getPayment;

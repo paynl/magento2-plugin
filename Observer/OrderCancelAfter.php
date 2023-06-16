@@ -18,12 +18,21 @@ class OrderCancelAfter implements ObserverInterface
     private $config;
 
     /**
+     *
+     * @var \Paynl\Payment\Helper\PayHelper;
+     */
+    private $payHelper;
+
+    /**
      * @param Config $config
+     * @param PayHelper $payHelper
      */
     public function __construct(
-        Config $config
+        Config $config,
+        PayHelper $payHelper
     ) {
         $this->config = $config;
+        $this->payHelper = $payHelper;
     }
 
     /**
@@ -46,7 +55,7 @@ class OrderCancelAfter implements ObserverInterface
                     $amountRefunded = isset($data['amount_refunded']) ? $data['amount_refunded'] : null;
 
                     if ($bHasAmountAuthorized && $amountPaid === null && $amountRefunded === null) {
-                        payHelper::logDebug('AUTO-VOIDING(order-cancel-after) ' . $payOrderId, [], $order->getStore());
+                        $this->payHelper->logDebug('AUTO-VOIDING(order-cancel-after) ' . $payOrderId, [], $order->getStore());
                         $bVoidResult = false;
                         try {
                             $this->config->configureSDK();
@@ -56,7 +65,7 @@ class OrderCancelAfter implements ObserverInterface
                             }
                         } catch (\Exception $e) {
                             $strMessage = $e->getMessage();
-                            payHelper::logDebug('Order PAY error: ' . $strMessage . ' EntityId: ' . $order->getEntityId(), [], $order->getStore());
+                            $this->payHelper->logDebug('Order PAY error: ' . $strMessage . ' EntityId: ' . $order->getEntityId(), [], $order->getStore());
                             $strFriendlyMessage = 'Failed. Errorcode: PAY-MAGENTO2-005. See docs.pay.nl for more information';
                             if (stripos($strMessage, 'Transaction not found') !== false) {
                                 $strFriendlyMessage = 'Transaction seems to be already voided/paid';
@@ -66,17 +75,17 @@ class OrderCancelAfter implements ObserverInterface
                             __('PAY. - Performed auto-void. Result: ') . ($bVoidResult ? 'Success' : 'Failed') . (empty($strFriendlyMessage) ? '' : '. ' . $strFriendlyMessage)
                         )->save();
                     } else {
-                        payHelper::logDebug(
+                        $this->payHelper->logDebug(
                             'Auto-Void conditions not met (yet). Amountpaid:' . $amountPaid . ' bHasAmountAuthorized: ' . ($bHasAmountAuthorized ? '1' : '0'),
                             [],
                             $order->getStore()
                         );
                     }
                 } else {
-                    payHelper::logDebug('Auto-Void conditions not met (yet). No PAY-Order-id.', [], $order->getStore());
+                    $this->payHelper->logDebug('Auto-Void conditions not met (yet). No PAY-Order-id.', [], $order->getStore());
                 }
             } else {
-                payHelper::logDebug('Auto-Void conditions not met (yet). State: ' . $order->getState(), [], $order->getStore());
+                $this->payHelper->logDebug('Auto-Void conditions not met (yet). State: ' . $order->getState(), [], $order->getStore());
             }
         }
     }

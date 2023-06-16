@@ -6,11 +6,10 @@ use Magento\Framework\Event\ObserverInterface;
 use Psr\Log\LoggerInterface;
 use Paynl\Payment\Model\Config;
 use Magento\Sales\Model\Order;
-use \Paynl\Payment\Helper\PayHelper;
+use Paynl\Payment\Helper\PayHelper;
 
 class InvoiceSaveCommitAfter implements ObserverInterface
 {
-
     /**
      *
      * @var Psr\Log\LoggerInterface
@@ -29,16 +28,36 @@ class InvoiceSaveCommitAfter implements ObserverInterface
      */
     protected $_request;
 
+    /**
+     *
+     * @var \Paynl\Payment\Helper\PayHelper;
+     */
+    protected $payHelper;
+
+    /**
+     * Constructor.
+     *
+     * @param LoggerInterface $logger
+     * @param Config $config
+     * @param \Magento\Framework\App\RequestInterface $request
+     * @param PayHelper $payHelper
+     */
     public function __construct(
         LoggerInterface $logger,
         Config $config,
-        \Magento\Framework\App\RequestInterface $request
+        \Magento\Framework\App\RequestInterface $request,
+        PayHelper $payHelper
     ) {
         $this->logger = $logger;
         $this->config = $config;
         $this->_request = $request;
+        $this->payHelper = $payHelper;
     }
 
+    /**
+     * @param \Magento\Framework\Event\Observer $observer
+     * @return void
+     */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
         $invoice = $observer->getEvent()->getInvoice();
@@ -50,7 +69,7 @@ class InvoiceSaveCommitAfter implements ObserverInterface
             $paymentMethod = $order->getPayment()->getMethod();
             $customStatus = $this->config->getPaidStatus($paymentMethod);
             if (!empty($customStatus)) {
-                payHelper::logNotice('PAY.: Updating order status from ' . $order->getStatus() . ' to ' . $customStatus, [], $order->getStore());
+                $this->payHelper->logNotice('PAY.: Updating order status from ' . $order->getStatus() . ' to ' . $customStatus, [], $order->getStore());
                 $order->setStatus($customStatus)->save();
             }
         }

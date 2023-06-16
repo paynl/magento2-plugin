@@ -41,6 +41,11 @@ class Instore extends \Magento\Payment\Block\Form
     public $store;
 
     /**
+     * @var \Paynl\Payment\Helper\PayHelper;
+     */
+    protected $payHelper;
+
+    /**
      * Instore constructor.
      *
      * @param \Magento\Framework\View\Element\Template\Context $context
@@ -48,18 +53,21 @@ class Instore extends \Magento\Payment\Block\Form
      * @param Config $config
      * @param CacheInterface $cache
      * @param Store $store
+     * @param PayHelper $payHelper
      */
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
         StoreManagerInterface $storeManager,
         Config $config,
         CacheInterface $cache,
-        Store $store
+        Store $store,
+        PayHelper $payHelper
     ) {
         $this->storeManager = $storeManager;
         $this->config = $config;
         $this->cache = $cache;
         $this->store = $store;
+        $this->payHelper = $payHelper;
         parent::__construct($context);
     }
 
@@ -100,7 +108,7 @@ class Instore extends \Magento\Payment\Block\Form
                         }
                         $this->cache->save(json_encode($terminalArr), $cacheName);
                     } catch (\Paynl\Error\Error $e) {
-                        payHelper::logNotice('PAY.: Pinterminal error, ' . $e->getMessage());
+                        $this->payHelper->logNotice('PAY.: Pinterminal error, ' . $e->getMessage());
                     }
                 }
             }
