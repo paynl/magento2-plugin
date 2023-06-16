@@ -8,8 +8,6 @@ use Magento\Store\Model\Store;
 
 /**
  * Get / Set configuration for the PAY api and Magento settings.
- *
- * @author Andy Pieters <andy@pay.nl>
  */
 class Config
 {

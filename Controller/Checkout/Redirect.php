@@ -10,9 +10,7 @@ use Paynl\Payment\Controller\PayAction;
 use Paynl\Payment\Helper\PayHelper;
 
 /**
- * Redirects the user.
- *
- * @author Andy Pieters <andy@pay.nl>
+ * Redirects the user after payment
  */
 class Redirect extends PayAction
 {
