@@ -373,7 +373,7 @@ class Config
      * @param boolean $useGateway
      * @return boolean TRUE when config loaded, FALSE when the apitoken or serviceId are empty
      */
-    public function configureSDK($useGateway = true)
+    public function configureSDK($useGateway = false)
     {
         $apiToken = $this->getApiToken();
         $serviceId = $this->getServiceId();
