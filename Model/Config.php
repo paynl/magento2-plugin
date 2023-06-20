@@ -373,7 +373,7 @@ class Config
      *
      * @return boolean TRUE when config loaded, FALSE when the apitoken or serviceId are empty
      */
-    public function configureSDK()
+    public function configureSDK($useGateway = false)
     {
         $apiToken = $this->getApiToken();
         $serviceId = $this->getServiceId();
@@ -385,7 +385,7 @@ class Config
         }
 
         if (!empty($apiToken) && !empty($serviceId)) {
-            if (!empty($gateway) && substr(trim($gateway), 0, 4) === "http") {
+            if ($useGateway && !empty($gateway) && substr(trim($gateway), 0, 4) === "http") {
                 \Paynl\Config::setApiBase(trim($gateway));
             }
             \Paynl\Config::setApiToken($apiToken);
