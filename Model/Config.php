@@ -370,10 +370,10 @@ class Config
 
     /**
      * Configures the sdk with the API token and serviceId
-     *
+     * @param boolean $useGateway
      * @return boolean TRUE when config loaded, FALSE when the apitoken or serviceId are empty
      */
-    public function configureSDK($useGateway = false)
+    public function configureSDK($useGateway = true)
     {
         $apiToken = $this->getApiToken();
         $serviceId = $this->getServiceId();
