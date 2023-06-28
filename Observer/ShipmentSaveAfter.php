@@ -106,6 +106,7 @@ class ShipmentSaveAfter implements ObserverInterface
                         )->save();
 
                         # Whether capture failed or succeeded, we still might have to process paid order
+                        $this->config->configureSDK(true);
                         $transaction = \Paynl\Transaction::get($payOrderId);
                         if ($transaction->isPaid()) {
                             $this->payPayment->processPaidOrder($transaction, $order);
