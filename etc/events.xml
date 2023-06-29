@@ -3,9 +3,6 @@
     <event name="sales_order_uncancel_inventory">
         <observer name="inventory" instance="Paynl\Payment\Observer\SubtractInventoryObserver"/>
     </event>
-    <event name="sales_order_save_commit_after">
-        <observer name="sales_order_save_commit_after" instance="Paynl\Payment\Observer\OrderSaveCommitAfter" />
-    </event>
     <event name="sales_order_invoice_save_after">
         <observer name="sales_order_invoice_save_after" instance="Paynl\Payment\Observer\InvoiceSaveCommitAfter" />
     </event>

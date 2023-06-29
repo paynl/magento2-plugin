@@ -132,7 +132,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         $this->config->setStore($order->getStore());
 
         try {
-            $this->config->configureSDK();
+            $this->config->configureSDK(true);
             $transaction = Transaction::get($payOrderId);
         } catch (\Exception $e) {
             $this->payHelper->logCritical($e, $params, $order->getStore());

@@ -114,8 +114,7 @@ class PayPaymentCreate
      */
     public function create()
     {
-        $this->payConfig->configureSDK();
-
+        $this->payConfig->configureSDK(true);
         return \Paynl\Transaction::start($this->getData());
     }
 

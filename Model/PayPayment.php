@@ -301,6 +301,7 @@ class PayPayment
     {
         $returnResult = false;
         try {
+            $this->config->configureSDK();
             $details = \Paynl\Transaction::details($payOrderId);
 
             $paymentDetails = $details->getPaymentDetails();

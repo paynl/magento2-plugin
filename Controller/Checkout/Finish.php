@@ -146,7 +146,7 @@ class Finish extends PayAction
             }
 
             if (empty($bSuccess) && !$isPinTransaction) {
-                $this->config->configureSDK();
+                $this->config->configureSDK(true);
                 $transaction = \Paynl\Transaction::get($payOrderId);
                 $orderNumber = $transaction->getExtra1();
                 $this->checkEmpty($order->getIncrementId() == $orderNumber, '', 104, 'order mismatch');
@@ -205,6 +205,7 @@ class Finish extends PayAction
      */
     private function handlePin(string $hash, Order $order)
     {
+        $this->config->configureSDK(true);
         $status = \Paynl\Instore::status(['hash' => $hash]);
         if (in_array($status->getTransactionState(), ['cancelled', 'expired', 'error'])) {
             # Instore does not send a canceled exchange message, so cancel it here
