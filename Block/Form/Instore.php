@@ -2,7 +2,11 @@
 
 namespace Paynl\Payment\Block\Form;
 
+use Magento\Framework\App\CacheInterface;
+use Magento\Store\Model\Store;
+use Magento\Store\Model\StoreManagerInterface;
 use Paynl\Payment\Helper\PayHelper;
+use Paynl\Payment\Model\Config;
 
 /**
  * Block for Instore payment method form
@@ -17,23 +21,54 @@ class Instore extends \Magento\Payment\Block\Form
     protected $_template = 'form/instore.phtml';
 
     /**
-     *
+     * @var \Magento\Store\Model\StoreManagerInterface
+     */
+    public $storeManager;
+
+    /**
+     * @var \Paynl\Payment\Model\Config
+     */
+    public $config;
+
+    /**
+     * @var \Magento\Framework\App\CacheInterface
+     */
+    public $cache;
+
+    /**
+     * @var \Magento\Store\Model\Store
+     */
+    public $store;
+
+    /**
      * @var \Paynl\Payment\Helper\PayHelper;
      */
     protected $payHelper;
 
     /**
+     * Instore constructor.
+     *
      * @param \Magento\Framework\View\Element\Template\Context $context
+     * @param StoreManagerInterface $storeManager
+     * @param Config $config
+     * @param CacheInterface $cache
+     * @param Store $store
      * @param PayHelper $payHelper
-     * @param array $data
      */
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
-        PayHelper $payHelper,
-        array $data = []
+        StoreManagerInterface $storeManager,
+        Config $config,
+        CacheInterface $cache,
+        Store $store,
+        PayHelper $payHelper
     ) {
-        parent::__construct($context, $data);
+        $this->storeManager = $storeManager;
+        $this->config = $config;
+        $this->cache = $cache;
+        $this->store = $store;
         $this->payHelper = $payHelper;
+        parent::__construct($context);
     }
 
     /**
@@ -44,21 +79,17 @@ class Instore extends \Magento\Payment\Block\Form
     public function getTerminals()
     {
         $terminalArr = [];
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
 
-        $storeManager = $objectManager->get(\Magento\Store\Model\StoreManagerInterface::class);
-        $store = $storeManager->getStore();
+        $store = $this->storeManager->getStore();
         $storeId = $store->getId();
 
-        $config = $objectManager->get(\Paynl\Payment\Model\Config::class);
-        $config->setStore($store);
-        $configured = $config->configureSDK();
+        $this->config->setStore($store);
+        $configured = $this->config->configureSDK();
 
-        if ($config->isPaymentMethodActive('paynl_payment_instore')) {
+        if ($this->config->isPaymentMethodActive('paynl_payment_instore')) {
             if ($configured) {
-                $cache = $objectManager->get(\Magento\Framework\App\CacheInterface::class);
                 $cacheName = 'paynl_terminals_' . $store->getConfig('payment/paynl_payment_instore/payment_option_id') . '_' . $storeId;
-                $terminalJson = $cache->load($cacheName);
+                $terminalJson = $this->cache->load($cacheName);
 
                 if ($terminalJson) {
                     $terminalArr = json_decode($terminalJson);
@@ -75,7 +106,7 @@ class Instore extends \Magento\Payment\Block\Form
                             $terminal['visibleName'] = $terminal['name'];
                             array_push($terminalArr, $terminal);
                         }
-                        $cache->save(json_encode($terminalArr), $cacheName);
+                        $this->cache->save(json_encode($terminalArr), $cacheName);
                     } catch (\Paynl\Error\Error $e) {
                         $this->payHelper->logNotice('PAY.: Pinterminal error, ' . $e->getMessage());
                     }
@@ -93,24 +124,20 @@ class Instore extends \Magento\Payment\Block\Form
     }
 
     /**
-     * @return string
+     * @return string|integer
      */
     public function getDefaultTerminal()
     {
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $store = $objectManager->get(\Magento\Store\Model\Store::class);
-        return $store->getConfig('payment/paynl_payment_instore/default_terminal');
+        return $this->store->getConfig('payment/paynl_payment_instore/default_terminal');
     }
 
     /**
-     * @return interger|string
+     * @return string|integer
      */
     public function hidePaymentOptions()
     {
         if (!empty($this->getDefaultTerminal())) {
-            $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-            $store = $objectManager->get(\Magento\Store\Model\Store::class);
-            return $store->getConfig('payment/paynl_payment_instore/hide_terminal_selection');
+            return $this->store->getConfig('payment/paynl_payment_instore/hide_terminal_selection');
         }
         return 0;
     }
