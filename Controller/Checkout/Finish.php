@@ -3,6 +3,7 @@
 namespace Paynl\Payment\Controller\Checkout;
 
 use Magento\Checkout\Model\Session;
+use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Event\ManagerInterface;
 use Magento\Quote\Model\QuoteRepository;
