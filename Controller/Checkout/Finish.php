@@ -3,15 +3,14 @@
 namespace Paynl\Payment\Controller\Checkout;
 
 use Magento\Checkout\Model\Session;
-use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\Event\ManagerInterface;
 use Magento\Quote\Model\QuoteRepository;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderRepository;
 use Paynl\Payment\Controller\PayAction;
-use Paynl\Payment\Model\Config;
 use Paynl\Payment\Helper\PayHelper;
-use Magento\Framework\Event\ManagerInterface;
+use Paynl\Payment\Model\Config;
 
 /**
  * Finishes up the payment and redirects the user to the thank you page.
@@ -62,8 +61,15 @@ class Finish extends PayAction
      * @param PayHelper $payHelper
      * @param ManagerInterface $eventManager
      */
-    public function __construct(Context $context, Config $config, Session $checkoutSession, OrderRepository $orderRepository, QuoteRepository $quoteRepository, PayHelper $payHelper, ManagerInterface $eventManager)
-    {
+    public function __construct(
+        Context $context,
+        Config $config,
+        Session $checkoutSession,
+        OrderRepository $orderRepository,
+        QuoteRepository $quoteRepository,
+        PayHelper $payHelper,
+        ManagerInterface $eventManager
+    ) {
         $this->config = $config;
         $this->checkoutSession = $checkoutSession;
         $this->orderRepository = $orderRepository;
@@ -113,14 +119,14 @@ class Finish extends PayAction
     }
 
     /**
-     * @return resultRedirectFactory
+     * @return resultRedirectFactory|void
      */
     public function execute()
     {
         $resultRedirect = $this->resultRedirectFactory->create();
         $params = $this->getRequest()->getParams();
         $payOrderId = empty($params['orderId']) ? (empty($params['orderid']) ? null : $params['orderid']) : $params['orderId'];
-        $orderStatusId = empty($params['orderStatusId']) ? null : (int)$params['orderStatusId'];
+        $orderStatusId = empty($params['orderStatusId']) ? null : (int) $params['orderStatusId'];
         $magOrderId = empty($params['entityid']) ? null : $params['entityid'];
         $orderIds = empty($params['order_ids']) ? null : $params['order_ids'];
         $bSuccess = $orderStatusId === Config::ORDERSTATUS_PAID;
@@ -174,14 +180,14 @@ class Finish extends PayAction
                     $order->addStatusHistoryComment(__('PAY. - This payment has been flagged as possibly fraudulent. Please verify this transaction in the Pay. portal.'));
                     $this->orderRepository->save($order);
                 }
-                if ($multiShipFinish) {                    
-                    $this->eventManager->dispatch('pay_multishipping_success_redirect', [                     
+                if ($multiShipFinish) {
+                    $this->eventManager->dispatch('pay_multishipping_success_redirect', [
                         'order_ids' => $orderIds,
                         'request' => $this->getRequest(),
                         'response' => $this->getResponse(),
-                    ]);     
-                    return;                                  
-                }                
+                    ]);
+                    return;
+                }
                 $this->deactivateCart($order, $payOrderId);
             } elseif ($bPending) {
                 $successUrl = Config::FINISH_STANDARD;
