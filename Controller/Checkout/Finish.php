@@ -11,6 +11,7 @@ use Magento\Sales\Model\OrderRepository;
 use Paynl\Payment\Controller\PayAction;
 use Paynl\Payment\Model\Config;
 use Paynl\Payment\Helper\PayHelper;
+use Magento\Framework\Event\ManagerInterface;
 
 /**
  * Finishes up the payment and redirects the user to the thank you page.
@@ -47,6 +48,11 @@ class Finish extends PayAction
     private $payHelper;
 
     /**
+     * @var ManagerInterface
+     */
+    private $eventManager;
+
+    /**
      * Index constructor.
      * @param Context $context
      * @param Config $config
@@ -54,14 +60,16 @@ class Finish extends PayAction
      * @param OrderRepository $orderRepository
      * @param QuoteRepository $quoteRepository
      * @param PayHelper $payHelper
+     * @param ManagerInterface $eventManager
      */
-    public function __construct(Context $context, Config $config, Session $checkoutSession, OrderRepository $orderRepository, QuoteRepository $quoteRepository, PayHelper $payHelper)
+    public function __construct(Context $context, Config $config, Session $checkoutSession, OrderRepository $orderRepository, QuoteRepository $quoteRepository, PayHelper $payHelper, ManagerInterface $eventManager)
     {
         $this->config = $config;
         $this->checkoutSession = $checkoutSession;
         $this->orderRepository = $orderRepository;
         $this->quoteRepository = $quoteRepository;
         $this->payHelper = $payHelper;
+        $this->eventManager = $eventManager;
         parent::__construct($context);
     }
 
@@ -166,6 +174,14 @@ class Finish extends PayAction
                     $order->addStatusHistoryComment(__('PAY. - This payment has been flagged as possibly fraudulent. Please verify this transaction in the Pay. portal.'));
                     $this->orderRepository->save($order);
                 }
+                if ($multiShipFinish) {                    
+                    $this->eventManager->dispatch('pay_multishipping_success_redirect', [                     
+                        'order_ids' => $orderIds,
+                        'request' => $this->getRequest(),
+                        'response' => $this->getResponse(),
+                    ]);     
+                    return;                                  
+                }                
                 $this->deactivateCart($order, $payOrderId);
             } elseif ($bPending) {
                 $successUrl = Config::FINISH_STANDARD;
