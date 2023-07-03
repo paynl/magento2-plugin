@@ -178,7 +178,7 @@ class PayPaymentCreate
 
         $customExchangeURL = $this->payConfig->getCustomExchangeUrl();
 
-        if (!empty($customExchangeURL)){
+        if (!empty($customExchangeURL)) {
             $this->paymentData['exchangeURL'] = trim($customExchangeURL);
         }
 
