@@ -488,6 +488,14 @@ class Config
     /**
      * @return string
      */
+    public function getCustomExchangeUrl()
+    {
+        return $this->store->getConfig('payment/paynl/custom_exchagne_url');
+    }
+
+    /**
+     * @return string
+     */
     public function registerPartialPayments()
     {
         return $this->store->getConfig('payment/paynl/register_partial_payments');

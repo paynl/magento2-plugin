@@ -204,6 +204,11 @@
                     <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
                     <config_path>payment/paynl/pay_pending_page</config_path>
                 </field>
+                <field id="custom_exchagne_url" translate="label" type="text" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Custom Exchange URL</label>
+                    <comment><![CDATA[Use your own exchange-handler. Requests will be send as GET. Example: https://www.yourdomain.nl/exchange_handler?action=#action#&order_id=#order_id#]]></comment>
+                    <config_path>payment/paynl/custom_exchagne_url</config_path>
+                </field>
             </group>
         </section>
         <section id="payment">
