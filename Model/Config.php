@@ -490,7 +490,7 @@ class Config
      */
     public function getCustomExchangeUrl()
     {
-        return $this->store->getConfig('payment/paynl/custom_exchagne_url');
+        return $this->store->getConfig('payment/paynl/custom_exchange_url');
     }
 
     /**
