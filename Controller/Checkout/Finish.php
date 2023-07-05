@@ -127,7 +127,7 @@ class Finish extends PayAction
         $resultRedirect = $this->resultRedirectFactory->create();
         $params = $this->getRequest()->getParams();
         $payOrderId = empty($params['orderId']) ? (empty($params['orderid']) ? null : $params['orderid']) : $params['orderId'];
-        $orderStatusId = empty($params['orderStatusId']) ? null : (int) $params['orderStatusId'];
+        $orderStatusId = empty($params['orderStatusId']) ? null : (int)$params['orderStatusId'];
         $magOrderId = empty($params['entityid']) ? null : $params['entityid'];
         $orderIds = empty($params['order_ids']) ? null : $params['order_ids'];
         $bSuccess = $orderStatusId === Config::ORDERSTATUS_PAID;
