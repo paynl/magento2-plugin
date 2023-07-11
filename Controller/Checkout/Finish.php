@@ -6,6 +6,7 @@ use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Event\ManagerInterface;
+use Magento\Quote\Model\QuoteFactory;
 use Magento\Quote\Model\QuoteRepository;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderRepository;
@@ -53,6 +54,11 @@ class Finish extends PayAction
     private $eventManager;
 
     /**
+     * @var QuoteFactory
+     */
+    private $quoteFactory;
+
+    /**
      * Index constructor.
      * @param Context $context
      * @param Config $config
@@ -61,6 +67,7 @@ class Finish extends PayAction
      * @param QuoteRepository $quoteRepository
      * @param PayHelper $payHelper
      * @param ManagerInterface $eventManager
+     * @param QuoteFactory $quoteFactory
      */
     public function __construct(
         Context $context,
@@ -69,7 +76,8 @@ class Finish extends PayAction
         OrderRepository $orderRepository,
         QuoteRepository $quoteRepository,
         PayHelper $payHelper,
-        ManagerInterface $eventManager
+        ManagerInterface $eventManager,
+        QuoteFactory $quoteFactory
     ) {
         $this->config = $config;
         $this->checkoutSession = $checkoutSession;
@@ -77,6 +85,7 @@ class Finish extends PayAction
         $this->quoteRepository = $quoteRepository;
         $this->payHelper = $payHelper;
         $this->eventManager = $eventManager;
+        $this->quoteFactory = $quoteFactory;
         parent::__construct($context);
     }
 
@@ -202,6 +211,15 @@ class Finish extends PayAction
             } else {
                 $cancelMessage = $bDenied ? __('Payment denied') : __('Payment canceled');
                 $this->messageManager->addNoticeMessage($cancelMessage);
+                if ($multiShipFinish) {
+                    $session = $this->checkoutSession;
+                    $sessionId = $session->getLastQuoteId();
+                    $quote = $this->quoteFactory->create()->loadByIdWithoutStore($sessionId);
+                    if (!empty($quote->getId())) {
+                        $quote->setIsActive(true)->setReservedOrderId(null)->save();
+                        $session->replaceQuote($quote);
+                    }
+                }
                 $resultRedirect->setPath($payment->getMethod() == 'paynl_payment_paylink' ? Config::CANCEL_PAY : $this->config->getCancelURL());
             }
         } catch (\Exception $e) {
