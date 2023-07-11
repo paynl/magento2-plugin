@@ -175,6 +175,14 @@ class PayPaymentCreate
     public function setExchangeURL(string $exchangeURL)
     {
         $this->paymentData['exchangeURL'] = $exchangeURL;
+
+        $customExchangeURL = $this->payConfig->getCustomExchangeUrl();
+        $customExchangeURL = is_null($customExchangeURL) ? '' : trim($customExchangeURL);
+
+        if (!empty($customExchangeURL)) {
+            $this->paymentData['exchangeURL'] = $customExchangeURL;
+        }
+
         return $this;
     }
 
