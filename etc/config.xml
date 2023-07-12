@@ -423,6 +423,18 @@ In order to pay for your order click the link below
                 <model>Paynl\Payment\Model\Paymentmethod\Ideal</model>
                 <group>paynl_payment</group>
             </paynl_payment_ideal>
+            <paynl_payment_incasso>
+                <active>0</active>
+                <title>Incasso</title>
+                <payment_option_id>137</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <instructions>Veilig betalen via een eenmalige incasso</instructions>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Incasso</model>
+                <group>paynl_payment</group>
+            </paynl_payment_incasso>
             <paynl_payment_instore>
                 <active>0</active>
                 <title>Pinnen</title>

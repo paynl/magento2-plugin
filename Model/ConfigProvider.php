@@ -44,6 +44,7 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_googlepay',
         'paynl_payment_huisentuincadeau',
         'paynl_payment_ideal',
+        'paynl_payment_incasso',
         'paynl_payment_instore',
         'paynl_payment_klarna',
         'paynl_payment_klarnakp',
