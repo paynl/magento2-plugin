@@ -21,8 +21,10 @@
             <!--/ko-->
         </div>
         <p data-bind="html: getInstructions();"></p>
-        <div data-bind="visible: showPaymentOptions()" class="field-select-billing">
+        <div class="field-select-billing">
+            <!-- ko if: showPaymentOptions() -->
             <select data-bind="options: getPaymentOptions(), optionsText: 'visibleName', optionsValue: 'id', value: paymentOption"></select>
+            <!-- /ko -->
         </div>
         <div data-bind="visible: showPaymentOptionsList()" class="field-select-billing">
             <br/>
