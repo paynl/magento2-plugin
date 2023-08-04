@@ -4,12 +4,12 @@ namespace Paynl\Payment\Model\Config\Source\Available;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\RequestInterface;
-use \Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Option\ArrayInterface;
 use Magento\Payment\Model\Method\Factory as PaymentMethodFactory;
 use Magento\Store\Model\ScopeInterface;
-use \Paynl\Payment\Model\Config;
+use Paynl\Payment\Model\Config;
 use Paynl\Payment\Model\Paymentmethod\PaymentMethod;
-use \Paynl\Paymentmethods;
+use Paynl\Paymentmethods;
 
 abstract class Available implements ArrayInterface
 {
@@ -42,6 +42,15 @@ abstract class Available implements ArrayInterface
      */
     protected $_storeManager;
 
+    /**
+     * Available construct
+     *
+     * @param Config $config
+     * @param RequestInterface $request
+     * @param ScopeConfigInterface $scopeConfig
+     * @param PaymentMethodFactory $paymentMethodFactory
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     */
     public function __construct(
         Config $config,
         RequestInterface $request,
@@ -99,6 +108,9 @@ abstract class Available implements ArrayInterface
         }
     }
 
+    /**
+     * @return PaymentMethod|null
+     */
     protected function getPaymentOptionId()
     {
         $method = $this->_paymentmethodFactory->create($this->_class);
@@ -108,6 +120,10 @@ abstract class Available implements ArrayInterface
         return null;
     }
 
+    /**
+     * @param string $path
+     * @return string
+     */
     protected function getConfigValue($path)
     {
         $scopeType = ScopeConfigInterface::SCOPE_TYPE_DEFAULT;
@@ -126,7 +142,10 @@ abstract class Available implements ArrayInterface
         return $this->_scopeConfig->getValue($path, $scopeType, $scopeValue);
     }
 
-    protected function _isAvailable()
+    /**
+     * @return boolean
+     */
+    protected function _isAvailable() // phpcs:ignore
     {
         $storeId = $this->_request->getParam('store');
         if ($storeId) {

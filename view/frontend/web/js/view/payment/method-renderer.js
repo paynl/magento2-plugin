@@ -4,9 +4,11 @@ define(
         'uiComponent',
         'Magento_Checkout/js/model/payment/renderer-list'
     ],
-    function ($,
-              Component,
-              rendererList) {
+    function (
+        $,
+        Component,
+        rendererList
+    ) {
         'use strict';
 
         var defaultComponent = 'Paynl_Payment/js/view/payment/method-renderer/default';

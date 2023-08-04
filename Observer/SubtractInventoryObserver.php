@@ -54,7 +54,7 @@ class SubtractInventoryObserver implements ObserverInterface
             $productQty,
             $order->getStore()->getWebsiteId()
         );
-        
+
         $productIds = [];
         foreach ($itemsForReindex as $item) {
             $item->save();

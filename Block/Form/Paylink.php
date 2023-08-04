@@ -1,4 +1,5 @@
 <?php
+
 namespace Paynl\Payment\Block\Form;
 
 /**

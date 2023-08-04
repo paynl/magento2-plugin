@@ -16,6 +16,11 @@ class Version extends Field
 
     protected $paynlConfig;
 
+    /**
+     * @param Context $context
+     * @param Config $paynlConfig
+     * @param array $data
+     */
     public function __construct(
         Context $context,
         Config $paynlConfig,
@@ -41,7 +46,7 @@ class Version extends Field
      * @param AbstractElement $element
      * @return mixed
      */
-    public function _getElementHtml(AbstractElement $element)
+    public function _getElementHtml(AbstractElement $element) // phpcs:ignore
     {
         return $this->_toHtml();
     }

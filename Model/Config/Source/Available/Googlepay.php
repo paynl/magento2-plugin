@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright © 2015 Pay.nl All rights reserved.
  */
