@@ -1,0 +1,94 @@
+<?php
+/**
+ * @see \Paynl\Payment\Block\Adminhtml\Render\Version
+ * @var \Paynl\Payment\Block\Adminhtml\Render\Version $block
+ */
+?>
+
+<style>
+    #row_paynl_feature_request_paynl_general_settings_feature_email .label {
+        display: none;
+    }
+    #row_paynl_feature_request_paynl_general_settings_feature_email .value {
+        width: 100%;
+    }
+    #row_paynl_feature_request_paynl_general_settings_feature_email .value b{
+        width: 60px;
+        display: inline-block;
+    }
+    #row_paynl_feature_request_paynl_general_settings_feature_email .value .pay_feature_error{
+        color: red;
+        margin-left: 15px;
+        font-style: italic;
+        display: none;
+    }
+</style>
+
+<form>
+<span><b>Email</b><span id="pay_feature_email_error" class="pay_feature_error">Please fill in your email.</span></span>
+<input type="text" name="pay_feature_email" id="pay_feature_email"/>
+<br/><br/>
+<span><b>Subject</b><span id="pay_feature_subject_error" class="pay_feature_error">Please fill in your subject.</span></span>
+<input type="text" name="pay_feature_subject" id="pay_feature_subject"/>
+<br/><br/>
+<span><b>Message</b><span id="pay_feature_message_error" class="pay_feature_error">Please fill in your message.</span></span>
+<textarea id="pay_feature_message" name="pay_feature_message"></textarea>
+</form>
+<br/><br/>
+
+<?=$block->getButtonHtml()?>
+
+<script>
+    require([
+        'jquery'
+    ], function (jQuery) {
+        jQuery('#paynl_submit_email_feature_request').click(function () {
+
+            var request_email = encodeURIComponent(jQuery('#pay_feature_email').val());
+            var request_subject = encodeURIComponent(jQuery('#pay_feature_subject').val());
+            var request_message = encodeURIComponent(jQuery('#pay_feature_message').val());
+            var version = '<?=$block->getVersion()?>';
+            var magento_version = '<?=$block->getMagentoVersion()?>';
+
+            var request = '?feature_request_email=' + request_email + '&feature_request_subject=' + request_subject + '&feature_request_message=' + request_message + '&pay_version=' + version + '&magento_version=' + magento_version;
+
+            if(jQuery.trim(request_email) == '' || jQuery.trim(request_subject)== '' || jQuery.trim(request_message)== ''){
+                if(jQuery.trim(request_email) == ''){
+                    jQuery('#pay_feature_email_error').css('display', 'inline');
+                }
+                if(jQuery.trim(request_subject) == ''){
+                    jQuery('#pay_feature_subject_error').css('display', 'inline');
+                }
+                if(jQuery.trim(request_message) == ''){
+                    jQuery('#pay_feature_message_error').css('display', 'inline');
+                }
+                return false;
+            } else {
+                jQuery('#pay_feature_email_error').css('display', 'none');
+                jQuery('#pay_feature_email_error').css('display', 'none');
+                jQuery('#pay_feature_email_error').css('display', 'none');
+            }
+
+            new Ajax.Request('<?=$block->getAjaxUrl()?>' + request, {
+                loaderArea: false,
+                asynchronous: true,
+                onCreate: function () {
+                    jQuery('#paynl_submit_email_feature_request').attr('disabled', true);
+                },
+                onSuccess: function (response) {
+                    var json = response.responseJSON;
+                    let result = '';
+                    if(json.result === true){
+                        jQuery('#pay_feature_email').val("");
+                        jQuery('#pay_feature_subject').val("");
+                        jQuery('#pay_feature_message').val("");
+                        alert("Your feature request has been sent, thank you for your contribution.");
+                    } else {
+                        alert("Email could not be sent, please try again later.");
+                    }
+                    jQuery('#paynl_submit_email_feature_request').attr('disabled', false);
+                }
+            });
+        });
+    });
+</script>
