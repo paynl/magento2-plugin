@@ -2,9 +2,10 @@
 
 namespace Paynl\Payment\Block\Adminhtml\Render;
 
-use Magento\Config\Block\System\Config\Form\Field;
 use Magento\Backend\Block\Template\Context;
+use Magento\Config\Block\System\Config\Form\Field;
 use Magento\Framework\Data\Form\Element\AbstractElement;
+use Magento\Framework\UrlInterface;
 use Paynl\Payment\Model\Config;
 
 class Version extends Field
@@ -14,15 +15,31 @@ class Version extends Field
      */
     protected $_template = 'Paynl_Payment::system/config/versioncheck.phtml';
 
+    /**
+     * @var UrlInterface
+     */
+    protected $urlInterface;
+
+    /**
+     * @var Config
+     */
     protected $paynlConfig;
 
+    /**
+     * @param Context $context
+     * @param Config $paynlConfig
+     * @param UrlInterface $urlInterface
+     * @param array $data
+     */
     public function __construct(
         Context $context,
         Config $paynlConfig,
+        UrlInterface $urlInterface,
         array $data = []
     ) {
         parent::__construct($context, $data);
         $this->paynlConfig = $paynlConfig;
+        $this->urlInterface = $urlInterface;
     }
 
     /**
@@ -41,7 +58,7 @@ class Version extends Field
      * @param AbstractElement $element
      * @return mixed
      */
-    public function _getElementHtml(AbstractElement $element)
+    public function _getElementHtml(AbstractElement $element)  // phpcs:ignore
     {
         return $this->_toHtml();
     }
@@ -69,5 +86,15 @@ class Version extends Field
     {
         $button = $this->getLayout()->createBlock('Magento\Backend\Block\Widget\Button')->setData(['id' => 'paynl_version_check_button', 'label' => __('Check version')]);
         return $button->toHtml();
+    }
+
+    /**
+     * @return string
+     */
+    public function getFeatureRequestUrl()
+    {
+        $currentUrl = $this->urlInterface->getCurrentUrl();
+        $payUrl = str_replace("paynl_setup", "paynl_feature_request", $currentUrl);
+        return $payUrl;
     }
 }

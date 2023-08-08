@@ -14,8 +14,16 @@ class FeatureRequest extends Field
      */
     protected $_template = 'Paynl_Payment::system/config/featurerequest.phtml';
 
+    /**
+     * @var Config
+     */
     protected $paynlConfig;
 
+    /**
+     * @param Context $context
+     * @param Config $paynlConfig
+     * @param array $data
+     */
     public function __construct(
         Context $context,
         Config $paynlConfig,
@@ -41,7 +49,7 @@ class FeatureRequest extends Field
      * @param AbstractElement $element
      * @return mixed
      */
-    public function _getElementHtml(AbstractElement $element)
+    public function _getElementHtml(AbstractElement $element) // phpcs:ignore
     {
         return $this->_toHtml();
     }
@@ -78,5 +86,4 @@ class FeatureRequest extends Field
     {
         return $this->paynlConfig->getMagentoVersion();
     }
-
 }
