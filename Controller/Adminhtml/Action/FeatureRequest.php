@@ -91,6 +91,9 @@ class FeatureRequest extends Action
         return $result->setData(['result' => $emailResult]);
     }
 
+    /**
+     * @return boolean
+     */
     private function sendEmail()
     {
         try {
