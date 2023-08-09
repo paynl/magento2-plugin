@@ -91,9 +91,6 @@ class FeatureRequest extends Action
         return $result->setData(['result' => $emailResult]);
     }
 
-    /**
-     * @return boolean
-     */
     private function sendEmail()
     {
         try {
@@ -105,13 +102,13 @@ class FeatureRequest extends Action
                 'email' => $senderEmail,
             ];
 
-            $params = $this->getRequest()->getParams();
+            $postParams = $this->getRequest()->getPostValue();
 
-            $email = !empty($params['feature_request_email']) ? $params['feature_request_email'] : '';
-            $subject = !empty($params['feature_request_subject']) ? 'Feature Request: ' . $params['feature_request_subject'] : 'Feature Request';
-            $message = !empty($params['feature_request_message']) ? $params['feature_request_message'] : '';
-            $version = !empty($params['pay_version']) ? $params['pay_version'] : '';
-            $magento_version = !empty($params['magento_version']) ? $params['magento_version'] : '';
+            $email = !empty($postParams['feature_request_email']) ? $postParams['feature_request_email'] : '';
+            $subject = !empty($postParams['feature_request_subject']) ? 'Feature Request: ' . $postParams['feature_request_subject'] : 'Feature Request';
+            $message = !empty($postParams['feature_request_message']) ? $postParams['feature_request_message'] : '';
+            $version = !empty($postParams['pay_version']) ? $postParams['pay_version'] : '';
+            $magento_version = !empty($postParams['magento_version']) ? $postParams['magento_version'] : '';
 
             $body = $message;
             $body = nl2br($body);
