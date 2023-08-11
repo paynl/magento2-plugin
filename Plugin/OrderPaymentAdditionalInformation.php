@@ -8,9 +8,10 @@ class OrderPaymentAdditionalInformation
 {
     /**
      * @param Payment $subject
-     * @param $result
+     * @param array $result
      * @return array
      * @throws \Exception
+     * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing 
      */
     public function afterGetAdditionalInformation(Payment $subject, $result)
     {

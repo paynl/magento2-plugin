@@ -2,11 +2,10 @@
 
 namespace Paynl\Payment\Model\Config\Source;
 
-use \Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Option\ArrayInterface;
 
 class ShowUseragentOptions implements ArrayInterface
 {
-
     /**
      * Options getter
      *
@@ -28,7 +27,6 @@ class ShowUseragentOptions implements ArrayInterface
      *
      * @return array
      */
-
     public function toArray()
     {
         return [

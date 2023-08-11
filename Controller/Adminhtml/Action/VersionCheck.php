@@ -31,6 +31,15 @@ class VersionCheck extends Action
      */
     private $httpHeader;
 
+    /**
+     * Logs construct
+     *
+     * @param Context $context
+     * @param JsonFactory $resultJsonFactory
+     * @param File $file
+     * @param EncoderInterface $encoder
+     * @param Header $httpHeader
+     */
     public function __construct(
         Context $context,
         JsonFactory $resultJsonFactory,

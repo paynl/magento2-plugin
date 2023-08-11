@@ -11,6 +11,9 @@ class Checkbox extends Field
     protected $configPath;
     protected $_template = 'Paynl_Payment::system/config/checkbox.phtml';
 
+    /**
+     * @param Context $context
+     */
     public function __construct(
         Context $context
     ) {
@@ -23,7 +26,7 @@ class Checkbox extends Field
      *
      * @return string
      */
-    protected function _getElementHtml(AbstractElement $element)
+    protected function _getElementHtml(AbstractElement $element) // phpcs:ignore
     {
         $this->configPath = $element->getData('field_config')['config_path'];
         $this->setNamePrefix($element->getName())
@@ -32,11 +35,11 @@ class Checkbox extends Field
     }
 
     /**
-     * 
+     *
      * @return boolean
      */
     public function getIsChecked()
-    {       
+    {
         $data = $this->getConfigData();
         if (isset($data[$this->configPath])) {
             $data = $data[$this->configPath];

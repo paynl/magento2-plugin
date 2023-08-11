@@ -2,7 +2,6 @@
 
 namespace Paynl\Payment\Model\Config\Source;
 
-
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\RequestInterface;
 use Paynl\Payment\Model\Config;
