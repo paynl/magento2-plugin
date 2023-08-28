@@ -43,9 +43,8 @@ class SubtractInventoryObserver implements ObserverInterface
         $order = $observer->getEvent()->getOrder();
 
         $payment = $order->getPayment();
-        $methodInstance = $payment->getMethodInstance();  
+        $methodInstance = $payment->getMethodInstance();
         if ($methodInstance instanceof \Paynl\Payment\Model\Paymentmethod\Paymentmethod) {
-
             $productQty = $observer->getEvent()->getProductQty();
 
             if ($order->getInventoryProcessed()) {
