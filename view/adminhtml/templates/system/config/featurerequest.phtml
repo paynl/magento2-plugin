@@ -25,20 +25,18 @@
 </style>
 
 <span>
-    You can use the following form if you'd like to request a new feature for the Pay. Plugin for Magneto. <br/>
-    Please note we will not always reply back to your requests, nor will we make every request that is send to us.<br/><br/>
-    If you need support for the Pay. Plugin for Magneto2 instead, please send an Email to <a href="mailto:support@pay.nl">support@pay.nl</a>.
+    <?=$block->escapeHtml(__('If you have a feature request or other ideas, let us know!'));?> <br/>
+    <?=$block->escapeHtml(__('Your submission will be reviewed by our development team.'));?><br/>
+    <?=$block->escapeHtml(__('If needed, we will contact you for further information via the e-mail address provided.'));?><br/><br/>
+    <?=str_replace('support@pay.nl', '<a href="mailto:support@pay.nl">support@pay.nl</a>', $block->escapeHtml(__('Please note: this form is not for Support requests, please contact support@pay.nl for this.')));?>.
 </span>
 <br/><br/><br/>
 <form>
-<span><b>Email</b><span id="pay_feature_email_error" class="pay_feature_error">Please fill in your email.</span><span id="pay_feature_email_error_2" class="pay_feature_error">Please fill in a valid email.</span></span>
+<span><b><?=$block->escapeHtml(__('Email'));?></b><span id="pay_feature_email_error_2" class="pay_feature_error">Please fill in a valid email.</span></span>
 <input type="text" name="pay_feature_email" id="pay_feature_email"/>
 <br/><br/>
-<span><b>Subject</b><span id="pay_feature_subject_error" class="pay_feature_error">Please fill in your subject.</span></span>
-<input type="text" name="pay_feature_subject" id="pay_feature_subject"/>
-<br/><br/>
-<span><b>Message</b><span id="pay_feature_message_error" class="pay_feature_error">Please fill in your message.</span></span>
-<textarea id="pay_feature_message" name="pay_feature_message"></textarea>
+<span><b><?=$block->escapeHtml(__('Message'));?>*</b><span id="pay_feature_message_error" class="pay_feature_error">Please fill in your message.</span></span>
+<textarea id="pay_feature_message" name="pay_feature_message" placeholder="<?=$block->escapeHtml(__('Leave your suggestions here...'))?>"></textarea>
 </form>
 <br/><br/>
 
@@ -51,27 +49,20 @@
         jQuery('#paynl_submit_email_feature_request').click(function () {
 
             var request_email = encodeURIComponent(jQuery('#pay_feature_email').val());
-            var request_subject = encodeURIComponent(jQuery('#pay_feature_subject').val());
             var request_message = encodeURIComponent(jQuery('#pay_feature_message').val());
             var version = '<?=$block->getVersion()?>';
             var magento_version = '<?=$block->getMagentoVersion()?>';
 
-            var request = 'feature_request_email=' + request_email + '&feature_request_subject=' + request_subject + '&feature_request_message=' + request_message + '&pay_version=' + version + '&magento_version=' + magento_version;
+            var request = 'feature_request_email=' + request_email + '&feature_request_message=' + request_message + '&pay_version=' + version + '&magento_version=' + magento_version;
 
             jQuery('#pay_feature_email_error').css('display', 'none');
             jQuery('#pay_feature_email_error_2').css('display', 'none');
-            jQuery('#pay_feature_subject_error').css('display', 'none');
             jQuery('#pay_feature_message_error').css('display', 'none');
 
             var regex = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
-            if(jQuery.trim(request_email) == '' || jQuery.trim(request_subject) == '' || jQuery.trim(request_message) == '' || !regex.test(jQuery('#pay_feature_email').val())){
-                if(jQuery.trim(request_email) == ''){
-                    jQuery('#pay_feature_email_error').css('display', 'inline');
-                } else if(!regex.test(jQuery('#pay_feature_email').val())){
+            if(jQuery.trim(request_message) == '' || (jQuery.trim(request_email) != '' && !regex.test(jQuery('#pay_feature_email').val()))){
+                if(jQuery.trim(request_email) != '' && !regex.test(jQuery('#pay_feature_email').val())){
                     jQuery('#pay_feature_email_error_2').css('display', 'inline');
-                }
-                if(jQuery.trim(request_subject) == ''){
-                    jQuery('#pay_feature_subject_error').css('display', 'inline');
                 }
                 if(jQuery.trim(request_message) == ''){
                     jQuery('#pay_feature_message_error').css('display', 'inline');
@@ -92,11 +83,10 @@
                     let result = '';
                     if(json.result === true){
                         jQuery('#pay_feature_email').val("");
-                        jQuery('#pay_feature_subject').val("");
                         jQuery('#pay_feature_message').val("");
-                        alert("Your feature request has been sent, thank you for your contribution.");
+                        alert("<?=$block->escapeHtml(__('Sent! Thank you for your contribution.'));?>");
                     } else {
-                        alert("Email could not be sent, please try again later.");
+                        alert("<?=$block->escapeHtml(__('Email could not be sent, please try again later.'));?>");
                     }
                     jQuery('#paynl_submit_email_feature_request').attr('disabled', false);
                 }

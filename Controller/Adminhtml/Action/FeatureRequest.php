@@ -108,7 +108,7 @@ class FeatureRequest extends Action
             $postParams = $this->getRequest()->getPostValue();
 
             $email = !empty($postParams['feature_request_email']) ? $postParams['feature_request_email'] : '';
-            $subject = !empty($postParams['feature_request_subject']) ? 'Feature Request: ' . $postParams['feature_request_subject'] : 'Feature Request';
+            $subject = 'Magento2 Feature Request';
             $message = !empty($postParams['feature_request_message']) ? $postParams['feature_request_message'] : '';
             $version = !empty($postParams['pay_version']) ? $postParams['pay_version'] : '';
             $magento_version = !empty($postParams['magento_version']) ? $postParams['magento_version'] : '';
