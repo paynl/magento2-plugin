@@ -4,12 +4,12 @@ namespace Paynl\Payment\Observer;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
-use Magento\Store\Model\Store;
-use Paynl\Result\Transaction\Transaction;
-use Paynl\Payment\Model\Config;
 use Magento\Sales\Model\Order;
+use Magento\Store\Model\Store;
 use Paynl\Payment\Helper\PayHelper;
+use Paynl\Payment\Model\Config;
 use Paynl\Payment\Model\PayPayment;
+use Paynl\Result\Transaction\Transaction;
 
 class ShipmentSaveAfter implements ObserverInterface
 {
@@ -61,68 +61,73 @@ class ShipmentSaveAfter implements ObserverInterface
     public function execute(Observer $observer)
     {
         $order = $observer->getEvent()->getShipment()->getOrder();
-        $this->config->setStore($order->getStore());
+        $payment = $order->getPayment();
+        $methodInstance = $payment->getMethodInstance();
+        if ($methodInstance instanceof \Paynl\Payment\Model\Paymentmethod\Paymentmethod) {
 
-        if ($this->config->autoCaptureEnabled()) {
-            $invoiceCheck = $this->config->sherpaEnabled() ? true : !$order->hasInvoices();
+            $this->config->setStore($order->getStore());
 
-            if ($order->getState() == Order::STATE_PROCESSING && $invoiceCheck) {
-                $data = $order->getPayment()->getData();
-                $payOrderId = $data['last_trans_id'] ?? null;
+            if ($this->config->autoCaptureEnabled()) {
+                $invoiceCheck = $this->config->sherpaEnabled() ? true : !$order->hasInvoices();
 
-                if (!empty($payOrderId)) {
-                    $bHasAmountAuthorized = !empty($data['base_amount_authorized']);
-                    $amountPaid = isset($data['amount_paid']) ? $data['amount_paid'] : null;
-                    $amountRefunded = isset($data['amount_refunded']) ? $data['amount_refunded'] : null;
-                    $amountPaidCheck =  $this->config->sherpaEnabled() ? true : $amountPaid === null;
+                if ($order->getState() == Order::STATE_PROCESSING && $invoiceCheck) {
+                    $data = $order->getPayment()->getData();
+                    $payOrderId = $data['last_trans_id'] ?? null;
 
-                    if ($bHasAmountAuthorized && $amountPaidCheck === true && $amountRefunded === null) {
-                        $this->payHelper->logDebug('AUTO-CAPTURING(shipment-save-after) ' . $payOrderId, [], $order->getStore());
-                        $bCaptureResult = false;
-                        try {
-                            # Handles Wuunder
-                            # Handles Picqer
-                            # Handles Sherpa
-                            # Handles Manual made shipment
-                            $this->config->configureSDK();
-                            $bCaptureResult = \Paynl\Transaction::capture($payOrderId);
+                    if (!empty($payOrderId)) {
+                        $bHasAmountAuthorized = !empty($data['base_amount_authorized']);
+                        $amountPaid = isset($data['amount_paid']) ? $data['amount_paid'] : null;
+                        $amountRefunded = isset($data['amount_refunded']) ? $data['amount_refunded'] : null;
+                        $amountPaidCheck = $this->config->sherpaEnabled() ? true : $amountPaid === null;
 
-                            if (!$bCaptureResult) {
-                                throw new \Exception('Capture failed');
+                        if ($bHasAmountAuthorized && $amountPaidCheck === true && $amountRefunded === null) {
+                            $this->payHelper->logDebug('AUTO-CAPTURING(shipment-save-after) ' . $payOrderId, [], $order->getStore());
+                            $bCaptureResult = false;
+                            try {
+                                # Handles Wuunder
+                                # Handles Picqer
+                                # Handles Sherpa
+                                # Handles Manual made shipment
+                                $this->config->configureSDK();
+                                $bCaptureResult = \Paynl\Transaction::capture($payOrderId);
+
+                                if (!$bCaptureResult) {
+                                    throw new \Exception('Capture failed');
+                                }
+                            } catch (\Exception $e) {
+                                $strMessage = $e->getMessage();
+                                $this->payHelper->logDebug('Order PAY error(rest): ' . $strMessage . ' EntityId: ' . $order->getEntityId(), [], $order->getStore());
+
+                                $strFriendlyMessage = 'Failed. Errorcode: PAY-MAGENTO2-004. See docs.pay.nl for more information';
+
+                                if (stripos($strMessage, 'Transaction not found') !== false) {
+                                    $strFriendlyMessage = 'Transaction seems to be already captured/paid';
+                                }
                             }
-                        } catch (\Exception $e) {
-                            $strMessage = $e->getMessage();
-                            $this->payHelper->logDebug('Order PAY error(rest): ' . $strMessage . ' EntityId: ' . $order->getEntityId(), [], $order->getStore());
 
-                            $strFriendlyMessage = 'Failed. Errorcode: PAY-MAGENTO2-004. See docs.pay.nl for more information';
+                            $order->addStatusHistoryComment(
+                                __('PAY. - Performed auto-capture. Result: ') . ($bCaptureResult ? 'Success' : 'Failed') . (empty($strFriendlyMessage) ? '' : '. ' . $strFriendlyMessage)
+                            )->save();
 
-                            if (stripos($strMessage, 'Transaction not found') !== false) {
-                                $strFriendlyMessage = 'Transaction seems to be already captured/paid';
+                            # Whether capture failed or succeeded, we still might have to process paid order
+                            $this->config->configureSDK(true);
+                            $transaction = \Paynl\Transaction::get($payOrderId);
+                            if ($transaction->isPaid()) {
+                                $this->payPayment->processPaidOrder($transaction, $order);
                             }
-                        }
-
-                        $order->addStatusHistoryComment(
-                            __('PAY. - Performed auto-capture. Result: ') . ($bCaptureResult ? 'Success' : 'Failed') . (empty($strFriendlyMessage) ? '' : '. ' . $strFriendlyMessage)
-                        )->save();
-
-                        # Whether capture failed or succeeded, we still might have to process paid order
-                        $this->config->configureSDK(true);
-                        $transaction = \Paynl\Transaction::get($payOrderId);
-                        if ($transaction->isPaid()) {
-                            $this->payPayment->processPaidOrder($transaction, $order);
+                        } else {
+                            $this->payHelper->logDebug(
+                                'Auto-Capture conditions not met (yet). Amountpaid:' . $amountPaid . ' bHasAmountAuthorized: ' . ($bHasAmountAuthorized ? '1' : '0'),
+                                [],
+                                $order->getStore()
+                            );
                         }
                     } else {
-                        $this->payHelper->logDebug(
-                            'Auto-Capture conditions not met (yet). Amountpaid:' . $amountPaid . ' bHasAmountAuthorized: ' . ($bHasAmountAuthorized ? '1' : '0'),
-                            [],
-                            $order->getStore()
-                        );
+                        $this->payHelper->logDebug('Auto-Capture conditions not met (yet). No PAY-Order-id.', [], $order->getStore());
                     }
                 } else {
-                    $this->payHelper->logDebug('Auto-Capture conditions not met (yet). No PAY-Order-id.', [], $order->getStore());
+                    $this->payHelper->logDebug('Auto-capture conditions not met (yet). State: ' . $order->getState(), [], $order->getStore());
                 }
-            } else {
-                $this->payHelper->logDebug('Auto-capture conditions not met (yet). State: ' . $order->getState(), [], $order->getStore());
             }
         }
     }
