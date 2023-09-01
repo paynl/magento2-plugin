@@ -8,6 +8,9 @@ class Bataviacadeaukaart extends PaymentMethod
 {
     protected $_code = 'paynl_payment_bataviacadeaukaart';
 
+    /**
+     * @return integer
+     */
     protected function getDefaultPaymentOptionId()
     {
         return 2955;

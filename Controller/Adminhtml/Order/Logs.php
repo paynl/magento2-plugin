@@ -14,7 +14,17 @@ class Logs extends \Magento\Backend\App\Action
     protected $resultFactory;
     protected $redirect;
     private $authorization;
-    
+
+    /**
+     * Logs construct
+     *
+     * @param \Magento\Backend\App\Action\Context $context
+     * @param \Magento\Framework\App\Response\Http\FileFactory $fileFactory
+     * @param \Magento\Framework\App\Filesystem\DirectoryList $directoryList
+     * @param AuthorizationInterface $authorization
+     * @param ResultFactory $resultFactory
+     * @param \Magento\Framework\App\Response\RedirectInterface $redirect
+     */
     public function __construct(
         \Magento\Backend\App\Action\Context $context,
         \Magento\Framework\App\Response\Http\FileFactory $fileFactory,
@@ -31,11 +41,17 @@ class Logs extends \Magento\Backend\App\Action
         return parent::__construct($context);
     }
 
+    /**
+     * @return boolean
+     */
     protected function isAllowed()
     {
         return $this->authorization->isAllowed('Paynl_Payment::logs');
     }
 
+    /**
+     * @return void
+     */
     private function downloadPayLog()
     {
         # Just download the PAY. logs
@@ -50,6 +66,9 @@ class Logs extends \Magento\Backend\App\Action
         }
     }
 
+    /**
+     * @return boolean
+     */
     public function execute()
     {
         if (!$this->isAllowed()) {

@@ -2,11 +2,10 @@
 
 namespace Paynl\Payment\Model\Config\Source;
 
-use \Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Option\ArrayInterface;
 
 class ProductDataID implements ArrayInterface
 {
-
   /**
    * Options getter
    *

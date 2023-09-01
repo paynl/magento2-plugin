@@ -8,6 +8,9 @@ class Biller extends PaymentMethod
 {
     protected $_code = 'paynl_payment_biller';
 
+    /**
+     * @return integer
+     */
     protected function getDefaultPaymentOptionId()
     {
         return 2931;

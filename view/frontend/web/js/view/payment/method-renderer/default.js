@@ -28,7 +28,7 @@ define(
             initialize: function () {
                 this._super();
 
-                if(this.paymentOption == null){
+                if (this.paymentOption == null) {
                     this.paymentOption = this.getDefaultPaymentOption();
                 }
 
@@ -36,13 +36,13 @@ define(
                 if (!quote.paymentMethod() &&
                     typeof defaultPaymentMethod !== 'undefined' &&
                     typeof defaultPaymentMethod[this.item.method] !== 'undefined' &&
-                    defaultPaymentMethod[this.item.method])  {
+                    defaultPaymentMethod[this.item.method]) {
                     this.selectPaymentMethod();
                 }
 
                 return this;
             },
-            isVisible:function() {
+            isVisible:function () {
                 var group = window.checkoutConfig.payment.showforgroup[this.item.method];
                 if (group) {
                     if (group == 0 && customer.isLoggedIn) {
@@ -90,7 +90,7 @@ define(
             },
             getCompany: function () {
                 if (quote.billingAddress.hasOwnProperty('_latestValue') && typeof quote.billingAddress._latestValue !== 'undefined' && quote.billingAddress._latestValue !== null) {
-                    if (quote.billingAddress._latestValue.hasOwnProperty('company') && typeof quote.billingAddress._latestValue.company !== 'undefined' && quote.billingAddress._latestValue.company !== null) {                        
+                    if (quote.billingAddress._latestValue.hasOwnProperty('company') && typeof quote.billingAddress._latestValue.company !== 'undefined' && quote.billingAddress._latestValue.company !== null) {
                         return quote.billingAddress._latestValue.company;
                     }
                 }
@@ -105,8 +105,8 @@ define(
             getPaymentIcon: function () {
                 return window.checkoutConfig.payment.icon[this.item.method];
             },
-            showKVKAgree: function(){
-                if(this.item.method == 'paynl_payment_billink' && this.getKVK() > 0){
+            showKVKAgree: function () {
+                if (this.item.method == 'paynl_payment_billink' && this.getKVK() > 0) {
                     return true;
                 }
                 return false;
@@ -121,7 +121,7 @@ define(
                 return this.getVAT() > 0;
             },
             getVAT: function () {
-                if(this.getCompany().length == 0){
+                if (this.getCompany().length == 0) {
                     return false;
                 }
                 return (typeof window.checkoutConfig.payment.showvat !== 'undefined') ? window.checkoutConfig.payment.showvat[this.item.method] : '';
@@ -165,11 +165,11 @@ define(
                 }
                 return paymentOptions;
             },
-            getPaymentOptionsList: function(){
-                if(!this.showPaymentOptionsList){
+            getPaymentOptionsList: function () {
+                if (!this.showPaymentOptionsList) {
                     return false;
                 }
-                if (!(this.item.method in this.paymentOptionsList)){
+                if (!(this.item.method in this.paymentOptionsList)) {
                     var list = window.checkoutConfig.payment.paymentoptions[this.item.method];
                     var name = 'paymentOptionsList_' + this.item.method;
                     $.each(list, function (i, l) {
@@ -215,7 +215,7 @@ define(
             },
             placeOrder: function (data, event) {
 
-                if(this.useAdditionalValidation()) {
+                if (this.useAdditionalValidation()) {
                     this.validate();
                     additionalValidators.validate();
                 }
@@ -230,7 +230,7 @@ define(
                             title: $.mage.__('Payment terms'),
                             content: $.mage.__('You must first agree to the payment terms.'),
                             actions: {
-                                always: function(){}
+                                always: function (){}
                             }
                         });
                         return false;
@@ -240,7 +240,7 @@ define(
                             title: $.mage.__('Invalid COC number'),
                             content: $.mage.__('Enter a valid COC number'),
                             actions: {
-                                always: function(){}
+                                always: function (){}
                             }
                         });
                         return false;
@@ -252,7 +252,7 @@ define(
                             title: $.mage.__('Invalid VAT-id'),
                             content: $.mage.__('Enter a valid VAT-id'),
                             actions: {
-                                always: function(){}
+                                always: function (){}
                             }
                         });
                         return false;
@@ -264,7 +264,7 @@ define(
                             title: $.mage.__('Invalid date of birth'),
                             content: $.mage.__('Enter a valid date of birth'),
                             actions: {
-                                always: function(){}
+                                always: function (){}
                             }
                         });
                         return false;

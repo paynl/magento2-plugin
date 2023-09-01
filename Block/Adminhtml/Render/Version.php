@@ -58,7 +58,7 @@ class Version extends Field
      * @param AbstractElement $element
      * @return mixed
      */
-    public function _getElementHtml(AbstractElement $element)  // phpcs:ignore
+    public function _getElementHtml(AbstractElement $element) // phpcs:ignore
     {
         return $this->_toHtml();
     }

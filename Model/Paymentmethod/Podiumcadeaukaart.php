@@ -6,6 +6,9 @@ class Podiumcadeaukaart extends PaymentMethod
 {
     protected $_code = 'paynl_payment_podiumcadeaukaart';
 
+    /**
+     * @return integer
+     */
     protected function getDefaultPaymentOptionId()
     {
         return 816;

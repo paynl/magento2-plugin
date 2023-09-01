@@ -8,11 +8,14 @@ class Billink extends PaymentMethod
 {
     protected $_code = 'paynl_payment_billink';
 
+    /**
+     * @return integer
+     */
     protected function getDefaultPaymentOptionId()
     {
         return 1672;
     }
- 
+
   /**
    * @return \Magento\Framework\App\CacheInterface
    */

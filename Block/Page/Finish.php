@@ -7,7 +7,6 @@ use Magento\Sales\Model\Order;
 
 class Finish extends \Magento\Framework\View\Element\Template
 {
-
     /**
      * @var \Magento\Checkout\Model\Session
      */
@@ -30,6 +29,7 @@ class Finish extends \Magento\Framework\View\Element\Template
      * @param \Magento\Checkout\Model\Session $checkoutSession
      * @param \Magento\Sales\Model\Order\Config $orderConfig
      * @param \Magento\Framework\App\Http\Context $httpContext
+     * @param \Magento\Framework\App\Request\Http $request
      * @param array $data
      */
     public function __construct(
@@ -63,7 +63,7 @@ class Finish extends \Magento\Framework\View\Element\Template
      *
      * @return string
      */
-    protected function _beforeToHtml()
+    protected function _beforeToHtml() // phpcs:ignore
     {
         $this->prepareBlockData();
         return parent::_beforeToHtml();
@@ -100,7 +100,7 @@ class Finish extends \Magento\Framework\View\Element\Template
      * Is order visible
      *
      * @param Order $order
-     * @return bool
+     * @return boolean
      */
     protected function isVisible(Order $order)
     {
@@ -114,7 +114,7 @@ class Finish extends \Magento\Framework\View\Element\Template
      * Can view order
      *
      * @param Order $order
-     * @return bool
+     * @return boolean
      */
     protected function canViewOrder(Order $order)
     {
@@ -131,6 +131,10 @@ class Finish extends \Magento\Framework\View\Element\Template
         return $this->_storeManager->getStore()->getBaseUrl();
     }
 
+    /**
+     * @param string $param
+     * @return string|null
+     */
     public function getParam($param)
     {
         $params = $this->request->getParams();

@@ -2,15 +2,14 @@
 
 namespace Paynl\Payment\Model\Config\Source;
 
-use \Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Option\ArrayInterface;
 
 class LogOptions implements ArrayInterface
 {
-
-    const LOG_ALL = 0;
-    const LOG_CRITICAL_NOTICE = 1;
-    const LOG_ONLY_CRITICAL = 2;
-    const LOG_NONE = 3;
+    public const LOG_ALL = 0;
+    public const LOG_CRITICAL_NOTICE = 1;
+    public const LOG_ONLY_CRITICAL = 2;
+    public const LOG_NONE = 3;
 
     /**
      * Options getter
