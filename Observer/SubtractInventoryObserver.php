@@ -41,30 +41,35 @@ class SubtractInventoryObserver implements ObserverInterface
     public function execute(EventObserver $observer)
     {
         $order = $observer->getEvent()->getOrder();
-        $productQty = $observer->getEvent()->getProductQty();
 
-        if ($order->getInventoryProcessed()) {
+        $payment = $order->getPayment();
+        $methodInstance = $payment->getMethodInstance();
+        if ($methodInstance instanceof \Paynl\Payment\Model\Paymentmethod\Paymentmethod) {
+            $productQty = $observer->getEvent()->getProductQty();
+
+            if ($order->getInventoryProcessed()) {
+                return $this;
+            }
+
+            /**
+             * Reindex items
+             */
+            $itemsForReindex = $this->stockManagement->registerProductsSale(
+                $productQty,
+                $order->getStore()->getWebsiteId()
+            );
+
+            $productIds = [];
+            foreach ($itemsForReindex as $item) {
+                $item->save();
+                $productIds[] = $item->getProductId();
+            }
+            if (!empty($productIds)) {
+                $this->stockIndexerProcessor->reindexList($productIds);
+            }
+
+            $order->setInventoryProcessed(true);
             return $this;
         }
-
-        /**
-         * Reindex items
-         */
-        $itemsForReindex = $this->stockManagement->registerProductsSale(
-            $productQty,
-            $order->getStore()->getWebsiteId()
-        );
-
-        $productIds = [];
-        foreach ($itemsForReindex as $item) {
-            $item->save();
-            $productIds[] = $item->getProductId();
-        }
-        if (!empty($productIds)) {
-            $this->stockIndexerProcessor->reindexList($productIds);
-        }
-
-        $order->setInventoryProcessed(true);
-        return $this;
     }
 }

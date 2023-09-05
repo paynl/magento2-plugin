@@ -3,10 +3,10 @@
 namespace Paynl\Payment\Observer;
 
 use Magento\Framework\Event\ObserverInterface;
-use Psr\Log\LoggerInterface;
-use Paynl\Payment\Model\Config;
 use Magento\Sales\Model\Order;
 use Paynl\Payment\Helper\PayHelper;
+use Paynl\Payment\Model\Config;
+use Psr\Log\LoggerInterface;
 
 class InvoiceSaveCommitAfter implements ObserverInterface
 {
@@ -62,15 +62,18 @@ class InvoiceSaveCommitAfter implements ObserverInterface
     {
         $invoice = $observer->getEvent()->getInvoice();
         $order = $invoice->getOrder();
-        $postdata = $this->_request->getPost();
-
-        if (!empty($postdata['invoice']['capture_case']) && $postdata['invoice']['capture_case'] == "online" && $order->getState() == Order::STATE_PROCESSING) {
-            $this->config->setStore($order->getStore());
-            $paymentMethod = $order->getPayment()->getMethod();
-            $customStatus = $this->config->getPaidStatus($paymentMethod);
-            if (!empty($customStatus)) {
-                $this->payHelper->logNotice('PAY.: Updating order status from ' . $order->getStatus() . ' to ' . $customStatus, [], $order->getStore());
-                $order->setStatus($customStatus)->save();
+        $payment = $order->getPayment();
+        $methodInstance = $payment->getMethodInstance();
+        if ($methodInstance instanceof \Paynl\Payment\Model\Paymentmethod\Paymentmethod) {
+            $postdata = $this->_request->getPost();
+            if (!empty($postdata['invoice']['capture_case']) && $postdata['invoice']['capture_case'] == "online" && $order->getState() == Order::STATE_PROCESSING) {
+                $this->config->setStore($order->getStore());
+                $paymentMethod = $order->getPayment()->getMethod();
+                $customStatus = $this->config->getPaidStatus($paymentMethod);
+                if (!empty($customStatus)) {
+                    $this->payHelper->logNotice('PAY.: Updating order status from ' . $order->getStatus() . ' to ' . $customStatus, [], $order->getStore());
+                    $order->setStatus($customStatus)->save();
+                }
             }
         }
     }
