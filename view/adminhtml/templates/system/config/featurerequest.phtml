@@ -44,8 +44,9 @@
 
 <script>
     require([
-        'jquery'
-    ], function (jQuery) {
+        'jquery',
+        'Magento_Ui/js/modal/alert'
+    ], function (jQuery, alert) {
         jQuery('#paynl_submit_email_feature_request').click(function () {
 
             var request_email = encodeURIComponent(jQuery('#pay_feature_email').val());
@@ -84,9 +85,15 @@
                     if(json.result === true){
                         jQuery('#pay_feature_email').val("");
                         jQuery('#pay_feature_message').val("");
-                        alert("<?=$block->escapeHtml(__('Sent! Thank you for your contribution.'));?>");
+                        alert({
+                            title: "<?=$block->escapeHtml(__('Success'));?>",
+                            content: "<?=$block->escapeHtml(__('Sent! Thank you for your contribution.'));?>"
+                        });
                     } else {
-                        alert("<?=$block->escapeHtml(__('Email could not be sent, please try again later.'));?>");
+                        alert({
+                            title: "<?=$block->escapeHtml(__('Error'));?>",
+                            content: "<?=$block->escapeHtml(__('Email could not be sent, please try again later.'));?>"
+                        });
                     }
                     jQuery('#paynl_submit_email_feature_request').attr('disabled', false);
                 }
