@@ -87,14 +87,4 @@ class Version extends Field
         $button = $this->getLayout()->createBlock('Magento\Backend\Block\Widget\Button')->setData(['id' => 'paynl_version_check_button', 'label' => __('Check version')]);
         return $button->toHtml();
     }
-
-    /**
-     * @return string
-     */
-    public function getFeatureRequestUrl()
-    {
-        $currentUrl = $this->urlInterface->getCurrentUrl();
-        $payUrl = str_replace("paynl_setup", "paynl_feature_request", $currentUrl);
-        return $payUrl;
-    }
 }
