@@ -2,9 +2,8 @@ require([
   'jquery',
   'Magento_Ui/js/modal/alert'
 ], function (jQuery, alert) {
-  jQuery('#pay_feature_email, #pay_feature_message').keypress(function (e) {
+  jQuery('#pay_feature_email').keypress(function (e) {
     if (e.which == 13) {
-      jQuery('#paynl_submit_email_feature_request').click()
       e.preventDefault()
     }
   })
@@ -12,8 +11,8 @@ require([
   jQuery('#paynl_submit_email_feature_request').click(function () {
     var request_email = encodeURIComponent(jQuery('#pay_feature_email').val())
     var request_message = encodeURIComponent(jQuery('#pay_feature_message').val())
-    var version = '<?=$block->getVersion()?>'
-    var magento_version = '<?=$block->getMagentoVersion()?>'
+    var version = jQuery('#FR_payversion').text()
+    var magento_version = jQuery('#FR_magentoversion').text()
 
     var request = 'feature_request_email=' + request_email + '&feature_request_message=' + request_message + '&pay_version=' + version + '&magento_version=' + magento_version
 

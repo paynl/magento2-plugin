@@ -107,11 +107,11 @@ class FeatureRequest extends Action
 
             $postParams = $this->getRequest()->getPostValue();
 
-            $email = !empty($postParams['feature_request_email']) ? $postParams['feature_request_email'] : '';
-            $subject = 'Magento2 Feature Request';
-            $message = !empty($postParams['feature_request_message']) ? $postParams['feature_request_message'] : '';
-            $version = !empty($postParams['pay_version']) ? $postParams['pay_version'] : '';
-            $magento_version = !empty($postParams['magento_version']) ? $postParams['magento_version'] : '';
+            $email = !empty($postParams['feature_request_email']) ? strip_tags($postParams['feature_request_email']) : '';
+            $subject = 'Magento2 Suggestion';
+            $message = !empty($postParams['feature_request_message']) ? strip_tags($postParams['feature_request_message']) : '';
+            $version = !empty($postParams['pay_version']) ? strip_tags($postParams['pay_version']) : '';
+            $magento_version = !empty($postParams['magento_version']) ? strip_tags($postParams['magento_version']) : '';
 
             $body = $message;
             $body = nl2br($body);
