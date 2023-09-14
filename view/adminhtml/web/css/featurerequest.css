@@ -1,0 +1,23 @@
+#row_paynl_feature_request_paynl_general_settings_feature_email .label {
+    display: none;
+}
+
+#row_paynl_feature_request_paynl_general_settings_feature_email .value {
+    width: 100%;
+}
+
+#row_paynl_feature_request_paynl_general_settings_feature_email .value b {
+    width: 60px;
+    display: inline-block;
+}
+
+#row_paynl_feature_request_paynl_general_settings_feature_email .value .pay_feature_error {
+    color: red;
+    margin-left: 15px;
+    font-style: italic;
+    display: none;
+}
+
+#FR_Notices {
+    display: none;
+}

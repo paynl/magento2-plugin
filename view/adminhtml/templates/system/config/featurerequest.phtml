@@ -5,99 +5,36 @@
  */
 ?>
 
-<style>
-    #row_paynl_feature_request_paynl_general_settings_feature_email .label {
-        display: none;
-    }
-    #row_paynl_feature_request_paynl_general_settings_feature_email .value {
-        width: 100%;
-    }
-    #row_paynl_feature_request_paynl_general_settings_feature_email .value b{
-        width: 60px;
-        display: inline-block;
-    }
-    #row_paynl_feature_request_paynl_general_settings_feature_email .value .pay_feature_error{
-        color: red;
-        margin-left: 15px;
-        font-style: italic;
-        display: none;
-    }
-</style>
-
 <span>
     <?=$block->escapeHtml(__('If you have a feature request or other ideas, let us know!'));?> <br/>
     <?=$block->escapeHtml(__('Your submission will be reviewed by our development team.'));?><br/>
     <?=$block->escapeHtml(__('If needed, we will contact you for further information via the e-mail address provided.'));?><br/><br/>
-    <?=str_replace('support@pay.nl', '<a href="mailto:support@pay.nl">support@pay.nl</a>', $block->escapeHtml(__('Please note: this form is not for Support requests, please contact support@pay.nl for this.')));?>.
+    <?=str_replace('support@pay.nl', '<a href="mailto:support@pay.nl">support@pay.nl</a>', $block->escapeHtml(__('Please note: this form is not for Support requests, please contact support@pay.nl for this.')));?>
 </span>
 <br/><br/><br/>
 <form>
-<span><b><?=$block->escapeHtml(__('Email'));?></b><span id="pay_feature_email_error_2" class="pay_feature_error">Please fill in a valid email.</span></span>
+<span><b><?=$block->escapeHtml(__('Email'));?></b><span id="pay_feature_email_error_2" class="pay_feature_error"><?=$block->escapeHtml(__('Please fill in a valid email.'))?></span></span>
 <input type="text" name="pay_feature_email" id="pay_feature_email"/>
 <br/><br/>
-<span><b><?=$block->escapeHtml(__('Message'));?>*</b><span id="pay_feature_message_error" class="pay_feature_error">Please fill in your message.</span></span>
+<span><b><?=$block->escapeHtml(__('Message'));?>*</b><span id="pay_feature_message_error" class="pay_feature_error"><?=$block->escapeHtml(__('Please fill in your message.'))?></span></span>
 <textarea id="pay_feature_message" name="pay_feature_message" placeholder="<?=$block->escapeHtml(__('Leave your suggestions here...'))?>"></textarea>
 </form>
+<div id="FR_Notices">
+<span id="ajaxurl"><?=$block->getAjaxUrl()?></span>
+<span id="FR_Notices_Success_title"><?=$block->escapeHtml(__('Success'));?></span>
+<span id="FR_Notices_Success_body"><?=$block->escapeHtml(__('Sent! Thank you for your contribution.'));?></span>
+<span id="FR_Notices_Fail_title"><?=$block->escapeHtml(__('Error'));?></span>
+<span id="FR_Notices_Fail_body"><?=$block->escapeHtml(__('Email could not be sent, please try again later.'));?></span>
+</div>
 <br/><br/>
 
 <?=$block->getButtonHtml()?>
 
-<script>
-    require([
-        'jquery',
-        'Magento_Ui/js/modal/alert'
-    ], function (jQuery, alert) {
-        jQuery('#paynl_submit_email_feature_request').click(function () {
-
-            var request_email = encodeURIComponent(jQuery('#pay_feature_email').val());
-            var request_message = encodeURIComponent(jQuery('#pay_feature_message').val());
-            var version = '<?=$block->getVersion()?>';
-            var magento_version = '<?=$block->getMagentoVersion()?>';
-
-            var request = 'feature_request_email=' + request_email + '&feature_request_message=' + request_message + '&pay_version=' + version + '&magento_version=' + magento_version;
-
-            jQuery('#pay_feature_email_error').css('display', 'none');
-            jQuery('#pay_feature_email_error_2').css('display', 'none');
-            jQuery('#pay_feature_message_error').css('display', 'none');
-
-            var regex = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
-            if(jQuery.trim(request_message) == '' || (jQuery.trim(request_email) != '' && !regex.test(jQuery('#pay_feature_email').val()))){
-                if(jQuery.trim(request_email) != '' && !regex.test(jQuery('#pay_feature_email').val())){
-                    jQuery('#pay_feature_email_error_2').css('display', 'inline');
-                }
-                if(jQuery.trim(request_message) == ''){
-                    jQuery('#pay_feature_message_error').css('display', 'inline');
-                }
-                return false;
-            }
-
-            new Ajax.Request('<?=$block->getAjaxUrl()?>', {
-                method: 'POST',
-                parameters: request,
-                loaderArea: false,
-                asynchronous: true,
-                onCreate: function () {
-                    jQuery('#paynl_submit_email_feature_request').attr('disabled', true);
-                },
-                onSuccess: function (response) {
-                    var json = response.responseJSON;
-                    let result = '';
-                    if(json.result === true){
-                        jQuery('#pay_feature_email').val("");
-                        jQuery('#pay_feature_message').val("");
-                        alert({
-                            title: "<?=$block->escapeHtml(__('Success'));?>",
-                            content: "<?=$block->escapeHtml(__('Sent! Thank you for your contribution.'));?>"
-                        });
-                    } else {
-                        alert({
-                            title: "<?=$block->escapeHtml(__('Error'));?>",
-                            content: "<?=$block->escapeHtml(__('Email could not be sent, please try again later.'));?>"
-                        });
-                    }
-                    jQuery('#paynl_submit_email_feature_request').attr('disabled', false);
-                }
-            });
-        });
-    });
+<link rel="stylesheet" type="text/css" href="<?=$block->getViewFileUrl('Paynl_Payment::css/featurerequest.css')?>">
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "Paynl_Payment/js/featurerequest" : {}
+        }
+    }
 </script>
