@@ -220,5 +220,17 @@
                 </field>
             </group>
         </section>
+        <section id="paynl_feature_request" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="99" translate="label">
+            <label>Suggestions?</label>
+            <tab>paynl</tab>
+            <resource>Paynl_Payment::config</resource>
+            <group id="paynl_general_settings" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Pay. - Suggestions?</label>
+                <field id="feature_email" translate="label" type="button" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Email</label>
+                    <frontend_model>Paynl\Payment\Block\Adminhtml\Render\FeatureRequest</frontend_model>
+                </field>                
+            </group>
+        </section>
     </system>
 </config>
