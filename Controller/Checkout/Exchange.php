@@ -199,9 +199,8 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             return $this->result->setContents('FALSE|Transaction mismatch');
         }
 
-        if ($transaction->isRefunded() && substr($action, 0, 6) == 'refund') {
-            if ($this->config->refundFromPay() && $order->getTotalDue() == 0 && $transaction->getRefundedAmount() == $order->getGrandTotal())
-            {
+        if ($transaction->isRefunded(false) && substr($action, 0, 6) == 'refund') {
+            if ($this->config->refundFromPay() && $order->getTotalDue() == 0) {
                 if ($order->getTotalRefunded() != 0) {
                     return $this->result->setContents('TRUE|Already refunded');
                 }
