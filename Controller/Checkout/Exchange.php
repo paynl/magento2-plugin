@@ -101,6 +101,11 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         parent::__construct($context);
     }
 
+    /**
+     * @param $orderEntityId
+     * @return true
+     * @throws \Exception
+     */
     private function refundOrder($orderEntityId)
     {
         try {
