@@ -11,13 +11,9 @@ use Paynl\Payment\Controller\PayAction;
 use Paynl\Payment\Helper\PayHelper;
 use Paynl\Payment\Model\PayPayment;
 use Paynl\Transaction;
+use Magento\Sales\Model\Order\CreditmemoFactory;
 use Magento\Sales\Model\Service\CreditmemoService;
 
-/**
- * Communicates with PAY. in order to update payment statuses in magento
- *
- * @author Andy Pieters <andy@pay.nl>
- */
 class Exchange extends PayAction implements CsrfAwareActionInterface
 {
     /**
@@ -29,7 +25,12 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
      * @var \Magento\Framework\Controller\Result\Raw
      */
     private $result;
-    
+
+    /**
+     * @var \Magento\Sales\Model\Order\CreditmemoFactory;
+     */
+    private $cmfac;
+
     /**
      * @var \Magento\Sales\Model\Service\CreditmemoService;
      */
@@ -62,7 +63,6 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
     }
 
     /**
-     *
      * @param RequestInterface $request
      * @return boolean
      */
@@ -78,6 +78,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
      * @param OrderRepository $orderRepository
      * @param PayPayment $payPayment
      * @param PayHelper $payHelper
+     * @param \Magento\Sales\Model\Order\CreditmemoFactory $cmfac
      * @param \Magento\Sales\Model\Service\CreditmemoService $cmService
      */
     public function __construct(
@@ -87,6 +88,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         OrderRepository $orderRepository,
         PayPayment $payPayment,
         PayHelper $payHelper,
+        \Magento\Sales\Model\Order\CreditmemoFactory $cmfac,
         \Magento\Sales\Model\Service\CreditmemoService $cmService
     ) {
         $this->result = $result;
@@ -95,6 +97,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         $this->payPayment = $payPayment;
         $this->payHelper = $payHelper;
         $this->cmService = $cmService;
+        $this->cmfac = $cmfac;
         parent::__construct($context);
     }
 
@@ -113,7 +116,6 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
     }
 
     /**
-     *
      * @return \Magento\Framework\Controller\Result\Raw
      */
     public function execute()
@@ -197,8 +199,9 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             return $this->result->setContents('FALSE|Transaction mismatch');
         }
 
-        if ($transaction->isRefunded() && $order->getTotalDue() == 0 && substr($action, 0, 6) == 'refund') {
-            if ($this->config->refundFromPay()) {
+        if ($transaction->isRefunded() && substr($action, 0, 6) == 'refund') {
+            if ($this->config->refundFromPay() && $order->getTotalDue() == 0 && $transaction->getRefundedAmount() == $order->getGrandTotal())
+            {
                 if ($order->getTotalRefunded() != 0) {
                     return $this->result->setContents('TRUE|Already refunded');
                 }

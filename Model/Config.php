@@ -501,7 +501,10 @@ class Config
     {
         return $this->store->getConfig('payment/paynl/register_partial_payments');
     }
-    
+
+    /**
+     * @return string|null
+     */
     public function refundFromPay()
     {
         return $this->store->getConfig('payment/paynl/allow_refund_from_pay');
