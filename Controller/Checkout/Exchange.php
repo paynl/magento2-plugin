@@ -11,6 +11,7 @@ use Paynl\Payment\Controller\PayAction;
 use Paynl\Payment\Helper\PayHelper;
 use Paynl\Payment\Model\PayPayment;
 use Paynl\Transaction;
+use Magento\Sales\Model\Service\CreditmemoService;
 
 /**
  * Communicates with PAY. in order to update payment statuses in magento
@@ -28,6 +29,11 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
      * @var \Magento\Framework\Controller\Result\Raw
      */
     private $result;
+    
+    /**
+     * @var \Magento\Sales\Model\Service\CreditmemoService;
+     */
+    private $cmService;
 
     /**
      * @var OrderRepository
@@ -66,14 +72,13 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
     }
 
     /**
-     * Exchange constructor.
-     *
      * @param \Magento\Framework\App\Action\Context $context
      * @param \Paynl\Payment\Model\Config $config
      * @param \Magento\Framework\Controller\Result\Raw $result
      * @param OrderRepository $orderRepository
      * @param PayPayment $payPayment
      * @param PayHelper $payHelper
+     * @param \Magento\Sales\Model\Service\CreditmemoService $cmService
      */
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
@@ -81,15 +86,30 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         \Magento\Framework\Controller\Result\Raw $result,
         OrderRepository $orderRepository,
         PayPayment $payPayment,
-        PayHelper $payHelper
+        PayHelper $payHelper,
+        \Magento\Sales\Model\Service\CreditmemoService $cmService
     ) {
         $this->result = $result;
         $this->config = $config;
         $this->orderRepository = $orderRepository;
         $this->payPayment = $payPayment;
         $this->payHelper = $payHelper;
-
+        $this->cmService = $cmService;
         parent::__construct($context);
+    }
+
+    private function refundOrder($orderEntityId)
+    {
+        try {
+            $order = $this->orderRepository->get($orderEntityId);
+            $creditmemo = $this->cmfac->createByOrder($order);
+            $this->cmService->refund($creditmemo);
+
+            $order->addStatusHistoryComment(__('PAY. - Refund initiated from Pay.'))->save();
+        } catch (\Exception $e) {
+            throw new \Exception('Could not refund');
+        }
+        return true;
     }
 
     /**
@@ -175,6 +195,20 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             $this->payHelper->logCritical('Transaction mismatch ' . $orderEntityId . ' / ' . $orderEntityIdTransaction, $params, $order->getStore());
             $this->removeProcessing($payOrderId, $action);
             return $this->result->setContents('FALSE|Transaction mismatch');
+        }
+
+        if ($transaction->isRefunded() && $order->getTotalDue() == 0 && substr($action, 0, 6) == 'refund') {
+            if ($this->config->refundFromPay()) {
+                if ($order->getTotalRefunded() != 0) {
+                    return $this->result->setContents('TRUE|Already refunded');
+                }
+                try {
+                    $response = $this->refundOrder($orderEntityId);
+                } catch (Exception $e) {
+                    $response = $e->getMessage();
+                }
+                return $this->result->setContents($response === true ? 'TRUE|Refund success' : 'FALSE|' . $response);
+            }
         }
 
         if ($order->getTotalDue() <= 0) {
