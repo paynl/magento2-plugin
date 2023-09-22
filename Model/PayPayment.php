@@ -194,7 +194,7 @@ class PayPayment
     }
 
     /**
-     * @param $orderEntityId
+     * @param int $orderEntityId
      * @return true
      * @throws \Exception
      */
