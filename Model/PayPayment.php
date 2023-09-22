@@ -198,7 +198,7 @@ class PayPayment
      * @return true
      * @throws \Exception
      */
-    private function refundOrder($orderEntityId)
+    public function refundOrder($orderEntityId)
     {
         try {
             $order = $this->orderRepository->get($orderEntityId);
