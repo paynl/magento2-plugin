@@ -169,8 +169,8 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
 
         if ($transaction->isRefunded(false) && substr($action, 0, 6) == 'refund') {
             if ($this->config->refundFromPay() && $order->getTotalDue() == 0) {
-                if ($order->getTotalRefunded() != 0) {
-                    return $this->result->setContents('TRUE|Already refunded');
+                if ($order->getBaseTotalRefunded() == $order->getBaseGrandTotal()) {
+                    return $this->result->setContents('TRUE|Already fully refunded');
                 }
                 try {
                     $response = $this->payPayment->refundOrder($orderEntityId);
