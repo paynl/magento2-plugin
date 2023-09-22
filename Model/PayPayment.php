@@ -70,7 +70,7 @@ class PayPayment
     /**
      * @var \Magento\Sales\Model\Order\CreditmemoFactory;
      */
-    private $cmfac;
+    private $cmFac;
 
     /**
      * @var \Magento\Sales\Model\Service\CreditmemoService;
@@ -90,7 +90,7 @@ class PayPayment
      * @param \Magento\Sales\Model\Order\PaymentFactory $paymentFactory
      * @param UpdateCouponUsages $updateCouponUsages
      * @param PayHelper $payHelper
-     * @param \Magento\Sales\Model\Order\CreditmemoFactory $cmfac
+     * @param \Magento\Sales\Model\Order\CreditmemoFactory $cmFac
      * @param \Magento\Sales\Model\Service\CreditmemoService $cmService
      */
     public function __construct(
@@ -104,7 +104,7 @@ class PayPayment
         \Magento\Sales\Model\Order\PaymentFactory $paymentFactory,
         UpdateCouponUsages $updateCouponUsages,
         PayHelper $payHelper,
-        \Magento\Sales\Model\Order\CreditmemoFactory $cmfac,
+        \Magento\Sales\Model\Order\CreditmemoFactory $cmFac,
         \Magento\Sales\Model\Service\CreditmemoService $cmService
     ) {
         $this->eventManager = $eventManager;
@@ -118,7 +118,7 @@ class PayPayment
         $this->updateCouponUsages = $updateCouponUsages;
         $this->payHelper = $payHelper;
         $this->cmService = $cmService;
-        $this->cmfac = $cmfac;
+        $this->cmFac = $cmFac;
     }
 
     /**
@@ -202,7 +202,7 @@ class PayPayment
     {
         try {
             $order = $this->orderRepository->get($orderEntityId);
-            $creditmemo = $this->cmfac->createByOrder($order);
+            $creditmemo = $this->cmFac->createByOrder($order);
             $this->cmService->refund($creditmemo);
 
             $order->addStatusHistoryComment(__('PAY. - Refund initiated from Pay.'))->save();
