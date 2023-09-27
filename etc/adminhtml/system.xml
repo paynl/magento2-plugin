@@ -23,14 +23,14 @@
                 <field id="tokencode" translate="label, comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Token code</label>
                     <comment>
-                        <![CDATA[Get your AT-code <a target='_blank' href='https://admin.pay.nl/company/tokens'>here</a>. Not registered at PAY? Sign up <a target='_blank' href='https://www.pay.nl/en?register'>here</a>!]]>
+                        <![CDATA[Retrieve your AT-code <a target='_blank' href='https://my.pay.nl/company/tokens'>here</a>. Not registered with Pay? Sign up <a target='_blank' href='https://signup.pay.nl/'>here</a>!!]]>
                     </comment>
                     <config_path>payment/paynl/tokencode</config_path>
                 </field>
                 <field id="apitoken_encrypted" translate="label, comment" type="obscure" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>API-token</label>
                     <comment>
-                        <![CDATA[Your API-token, you can find your tokens <a target='_blank' href='https://admin.pay.nl/company/tokens'>here</a>]]>
+                        <![CDATA[Your API-token, you can find your tokens <a target='_blank' href='https://my.pay.nl/company/tokens'>here</a>]]>
                     </comment>
                     <config_path>payment/paynl/apitoken_encrypted</config_path>
                     <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
@@ -38,12 +38,12 @@
                 <field id="serviceid" translate="label, comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>ServiceId</label>
                     <comment>
-                        <![CDATA[The SL-code of your service, you can find your services <a target='_blank' href='https://admin.pay.nl/programs/programs'>here</a>]]>
+                        <![CDATA[The SL-code of your service, you can find your services <a target='_blank' href='https://my.pay.nl/programs/programs'>here</a>]]>
                     </comment>
                     <config_path>payment/paynl/serviceid</config_path>
                 </field>
                 <field id="testmode" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Testmode</label>
+                    <label>Test mode</label>
                     <frontend_model>Paynl\Payment\Block\Adminhtml\Render\Checkbox</frontend_model>
                     <config_path>payment/paynl/testmode</config_path>
                 </field>
@@ -74,7 +74,7 @@
                 <field id="auto_capture" translate="label" type="select" sortOrder="105" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Auto Capture</label>
                     <comment>
-                        <![CDATA[Automatically capture authorisation-transaction when creating the shipment for the order.]]>
+                        <![CDATA[Automatically capture transactions in the state AUTHORIZE when a shipment is created for the order.]]>
                     </comment>
                     <source_model>Paynl\Payment\Model\Config\Source\AutoCapture</source_model>
                     <config_path>payment/paynl/auto_capture</config_path>
@@ -82,7 +82,7 @@
                 <field id="auto_void" translate="label" type="select" sortOrder="106" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Auto Void</label>
                     <comment>
-                        <![CDATA[Automatically void authorisation-transactions when cancelling an order.]]>
+                        <![CDATA[Automatically void transactions in the state AUTHORIZE when cancelling an order.]]>
                     </comment>
                     <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
                     <config_path>payment/paynl/auto_void</config_path>
@@ -100,7 +100,7 @@
                 <field id="pay_style_checkout" translate="label" type="select" sortOrder="87" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>PAY. Style checkout</label>
                     <comment>
-                        <![CDATA[Select whether you want PAY. style applied to your checkout.]]>
+                        <![CDATA[Select whether you want Pay. style applied to your checkout.]]>
                     </comment>
                     <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
                     <config_path>payment/paynl/pay_style_checkout</config_path>
@@ -127,7 +127,7 @@
                 <field id="always_base_currency" translate="label,comment" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Always use base currency</label>
                     <comment>
-                        <![CDATA[Set this to yes if you always want to process payments in the base currency of this store. Magento acts strange when trying to register a payment in another currency than the base currency. The base currency MUST be EUR]]>
+                        <![CDATA[Set this to Yes if you always want to process payments in the base currency of this store. Magento acts strange when trying to register a payment in another currency than the base currency.]]>
                     </comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <config_path>payment/paynl/always_base_currency</config_path>
@@ -135,7 +135,7 @@
                 <field id="use_sku_id" translate="label,comment" type="select" sortOrder="72" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Productdata ID</label>
                     <comment>
-                        <![CDATA[Set which product data to use as product ID in the PAY. backend.]]>
+                        <![CDATA[Set which product data to use as product ID in the Pay. backend.]]>
                     </comment>
                     <source_model>Paynl\Payment\Model\Config\Source\ProductDataID</source_model>
                     <config_path>payment/paynl/use_sku_id</config_path>
@@ -143,7 +143,7 @@
                 <field id="skip_fraud_detection" translate="label,comment" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Skip fraud detection</label>
                     <comment>
-                        <![CDATA[Sometimes magento incorrectly marks an order as fraudulent. this happens more often when using different currencies. Set this to yes to skip fraud detection.]]>
+                        <![CDATA[ Sometimes Magento incorrectly marks an order as fraudulent. This happens more often when using different currencies. Set this setting to Yes to skip fraud detection.]]>
                     </comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <config_path>payment/paynl/skip_fraud_detection</config_path>
@@ -151,7 +151,7 @@
                 <field id="discount_tax" translate="label,comment" type="select" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Send discount tax</label>
                     <comment>
-                        <![CDATA[Set this to NO if you have a mix of low and high vatrate products. Some pay later methods have issues when the discount has a tax amount other than the default vat categories]]>
+                        <![CDATA[Set this to No if you have a mix of low and high VAT rate products. Some Buy Now Pay Later payment methods have trouble processing payments when the discount has a tax amount other than the default VAT categories.]]>
                     </comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <config_path>payment/paynl/discount_tax</config_path>
@@ -167,7 +167,7 @@
                 <field id="testipaddress" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Test IP Address</label>
                     <comment>
-                        <![CDATA[Forces testmode on these Ip addresses, separate ip's by comma's for multiple ip's]]>
+                        <![CDATA[Forces testmode on these IP addresses, separate IP's by comma's for multiple IP's]]>
                     </comment>
                     <config_path>payment/paynl/testipaddress</config_path>
                 </field>
@@ -180,7 +180,7 @@
                 <field id="logging_level" translate="label" type="select" sortOrder="107" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Loglevel</label>
                     <source_model>Paynl\Payment\Model\Config\Source\LogOptions</source_model>
-                    <comment><![CDATA[Set PAY. loglevel]]></comment>
+                    <comment><![CDATA[Set Pay. loglevel]]></comment>
                     <config_path>payment/paynl/logging_level</config_path>
                 </field>
                 <field id="logsdownload" translate="label" type="button" sortOrder="107" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -189,7 +189,7 @@
                 </field>
                 <field id="failover_gateway" translate="label" type="text" sortOrder="108" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Failover Gateway</label>
-                    <comment><![CDATA[Leave this empty unless advised otherwise by PAY.]]></comment>
+                    <comment><![CDATA[Leave this empty unless advised otherwise by Pay. Support]]></comment>
                     <config_path>payment/paynl/failover_gateway</config_path>
                 </field>
                 <field id="google_analytics_ecommerce" translate="label,comment" type="select" sortOrder="109" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -200,7 +200,7 @@
                 </field>
                 <field id="pay_pending_page" translate="label,comment" type="select" sortOrder="109" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Pending page</label>
-                    <comment><![CDATA[Select whether you want to use the PAY. thank you page when transaction is pending.]]></comment>
+                    <comment><![CDATA[Pay. transaction-ID: ]]></comment>
                     <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
                     <config_path>payment/paynl/pay_pending_page</config_path>
                 </field>
@@ -215,7 +215,7 @@
             <group id="paynllink" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Pay. - Settings</label>
                 <field id="version" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>PAY. Settings</label>
+                    <label>Pay. Settings</label>
                     <frontend_model>Paynl\Payment\Block\Adminhtml\Render\SettingsButton</frontend_model>
                 </field>
             </group>

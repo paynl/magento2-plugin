@@ -105,7 +105,7 @@ class ShipmentSaveAfter implements ObserverInterface
                             }
 
                             $order->addStatusHistoryComment(
-                                __('PAY. - Performed auto-capture. Result: ') . ($bCaptureResult ? 'Success' : 'Failed') . (empty($strFriendlyMessage) ? '' : '. ' . $strFriendlyMessage)
+                                __('Pay. - performed auto-capture. Result: ') . ($bCaptureResult ? 'Success' : 'Failed') . (empty($strFriendlyMessage) ? '' : '. ' . $strFriendlyMessage)
                             )->save();
 
                             # Whether capture failed or succeeded, we still might have to process paid order

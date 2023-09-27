@@ -184,10 +184,10 @@ class Finish extends PayAction
                 }
                 $resultRedirect->setPath($successUrl, ['_query' => ['utm_nooverride' => '1']]);
                 if ($isPinTransaction && $pinStatus->getTransactionState() !== 'approved') {
-                    $this->messageManager->addNoticeMessage(__('Order has been made and the payment is pending.'));
+                    $this->messageManager->addNoticeMessage(__('Order has been placed and payment is pending'));
                 }
                 if ($bVerify) {
-                    $order->addStatusHistoryComment(__('PAY. - This payment has been flagged as possibly fraudulent. Please verify this transaction in the Pay. portal.'));
+                    $order->addStatusHistoryComment(__('Pay. - this payment has been flagged as possibly fraudulent. Please verify this transaction in My.pay.nl.'));
                     $this->orderRepository->save($order);
                 }
                 if ($multiShipFinish) {
@@ -209,7 +209,7 @@ class Finish extends PayAction
                 $resultRedirect->setPath($successUrl, ['_query' => ['utm_nooverride' => '1']]);
                 $this->deactivateCart($order, $payOrderId);
             } else {
-                $cancelMessage = $bDenied ? __('Payment denied') : __('Payment canceled');
+                $cancelMessage = $bDenied ? __('Payment denied') : __('Payment cancelled');
                 $this->messageManager->addNoticeMessage($cancelMessage);
                 if ($multiShipFinish) {
                     $session = $this->checkoutSession;

@@ -114,7 +114,7 @@ class Instore extends \Magento\Payment\Block\Form
             }
         }
         $optionArr = [];
-        $optionArr[0] = __('Choose the pin terminal');
+        $optionArr[0] = __('Select card terminal');
         foreach ($terminalArr as $terminal) {
             $arr = (array) $terminal;
             $optionArr[$arr['id']] = $arr['visibleName'];

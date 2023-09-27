@@ -31,8 +31,8 @@ class ShowKvkOptions implements ArrayInterface
     {
         return [
         '0' => __('No'),
-        '1' => __('Yes, as optional'),
-        '2' => __('Yes, as required'),
+        '1' => __('Yes, optional'),
+        '2' => __('Yes, required'),
         ];
     }
 }

@@ -116,7 +116,7 @@ class PayPayment
                 $order->unhold();
             }
             $order->cancel();
-            $order->addStatusHistoryComment(__('PAY. - Canceled the order'));
+            $order->addStatusHistoryComment(__('Pay. - order cancelled'));
             $this->orderRepository->save($order);
             if (!empty($order->getCouponCode())) {
                 $this->updateCouponUsages->execute($order, false);
@@ -169,7 +169,7 @@ class PayPayment
         $order->setBaseTotalCanceled(0);
         $order->setState($state);
         $order->setStatus($state);
-        $order->addStatusHistoryComment(__('PAY. - Uncanceled order'), false);
+        $order->addStatusHistoryComment(__('PAY. - order uncancelled'), false);
         if (!empty($order->getCouponCode())) {
             $this->updateCouponUsages->execute($order, true);
         }
@@ -235,7 +235,7 @@ class PayPayment
             # Notify customer
             if ($order && !$order->getEmailSent()) {
                 $this->orderSender->send($order);
-                $order->addStatusHistoryComment(__('PAY. - New order email sent'))->setIsCustomerNotified(true)->save();
+                $order->addStatusHistoryComment(__('PAY. - Order confirmation sent'))->setIsCustomerNotified(true)->save();
             }
 
             # Skip creation of invoice for B2B if enabled
@@ -255,7 +255,7 @@ class PayPayment
                 $invoice = $payment->getCreatedInvoice();
                 if ($invoice && !$invoice->getEmailSent()) {
                     $this->invoiceSender->send($invoice);
-                    $order->addStatusHistoryComment(__('PAY. - You notified customer about invoice #%1.', $invoice->getIncrementId()))->setIsCustomerNotified(true)->save();
+                    $order->addStatusHistoryComment(__('PAY. - You notified customer about invoice #%1', $invoice->getIncrementId()))->setIsCustomerNotified(true)->save();
                 }
 
                 $returnResult = true;

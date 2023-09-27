@@ -117,13 +117,13 @@ class Credentials extends Field
         if (!empty($error)) {
             switch ($error) {
                 case 'HTTP/1.0 401 Unauthorized':
-                    $error = __('Service-ID, API-Token or Tokencode invalid');
+                    $error = __('ServiceId, API-token or token code invalid');
                     break;
                 case 'PAY-404 - Service not found':
-                    $error = __('Service-ID is invalid.');
+                    $error = __('ServiceId is invalid');
                     break;
                 case 'PAY-403 - Access denied: Token not valid for this company':
-                    $error = __('Service-ID / API-Token combination is invalid.');
+                    $error = __('ServiceId / API-token combination is invalid');
                     break;
                 default:
                     $this->payHelper->logCritical('Pay. API exception: ' . $error);
