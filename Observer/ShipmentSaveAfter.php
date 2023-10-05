@@ -72,6 +72,7 @@ class ShipmentSaveAfter implements ObserverInterface
                 if ($order->getState() == Order::STATE_PROCESSING && $invoiceCheck) {
                     $data = $order->getPayment()->getData();
                     $payOrderId = $data['last_trans_id'] ?? null;
+                    $payOrderId = str_replace('-capture', '', $payOrderId);
 
                     if (!empty($payOrderId)) {
                         $bHasAmountAuthorized = !empty($data['base_amount_authorized']);
