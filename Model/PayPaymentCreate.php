@@ -97,7 +97,7 @@ class PayPaymentCreate
         $this->setAmount($this->payConfig->isAlwaysBaseCurrency() ? $order->getBaseGrandTotal() : $order->getGrandTotal());
         $this->setCurrency($this->payConfig->isAlwaysBaseCurrency() ? $order->getBaseCurrencyCode() : $order->getOrderCurrencyCode());
         $this->setCocNumber($this->additionalData['kvknummer'] ?? '');
-        $this->setVatNumber($this->additionalData['vatnumber'] ?? '');
+        $this->setVatNumber($this->additionalData['vatnummer'] ?? '');
         $this->setIssuer($this->additionalData['payment_option'] ?? '');
         $this->setExpireData((int)($this->additionalData['valid_days'] ?? ''));
         $this->setFinishURL($this->additionalData['returnUrl'] ?? $order->getStore()->getBaseUrl() . 'paynl/checkout/finish/?entityid=' . $order->getEntityId());

@@ -543,8 +543,8 @@ abstract class PaymentMethod extends AbstractMethod
             if (isset($data['kvknummer'])) {
                 $this->getInfoInstance()->setAdditionalInformation('kvknummer', $data['kvknummer']);
             }
-            if (isset($data['vatnumber'])) {
-                $this->getInfoInstance()->setAdditionalInformation('vatnumber', $data['vatnumber']);
+            if (isset($data['vatnummer'])) {
+                $this->getInfoInstance()->setAdditionalInformation('vatnummer', $data['vatnummer']);
             }
             if (isset($data['dob'])) {
                 $this->getInfoInstance()->setAdditionalInformation('dob', $data['dob']);
@@ -556,8 +556,8 @@ abstract class PaymentMethod extends AbstractMethod
                 $this->getInfoInstance()->setAdditionalInformation('kvknummer', $additional_data['kvknummer']);
             }
 
-            if (isset($additional_data['vatnumber'])) {
-                $this->getInfoInstance()->setAdditionalInformation('vatnumber', $additional_data['vatnumber']);
+            if (isset($additional_data['vatnummer'])) {
+                $this->getInfoInstance()->setAdditionalInformation('vatnummer', $additional_data['vatnummer']);
             }
 
             if (isset($additional_data['billink_agree'])) {
