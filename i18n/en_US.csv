@@ -155,3 +155,5 @@
 "Please fill in a valid email.","Please fill in a valid email."
 "Success","Success"
 "Error", "Error"
+"PAY. - Refund initiated from Pay.","PAY. - Refund initiated from Pay."
+"Set to `on` to accept refunds initiated from Pay.","Set to `on` to accept refunds initiated from Pay."

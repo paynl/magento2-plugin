@@ -503,6 +503,14 @@ class Config
     }
 
     /**
+     * @return string|null
+     */
+    public function refundFromPay()
+    {
+        return $this->store->getConfig('payment/paynl/allow_refund_from_pay');
+    }
+
+    /**
      * @param string $paymentProfileId
      * @return string
      */
