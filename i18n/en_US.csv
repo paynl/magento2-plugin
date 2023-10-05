@@ -197,3 +197,5 @@
 "Only Critical errors are logged","Only Critical errors are logged"
 "Only Critical errors and Notices are logged","Only Critical errors and Notices are logged"
 "Everything is logged, including Critical, Notice, Info and Debug","Everything is logged, including Critical, Notice, Info and Debug"
+"PAY. - Refund initiated from Pay.","PAY. - Refund initiated from Pay."
+"Set to `on` to accept refunds initiated from Pay.","Set to `on` to accept refunds initiated from Pay."

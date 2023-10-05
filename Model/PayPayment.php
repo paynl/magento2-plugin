@@ -9,6 +9,8 @@ use Magento\Sales\Model\OrderRepository;
 use Magento\SalesRule\Model\Coupon\UpdateCouponUsages;
 use Paynl\Result\Transaction\Transaction as PayTransaction;
 use Paynl\Payment\Helper\PayHelper;
+use Magento\Sales\Model\Order\CreditmemoFactory;
+use Magento\Sales\Model\Service\CreditmemoService;
 
 class PayPayment
 {
@@ -61,10 +63,19 @@ class PayPayment
     private $paynlConfig;
 
     /**
-     *
      * @var \Paynl\Payment\Helper\PayHelper;
      */
     private $payHelper;
+
+    /**
+     * @var \Magento\Sales\Model\Order\CreditmemoFactory;
+     */
+    private $cmFac;
+
+    /**
+     * @var \Magento\Sales\Model\Service\CreditmemoService;
+     */
+    private $cmService;
 
     /**
      * Constructor.
@@ -79,6 +90,8 @@ class PayPayment
      * @param \Magento\Sales\Model\Order\PaymentFactory $paymentFactory
      * @param UpdateCouponUsages $updateCouponUsages
      * @param PayHelper $payHelper
+     * @param \Magento\Sales\Model\Order\CreditmemoFactory $cmFac
+     * @param \Magento\Sales\Model\Service\CreditmemoService $cmService
      */
     public function __construct(
         \Paynl\Payment\Model\Config $config,
@@ -90,7 +103,9 @@ class PayPayment
         \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $builderInterface,
         \Magento\Sales\Model\Order\PaymentFactory $paymentFactory,
         UpdateCouponUsages $updateCouponUsages,
-        PayHelper $payHelper
+        PayHelper $payHelper,
+        \Magento\Sales\Model\Order\CreditmemoFactory $cmFac,
+        \Magento\Sales\Model\Service\CreditmemoService $cmService
     ) {
         $this->eventManager = $eventManager;
         $this->config = $config;
@@ -102,6 +117,8 @@ class PayPayment
         $this->paymentFactory = $paymentFactory;
         $this->updateCouponUsages = $updateCouponUsages;
         $this->payHelper = $payHelper;
+        $this->cmService = $cmService;
+        $this->cmFac = $cmFac;
     }
 
     /**
@@ -174,6 +191,25 @@ class PayPayment
             $this->updateCouponUsages->execute($order, true);
         }
         $this->eventManager->dispatch('order_uncancel_after', ['order' => $order]);
+    }
+
+    /**
+     * @param integer $orderEntityId
+     * @return true
+     * @throws \Exception
+     */
+    public function refundOrder($orderEntityId)
+    {
+        try {
+            $order = $this->orderRepository->get($orderEntityId);
+            $creditmemo = $this->cmFac->createByOrder($order);
+            $this->cmService->refund($creditmemo);
+
+            $order->addStatusHistoryComment(__('PAY. - Refund initiated from Pay.'))->save();
+        } catch (\Exception $e) {
+            throw new \Exception('Could not refund');
+        }
+        return true;
     }
 
     /**

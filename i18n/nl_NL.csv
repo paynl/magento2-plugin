@@ -198,3 +198,6 @@
 "Only Critical errors are logged","Alleen kritieke fouten loggen"
 "Only Critical errors and Notices are logged","Alleen kritieke fouten en waarschuwingen loggen"
 "Everything is logged, including Critical, Notice, Info and Debug","Alles wordt gelogd, inclusief kritieke fouten, waarschuwingen, informatie en debugging"
+"Error","Fout"
+"PAY. - Refund initiated from Pay.","PAY. - Terugebetaling geïnitieerd vanuit Pay."
+"Set to `on` to accept refunds initiated from Pay.","Selecteer `Aan` om terugbetalingen vanuit Pay. te verwerken in Magento."

@@ -116,6 +116,14 @@
                     <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
                     <config_path>payment/paynl/register_partial_payments</config_path>
                 </field>
+                <field id="allow_refund_from_pay" translate="label" type="select" sortOrder="107" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Refund from Pay.</label>
+                    <comment>
+                        <![CDATA[Set to `on` to accept refunds initiated from Pay.]]>
+                    </comment>
+                    <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
+                    <config_path>payment/paynl/allow_refund_from_pay</config_path>
+                </field>
                 <field id="never_cancel" translate="label,comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Never cancel order</label>
                     <comment>
@@ -229,7 +237,7 @@
                 <field id="feature_email" translate="label" type="button" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Email</label>
                     <frontend_model>Paynl\Payment\Block\Adminhtml\Render\FeatureRequest</frontend_model>
-                </field>                
+                </field>
             </group>
         </section>
     </system>

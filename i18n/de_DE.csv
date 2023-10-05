@@ -135,3 +135,5 @@
 "Please fill in a valid email.","Bitte geben Sie eine gültige E-Mail-Adresse ein."
 "Success","Erfolg"
 "Error", "Fehler"
+"PAY. - Refund initiated from Pay.","PAY. - Erstattung von Pay. initiiert"
+"Set to `on` to accept refunds initiated from Pay.","Setzen Sie diese Option auf `Ein`, um von Pay. initiierte Erstattungen zu verarbeiten."
