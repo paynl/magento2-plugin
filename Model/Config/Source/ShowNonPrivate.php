@@ -30,9 +30,9 @@ class ShowNonPrivate implements ArrayInterface
     public function toArray()
     {
         return [
-        '0' => __('Off'),
-        '1' => __('Optional for business customers'),
-        '2' => __('Required for business customers'),
+        '0' => __('No'),
+        '1' => __('Yes, optional for business customers'),
+        '2' => __('Yes, required for business customers'),
         ];
     }
 }

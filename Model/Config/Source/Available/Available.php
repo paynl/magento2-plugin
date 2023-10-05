@@ -101,7 +101,7 @@ abstract class Available implements ArrayInterface
             if ($this->_isAvailable()) {
                 return [0 => __('No'), 1 => __('Yes')];
             } else {
-                return [0 => __('Not available, you can enable this on admin.pay.nl')];
+                return [0 => __('Payment method not activated, please activate on My.pay.nl first')];
             }
         } catch (\Exception $e) {
             return [0 => 'Error: ' . $e->getMessage()];
