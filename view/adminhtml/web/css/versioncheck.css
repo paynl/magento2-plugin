@@ -1,0 +1,8 @@
+.paynl_hidden {
+    display: none;
+}
+
+#paynl_version_check_text {
+    display: inline-block;
+    margin-left: 12px;
+}
