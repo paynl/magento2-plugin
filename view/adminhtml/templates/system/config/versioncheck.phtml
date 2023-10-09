@@ -13,6 +13,7 @@
 <span class="paynl_hidden">
     <span id="ajaxurl"><?=$block->getAjaxUrl()?></span>
     <span id="current_version"><?=$block->getVersion()?></span>
+    <span id="VC_version_check_result_success"><?=$block->escapeHtml(__('You are up to date with the latest version'));?></span>
 </span>
 
 <link rel="stylesheet" type="text/css" href="<?=$block->getViewFileUrl('Paynl_Payment::css/versioncheck.css')?>">

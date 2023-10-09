@@ -23,7 +23,7 @@ require([
                         result = 'There is a new version available (' + json.version + ')'
                     } else {
                         jQuery('#paynl_version_check_button').hide();
-                        result = 'You are up to date with the latest version'
+                        result = jQuery('#VC_version_check_result_success').text();
                         jQuery('#paynl_version_check_current_version').addClass('versionUpToDate');
                     }
                 }
