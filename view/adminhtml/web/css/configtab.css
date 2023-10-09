@@ -47,3 +47,19 @@
     text-decoration: none;
     display: inline-block;
 }
+
+.accordion .form-inline .config .value.pay_fullwidth {
+    width:100%;
+}
+
+.accordion .form-inline .config .value.pay_connect_success{
+    color:#438600; font-weight: bold;
+}
+
+.accordion .form-inline .config .value.pay_connect_failure{
+    color:#dd4242; font-weight: bold;
+}
+
+.accordion .form-inline .config .value.pay_connect_empty{
+    color:#dd7536; font-weight: bold;
+}
