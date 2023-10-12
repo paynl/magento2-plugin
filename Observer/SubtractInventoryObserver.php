@@ -19,6 +19,12 @@ class SubtractInventoryObserver implements ObserverInterface
      */
     protected $itemsForReindex;
 
+
+    /**
+     * @var \Magento\CatalogInventory\Model\Indexer\Stock\Processor
+     */
+    protected stockIndexerProcessor;
+
     /**
      * SubtractInventoryObserver constructor.
      * @param StockManagementInterface $stockManagement
