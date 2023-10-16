@@ -155,7 +155,7 @@ class Paylink extends PaymentMethod
                         ->getTransport();
                     $transport->sendMessage();
 
-                    $paylinktext = __('A Pay. Paylink has been sent to');
+                    $paylinktext = __('A Pay. paylink has been sent to');
                     $order->addStatusHistoryComment($paylinktext . ' ' . $order->getCustomerEmail() . '.', $status)->save();
                 } catch (\Exception $e) {
                     $this->payHelper->logDebug('Paylink exception: ' . $e->getMessage());

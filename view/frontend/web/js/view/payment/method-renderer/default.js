@@ -249,8 +249,8 @@ define(
                 if (vatRequired) {
                     if (this.vatnumber == null || this.vatnumber.length < 8) {
                         alert({
-                            title: $.mage.__('VAT-ID'),
-                            content: $.mage.__('VAT-ID'),
+                            title: $.mage.__('VAT number'),
+                            content: $.mage.__('VAT number'),
                             actions: {
                                 always: function (){}
                             }

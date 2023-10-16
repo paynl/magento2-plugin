@@ -109,7 +109,7 @@ class Credentials extends Field
                 $error = $e->getMessage();
             }
         } elseif (!empty($apiToken) || !empty($serviceId) || !empty($tokencode)) {
-            $error = __('Pay. Tokencode, API token and serviceId are required.');
+            $error = __('Token code, API token and SL-code are required.');
         } else {
             $status = 0;
         }
@@ -117,13 +117,13 @@ class Credentials extends Field
         if (!empty($error)) {
             switch ($error) {
                 case 'HTTP/1.0 401 Unauthorized':
-                    $error = __('ServiceId, API-token or token code invalid');
+                    $error = __('SL-code, API token or token code invalid');
                     break;
                 case 'PAY-404 - Service not found':
-                    $error = __('ServiceId is invalid');
+                    $error = __('SL-code is invalid');
                     break;
                 case 'PAY-403 - Access denied: Token not valid for this company':
-                    $error = __('ServiceId / API-token combination is invalid');
+                    $error = __('SL-code / API token combination invalid');
                     break;
                 default:
                     $this->payHelper->logCritical('Pay. API exception: ' . $error);
