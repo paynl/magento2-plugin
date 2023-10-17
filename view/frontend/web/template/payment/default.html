@@ -35,8 +35,8 @@
                     <label data-bind="attr: {'for': uniqueId}">
                         <img height="50px" width="50px" data-bind="visible: showLogo, attr: {src: logo, alt: name}" class="payment-option-icon" />
                         <span data-bind="text: name"></span>
-                    </label>                    
-                </li>    
+                    </label>
+                </li>
             </ul>
         </div>
         <div data-bind="visible: showDOB()" class="field-select-billing">
@@ -52,8 +52,8 @@
         </div>
         <div data-bind="visible: showVAT()" class="field-select-billing">
             <br/>
-            <label for="vatnummer" data-bind="i18n: 'VAT-id'"></label>
-            <input data-bind="optionsValue: 'id', name: 'vatnummer', value: vatnummer" name="vatnummer" type="text" placeholder="xxxxxxxxxxxxxx"/>
+            <label for="vatnumber" data-bind="i18n: 'VAT-ID'"></label>
+            <input data-bind="optionsValue: 'id', name: 'vatnumber', value: vatnumber" name="vatnumber" type="text" placeholder="xxxxxxxxxxxxxx"/>
         </div>
         <div data-bind="visible: showKVKAgree()" class="field-select-billing">
             <div style="padding-top:10px; padding-bottom:10px">

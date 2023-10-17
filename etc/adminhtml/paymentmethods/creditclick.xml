@@ -18,7 +18,7 @@
             </depends>
         </field>
         <field id="instructions" translate="label" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Instructions</label>
+            <label>Payment instructions</label>
             <depends>
                 <field id="active">1</field>
             </depends>
@@ -26,7 +26,7 @@
         </field>
         <field id="min_order_total" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1"
                showInStore="1">
-            <label>Minimum Order Total</label>
+            <label>Minimum order total</label>
             <config_path>payment/paynl_payment_creditclick/min_order_total</config_path>
             <depends>
                 <field id="active">1</field>
@@ -34,7 +34,7 @@
         </field>
         <field id="max_order_total" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1"
                showInStore="1">
-            <label>Maximum Order Total</label>
+            <label>Maximum order total</label>
             <config_path>payment/paynl_payment_creditclick/max_order_total</config_path>
             <depends>
                 <field id="active">1</field>
@@ -42,7 +42,7 @@
         </field>
         <field id="sort_order" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1"
                showInStore="1">
-            <label>Sort Order</label>
+            <label>Sort order</label>
             <frontend_class>validate-number</frontend_class>
             <config_path>payment/paynl_payment_creditclick/sort_order</config_path>
             <depends>
@@ -51,7 +51,7 @@
         </field>
         <field id="allowspecific" translate="label" type="allowspecific" sortOrder="70" showInDefault="1"
                showInWebsite="1" showInStore="1">
-            <label>Payment from Applicable Countries</label>
+            <label>Accepted billing country</label>
             <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
             <config_path>payment/paynl_payment_creditclick/allowspecific</config_path>
             <depends>
@@ -60,7 +60,7 @@
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="80" showInDefault="1"
                showInWebsite="1" showInStore="1">
-            <label>Payment from Specific Countries</label>
+            <label>Select accepted countries</label>
             <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
             <can_be_empty>1</can_be_empty>
             <config_path>payment/paynl_payment_creditclick/specificcountry</config_path>
@@ -103,8 +103,8 @@
             <field id="payment_option_id" translate="label comment" type="text" sortOrder="10" showInDefault="1"
                    showInWebsite="1"
                    showInStore="1">
-                <label>Payment option id</label>
-                <comment>The id of the payment method, only change this if you are told to do so</comment>
+                <label>Payment method ID</label>
+                <comment>Only change this if you are told to do so by Pay. Support</comment>
                 <config_path>payment/paynl_payment_creditclick/payment_option_id</config_path>
             </field>
         </group>

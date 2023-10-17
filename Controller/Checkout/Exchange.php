@@ -12,11 +12,6 @@ use Paynl\Payment\Helper\PayHelper;
 use Paynl\Payment\Model\PayPayment;
 use Paynl\Transaction;
 
-/**
- * Communicates with PAY. in order to update payment statuses in magento
- *
- * @author Andy Pieters <andy@pay.nl>
- */
 class Exchange extends PayAction implements CsrfAwareActionInterface
 {
     /**
@@ -56,7 +51,6 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
     }
 
     /**
-     *
      * @param RequestInterface $request
      * @return boolean
      */
@@ -66,8 +60,6 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
     }
 
     /**
-     * Exchange constructor.
-     *
      * @param \Magento\Framework\App\Action\Context $context
      * @param \Paynl\Payment\Model\Config $config
      * @param \Magento\Framework\Controller\Result\Raw $result
@@ -88,12 +80,10 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         $this->orderRepository = $orderRepository;
         $this->payPayment = $payPayment;
         $this->payHelper = $payHelper;
-
         parent::__construct($context);
     }
 
     /**
-     *
      * @return \Magento\Framework\Controller\Result\Raw
      */
     public function execute()
@@ -175,6 +165,20 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             $this->payHelper->logCritical('Transaction mismatch ' . $orderEntityId . ' / ' . $orderEntityIdTransaction, $params, $order->getStore());
             $this->removeProcessing($payOrderId, $action);
             return $this->result->setContents('FALSE|Transaction mismatch');
+        }
+
+        if ($transaction->isRefunded(false) && substr($action, 0, 6) == 'refund') {
+            if ($this->config->refundFromPay() && $order->getTotalDue() == 0) {
+                if ($order->getBaseTotalRefunded() == $order->getBaseGrandTotal()) {
+                    return $this->result->setContents('TRUE|Already fully refunded');
+                }
+                try {
+                    $response = $this->payPayment->refundOrder($orderEntityId);
+                } catch (Exception $e) {
+                    $response = $e->getMessage();
+                }
+                return $this->result->setContents($response === true ? 'TRUE|Refund success' : 'FALSE|' . $response);
+            }
         }
 
         if ($order->getTotalDue() <= 0) {

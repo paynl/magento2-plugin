@@ -154,7 +154,7 @@ define(
                     message = $.mage.__('Choose your bank');
                 }
                 if (this.item.method == 'paynl_payment_instore') {
-                    message = $.mage.__('Choose the pin terminal');
+                    message = $.mage.__('Select card terminal');
                 }
                 if (message && this.showPaymentOptions() === true) {
                     var paymentOption = [];
@@ -249,8 +249,8 @@ define(
                 if (vatRequired) {
                     if (this.vatnummer == null || this.vatnummer.length < 8) {
                         alert({
-                            title: $.mage.__('Invalid VAT-id'),
-                            content: $.mage.__('Enter a valid VAT-id'),
+                            title: $.mage.__('VAT-ID'),
+                            content: $.mage.__('VAT-ID'),
                             actions: {
                                 always: function (){}
                             }
