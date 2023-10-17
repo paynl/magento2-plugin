@@ -22,7 +22,7 @@ define(
             paymentOption: null,
             paymentOptionsList: [],
             kvknummer: null,
-            vatnumber: null,
+            vatnummer: null,
             dateofbirth: null,
             billink_agree: null,
             initialize: function () {
@@ -206,7 +206,7 @@ define(
                     'po_number': null,
                     'additional_data': {
                         "kvknummer": this.kvknummer,
-                        "vatnumber": this.vatnumber,
+                        "vatnummer": this.vatnummer,
                         "dob": dob_format,
                         "billink_agree": this.billink_agree,
                         "payment_option": this.paymentOption
@@ -247,7 +247,7 @@ define(
                     }
                 }
                 if (vatRequired) {
-                    if (this.vatnumber == null || this.vatnumber.length < 8) {
+                    if (this.vatnummer == null || this.vatnummer.length < 8) {
                         alert({
                             title: $.mage.__('VAT-ID'),
                             content: $.mage.__('VAT-ID'),
