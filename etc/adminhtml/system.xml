@@ -21,7 +21,7 @@
                     <frontend_model>Paynl\Payment\Block\Adminhtml\Render\Credentials</frontend_model>
                 </field>
                 <field id="tokencode" translate="label, comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>AT-Code</label>
+                    <label>Token code</label>
                     <comment>
                         <![CDATA[Retrieve your AT-code <a target='_blank' href='https://my.pay.nl/company/tokens'>here</a>. Not registered with Pay? Sign up <a target='_blank' href='https://signup.pay.nl/'>here</a>!]]>
                     </comment>
@@ -36,9 +36,9 @@
                     <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
                 </field>
                 <field id="serviceid" translate="label, comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>SL-code</label>
+                    <label>Sales location</label>
                     <comment>
-                        <![CDATA[The SL-code of your sales location, you can find your sales locations  <a target='_blank' href='https://my.pay.nl/programs/programs'>here</a>]]>
+                        <![CDATA[The SL-code of your sales location, you can find your sales locations  <a target='_blank' href='https://my.pay.nl/programs/programs'>here</a>.]]>
                     </comment>
                     <config_path>payment/paynl/serviceid</config_path>
                 </field>
@@ -72,7 +72,7 @@
                     <config_path>payment/paynl/default_payment_option</config_path>
                 </field>
                 <field id="auto_capture" translate="label" type="select" sortOrder="105" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Auto Capture</label>
+                    <label>Auto capture</label>
                     <comment>
                         <![CDATA[Automatically capture transactions in the state AUTHORIZE when a shipment is created for the order.]]>
                     </comment>
@@ -80,7 +80,7 @@
                     <config_path>payment/paynl/auto_capture</config_path>
                 </field>
                 <field id="auto_void" translate="label" type="select" sortOrder="106" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Auto Void</label>
+                    <label>Auto void</label>
                     <comment>
                         <![CDATA[Automatically void transactions in the state AUTHORIZE when cancelling an order.]]>
                     </comment>
@@ -127,7 +127,7 @@
                 <field id="never_cancel" translate="label,comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Never cancel order</label>
                     <comment>
-                        <![CDATA[This might be your preference when uncancelling orders isn't possible, which might lead to problems in case of a second chance payments.]]>
+                        <![CDATA[This setting will disable cancelling the order when the payment is cancelled.]]>
                     </comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <config_path>payment/paynl/never_cancel</config_path>

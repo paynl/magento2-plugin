@@ -50,8 +50,8 @@
 "Order description prefix","Order description prefix"
 "Prefix the order description with a custom word","Prefix the order description with a custom word."
 "API token","API token"
-"AT-code","AT-code"
-"SL-code","SL-code"
+"Token code","Token code"
+"Sales location","Sales location"
 "None","None"
 "Language payment screen","Language payment screen"
 "Never cancel order","Never cancel order"
@@ -63,7 +63,7 @@
 "Sometimes Magento incorrectly marks an order as fraudulent. This happens more often when using different currencies. Set this setting to Yes to skip fraud detection.","Sometimes Magento incorrectly marks an order as fraudulent. This happens more often when using different currencies. Set this setting to Yes to skip fraud detection."
 "Retrieve your AT-code <a target='_blank' href='https://my.pay.nl/company/tokens'>here</a>. Not registered with Pay? Sign up <a target='_blank' href='https://signup.pay.nl/'>here</a>!", "Retrieve your AT-code <a target='_blank' href='https://my.pay.nl/company/tokens'>here</a>. Not registered with Pay? Sign up <a target='_blank' href='https://signup.pay.nl/'>here</a>!"
 "Your API-token, you can find your tokens <a target='_blank' href='https://my.pay.nl/company/tokens'>here</a>", "Your API-token, you can find your tokens <a target='_blank' href='https://my.pay.nl/company/tokens'>here</a>"
-"The SL-code of your sales location, you can find your sales locations  <a target='_blank' href='https://my.pay.nl/programs/programs'>here</a>", "The SL-code of your service, you can find your services <a target='_blank' href='https://my.pay.nl/programs/programs'>here</a>",
+"The SL-code of your sales location, you can find your sales locations  <a target='_blank' href='https://my.pay.nl/programs/programs'>here</a>.", "The SL-code of your sales location, you can find your sales locations  <a target='_blank' href='https://my.pay.nl/programs/programs'>here</a>.",
 "URL of the payment option icons. Default URL: https://static.pay.nl/payment_profiles/50x32/#paymentOptionId#.png","URL of the payment option icons. Default URL: https://static.pay.nl/payment_profiles/50x32/#paymentOptionId#.png"
 "Send discount tax","Send discount tax"
 "Set this to No if you have a mix of low and high VAT rate products. Some Buy Now Pay Later payment methods have trouble processing payments when the discount has a tax amount other than the default VAT categories.","Set this to No if you have a mix of low and high VAT rate products. Some Buy Now Pay Later payment methods have trouble processing payments when the discount has a tax amount other than the default VAT categories."
@@ -165,7 +165,7 @@
 "Error", "Error"
 "Leave this empty unless advised otherwise by Pay. Support","Leave this empty unless advised otherwise by Pay. Support"
 "Test IP address","Test IP address
-"Forces testmode on these IP addresses, separate IP's by comma's for multiple IP's",""Forces testmode on these IP addresses, separate IP's by comma's for multiple IP's"
+"Forces testmode on these IP addresses, separate IP's by comma's for multiple IP's","Forces testmode on these IP addresses, separate IP's by comma's for multiple IP's"
 "Enable additional validation","Enable additional validation"
 "Enable this to also apply the validation of other activated (third party) modules during the payment process.","Enable this to also apply the validation of other activated (third party) modules during the payment process."
 "Set Pay. loglevel","Set Pay. loglevel"
@@ -190,7 +190,7 @@
 "Pay. connection failed","Pay. connection failed"
 "Pay. not connected","Pay. not connected"
 "Token code, API token and SL-code are required","Token code, API token and SL-code are required"
-"SL-code, API token or token code invalid","SL-code, API token or token code invalid""
+"SL-code, API token or token code invalid","SL-code, API token or token code invalid"
 "SL-code is invalid","SL-code is invalid"
 "SL-code / API token combination invalid","SL-code / API token combination invalid"
 "No logging","No logging"
