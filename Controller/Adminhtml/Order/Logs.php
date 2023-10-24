@@ -50,7 +50,7 @@ class Logs extends \Magento\Backend\App\Action
     }
 
     /**
-     * @return void
+     * @return false
      */
     private function downloadPayLog()
     {
@@ -63,6 +63,8 @@ class Logs extends \Magento\Backend\App\Action
 
         if (file_exists($filePath)) {
             return $this->fileFactory->create('pay.log', $content, DirectoryList::VAR_DIR);
+        } else {
+            return false;
         }
     }
 
