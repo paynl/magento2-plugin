@@ -67,7 +67,7 @@ class Logs extends \Magento\Backend\App\Action
     }
 
     /**
-     * @return boolean
+     * @return false|null
      */
     public function execute()
     {
