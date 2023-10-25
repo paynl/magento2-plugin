@@ -30,7 +30,7 @@
                 <field id="apitoken_encrypted" translate="label, comment" type="obscure" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>API token</label>
                     <comment>
-                        <![CDATA[Your API token, you can find your tokens <a target='_blank' href='https://my.pay.nl/company/tokens'>here</a>]]>
+                        <![CDATA[Your API token, you can find your tokens <a target='_blank' href='https://my.pay.nl/company/tokens'>here</a>.]]>
                     </comment>
                     <config_path>payment/paynl/apitoken_encrypted</config_path>
                     <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
@@ -62,7 +62,7 @@
             <group id="paynl_general_settings" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Pay. - General Settings</label>
                 <field id="language" translate="label" type="select" sortOrder="52" showInDefault="1" showInStore="1" showInWebsite="1">
-                    <label>Language Payment Screen</label>
+                    <label>Language payment screen</label>
                     <source_model>Paynl\Payment\Model\Config\Source\Languages</source_model>
                     <config_path>payment/paynl/language</config_path>
                 </field>
@@ -127,7 +127,7 @@
                 <field id="never_cancel" translate="label,comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Never cancel order</label>
                     <comment>
-                        <![CDATA[This setting will disable cancelling the order when the payment is cancelled.]]>
+                        <![CDATA[When enabled, Magento will not cancel the order when the transaction is cancelled via Pay.]]>
                     </comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <config_path>payment/paynl/never_cancel</config_path>
@@ -192,28 +192,28 @@
                     <config_path>payment/paynl/logging_level</config_path>
                 </field>
                 <field id="logsdownload" translate="label" type="button" sortOrder="107" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>PAY. Logs</label>
+                    <label>Pay. logs</label>
                     <frontend_model>Paynl\Payment\Block\Adminhtml\Render\Logs</frontend_model>
                 </field>
                 <field id="failover_gateway" translate="label" type="text" sortOrder="108" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Failover Gateway</label>
+                    <label>Failover gateway</label>
                     <comment><![CDATA[Leave this empty unless advised otherwise by Pay. Support]]></comment>
                     <config_path>payment/paynl/failover_gateway</config_path>
                 </field>
                 <field id="google_analytics_ecommerce" translate="label,comment" type="select" sortOrder="109" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Google Analytics</label>
+                    <label>Google analytics</label>
                     <comment><![CDATA[Select whether you want to use Pay. as Google Analytics proxy.]]></comment>
                     <source_model>Paynl\Payment\Model\Config\Source\GoogleAnalytics</source_model>
                     <config_path>payment/paynl/google_analytics_ecommerce</config_path>
                 </field>
                 <field id="pay_pending_page" translate="label,comment" type="select" sortOrder="109" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Pending page</label>
-                    <comment><![CDATA[Pay. transaction-ID: ]]></comment>
+                    <comment><![CDATA[Select whether you want to use the Pay. thank you page when transaction is pending.]]></comment>
                     <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
                     <config_path>payment/paynl/pay_pending_page</config_path>
                 </field>
                 <field id="custom_exchange_url" translate="label" type="text" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Custom Exchange URL</label>
+                    <label>Custom exchange URL</label>
                     <comment><![CDATA[Use your own exchange-handler. Example: https://www.yourdomain.nl/exchange_handler?action=#action#&order_id=#order_id#]]></comment>
                     <config_path>payment/paynl/custom_exchange_url</config_path>
                 </field>

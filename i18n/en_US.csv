@@ -56,7 +56,7 @@
 "Language payment screen","Language payment screen"
 "Never cancel order","Never cancel order"
 "Payment methods","Payment methods"
-"This setting will disable cancelling the order when the payment is cancelled.","This setting will disable cancelling the order when the payment is cancelled. This can be used if uncancelling the order in case of a second chance payment produces errors. WARNING! Orders will never be cancelled automatically"
+"When enabled, Magento will not cancel the order when the transaction is cancelled via Pay.","When enabled, Magento will not cancel the order when the transaction is cancelled via Pay."
 "Always use base currency","Always use base currency"
 "Set this to Yes if you always want to process payments in the base currency of this store. Magento acts strange when trying to register a payment in another currency than the base currency.","Set this to Yes if you always want to process payments in the base currency of this store. Magento acts strange when trying to register a payment in another currency than the base currency."
 "Skip fraud detection","Skip fraud detection"
