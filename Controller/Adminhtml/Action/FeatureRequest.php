@@ -138,7 +138,7 @@ class FeatureRequest extends Action
                 ->addTo("webshop@pay.nl")
                 ->getTransport();
 
-            if (!empty($email)){
+            if (!empty($email)) {
                 $this->transportBuilder->setTemplateIdentifier($template)->setReplyTo($email);
             }
 
