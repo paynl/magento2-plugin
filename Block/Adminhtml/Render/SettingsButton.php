@@ -42,7 +42,7 @@ class SettingsButton extends Field
         $text = __('Pay. - Settings have been moved to their own tab, click') . ' <a href="' . $payUrl . '">' . __('here') . '</a> ' . __('to go to the new settings page.');
 
         $html = '<tr id="row_' . $element->getHtmlId() . '">';
-        $html .= '  <td class="value" style="width:100%;">' . $text . '</td>';
+        $html .= '  <td class="value pay_fullwidth">' . $text . '</td>';
         $html .= '</tr>';
         return $html;
     }
