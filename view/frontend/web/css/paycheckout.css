@@ -24,8 +24,8 @@
 .paynl .payment-method-content .fieldset .label,
 .paynl .payment-method-content p,
 .paynl .payment-method-content .field-select-billing label[for="dob"],
-.paynl .payment-method-content .field-select-billing label[for="kvknummer"],
-.paynl .payment-method-content .field-select-billing label[for="vatnummer"] {
+.paynl .payment-method-content .field-select-billing label[for="cocnumber"],
+.paynl .payment-method-content .field-select-billing label[for="vatnumber"] {
     position: absolute;
     z-index: 1;
     margin: -10px 0 0 15px;

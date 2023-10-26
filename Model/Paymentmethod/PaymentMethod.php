@@ -540,11 +540,11 @@ abstract class PaymentMethod extends AbstractMethod
         parent::assignData($data);
 
         if (is_array($data)) {
-            if (isset($data['kvknummer'])) {
-                $this->getInfoInstance()->setAdditionalInformation('kvknummer', $data['kvknummer']);
+            if (isset($data['cocnumber'])) {
+                $this->getInfoInstance()->setAdditionalInformation('cocnumber', $data['cocnumber']);
             }
-            if (isset($data['vatnummer'])) {
-                $this->getInfoInstance()->setAdditionalInformation('vatnummer', $data['vatnummer']);
+            if (isset($data['vatnumber'])) {
+                $this->getInfoInstance()->setAdditionalInformation('vatnumber', $data['vatnumber']);
             }
             if (isset($data['dob'])) {
                 $this->getInfoInstance()->setAdditionalInformation('dob', $data['dob']);
@@ -552,12 +552,12 @@ abstract class PaymentMethod extends AbstractMethod
         } elseif ($data instanceof \Magento\Framework\DataObject) {
             $additional_data = $data->getAdditionalData();
 
-            if (isset($additional_data['kvknummer'])) {
-                $this->getInfoInstance()->setAdditionalInformation('kvknummer', $additional_data['kvknummer']);
+            if (isset($additional_data['cocnumber'])) {
+                $this->getInfoInstance()->setAdditionalInformation('cocnumber', $additional_data['cocnumber']);
             }
 
-            if (isset($additional_data['vatnummer'])) {
-                $this->getInfoInstance()->setAdditionalInformation('vatnummer', $additional_data['vatnummer']);
+            if (isset($additional_data['vatnumber'])) {
+                $this->getInfoInstance()->setAdditionalInformation('vatnumber', $additional_data['vatnumber']);
             }
 
             if (isset($additional_data['billink_agree'])) {

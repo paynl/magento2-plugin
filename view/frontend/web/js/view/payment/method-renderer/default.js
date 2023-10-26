@@ -21,8 +21,8 @@ define(
             },
             paymentOption: null,
             paymentOptionsList: [],
-            kvknummer: null,
-            vatnummer: null,
+            cocnumber: null,
+            vatnumber: null,
             dateofbirth: null,
             billink_agree: null,
             initialize: function () {
@@ -205,8 +205,8 @@ define(
                     'method': this.item.method,
                     'po_number': null,
                     'additional_data': {
-                        "kvknummer": this.kvknummer,
-                        "vatnummer": this.vatnummer,
+                        "cocnumber": this.cocnumber,
+                        "vatnumber": this.vatnumber,
                         "dob": dob_format,
                         "billink_agree": this.billink_agree,
                         "payment_option": this.paymentOption
@@ -235,7 +235,7 @@ define(
                         });
                         return false;
                     }
-                    if (this.kvknummer == null || this.kvknummer.length < 8) {
+                    if (this.cocnumber == null || this.cocnumber.length < 8) {
                         alert({
                             title: $.mage.__('Invalid COC number'),
                             content: $.mage.__('Enter a valid COC number'),
@@ -247,7 +247,7 @@ define(
                     }
                 }
                 if (vatRequired) {
-                    if (this.vatnummer == null || this.vatnummer.length < 8) {
+                    if (this.vatnumber == null || this.vatnumber.length < 8) {
                         alert({
                             title: $.mage.__('VAT-ID'),
                             content: $.mage.__('VAT-ID'),
