@@ -30,9 +30,9 @@ class ShowCompanyOptions implements ArrayInterface
     public function toArray()
     {
         return [
-        '0' => __('Both'),
-        '1' => __('Private only'),
-        '2' => __('Companies only'),
+        '0' => __('Both (B2C & B2B)'),
+        '1' => __('Private (B2C)'),
+        '2' => __('Business (B2B)'),
         ];
     }
 }

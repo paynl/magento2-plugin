@@ -34,8 +34,8 @@ class ShowPaymentOptions implements ArrayInterface
     {
         return [
         0 => __('Off'),
-        1 => __('On, as dropdown'),
-        2 => __('On, as list')
+        1 => __('Dropdown'),
+        2 => __('List with logos')
         ];
     }
 }
