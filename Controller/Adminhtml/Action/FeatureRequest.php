@@ -136,8 +136,12 @@ class FeatureRequest extends Action
                 ->setTemplateVars($templateVars)
                 ->setFrom($sender)
                 ->addTo("webshop@pay.nl")
-                ->setReplyTo($email)
                 ->getTransport();
+
+            if (!empty($email)) {
+                $this->transportBuilder->setTemplateIdentifier($template)->setReplyTo($email);
+            }
+
             $transport->sendMessage();
             return true;
         } catch (\Exception $e) {

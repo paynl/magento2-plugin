@@ -203,3 +203,5 @@
 "Set to `on` to accept refunds initiated from Pay.","Selecteer `Aan` om terugbetalingen vanuit Pay. te verwerken in Magento."
 "Set this to Yes if you always want to process payments in the base currency of this store. Magento acts strange when trying to register a payment in another currency than the base currency.","Zet dit op Ja als u betalingen altijd in de basisvaluta van deze winkel wilt verwerken. Magento gedraagt zich vreemd bij het registreren van een betaling in een andere valuta dan de basisvaluta."
 "You are up to date with the latest version","Je bent up to date met de laatste versie"
+"Enter your COC number","Vul uw KVK nummer in"
+"Enter your VAT number","Vul uw BTW nummer in"

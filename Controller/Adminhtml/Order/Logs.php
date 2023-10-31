@@ -50,7 +50,7 @@ class Logs extends \Magento\Backend\App\Action
     }
 
     /**
-     * @return void
+     * @return false
      */
     private function downloadPayLog()
     {
@@ -62,12 +62,14 @@ class Logs extends \Magento\Backend\App\Action
         $filePath = $dir . '/var/log/pay.log';
 
         if (file_exists($filePath)) {
-            $this->fileFactory->create('pay.log', $content, DirectoryList::VAR_DIR);
+            return $this->fileFactory->create('pay.log', $content, DirectoryList::VAR_DIR);
+        } else {
+            return false;
         }
     }
 
     /**
-     * @return boolean
+     * @return false|null
      */
     public function execute()
     {
@@ -128,9 +130,10 @@ class Logs extends \Magento\Backend\App\Action
             $content['type'] = 'filename';
             $content['value'] = 'log/logs.zip';
             $content['rm'] = 1;
-            $this->fileFactory->create('logs-' . date("Y-m-d") . '.zip', $content, DirectoryList::VAR_DIR, 'application/zip');
+
+            return $this->fileFactory->create('logs-' . date("Y-m-d") . '.zip', $content, DirectoryList::VAR_DIR, 'application/zip');
         } else {
-            $this->downloadPayLog();
+            return $this->downloadPayLog();
         }
     }
 }
