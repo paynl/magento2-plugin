@@ -81,13 +81,13 @@
             <comment><![CDATA[Hold CTRL button to select/deselect multiple]]></comment>
         </field>
         <field id="showforcompany" translate="label" type="select" sortOrder="150" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Show for companies</label>
+            <label>Show for</label>
             <source_model>Paynl\Payment\Model\Config\Source\ShowCompanyOptions</source_model>
             <depends>
                 <field id="active">1</field>
             </depends>
             <config_path>payment/paynl_payment_creditclick/showforcompany</config_path>
-            <comment><![CDATA[Allow payment method to be used for companies, private, or both.]]></comment>
+            <comment><![CDATA[Show payment method for both business and private customers, private customers only or businesses only.]]></comment>
         </field>
         <field id="showforgroup" translate="label" type="select" sortOrder="160" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Customer Group</label>

@@ -23,22 +23,22 @@
                 <field id="tokencode" translate="label, comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Token code</label>
                     <comment>
-                        <![CDATA[Retrieve your AT-code <a target='_blank' href='https://my.pay.nl/company/tokens'>here</a>. Not registered with Pay? Sign up <a target='_blank' href='https://signup.pay.nl/'>here</a>!!]]>
+                        <![CDATA[Retrieve your AT-code <a target='_blank' href='https://my.pay.nl/company/tokens'>here</a>. Not registered with Pay? Sign up <a target='_blank' href='https://signup.pay.nl/'>here</a>!]]>
                     </comment>
                     <config_path>payment/paynl/tokencode</config_path>
                 </field>
                 <field id="apitoken_encrypted" translate="label, comment" type="obscure" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>API-token</label>
+                    <label>API token</label>
                     <comment>
-                        <![CDATA[Your API-token, you can find your tokens <a target='_blank' href='https://my.pay.nl/company/tokens'>here</a>]]>
+                        <![CDATA[Your API token, you can find your tokens <a target='_blank' href='https://my.pay.nl/company/tokens'>here</a>.]]>
                     </comment>
                     <config_path>payment/paynl/apitoken_encrypted</config_path>
                     <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
                 </field>
                 <field id="serviceid" translate="label, comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>ServiceId</label>
+                    <label>Sales location</label>
                     <comment>
-                        <![CDATA[The SL-code of your service, you can find your services <a target='_blank' href='https://my.pay.nl/programs/programs'>here</a>]]>
+                        <![CDATA[The SL-code of your sales location, you can find your sales locations  <a target='_blank' href='https://my.pay.nl/programs/programs'>here</a>.]]>
                     </comment>
                     <config_path>payment/paynl/serviceid</config_path>
                 </field>
@@ -62,7 +62,7 @@
             <group id="paynl_general_settings" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Pay. - General Settings</label>
                 <field id="language" translate="label" type="select" sortOrder="52" showInDefault="1" showInStore="1" showInWebsite="1">
-                    <label>Language Payment Screen</label>
+                    <label>Language payment screen</label>
                     <source_model>Paynl\Payment\Model\Config\Source\Languages</source_model>
                     <config_path>payment/paynl/language</config_path>
                 </field>
@@ -72,7 +72,7 @@
                     <config_path>payment/paynl/default_payment_option</config_path>
                 </field>
                 <field id="auto_capture" translate="label" type="select" sortOrder="105" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Auto Capture</label>
+                    <label>Auto capture</label>
                     <comment>
                         <![CDATA[Automatically capture transactions in the state AUTHORIZE when a shipment is created for the order.]]>
                     </comment>
@@ -80,7 +80,7 @@
                     <config_path>payment/paynl/auto_capture</config_path>
                 </field>
                 <field id="auto_void" translate="label" type="select" sortOrder="106" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Auto Void</label>
+                    <label>Auto void</label>
                     <comment>
                         <![CDATA[Automatically void transactions in the state AUTHORIZE when cancelling an order.]]>
                     </comment>
@@ -127,7 +127,7 @@
                 <field id="never_cancel" translate="label,comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Never cancel order</label>
                     <comment>
-                        <![CDATA[This might be your preference when uncancelling orders isn't possible, which might lead to problems in case of a second chance payments.]]>
+                        <![CDATA[When enabled, Magento will not cancel the order when the transaction is cancelled via Pay.]]>
                     </comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <config_path>payment/paynl/never_cancel</config_path>
@@ -151,7 +151,7 @@
                 <field id="skip_fraud_detection" translate="label,comment" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Skip fraud detection</label>
                     <comment>
-                        <![CDATA[ Sometimes Magento incorrectly marks an order as fraudulent. This happens more often when using different currencies. Set this setting to Yes to skip fraud detection.]]>
+                        <![CDATA[Sometimes Magento incorrectly marks an order as fraudulent. This happens more often when using different currencies. Set this setting to Yes to skip fraud detection.]]>
                     </comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <config_path>payment/paynl/skip_fraud_detection</config_path>
@@ -192,28 +192,28 @@
                     <config_path>payment/paynl/logging_level</config_path>
                 </field>
                 <field id="logsdownload" translate="label" type="button" sortOrder="107" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>PAY. Logs</label>
+                    <label>Pay. logs</label>
                     <frontend_model>Paynl\Payment\Block\Adminhtml\Render\Logs</frontend_model>
                 </field>
                 <field id="failover_gateway" translate="label" type="text" sortOrder="108" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Failover Gateway</label>
+                    <label>Failover gateway</label>
                     <comment><![CDATA[Leave this empty unless advised otherwise by Pay. Support]]></comment>
                     <config_path>payment/paynl/failover_gateway</config_path>
                 </field>
                 <field id="google_analytics_ecommerce" translate="label,comment" type="select" sortOrder="109" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Google Analytics</label>
-                    <comment><![CDATA[Select whether you want to use PAY. as Google Analytics proxy.]]></comment>
+                    <label>Google analytics</label>
+                    <comment><![CDATA[Select whether you want to use Pay. as Google Analytics proxy.]]></comment>
                     <source_model>Paynl\Payment\Model\Config\Source\GoogleAnalytics</source_model>
                     <config_path>payment/paynl/google_analytics_ecommerce</config_path>
                 </field>
                 <field id="pay_pending_page" translate="label,comment" type="select" sortOrder="109" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Pending page</label>
-                    <comment><![CDATA[Pay. transaction-ID: ]]></comment>
+                    <comment><![CDATA[Select whether you want to use the Pay. thank you page when transaction is pending.]]></comment>
                     <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
                     <config_path>payment/paynl/pay_pending_page</config_path>
                 </field>
                 <field id="custom_exchange_url" translate="label" type="text" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Custom Exchange URL</label>
+                    <label>Custom exchange URL</label>
                     <comment><![CDATA[Use your own exchange-handler. Example: https://www.yourdomain.nl/exchange_handler?action=#action#&order_id=#order_id#]]></comment>
                     <config_path>payment/paynl/custom_exchange_url</config_path>
                 </field>

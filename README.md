@@ -1,7 +1,7 @@
 <p align="center">
     <img src="https://www.pay.nl/uploads/1/brands/main_logo.png" />
 </p>
-<h1 align="center">PAY. Magento2 plugin</h1>
+<h1 align="center">Pay. Magento2 plugin</h1>
   
 This plugin provides your Magento2 webshop with all the payment methods you need. 
 

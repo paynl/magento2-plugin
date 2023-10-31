@@ -26,7 +26,7 @@
                 <paymentInfoKeys>valid_days</paymentInfoKeys>
                 <send_new_order_email>before_payment</send_new_order_email>
                 <send_paylink_email>1</send_paylink_email>
-                <paylink_subject>Order Paylink #((order_id))#</paylink_subject>
+                <paylink_subject>Paylink order #((order_id))#</paylink_subject>
                 <paylink_body>((customer_name)),
 Thank you for your order from ((store_name)).
 

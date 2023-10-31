@@ -56,7 +56,7 @@
         </field>
         <field id="order_status_authorized" translate="label" type="select" sortOrder="32" showInDefault="1" showInWebsite="1"
                showInStore="1">
-            <label>Authorized Order Status</label>
+            <label>Authorized order status</label>
             <source_model>Paynl\Payment\Model\Config\Source\Order\Status\Processing</source_model>
             <depends>
                 <field id="active">1</field>
@@ -65,7 +65,7 @@
         </field>
         <field id="order_status_processing" translate="label" type="select" sortOrder="35" showInDefault="1" showInWebsite="1"
                showInStore="1">
-            <label>Paid Order Status</label>
+            <label>Paid order status</label>
             <source_model>Paynl\Payment\Model\Config\Source\Order\Status\Processing</source_model>
             <depends>
                 <field id="active">1</field>

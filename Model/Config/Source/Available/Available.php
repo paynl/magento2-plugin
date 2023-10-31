@@ -95,13 +95,13 @@ abstract class Available implements ArrayInterface
         }
         $configured = $this->_config->configureSDK();
         if (!$configured) {
-            return [0 => __('Enter your API-token and ServiceId first')];
+            return [0 => __('Enter your API token and SL-code first')];
         }
         try {
             if ($this->_isAvailable()) {
                 return [0 => __('No'), 1 => __('Yes')];
             } else {
-                return [0 => __('Payment method not activated, please activate on My.pay.nl first')];
+                return [0 => __('Not active, activate on My.pay.nl first')];
             }
         } catch (\Exception $e) {
             return [0 => 'Error: ' . $e->getMessage()];

@@ -31,8 +31,8 @@ class ShowDobOptions implements ArrayInterface
     {
         return [
         '0' => __('No'),
-        '1' => __('Yes, optional'),
-        '2' => __('Yes, required'),
+        '1' => __('Optional'),
+        '2' => __('Required'),
         ];
     }
 }
