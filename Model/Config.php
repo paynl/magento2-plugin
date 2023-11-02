@@ -403,7 +403,7 @@ class Config
      */
     public function getApiToken()
     {
-        return $this->store->getConfig('payment/paynl/apitoken_encrypted');
+        return (!empty($this->store->getConfig('payment/paynl/apitoken_encrypted')) ? trim($this->store->getConfig('payment/paynl/apitoken_encrypted')) : '');
     }
 
     /**
@@ -411,7 +411,7 @@ class Config
      */
     public function getTokencode()
     {
-        return $this->store->getConfig('payment/paynl/tokencode');
+        return (!empty($this->store->getConfig('payment/paynl/tokencode')) ? trim($this->store->getConfig('payment/paynl/tokencode')) : '');
     }
 
     /**
@@ -419,7 +419,7 @@ class Config
      */
     public function getServiceId()
     {
-        return $this->store->getConfig('payment/paynl/serviceid');
+        return (!empty($this->store->getConfig('payment/paynl/serviceid')) ? trim($this->store->getConfig('payment/paynl/serviceid')) : '');
     }
 
     /**
@@ -427,7 +427,7 @@ class Config
      */
     public function getFailoverGateway()
     {
-        return $this->store->getConfig('payment/paynl/failover_gateway');
+        return (!empty($this->store->getConfig('payment/paynl/failover_gateway')) ? trim($this->store->getConfig('payment/paynl/failover_gateway')) : '');
     }
 
     /**
