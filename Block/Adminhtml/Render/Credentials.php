@@ -88,10 +88,10 @@ class Credentials extends Field
             $scopeId = $websiteId;
         }
 
-        $tokencode = (!empty($this->scopeConfig->getValue('payment/paynl/tokencode', $scope, $scopeId)) ? trim($this->scopeConfig->getValue('payment/paynl/tokencode', $scope, $scopeId)) : ''); // phpcs:ignore
-        $apiToken = (!empty($this->scopeConfig->getValue('payment/paynl/apitoken_encrypted', $scope, $scopeId)) ? trim($this->scopeConfig->getValue('payment/paynl/apitoken_encrypted', $scope, $scopeId)) : ''); // phpcs:ignore
-        $serviceId = (!empty($this->scopeConfig->getValue('payment/paynl/serviceid', $scope, $scopeId)) ? trim($this->scopeConfig->getValue('payment/paynl/serviceid', $scope, $scopeId)) : ''); // phpcs:ignore
-        $gateway = (!empty($this->scopeConfig->getValue('payment/paynl/failover_gateway', $scope, $scopeId)) ? trim($this->scopeConfig->getValue('payment/paynl/failover_gateway', $scope, $scopeId)) : ''); // phpcs:ignore
+        $tokencode = trim((string) $this->scopeConfig->getValue('payment/paynl/tokencode', $scope, $scopeId));
+        $apiToken = trim((string) $this->scopeConfig->getValue('payment/paynl/apitoken_encrypted', $scope, $scopeId));
+        $serviceId = trim((string) $this->scopeConfig->getValue('payment/paynl/serviceid', $scope, $scopeId));
+        $gateway = trim((string) $this->scopeConfig->getValue('payment/paynl/failover_gateway', $scope, $scopeId));
 
         $error = '';
         $status = 1;
