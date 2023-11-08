@@ -7,6 +7,7 @@ use Magento\Backend\Block\Template\Context;
 use Magento\Framework\Data\Form\Element\AbstractElement;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\UrlInterface;
 use Paynl\Payment\Helper\PayHelper;
 use Paynl\Paymentmethods;
 
@@ -33,18 +34,26 @@ class Credentials extends Field
     protected $payHelper;
 
     /**
+     *
+     * @var UrlInterface
+     */
+    protected $urlInterface;
+
+    /**
      * Constructor.
      *
      * @param Context $context
      * @param RequestInterface $request
      * @param ScopeConfigInterface $scopeConfig
      * @param PayHelper $payHelper
+     * @param UrlInterface $urlInterface
      */
-    public function __construct(Context $context, RequestInterface $request, ScopeConfigInterface $scopeConfig, PayHelper $payHelper)
+    public function __construct(Context $context, RequestInterface $request, ScopeConfigInterface $scopeConfig, PayHelper $payHelper, UrlInterface $urlInterface)
     {
         $this->request = $request;
         $this->scopeConfig = $scopeConfig;
         $this->payHelper = $payHelper;
+        $this->urlInterface = $urlInterface;
         parent::__construct($context);
     }
 
@@ -132,6 +141,9 @@ class Credentials extends Field
             $status = 0;
         }
 
-        return ['status' => $status, 'error' => $error];
+        $currentUrl = $this->urlInterface->getCurrentUrl();
+        $payUrl = str_replace("paynl_setup", "paynl_settings", $currentUrl);
+
+        return ['status' => $status, 'error' => $error, 'payUrl' => $payUrl];
     }
 }
