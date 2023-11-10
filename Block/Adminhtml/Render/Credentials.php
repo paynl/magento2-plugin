@@ -91,19 +91,14 @@ class Credentials extends Field
         $tokencode = trim((string) $this->scopeConfig->getValue('payment/paynl/tokencode', $scope, $scopeId));
         $apiToken = trim((string) $this->scopeConfig->getValue('payment/paynl/apitoken_encrypted', $scope, $scopeId));
         $serviceId = trim((string) $this->scopeConfig->getValue('payment/paynl/serviceid', $scope, $scopeId));
-        $gateway = trim((string) $this->scopeConfig->getValue('payment/paynl/failover_gateway', $scope, $scopeId));
 
         $error = '';
         $status = 1;
         if (!empty($apiToken) && !empty($serviceId) && !empty($tokencode)) {
             try {
-                if (!empty($gateway) && substr(trim($gateway), 0, 4) === "http") {
-                    \Paynl\Config::setApiBase(trim($gateway));
-                }
                 \Paynl\Config::setTokenCode($tokencode);
                 \Paynl\Config::setApiToken($apiToken);
                 \Paynl\Config::setServiceId($serviceId);
-
                 Paymentmethods::getList();
             } catch (\Exception $e) {
                 $error = $e->getMessage();

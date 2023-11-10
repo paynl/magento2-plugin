@@ -195,24 +195,35 @@
                     <label>Pay. logs</label>
                     <frontend_model>Paynl\Payment\Block\Adminhtml\Render\Logs</frontend_model>
                 </field>
-                <field id="failover_gateway" translate="label" type="text" sortOrder="108" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="failover_gateway_select" translate="label,comment" type="select" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Failover gateway</label>
+                    <comment>
+                        <![CDATA[Select the gateway which is use for processing payments]]>
+                    </comment>
+                    <source_model>Paynl\Payment\Model\Config\Source\FailoverGateways</source_model>
+                    <config_path>payment/paynl/failover_gateway_select</config_path>
+                </field>
+                <field id="failover_gateway" translate="label" type="text" sortOrder="112" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Custom failover gateway</label>
                     <comment><![CDATA[Leave this empty unless advised otherwise by Pay. Support]]></comment>
                     <config_path>payment/paynl/failover_gateway</config_path>
+                    <depends>
+                        <field id="failover_gateway_select">3</field>
+                    </depends>
                 </field>
-                <field id="google_analytics_ecommerce" translate="label,comment" type="select" sortOrder="109" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="google_analytics_ecommerce" translate="label,comment" type="select" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Google analytics</label>
                     <comment><![CDATA[Select whether you want to use Pay. as Google Analytics proxy.]]></comment>
                     <source_model>Paynl\Payment\Model\Config\Source\GoogleAnalytics</source_model>
                     <config_path>payment/paynl/google_analytics_ecommerce</config_path>
                 </field>
-                <field id="pay_pending_page" translate="label,comment" type="select" sortOrder="109" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="pay_pending_page" translate="label,comment" type="select" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Pending page</label>
                     <comment><![CDATA[Select whether you want to use the Pay. thank you page when transaction is pending.]]></comment>
                     <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
                     <config_path>payment/paynl/pay_pending_page</config_path>
                 </field>
-                <field id="custom_exchange_url" translate="label" type="text" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="custom_exchange_url" translate="label" type="text" sortOrder="140" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Custom exchange URL</label>
                     <comment><![CDATA[Use your own exchange-handler. Example: https://www.yourdomain.nl/exchange_handler?action=#action#&order_id=#order_id#]]></comment>
                     <config_path>payment/paynl/custom_exchange_url</config_path>

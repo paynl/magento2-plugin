@@ -60,8 +60,13 @@ class Ideal extends PaymentMethod
             $this->paynlConfig->setStore($store);
             $this->paynlConfig->configureSDK();
 
-            $banks = \Paynl\Paymentmethods::getBanks($this->getPaymentOptionId());
-            $this->cache->save(json_encode($banks), $cacheName);
+            try {
+                $banks = \Paynl\Paymentmethods::getBanks($this->getPaymentOptionId());
+                $this->cache->save(json_encode($banks), $cacheName);
+            } catch (\Exception $e) {
+                $banks = [];
+                $this->payHelper->logDebug('Bank retrieval error ' . $e->getMessage());
+            }
         }
 
         foreach ($banks as $key => $bank) {
