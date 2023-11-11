@@ -29,11 +29,7 @@ class FailoverGateways implements ArrayInterface
      */
     public function toArray()
     {
-        return [
-            'https://rest-api.pay.nl' => __('Pay.nl (Default)'),
-            'https://rest.achterelkebetaling.nl' => __('rest.achterelkebetaling.nl'),
-            'https://rest.payments.nl' => __('rest.payments.nl'),
-            'custom' => __('Custom')
-        ];
+        $cores = \Paynl\Config::getCores();
+        return array_merge($cores, ['custom' => __('Custom')]);
     }
 }

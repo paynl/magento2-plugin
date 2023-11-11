@@ -208,7 +208,7 @@
                     <comment><![CDATA[Leave this empty unless advised otherwise by Pay. Support]]></comment>
                     <config_path>payment/paynl/failover_gateway</config_path>
                     <depends>
-                        <field id="failover_gateway_select">3</field>
+                        <field id="failover_gateway_select">custom</field>
                     </depends>
                 </field>
                 <field id="google_analytics_ecommerce" translate="label,comment" type="select" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1">
