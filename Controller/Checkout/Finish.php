@@ -170,7 +170,7 @@ class Finish extends PayAction
             }
 
             if (empty($bSuccess) && !$isPinTransaction) {
-                $this->config->configureSDK(true);
+                $this->config->configureSDK();
                 $transaction = \Paynl\Transaction::get($payOrderId);
                 $orderNumber = $transaction->getExtra1();
                 $this->checkEmpty($order->getIncrementId() == $orderNumber, '', 104, 'order mismatch');

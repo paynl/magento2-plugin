@@ -423,11 +423,15 @@ class Config
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getFailoverGateway()
     {
-        return trim((string)$this->store->getConfig('payment/paynl/failover_gateway'));
+        $gateway = $this->store->getConfig('payment/paynl/failover_gateway_select');
+        if ($gateway == 'custom') {
+            return trim((string)$this->store->getConfig('payment/paynl/failover_gateway'));
+        }
+        return $gateway;
     }
 
     /**
