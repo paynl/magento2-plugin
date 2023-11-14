@@ -198,7 +198,7 @@
                 <field id="failover_gateway_select" translate="label,comment" type="select" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Failover gateway</label>
                     <comment>
-                        <![CDATA[Select the gateway which is use for processing payments]]>
+                        <![CDATA[*Select the gateway to use for processing payments]]>
                     </comment>
                     <source_model>Paynl\Payment\Model\Config\Source\FailoverGateways</source_model>
                     <config_path>payment/paynl/failover_gateway_select</config_path>
