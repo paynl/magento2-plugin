@@ -14,5 +14,5 @@ class Billink extends PaymentMethod
     protected function getDefaultPaymentOptionId()
     {
         return 1672;
-    }  
+    }
 }
