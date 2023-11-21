@@ -45,6 +45,7 @@ define(
             {type: 'paynl_payment_googlepay', component: defaultComponent},
             {type: 'paynl_payment_huisentuincadeau', component: defaultComponent},
             {type: 'paynl_payment_ideal', component: defaultComponent},
+            {type: 'paynl_payment_in3business', component: defaultComponent},
             {type: 'paynl_payment_incasso', component: defaultComponent},
             {type: 'paynl_payment_instore', component: defaultComponent},
             {type: 'paynl_payment_klarna', component: defaultComponent},

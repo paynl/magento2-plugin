@@ -105,6 +105,9 @@
         <method name="paynl_payment_ideal">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
+        <method name="paynl_payment_in3business">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
         <method name="paynl_payment_incasso">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
