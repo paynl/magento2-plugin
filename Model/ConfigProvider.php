@@ -30,6 +30,7 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_cartebleue',
         'paynl_payment_cashly',
         'paynl_payment_creditclick',
+        'paynl_payment_cult',
         'paynl_payment_dankort',
         'paynl_payment_decadeaukaart',
         'paynl_payment_dinerbon',

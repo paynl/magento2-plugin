@@ -60,6 +60,7 @@ class Config
         "paynl_payment_cartebleue" => "11",
         "paynl_payment_cashly" => "43",
         "paynl_payment_creditclick" => "99",
+        "paynl_payment_cult" => "291",
         "paynl_payment_dankort" => "58",
         "paynl_payment_decadeaukaart" => "189",
         "paynl_payment_dinerbon" => "198",
