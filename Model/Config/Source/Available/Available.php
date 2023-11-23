@@ -101,7 +101,7 @@ abstract class Available implements ArrayInterface
         if ($websiteId) {
             $scope = 'websites';
             $scopeId = $websiteId;
-        }   
+        }
 
         $configured = $this->_config->configureSDKBackend($scope, $scopeId);
         if (!$configured) {
@@ -170,7 +170,7 @@ abstract class Available implements ArrayInterface
         if ($websiteId) {
             $scope = 'websites';
             $scopeId = $websiteId;
-        }   
+        }
 
         $configured = $this->_config->configureSDKBackend($scope, $scopeId);
         if ($configured) {

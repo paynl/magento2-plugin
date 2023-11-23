@@ -438,6 +438,8 @@ class Config
 
     /**
      * Configures the sdk with the API token and serviceId
+     * @param string $scope
+     * @param integer $scopeId
      * @param boolean $useGateway
      * @return boolean TRUE when config loaded, FALSE when the apitoken or serviceId are empty
      */
@@ -454,8 +456,6 @@ class Config
         if (!empty($apiToken) && !empty($serviceId)) {
             if ($useGateway && !empty($gateway) && substr(trim($gateway), 0, 4) === "http") {
                 \Paynl\Config::setApiBase(trim($gateway));
-            } else {    
-                            
             }
             \Paynl\Config::setApiToken($apiToken);
             \Paynl\Config::setServiceId($serviceId);
@@ -466,6 +466,8 @@ class Config
     }
 
     /**
+     * @param string $scope
+     * @param integer $scopeId
      * @return string
      */
     public function getApiTokenBackend($scope, $scopeId)
@@ -474,6 +476,8 @@ class Config
     }
 
     /**
+     * @param string $scope
+     * @param integer $scopeId
      * @return string
      */
     public function getTokencodeBackend($scope, $scopeId)
@@ -482,14 +486,18 @@ class Config
     }
 
     /**
+     * @param string $scope
+     * @param integer $scopeId
      * @return string
      */
     public function getServiceIdBackend($scope, $scopeId)
     {
         return trim((string) $this->scopeConfig->getValue('payment/paynl/serviceid', $scope, $scopeId));
-    }    
+    }
 
     /**
+     * @param string $scope
+     * @param integer $scopeId
      * @return string|null
      */
     public function getFailoverGatewayBackend($scope, $scopeId)
