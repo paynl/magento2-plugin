@@ -97,17 +97,15 @@ class Credentials extends Field
             $scopeId = $websiteId;
         }
 
-        $tokencode = trim((string) $this->scopeConfig->getValue('payment/paynl/tokencode', $scope, $scopeId));
-        $apiToken = trim((string) $this->scopeConfig->getValue('payment/paynl/apitoken_encrypted', $scope, $scopeId));
-        $serviceId = trim((string) $this->scopeConfig->getValue('payment/paynl/serviceid', $scope, $scopeId));
+        $tokencode = $this->_config->getApiTokenBackend($scope, $scopeId);
+        $apiToken = $this->_config->getServiceIdBackend($scope, $scopeId);
+        $serviceId =  $this->_config->getTokencodeBackend($scope, $scopeId);
 
         $error = '';
         $status = 1;
         if (!empty($apiToken) && !empty($serviceId) && !empty($tokencode)) {
             try {
-                \Paynl\Config::setTokenCode($tokencode);
-                \Paynl\Config::setApiToken($apiToken);
-                \Paynl\Config::setServiceId($serviceId);
+                $this->_config->configureSDKBackend($scope, $scopeId);
                 Paymentmethods::getList();
             } catch (\Exception $e) {
                 $error = $e->getMessage();

@@ -89,11 +89,21 @@ abstract class Available implements ArrayInterface
     public function toArray()
     {
         $storeId = $this->_request->getParam('store');
+        $websiteId = $this->_request->getParam('website');
+
+        $scope = 'default';
+        $scopeId = 0;
+
         if ($storeId) {
-            $store = $this->_storeManager->getStore($storeId);
-            $this->_config->setStore($store);
+            $scope = 'stores';
+            $scopeId = $storeId;
         }
-        $configured = $this->_config->configureSDK();
+        if ($websiteId) {
+            $scope = 'websites';
+            $scopeId = $websiteId;
+        }   
+
+        $configured = $this->_config->configureSDKBackend($scope, $scopeId);
         if (!$configured) {
             return [0 => __('Enter your API token and SL-code first')];
         }
@@ -148,11 +158,21 @@ abstract class Available implements ArrayInterface
     protected function _isAvailable() // phpcs:ignore
     {
         $storeId = $this->_request->getParam('store');
+        $websiteId = $this->_request->getParam('website');
+
+        $scope = 'default';
+        $scopeId = 0;
+
         if ($storeId) {
-            $store = $this->_storeManager->getStore($storeId);
-            $this->_config->setStore($store);
+            $scope = 'stores';
+            $scopeId = $storeId;
         }
-        $configured = $this->_config->configureSDK();
+        if ($websiteId) {
+            $scope = 'websites';
+            $scopeId = $websiteId;
+        }   
+
+        $configured = $this->_config->configureSDKBackend($scope, $scopeId);
         if ($configured) {
             $paymentOptionId = $this->getPaymentOptionId();
 
