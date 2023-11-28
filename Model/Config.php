@@ -120,19 +120,22 @@ class Config
      * @param \Paynl\Payment\Helper\PayHelper $helper
      * @param ProductMetadataInterface $productMetadata
      * @param Data $paymentHelper
+     * @param ScopeConfigInterface $scopeConfig
      */
     public function __construct(
         Store $store,
         \Magento\Framework\View\Element\Template $resources,
         \Paynl\Payment\Helper\PayHelper $helper,
         ProductMetadataInterface $productMetadata,
-        Data $paymentHelper
+        Data $paymentHelper,
+        ScopeConfigInterface $scopeConfig
     ) {
         $this->store = $store;
         $this->resources = $resources;
         $this->helper = $helper;
         $this->productMetadata = $productMetadata;
         $this->paymentHelper = $paymentHelper;
+        $this->scopeConfig = $scopeConfig;
     }
 
     /**
