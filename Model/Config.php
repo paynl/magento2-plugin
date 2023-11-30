@@ -42,6 +42,11 @@ class Config
      */
     protected $paymentHelper;
 
+    /**
+     * @var ScopeConfigInterface
+     */
+    protected $scopeConfig;
+
     /** @array  Brands */
     public $brands = [
         "paynl_payment_afterpay" => "14",
