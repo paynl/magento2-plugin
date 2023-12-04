@@ -25,7 +25,7 @@ define(
             vatnumber: null,
             dateofbirth: null,
             billink_agree: null,
-            companyField: null,
+            companyfield: null,
             initialize: function () {
                 this._super();
 
@@ -131,7 +131,7 @@ define(
                 return this.getVAT() > 0;
             },
             getVAT: function () {
-                if (this.getCompany().length == 0 && !this.getCompanyField()) {
+                if (this.getCompany().length == 0 && (!this.getCompanyField() || this.getCompanyField() == 0)) {
                     return false;
                 }
                 return (typeof window.checkoutConfig.payment.showvat !== 'undefined') ? window.checkoutConfig.payment.showvat[this.item.method] : '';
