@@ -146,6 +146,18 @@ In order to pay for your order click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_bataviacadeaukaart>
+            <paynl_payment_beautycadeau>
+                <active>0</active>
+                <title>Bataviastad Cadeaukaart</title>
+                <payment_option_id>3144</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Beautycadeau</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_beautycadeau>
             <paynl_payment_billink>
                 <active>0</active>
                 <title>Achteraf betalen via Billink</title>
@@ -399,6 +411,18 @@ In order to pay for your order click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_googlepay>
+            <paynl_payment_horsesandgifts>
+                <active>0</active>
+                <title>Horses &amp; Gifts</title>
+                <payment_option_id>3222</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Horsesandgifts</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_horsesandgifts>
             <paynl_payment_huisentuincadeau>
                 <active>0</active>
                 <title>Huis en Tuin Cadeau</title>
@@ -508,6 +532,18 @@ In order to pay for your order click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_monizze>
+            <paynl_payment_mooigiftcard>
+                <active>0</active>
+                <title>MOOI giftcard</title>
+                <payment_option_id>3183</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Mooigiftcard</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_mooigiftcard>
             <paynl_payment_multibanco>
                 <active>0</active>
                 <title>Multibanco</title>
