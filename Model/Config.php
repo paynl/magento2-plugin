@@ -73,7 +73,7 @@ class Config
         "paynl_payment_givacard" => "61",
         "paynl_payment_good4fun" => "207",
         "paynl_payment_googlepay" => "176",
-        "paynl_payment_horsesandgifts" => "294",
+        "paynl_payment_horsesandgifts" => "300",
         "paynl_payment_huisentuincadeau" => "117",
         "paynl_payment_ideal" => "1",
         "paynl_payment_incasso" => "13",
