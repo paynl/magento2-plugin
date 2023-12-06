@@ -31,6 +31,7 @@ define(
             {type: 'paynl_payment_cartebleue', component: defaultComponent},
             {type: 'paynl_payment_cashly', component: defaultComponent},
             {type: 'paynl_payment_creditclick', component: defaultComponent},
+            {type: 'paynl_payment_cult', component: defaultComponent},
             {type: 'paynl_payment_dankort', component: defaultComponent},
             {type: 'paynl_payment_decadeaukaart', component: defaultComponent},
             {type: 'paynl_payment_dinerbon', component: defaultComponent},

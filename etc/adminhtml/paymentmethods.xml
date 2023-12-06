@@ -21,6 +21,7 @@
     <include path="Paynl_Payment::paymentmethods/cartebleue.xml" />
     <include path="Paynl_Payment::paymentmethods/cashly.xml" />
     <include path="Paynl_Payment::paymentmethods/creditclick.xml" />
+    <include path="Paynl_Payment::paymentmethods/cult.xml" />
     <include path="Paynl_Payment::paymentmethods/dankort.xml" />
     <include path="Paynl_Payment::paymentmethods/decadeaukaart.xml" />
     <include path="Paynl_Payment::paymentmethods/dinerbon.xml" />
