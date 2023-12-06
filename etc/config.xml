@@ -123,7 +123,7 @@ In order to pay for your order click the link below
             </paynl_payment_biercheque>
             <paynl_payment_biller>
                 <active>0</active>
-                <title>Biller</title>
+                <title>NOTYD</title>
                 <payment_option_id>2931</payment_option_id>
                 <order_status>pending_payment</order_status>
                 <order_status_authorized>processing</order_status_authorized>

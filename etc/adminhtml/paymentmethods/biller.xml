@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
-    <group id="paynl_payment_biller" sortOrder="215" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>Biller</label>
+    <group id="paynl_payment_biller" sortOrder="1250" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>NOTYD</label>
         <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1"
                showInStore="1">
             <label>Enabled</label>
