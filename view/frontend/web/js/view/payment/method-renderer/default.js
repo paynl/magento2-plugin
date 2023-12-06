@@ -25,6 +25,7 @@ define(
             vatnumber: null,
             dateofbirth: null,
             billink_agree: null,
+            companyfield: null,
             initialize: function () {
                 this._super();
 
@@ -105,6 +106,15 @@ define(
             getPaymentIcon: function () {
                 return window.checkoutConfig.payment.icon[this.item.method];
             },
+            showCompanyField: function () {
+                return this.getCompanyField() > 0;
+            },
+            getCompanyField: function () {
+                if (this.getCompany().length > 0) {
+                    return false;
+                }
+                return (typeof window.checkoutConfig.payment.showcompanyfield !== 'undefined') ? window.checkoutConfig.payment.showcompanyfield[this.item.method] : '';
+            },
             showKVKAgree: function () {
                 if (this.item.method == 'paynl_payment_billink' && this.getKVK() > 0) {
                     return true;
@@ -121,7 +131,7 @@ define(
                 return this.getVAT() > 0;
             },
             getVAT: function () {
-                if (this.getCompany().length == 0) {
+                if (this.getCompany().length == 0 && (!this.getCompanyField() || this.getCompanyField() == 0)) {
                     return false;
                 }
                 return (typeof window.checkoutConfig.payment.showvat !== 'undefined') ? window.checkoutConfig.payment.showvat[this.item.method] : '';
@@ -207,6 +217,7 @@ define(
                     'additional_data': {
                         "cocnumber": this.cocnumber,
                         "vatnumber": this.vatnumber,
+                        "companyfield": this.companyfield,
                         "dob": dob_format,
                         "billink_agree": this.billink_agree,
                         "payment_option": this.paymentOption
@@ -224,6 +235,20 @@ define(
                 var cocRequired = this.getKVK() == 2;
                 var vatRequired = this.getVAT() == 2;
                 var dobRequired = this.getDOB() == 2;
+                var companyfieldRequired = this.getCompanyField() == 2;
+
+                if (companyfieldRequired) {
+                    if (this.companyfield == null || this.companyfield.length == 0) {
+                        alert({
+                            title: $.mage.__('Invalid company'),
+                            content: $.mage.__('Enter a valid company name'),
+                            actions: {
+                                always: function (){}
+                            }
+                        });
+                        return false;
+                    }
+                }
                 if (cocRequired) {
                     if (this.billink_agree != true && this.item.method == 'paynl_payment_billink') {
                         alert({

@@ -131,6 +131,7 @@ class ConfigProvider implements ConfigProviderInterface
                 $config['payment']['defaultpaymentoption'][$code]  = $this->getDefaultPaymentOption($code);
                 $config['payment']['hidepaymentoptions'][$code]    = $this->hidePaymentOptions($code);
                 $config['payment']['icon'][$code]         = $this->getIcon($code);
+                $config['payment']['showcompanyfield'][$code] = $this->getCompanyField($code);
                 $config['payment']['showkvk'][$code]      = $this->getKVK($code);
                 $config['payment']['showvat'][$code]      = $this->getVAT($code);
                 $config['payment']['showdob'][$code]      = $this->getDOB($code);
@@ -195,6 +196,15 @@ class ConfigProvider implements ConfigProviderInterface
     protected function hidePaymentOptions($code)
     {
         return $this->methods[$code]->hidePaymentOptions();
+    }
+
+    /**
+     * @param string $code
+     * @return string
+     */
+    protected function getCompanyField($code)
+    {
+        return $this->methods[$code]->getCompanyField();
     }
 
     /**

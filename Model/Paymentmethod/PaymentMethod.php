@@ -250,6 +250,14 @@ abstract class PaymentMethod extends AbstractMethod
     /**
      * @return integer
      */
+    public function getCompanyField()
+    {
+        return $this->_scopeConfig->getValue('payment/' . $this->_code . '/showcompanyfield', 'store');
+    }
+
+    /**
+     * @return integer
+     */
     public function getKVK()
     {
         return $this->_scopeConfig->getValue('payment/' . $this->_code . '/showkvk', 'store');
@@ -540,6 +548,9 @@ abstract class PaymentMethod extends AbstractMethod
         parent::assignData($data);
 
         if (is_array($data)) {
+            if (isset($data['companyfield'])) {
+                $this->getInfoInstance()->setAdditionalInformation('companyfield', $data['companyfield']);
+            }
             if (isset($data['cocnumber'])) {
                 $this->getInfoInstance()->setAdditionalInformation('cocnumber', $data['cocnumber']);
             }
@@ -551,6 +562,10 @@ abstract class PaymentMethod extends AbstractMethod
             }
         } elseif ($data instanceof \Magento\Framework\DataObject) {
             $additional_data = $data->getAdditionalData();
+
+            if (isset($additional_data['companyfield'])) {
+                $this->getInfoInstance()->setAdditionalInformation('companyfield', $additional_data['companyfield']);
+            }
 
             if (isset($additional_data['cocnumber'])) {
                 $this->getInfoInstance()->setAdditionalInformation('cocnumber', $additional_data['cocnumber']);

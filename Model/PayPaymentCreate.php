@@ -23,6 +23,11 @@ class PayPaymentCreate
     /**
      * @var string
      */
+    private $companyField;
+
+    /**
+     * @var string
+     */
     private $cocNumber;
 
     /**
@@ -96,6 +101,7 @@ class PayPaymentCreate
         $this->additionalData = $order->getPayment()->getAdditionalInformation();
         $this->setAmount($this->payConfig->isAlwaysBaseCurrency() ? $order->getBaseGrandTotal() : $order->getGrandTotal());
         $this->setCurrency($this->payConfig->isAlwaysBaseCurrency() ? $order->getBaseCurrencyCode() : $order->getOrderCurrencyCode());
+        $this->setCompanyField($this->additionalData['companyfield'] ?? '');
         $this->setCocNumber($this->additionalData['cocnumber'] ?? '');
         $this->setVatNumber($this->additionalData['vatnumber'] ?? '');
         $this->setIssuer($this->additionalData['payment_option'] ?? '');
@@ -125,6 +131,16 @@ class PayPaymentCreate
     public function setPaymentMethod($paymentMethodId)
     {
         $this->paymentMethodId = $paymentMethodId;
+        return $this;
+    }
+
+    /**
+     * @param string $companyField
+     * @return $this
+     */
+    public function setCompanyField($companyField)
+    {
+        $this->companyField = $companyField;
         return $this;
     }
 
@@ -356,6 +372,8 @@ class PayPaymentCreate
             $enduser['gender'] = payHelper::genderConversion((empty($enduser['gender'])) ? $this->order->getCustomerGender($this->order) : $enduser['gender']);
             if (!empty($arrBillingAddress['company'])) {
                 $enduser['company']['name'] = $arrBillingAddress['company'];
+            } elseif (!empty($this->companyField)) {
+                $enduser['company']['name'] = $this->companyField;
             }
             if (!empty($arrBillingAddress['country_id'])) {
                 $enduser['company']['countryCode'] = $arrBillingAddress['country_id'];
