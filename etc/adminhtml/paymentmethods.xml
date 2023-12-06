@@ -10,6 +10,7 @@
     <include path="Paynl_Payment::paymentmethods/amex.xml" />
     <include path="Paynl_Payment::paymentmethods/applepay.xml" />
     <include path="Paynl_Payment::paymentmethods/bataviacadeaukaart.xml" />
+    <include path="Paynl_Payment::paymentmethods/beautycadeau.xml" />
     <include path="Paynl_Payment::paymentmethods/biercheque.xml" />
     <include path="Paynl_Payment::paymentmethods/biller.xml" />
     <include path="Paynl_Payment::paymentmethods/billink.xml" />
@@ -34,6 +35,7 @@
     <include path="Paynl_Payment::paymentmethods/givacard.xml" />
     <include path="Paynl_Payment::paymentmethods/good4fun.xml" />
     <include path="Paynl_Payment::paymentmethods/googlepay.xml" />
+    <include path="Paynl_Payment::paymentmethods/horsesandgifts.xml" />
     <include path="Paynl_Payment::paymentmethods/huisentuincadeau.xml" />
     <include path="Paynl_Payment::paymentmethods/ideal.xml" />
     <include path="Paynl_Payment::paymentmethods/in3business.xml" />
@@ -44,6 +46,7 @@
     <include path="Paynl_Payment::paymentmethods/maestro.xml" />
     <include path="Paynl_Payment::paymentmethods/mistercash.xml" />
     <include path="Paynl_Payment::paymentmethods/monizze.xml" />
+    <include path="Paynl_Payment::paymentmethods/mooigiftcard.xml" />
     <include path="Paynl_Payment::paymentmethods/multibanco.xml" />
     <include path="Paynl_Payment::paymentmethods/nexi.xml" />
     <include path="Paynl_Payment::paymentmethods/overboeking.xml" />
