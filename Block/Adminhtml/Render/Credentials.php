@@ -10,6 +10,7 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\UrlInterface;
 use Paynl\Payment\Helper\PayHelper;
 use Paynl\Paymentmethods;
+use Paynl\Payment\Model\Config;
 
 class Credentials extends Field
 {
@@ -40,6 +41,11 @@ class Credentials extends Field
     protected $urlInterface;
 
     /**
+     * @var Config
+     */
+    protected $_config;
+
+    /**
      * Constructor.
      *
      * @param Context $context
@@ -47,13 +53,15 @@ class Credentials extends Field
      * @param ScopeConfigInterface $scopeConfig
      * @param PayHelper $payHelper
      * @param UrlInterface $urlInterface
+     * @param Config $config
      */
-    public function __construct(Context $context, RequestInterface $request, ScopeConfigInterface $scopeConfig, PayHelper $payHelper, UrlInterface $urlInterface)
+    public function __construct(Context $context, RequestInterface $request, ScopeConfigInterface $scopeConfig, PayHelper $payHelper, UrlInterface $urlInterface, Config $config)
     {
         $this->request = $request;
         $this->scopeConfig = $scopeConfig;
         $this->payHelper = $payHelper;
         $this->urlInterface = $urlInterface;
+        $this->_config = $config;
         parent::__construct($context);
     }
 
@@ -97,17 +105,15 @@ class Credentials extends Field
             $scopeId = $websiteId;
         }
 
-        $tokencode = trim((string) $this->scopeConfig->getValue('payment/paynl/tokencode', $scope, $scopeId));
-        $apiToken = trim((string) $this->scopeConfig->getValue('payment/paynl/apitoken_encrypted', $scope, $scopeId));
-        $serviceId = trim((string) $this->scopeConfig->getValue('payment/paynl/serviceid', $scope, $scopeId));
+        $tokencode = $this->_config->getApiTokenBackend($scope, $scopeId);
+        $apiToken = $this->_config->getServiceIdBackend($scope, $scopeId);
+        $serviceId =  $this->_config->getTokencodeBackend($scope, $scopeId);
 
         $error = '';
         $status = 1;
         if (!empty($apiToken) && !empty($serviceId) && !empty($tokencode)) {
             try {
-                \Paynl\Config::setTokenCode($tokencode);
-                \Paynl\Config::setApiToken($apiToken);
-                \Paynl\Config::setServiceId($serviceId);
+                $this->_config->configureSDKBackend($scope, $scopeId);
                 Paymentmethods::getList();
             } catch (\Exception $e) {
                 $error = $e->getMessage();

@@ -5,6 +5,7 @@ namespace Paynl\Payment\Model;
 use Magento\Framework\App\ProductMetadataInterface;
 use Magento\Payment\Helper\Data;
 use Magento\Store\Model\Store;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 
 /**
  * Get / Set configuration for the PAY api and Magento settings.
@@ -20,6 +21,7 @@ class Config
     public const ORDERSTATUS_DENIED = -63;
     public const ORDERSTATUS_CANCELED = -90;
     public const ORDERSTATUS_VERIFY = 85;
+
 
     /** @var  Store */
     private $store;
@@ -39,6 +41,11 @@ class Config
      * @var Data
      */
     protected $paymentHelper;
+
+    /**
+     * @var ScopeConfigInterface
+     */
+    protected $scopeConfig;
 
     /** @array  Brands */
     public $brands = [
@@ -123,19 +130,22 @@ class Config
      * @param \Paynl\Payment\Helper\PayHelper $helper
      * @param ProductMetadataInterface $productMetadata
      * @param Data $paymentHelper
+     * @param ScopeConfigInterface $scopeConfig
      */
     public function __construct(
         Store $store,
         \Magento\Framework\View\Element\Template $resources,
         \Paynl\Payment\Helper\PayHelper $helper,
         ProductMetadataInterface $productMetadata,
-        Data $paymentHelper
+        Data $paymentHelper,
+        ScopeConfigInterface $scopeConfig
     ) {
         $this->store = $store;
         $this->resources = $resources;
         $this->helper = $helper;
         $this->productMetadata = $productMetadata;
         $this->paymentHelper = $paymentHelper;
+        $this->scopeConfig = $scopeConfig;
     }
 
     /**
@@ -435,6 +445,79 @@ class Config
         $gateway = $this->store->getConfig('payment/paynl/failover_gateway_select');
         if ($gateway == 'custom') {
             return trim((string)$this->store->getConfig('payment/paynl/failover_gateway'));
+        }
+        return $gateway;
+    }
+
+    /**
+     * Configures the sdk with the API token and serviceId
+     * @param string $scope
+     * @param integer $scopeId
+     * @param boolean $useGateway
+     * @return boolean TRUE when config loaded, FALSE when the apitoken or serviceId are empty
+     */
+    public function configureSDKBackend($scope, $scopeId, $useGateway = false)
+    {
+        $apiToken = $this->getApiTokenBackend($scope, $scopeId);
+        $serviceId = $this->getServiceIdBackend($scope, $scopeId);
+        $tokencode = $this->getTokencodeBackend($scope, $scopeId);
+        $gateway = $this->getFailoverGatewayBackend($scope, $scopeId);
+
+        if (!empty($tokencode)) {
+            \Paynl\Config::setTokenCode($tokencode);
+        }
+        if (!empty($apiToken) && !empty($serviceId)) {
+            if ($useGateway && !empty($gateway) && substr(trim($gateway), 0, 4) === "http") {
+                \Paynl\Config::setApiBase(trim($gateway));
+            }
+            \Paynl\Config::setApiToken($apiToken);
+            \Paynl\Config::setServiceId($serviceId);
+
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @param string $scope
+     * @param integer $scopeId
+     * @return string
+     */
+    public function getApiTokenBackend($scope, $scopeId)
+    {
+        return trim((string) $this->scopeConfig->getValue('payment/paynl/apitoken_encrypted', $scope, $scopeId));
+    }
+
+    /**
+     * @param string $scope
+     * @param integer $scopeId
+     * @return string
+     */
+    public function getTokencodeBackend($scope, $scopeId)
+    {
+        return trim((string) $this->scopeConfig->getValue('payment/paynl/tokencode', $scope, $scopeId));
+    }
+
+    /**
+     * @param string $scope
+     * @param integer $scopeId
+     * @return string
+     */
+    public function getServiceIdBackend($scope, $scopeId)
+    {
+        return trim((string) $this->scopeConfig->getValue('payment/paynl/serviceid', $scope, $scopeId));
+    }
+
+    /**
+     * @param string $scope
+     * @param integer $scopeId
+     * @return string|null
+     */
+    public function getFailoverGatewayBackend($scope, $scopeId)
+    {
+        $gateway = $this->scopeConfig->getValue('payment/paynl/failover_gateway_select', $scope, $scopeId);
+        if ($gateway == 'custom') {
+            return trim((string) $this->scopeConfig->getValue('payment/paynl/failover_gateway', $scope, $scopeId));
         }
         return $gateway;
     }
