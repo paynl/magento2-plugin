@@ -102,7 +102,7 @@ abstract class Available implements ArrayInterface
             $scope = 'websites';
             $scopeId = $websiteId;
         }
-        
+
         $this->_config->setScope($scope, $scopeId);
         $configured = $this->_config->configureSDK();
         if (!$configured) {
