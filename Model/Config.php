@@ -29,7 +29,7 @@ class Config
     /** @var  string */
     private $scope;
 
-    /** @var  int */
+    /** @var  integer */
     private $scopeId;
 
     /** @var  Resources */
@@ -200,14 +200,14 @@ class Config
 
     /**
      * @param string $scope
-     * @param int $scopeId
+     * @param integer $scopeId
      * @return void
      */
     public function setScope($scope, $scopeId)
     {
         $this->scope = $scope;
         $this->scopeId = $scopeId;
-    }  
+    }
 
     /**
      * @return boolean
@@ -435,7 +435,7 @@ class Config
      */
     public function getApiToken()
     {
-        if(!empty($scope)){
+        if (!empty($scope)) {
             return trim((string) $this->scopeConfig->getValue('payment/paynl/apitoken_encrypted', $this->scope, $this->scopeId));
         }
         return trim((string)$this->store->getConfig('payment/paynl/apitoken_encrypted'));
@@ -446,7 +446,7 @@ class Config
      */
     public function getTokencode()
     {
-        if(!empty($scope)){
+        if (!empty($scope)) {
             return trim((string) $this->scopeConfig->getValue('payment/paynl/tokencode', $this->scope, $this->scopeId));
         }
         return trim((string)$this->store->getConfig('payment/paynl/tokencode'));
@@ -457,7 +457,7 @@ class Config
      */
     public function getServiceId()
     {
-        if(!empty($scope)){
+        if (!empty($scope)) {
             return trim((string) $this->scopeConfig->getValue('payment/paynl/serviceid', $this->scope, $this->scopeId));
         }
         return trim((string)$this->store->getConfig('payment/paynl/serviceid'));
@@ -468,14 +468,14 @@ class Config
      */
     public function getFailoverGateway()
     {
-        if(!empty($scope)){
+        if (!empty($scope)) {
             $gateway = $this->scopeConfig->getValue('payment/paynl/failover_gateway_select', $this->scope, $this->scopeId);
         } else {
             $gateway = $this->store->getConfig('payment/paynl/failover_gateway_select');
         }
-        
+
         if ($gateway == 'custom') {
-            if(!empty($scope)){
+            if (!empty($scope)) {
                 return trim((string) $this->scopeConfig->getValue('payment/paynl/failover_gateway', $this->scope, $this->scopeId));
             }
             return trim((string)$this->store->getConfig('payment/paynl/failover_gateway'));
