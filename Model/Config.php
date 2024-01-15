@@ -26,6 +26,12 @@ class Config
     /** @var  Store */
     private $store;
 
+    /** @var  string */
+    private $scope;
+
+    /** @var  int */
+    private $scopeId;
+
     /** @var  Resources */
     private $resources;
 
@@ -191,6 +197,17 @@ class Config
     {
         $this->store = $store;
     }
+
+    /**
+     * @param string $scope
+     * @param int $scopeId
+     * @return void
+     */
+    public function setScope($scope, $scopeId)
+    {
+        $this->scope = $scope;
+        $this->scopeId = $scopeId;
+    }  
 
     /**
      * @return boolean
@@ -418,6 +435,9 @@ class Config
      */
     public function getApiToken()
     {
+        if(!empty($scope)){
+            return trim((string) $this->scopeConfig->getValue('payment/paynl/apitoken_encrypted', $this->scope, $this->scopeId));
+        }
         return trim((string)$this->store->getConfig('payment/paynl/apitoken_encrypted'));
     }
 
@@ -426,6 +446,9 @@ class Config
      */
     public function getTokencode()
     {
+        if(!empty($scope)){
+            return trim((string) $this->scopeConfig->getValue('payment/paynl/tokencode', $this->scope, $this->scopeId));
+        }
         return trim((string)$this->store->getConfig('payment/paynl/tokencode'));
     }
 
@@ -434,6 +457,9 @@ class Config
      */
     public function getServiceId()
     {
+        if(!empty($scope)){
+            return trim((string) $this->scopeConfig->getValue('payment/paynl/serviceid', $this->scope, $this->scopeId));
+        }
         return trim((string)$this->store->getConfig('payment/paynl/serviceid'));
     }
 
@@ -442,82 +468,17 @@ class Config
      */
     public function getFailoverGateway()
     {
-        $gateway = $this->store->getConfig('payment/paynl/failover_gateway_select');
+        if(!empty($scope)){
+            $gateway = $this->scopeConfig->getValue('payment/paynl/failover_gateway_select', $this->scope, $this->scopeId);
+        } else {
+            $gateway = $this->store->getConfig('payment/paynl/failover_gateway_select');
+        }
+        
         if ($gateway == 'custom') {
-            return trim((string)$this->store->getConfig('payment/paynl/failover_gateway'));
-        }
-        return $gateway;
-    }
-
-    /**
-     * Configures the sdk with the API token and serviceId
-     * @param string $scope
-     * @param integer $scopeId
-     * @param boolean $useGateway
-     * @return boolean TRUE when config loaded, FALSE when the apitoken or serviceId are empty
-     */
-    public function configureSDKBackend($scope, $scopeId, $useGateway = false)
-    {
-        $apiToken = $this->getApiTokenBackend($scope, $scopeId);
-        $serviceId = $this->getServiceIdBackend($scope, $scopeId);
-        $tokencode = $this->getTokencodeBackend($scope, $scopeId);
-        $gateway = $this->getFailoverGatewayBackend($scope, $scopeId);
-
-        if (!empty($tokencode)) {
-            \Paynl\Config::setTokenCode($tokencode);
-        }
-        if (!empty($apiToken) && !empty($serviceId)) {
-            if ($useGateway && !empty($gateway) && substr(trim($gateway), 0, 4) === "http") {
-                \Paynl\Config::setApiBase(trim($gateway));
+            if(!empty($scope)){
+                return trim((string) $this->scopeConfig->getValue('payment/paynl/failover_gateway', $this->scope, $this->scopeId));
             }
-            \Paynl\Config::setApiToken($apiToken);
-            \Paynl\Config::setServiceId($serviceId);
-
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * @param string $scope
-     * @param integer $scopeId
-     * @return string
-     */
-    public function getApiTokenBackend($scope, $scopeId)
-    {
-        return trim((string) $this->scopeConfig->getValue('payment/paynl/apitoken_encrypted', $scope, $scopeId));
-    }
-
-    /**
-     * @param string $scope
-     * @param integer $scopeId
-     * @return string
-     */
-    public function getTokencodeBackend($scope, $scopeId)
-    {
-        return trim((string) $this->scopeConfig->getValue('payment/paynl/tokencode', $scope, $scopeId));
-    }
-
-    /**
-     * @param string $scope
-     * @param integer $scopeId
-     * @return string
-     */
-    public function getServiceIdBackend($scope, $scopeId)
-    {
-        return trim((string) $this->scopeConfig->getValue('payment/paynl/serviceid', $scope, $scopeId));
-    }
-
-    /**
-     * @param string $scope
-     * @param integer $scopeId
-     * @return string|null
-     */
-    public function getFailoverGatewayBackend($scope, $scopeId)
-    {
-        $gateway = $this->scopeConfig->getValue('payment/paynl/failover_gateway_select', $scope, $scopeId);
-        if ($gateway == 'custom') {
-            return trim((string) $this->scopeConfig->getValue('payment/paynl/failover_gateway', $scope, $scopeId));
+            return trim((string)$this->store->getConfig('payment/paynl/failover_gateway'));
         }
         return $gateway;
     }
