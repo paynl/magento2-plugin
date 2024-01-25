@@ -103,7 +103,8 @@ abstract class Available implements ArrayInterface
             $scopeId = $websiteId;
         }
 
-        $configured = $this->_config->configureSDKBackend($scope, $scopeId);
+        $this->_config->setScope($scope, $scopeId);
+        $configured = $this->_config->configureSDK();
         if (!$configured) {
             return [0 => __('Enter your API token and SL-code first')];
         }
@@ -172,7 +173,8 @@ abstract class Available implements ArrayInterface
             $scopeId = $websiteId;
         }
 
-        $configured = $this->_config->configureSDKBackend($scope, $scopeId);
+        $this->_config->setScope($scope, $scopeId);
+        $configured = $this->_config->configureSDK();
         if ($configured) {
             $paymentOptionId = $this->getPaymentOptionId();
 

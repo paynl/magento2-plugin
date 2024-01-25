@@ -105,15 +105,16 @@ class Credentials extends Field
             $scopeId = $websiteId;
         }
 
-        $tokencode = $this->_config->getApiTokenBackend($scope, $scopeId);
-        $apiToken = $this->_config->getServiceIdBackend($scope, $scopeId);
-        $serviceId =  $this->_config->getTokencodeBackend($scope, $scopeId);
+        $this->_config->setScope($scope, $scopeId);
+        $tokencode = $this->_config->getApiToken();
+        $apiToken = $this->_config->getServiceId();
+        $serviceId =  $this->_config->getTokencode();
 
         $error = '';
         $status = 1;
         if (!empty($apiToken) && !empty($serviceId) && !empty($tokencode)) {
             try {
-                $this->_config->configureSDKBackend($scope, $scopeId);
+                $this->_config->configureSDK();
                 Paymentmethods::getList();
             } catch (\Exception $e) {
                 $error = $e->getMessage();
