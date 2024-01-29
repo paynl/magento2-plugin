@@ -280,6 +280,14 @@ abstract class PaymentMethod extends AbstractMethod
     }
 
     /**
+     * @return mixed
+     */
+    public function getPinMoment()
+    {
+        return $this->_scopeConfig->getValue('payment/' . $this->_code . '/pinmoment', 'store');
+    }
+
+    /**
      * @return integer
      */
     public function getDisallowedShippingMethods()

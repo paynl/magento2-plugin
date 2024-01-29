@@ -58,9 +58,7 @@ define(
                 }
                 var disallowedShippingMethods = this.getDisallowedShipping();
                 if (disallowedShippingMethods) {
-                    var carrier_code = typeof quote.shippingMethod().carrier_code !== 'undefined' ? quote.shippingMethod().carrier_code + '_' : '';
-                    var method_code = typeof quote.shippingMethod().method_code !== 'undefined' ? quote.shippingMethod().method_code : '';
-                    var currentShippingMethod = carrier_code + method_code;
+                    var currentShippingMethod = this.getCurrentShippingMethod();
                     var disallowedShippingMethodsSplitted = disallowedShippingMethods.split(',');
                     if (disallowedShippingMethodsSplitted.includes(currentShippingMethod) && currentShippingMethod.length > 0) {
                         return false;
@@ -79,6 +77,12 @@ define(
                     return false;
                 }
                 return true;
+            },
+            getCurrentShippingMethod: function () {
+                var carrier_code = typeof quote.shippingMethod().carrier_code !== 'undefined' ? quote.shippingMethod().carrier_code + '_' : '';
+                var method_code = typeof quote.shippingMethod().method_code !== 'undefined' ? quote.shippingMethod().method_code : '';
+                var currentShippingMethod = carrier_code + method_code;
+                return currentShippingMethod;
             },
             currentIpIsValid: function () {
                 return window.checkoutConfig.payment.currentipisvalid[this.item.method];
@@ -144,6 +148,13 @@ define(
             },
             getDOB: function () {
                 return (typeof window.checkoutConfig.payment.showdob !== 'undefined') ? window.checkoutConfig.payment.showdob[this.item.method] : '';
+            },
+            showPinMoment: function () {
+                return this.getPinMoment() > 0;
+            },
+            getPinMoment: function () {
+                var currentShippingMethod = this.getCurrentShippingMethod();
+                return (typeof window.checkoutConfig.payment.showpinmoment !== 'undefined' && currentShippingMethod === 'instore_pickup') ? window.checkoutConfig.payment.showpinmoment[this.item.method] : '';
             },
             showKVKDOB: function () {
                 return this.getKVKDOB() > 0;

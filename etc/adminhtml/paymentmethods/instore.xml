@@ -45,6 +45,17 @@
                 <![CDATA[Enable this to start a card machine transaction via the Order detail page after making an order with the Instore option via the Magento2 backend.]]>
             </comment>
         </field>
+        <field id="pinmoment" translate="label" type="select" sortOrder="28" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Pin Moment</label>
+            <source_model>Paynl\Payment\Model\Config\Source\PinMoment</source_model>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+            <config_path>payment/paynl_payment_instore/pinmoment</config_path>
+            <comment>
+                <![CDATA[Make it possible for customers to choose to pay via pin when they are picking up their order at the store.]]>
+            </comment>
+        </field>
         <field id="order_status" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1"
                showInStore="1">
             <label>New order status</label>
