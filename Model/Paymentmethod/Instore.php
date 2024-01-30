@@ -88,11 +88,7 @@ class Instore extends PaymentMethod
             $order->getPayment()->setAdditionalInformation($additionalData);
             $order->save();
 
-            if ($pinmoment == '1') {
-                $url = $order->getStore()->getBaseUrl() . 'paynl/order/pickup';
-            } else{
-                $url = $instorePayment->getRedirectUrl();
-            }
+            $url = ($pinmoment == '1') ? $order->getStore()->getBaseUrl() . 'paynl/order/pickup' : $instorePayment->getRedirectUrl();
         } catch (\Exception $e) {
             $this->payHelper->logCritical($e->getMessage(), [], $store);
 
