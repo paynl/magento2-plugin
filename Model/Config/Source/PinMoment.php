@@ -31,7 +31,7 @@ class PinMoment implements ArrayInterface
     {
         return [
             '0' => __("Don't show in checkout (default)"),
-            '1' => __('Show in checkout by pickup'),
+            '1' => __("Show in checkout by pickup"),
         ];
     }
 }

@@ -77,7 +77,7 @@ class Instore extends PaymentMethod
 
             $transaction = (new PayPaymentCreate($order, $this))->create();
 
-            if ($pinmoment !== '1'){
+            if ($pinmoment !== '1') {
                 $instorePayment = \Paynl\Instore::payment(['transactionId' => $transaction->getTransactionId(), 'terminalId' => $terminalId]);
                 $additionalData['terminal_hash'] = $instorePayment->getHash();
             }

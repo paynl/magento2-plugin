@@ -40,10 +40,10 @@
             </ul>
         </div>
         <div data-bind="visible: showPinMoment()" class="field-select-billing">
-            <label for="pinmoment" data-bind="i18n: 'Pin moment'"> </label>
+            <label for="pinmoment" data-bind="i18n: 'Pin moment'"></label>
             <select data-bind="optionsValue: 'id', name: 'pinmoment', value: pinmoment">
-                <option value="0">Pin right now</option>
-                <option value="1">Pin at the store at pickup</option>
+                <option value="0" data-bind="i18n: 'Pin right now'"></option>
+                <option value="1" data-bind="i18n: 'Pin at the store at pickup'"></option>
             </select>
         </div>
         <div data-bind="visible: showCompanyField()" class="field-select-billing">
