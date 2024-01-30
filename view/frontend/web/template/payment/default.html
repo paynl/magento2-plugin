@@ -41,7 +41,7 @@
         </div>
         <div data-bind="visible: showPinMoment()" class="field-select-billing">
             <label for="pinmoment" data-bind="i18n: 'Pin moment'"> </label>
-            <select>
+            <select data-bind="optionsValue: 'id', name: 'pinmoment', value: pinmoment">
                 <option value="0">Pin right now</option>
                 <option value="1">Pin at the store at pickup</option>
             </select>

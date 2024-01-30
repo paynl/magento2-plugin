@@ -26,6 +26,7 @@ define(
             dateofbirth: null,
             billink_agree: null,
             companyfield: null,
+            pinmoment: null,
             initialize: function () {
                 this._super();
 
@@ -231,7 +232,8 @@ define(
                         "companyfield": this.companyfield,
                         "dob": dob_format,
                         "billink_agree": this.billink_agree,
-                        "payment_option": this.paymentOption
+                        "payment_option": this.paymentOption,
+                        "pinmoment": this.pinmoment
                     }
                 };
             },

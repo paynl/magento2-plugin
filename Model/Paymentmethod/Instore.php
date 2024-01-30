@@ -63,6 +63,7 @@ class Instore extends PaymentMethod
         $url = $store->getBaseUrl() . 'checkout/cart/';
 
         $additionalData = $order->getPayment()->getAdditionalInformation();
+        $pinmoment = !$fromAdmin ? $additionalData['pinmoment'] : false;
         $terminalId = null;
         if (isset($additionalData['payment_option'])) {
             $terminalId = $additionalData['payment_option'];
@@ -76,16 +77,22 @@ class Instore extends PaymentMethod
 
             $transaction = (new PayPaymentCreate($order, $this))->create();
 
-            $instorePayment = \Paynl\Instore::payment(['transactionId' => $transaction->getTransactionId(), 'terminalId' => $terminalId]);
+            if ($pinmoment !== '1'){
+                $instorePayment = \Paynl\Instore::payment(['transactionId' => $transaction->getTransactionId(), 'terminalId' => $terminalId]);
+                $additionalData['terminal_hash'] = $instorePayment->getHash();
+            }
 
             $additionalData['transactionId'] = $transaction->getTransactionId();
-            $additionalData['terminal_hash'] = $instorePayment->getHash();
             $additionalData['payment_option'] = $terminalId;
 
             $order->getPayment()->setAdditionalInformation($additionalData);
             $order->save();
 
-            $url = $instorePayment->getRedirectUrl();
+            if ($pinmoment == '1') {
+                $url = $order->getStore()->getBaseUrl() . 'paynl/order/pickup';
+            } else{
+                $url = $instorePayment->getRedirectUrl();
+            }
         } catch (\Exception $e) {
             $this->payHelper->logCritical($e->getMessage(), [], $store);
 
