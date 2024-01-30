@@ -363,7 +363,7 @@ class PayPaymentCreate
                 'phoneNumber' => payHelper::validatePhoneNumber($arrBillingAddress['telephone']),
                 'emailAddress' => $arrBillingAddress['email'],
             ];
-            if (isset($this->additionalData['dob'])) {
+            if (isset($this->additionalData['dob']) && !empty($this->additionalData['dob'])) {
                 $enduser['dob'] = $this->additionalData['dob'];
             }
             if (isset($this->additionalData['gender'])) {
