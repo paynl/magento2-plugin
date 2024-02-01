@@ -219,3 +219,4 @@
 "Allow customers to choose to pay when picking up the order at the store. 'Start Pay. Pin' button will be visible in the order view.","Allow customers to choose to pay when picking up the order at the store. 'Start Pay. Pin' button will be visible in the order view."
 "Don't show in checkout (default)","Don't show in checkout (default)"
 "Show in checkout by pickup","Show in checkout by pickup"
+"Pay.: Order was created for payment at moment of pick up at the store","Pay.: Order was created for payment at moment of pick up at the store"

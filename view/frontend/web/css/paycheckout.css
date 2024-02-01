@@ -52,3 +52,8 @@
     margin-bottom: 10px;
     position: inherit;
 }
+
+.paynl .payment-method-content label[for="pinmoment"] {
+    margin: 20px 0 10px 18px;
+    display: inline-block;
+}

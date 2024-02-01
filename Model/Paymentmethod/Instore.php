@@ -63,7 +63,13 @@ class Instore extends PaymentMethod
         $url = $store->getBaseUrl() . 'checkout/cart/';
 
         $additionalData = $order->getPayment()->getAdditionalInformation();
-        $pinmoment = !$fromAdmin ? $additionalData['pinmoment'] : false;
+
+        $pinmoment = $additionalData['pinmoment'];
+        if ($pinmoment == "1" && !$fromAdmin){
+            $order->addStatusHistoryComment(__('Pay.: Order was created for payment at moment of pick up at the store'))->save();
+        }
+        $pinmoment = !$fromAdmin ? $pinmoment : false;
+
         $terminalId = null;
         if (isset($additionalData['payment_option'])) {
             $terminalId = $additionalData['payment_option'];
