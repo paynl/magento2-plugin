@@ -75,14 +75,15 @@ class Instore extends PaymentMethod
                 throw new \Exception(__('Please select a pin-terminal'), 201);
             }
 
-            $transaction = (new PayPaymentCreate($order, $this))->create();
-
             if ($pinmoment !== '1') {
+                $transaction = (new PayPaymentCreate($order, $this))->create();
+
                 $instorePayment = \Paynl\Instore::payment(['transactionId' => $transaction->getTransactionId(), 'terminalId' => $terminalId]);
+
                 $additionalData['terminal_hash'] = $instorePayment->getHash();
+                $additionalData['transactionId'] = $transaction->getTransactionId();
             }
 
-            $additionalData['transactionId'] = $transaction->getTransactionId();
             $additionalData['payment_option'] = $terminalId;
 
             $order->getPayment()->setAdditionalInformation($additionalData);
