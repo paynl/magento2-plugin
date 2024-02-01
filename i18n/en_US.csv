@@ -216,6 +216,6 @@
 "Pin moment","Pin moment"
 "Pin right now","Pin right now"
 "Pin at the store at pickup","Pin at the store at pickup"
-"Make it possible for customers to choose to pay via pin when they are picking up their order at the store.","Make it possible for customers to choose to pay via pin when they are picking up their order at the store."
+"Allow customers to choose to pay when picking up the order at the store. 'Start Pay. Pin' button will be visible in the order view.","Allow customers to choose to pay when picking up the order at the store. 'Start Pay. Pin' button will be visible in the order view."
 "Don't show in checkout (default)","Don't show in checkout (default)"
 "Show in checkout by pickup","Show in checkout by pickup"

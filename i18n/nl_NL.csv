@@ -220,6 +220,6 @@
 "Pin moment","Pin-moment"
 "Pin right now","Nu pinnen"
 "Pin at the store at pickup","Bij afhalen in de winkel pinnen"
-"Make it possible for customers to choose to pay via pin when they are picking up their order at the store.","Maak het mogelijk dat klanten kunnen kiezen om tijdens het afhalen van hun bestelling in de winkel te pinnen."
+"Allow customers to choose to pay when picking up the order at the store. 'Start Pay. Pin' button will be visible in the order view.","Geef klanten de mogelijkheid om te kiezen om te betalen bij het ophalen van de bestelling in de winkel. In het orderoverzicht is een pinknop zichtbaar."
 "Don't show in checkout (default)","Niet weergeven bij het afrekenen (standaard)"
 "Show in checkout by pickup","Toon bij het afrekenen wanneer gekozen is voor afhalen"

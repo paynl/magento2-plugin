@@ -163,6 +163,6 @@
 "Pin moment","Pin-Moment"
 "Pin right now","Jetzt pinnen"
 "Pin at the store at pickup","PIN bei der Abholung im Geschäft"
-"Make it possible for customers to choose to pay via pin when they are picking up their order at the store.","Ermöglichen Sie es Kunden, bei der Abholung ihrer Bestellung im Geschäft per PIN zu bezahlen."
+"Allow customers to choose to pay when picking up the order at the store. 'Start Pay. Pin' button will be visible in the order view.","Ermöglichen Sie den Kunden, bei der Abholung der Bestellung im Geschäft zu bezahlen. In der Bestellansicht wird ein Pin-Button angezeigt."
 "Don't show in checkout (default)","Nicht im Checkout anzeigen (Standard)"
 "Show in checkout by pickup","Bei Abholung an der Kasse anzeigen"

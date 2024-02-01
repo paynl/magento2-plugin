@@ -162,6 +162,6 @@
 "Pin moment","Moment de code PIN"
 "Pin right now","Épingler maintenant"
 "Pin at the store at pickup","Épinglez en magasin lors du retrait"
-"Make it possible for customers to choose to pay via pin when they are picking up their order at the store.","Permettez aux clients de choisir de payer par code PIN lors du retrait de leur commande en magasin."
+"Allow customers to choose to pay when picking up the order at the store. 'Start Pay. Pin' button will be visible in the order view.","Permettez aux clients de choisir de payer lors du retrait de la commande en magasin. Un bouton épingle sera visible dans la vue commande."
 "Don't show in checkout (default)","Ne pas afficher à la caisse (par défaut)"
 "Show in checkout by pickup","Présenter à la caisse lors du retrait"

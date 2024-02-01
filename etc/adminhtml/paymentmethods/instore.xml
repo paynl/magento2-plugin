@@ -53,7 +53,7 @@
             </depends>
             <config_path>payment/paynl_payment_instore/pinmoment</config_path>
             <comment>
-                <![CDATA[Make it possible for customers to choose to pay via pin when they are picking up their order at the store.]]>
+                <![CDATA[Allow customers to choose to pay when picking up the order at the store. 'Start Pay. Pin' button will be visible in the order view.]]>
             </comment>
         </field>
         <field id="order_status" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1"
