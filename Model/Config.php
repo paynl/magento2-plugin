@@ -379,6 +379,14 @@ class Config
     /**
      * @return boolean
      */
+    public function getFollowPaymentMethod()
+    {
+        return $this->store->getConfig('payment/paynl/follow_payment_method') == 1;
+    }
+
+    /**
+     * @return boolean
+     */
     public function sendEcommerceAnalytics()
     {
         return $this->store->getConfig('payment/paynl/google_analytics_ecommerce') == 1;

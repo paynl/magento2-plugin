@@ -9,6 +9,7 @@ use Magento\Sales\Model\OrderRepository;
 use Paynl\Payment\Controller\CsrfAwareActionInterface;
 use Paynl\Payment\Controller\PayAction;
 use Paynl\Payment\Helper\PayHelper;
+use Paynl\Payment\Model\Config;
 use Paynl\Payment\Model\PayPayment;
 use Paynl\Transaction;
 
@@ -92,6 +93,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         $action = !empty($params['action']) ? strtolower($params['action']) : '';
         $payOrderId = isset($params['order_id']) ? $params['order_id'] : null;
         $orderEntityId = isset($params['extra3']) ? $params['extra3'] : null;
+        $paymentProfileId = isset($params['payment_profile_id']) ? $params['payment_profile_id'] : null;
 
         if ($action == 'pending') {
             return $this->result->setContents('TRUE| Ignore pending');
@@ -205,6 +207,17 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
                 if (!$result) {
                     throw new \Exception('Cannot process order');
                 }
+
+                $orderMethod = $order->getPayment()->getMethod();
+                $transactionMethod = $this->config->getPaymentMethodCode($paymentProfileId);
+                if ($transactionMethod !== $orderMethod && $this->config->getFollowPaymentMethod()) {
+                    $order->getPayment()->setMethod($transactionMethod);
+                    $order->save();
+
+                    $order->addStatusHistoryComment(__('Pay.: Payment method changed: ') . $orderMethod . ' -> ' . $transactionMethod)->save();
+                    $this->payHelper->logDebug('Follow payment method form ' . $orderMethod . ' to ' . $transactionMethod);
+                }
+
                 $message = 'TRUE| ' . (($transaction->isPaid()) ? "PAID" : "AUTHORIZED");
             } catch (\Exception $e) {
                 $message = 'FALSE| ' . $e->getMessage();

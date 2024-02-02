@@ -160,3 +160,6 @@
 "Enter your company name","Geben Sie Ihren Firmennamen ein"
 "Invalid company","Ungültiger firma"
 "Enter a valid company name","Geben Sie einen gültigen Firmennamen ein"
+"Follow payment method","Follow payment method"
+"This will ensure the order is updated with the actual payment method used to complete the order. This can differ from the payment method initially selected","Dadurch wird sichergestellt, dass die Bestellung mit der tatsächlichen Zahlungsmethode aktualisiert wird, die zum Abschluss der Bestellung verwendet wurde. Diese kann von der ursprünglich gewählten Zahlungsart abweichen"
+"Pay.: Payment method changed: ","Pay.: Zahlungsmethode geändert: "
