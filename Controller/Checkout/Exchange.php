@@ -9,7 +9,6 @@ use Magento\Sales\Model\OrderRepository;
 use Paynl\Payment\Controller\CsrfAwareActionInterface;
 use Paynl\Payment\Controller\PayAction;
 use Paynl\Payment\Helper\PayHelper;
-use Paynl\Payment\Model\Config;
 use Paynl\Payment\Model\PayPayment;
 use Paynl\Transaction;
 
