@@ -161,4 +161,4 @@
 "Entrez un nom d'entreprise valide","Voer een geldige bedrijfsnaam in"
 "Follow payment method","Follow payment method"
 "This will ensure the order is updated with the actual payment method used to complete the order. This can differ from the payment method initially selected","Cela garantira que la commande est mise à jour avec le mode de paiement réel utilisé pour finaliser la commande. Celui-ci peut différer du mode de paiement initialement sélectionné"
-"Pay.: Payment method changed: ","Pay.: Mode de paiement modifié: "
+"PAY.: Updated payment method from %1 to %2","PAY.: Mode de paiement modifié de %1 à %2"

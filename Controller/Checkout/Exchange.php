@@ -202,19 +202,9 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
 
         if ($transaction->isPaid() || $transaction->isAuthorized()) {
             try {
-                $result = $this->payPayment->processPaidOrder($transaction, $order);
+                $result = $this->payPayment->processPaidOrder($transaction, $order, $paymentProfileId);
                 if (!$result) {
                     throw new \Exception('Cannot process order');
-                }
-
-                $orderMethod = $order->getPayment()->getMethod();
-                $transactionMethod = $this->config->getPaymentMethodCode($paymentProfileId);
-                if ($transactionMethod !== $orderMethod && $this->config->getFollowPaymentMethod()) {
-                    $order->getPayment()->setMethod($transactionMethod);
-                    $order->save();
-
-                    $order->addStatusHistoryComment(__('Pay.: Payment method changed: ') . $orderMethod . ' -> ' . $transactionMethod)->save();
-                    $this->payHelper->logDebug('Follow payment method form ' . $orderMethod . ' to ' . $transactionMethod);
                 }
 
                 $message = 'TRUE| ' . (($transaction->isPaid()) ? "PAID" : "AUTHORIZED");

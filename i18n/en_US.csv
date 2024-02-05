@@ -215,4 +215,4 @@
 "Enter a valid company name","Enter a valid company name"
 "Follow payment method","Follow payment method"
 "This will ensure the order is updated with the actual payment method used to complete the order. This can differ from the payment method initially selected","This will ensure the order is updated with the actual payment method used to complete the order. This can differ from the payment method initially selected"
-"Pay.: Payment method changed: ","Pay.: Payment method changed: "
+"PAY.: Updated payment method from %1 to %2","PAY.: Updated payment method from %1 to %2"
