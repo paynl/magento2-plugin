@@ -598,5 +598,4 @@ class Config
         $paymentMethodList = $this->paymentHelper->getPaymentMethods();
         return $paymentMethodList[$paymentCode] ?? [];
     }
-
 }
