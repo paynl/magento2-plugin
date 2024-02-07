@@ -379,6 +379,14 @@ class Config
     /**
      * @return boolean
      */
+    public function getFollowPaymentMethod()
+    {
+        return $this->store->getConfig('payment/paynl/follow_payment_method') == 1;
+    }
+
+    /**
+     * @return boolean
+     */
     public function sendEcommerceAnalytics()
     {
         return $this->store->getConfig('payment/paynl/google_analytics_ecommerce') == 1;
@@ -565,20 +573,29 @@ class Config
 
     /**
      * @param string $paymentProfileId
-     * @return string
+     * @return mixed|void
      */
-    public function getPaymentmethodCode(string $paymentProfileId)
+    public function getPaymentMethod(string $paymentProfileId)
     {
-        # Get all PAY. methods
         $paymentMethodList = $this->paymentHelper->getPaymentMethods();
-
         foreach ($paymentMethodList as $key => $value) {
             if (strpos($key, 'paynl_') !== false && $key != 'paynl_payment_paylink') {
                 $code = $this->store->getConfig('payment/' . $key . '/payment_option_id');
                 if ($code == $paymentProfileId) {
-                    return $key;
+                    $value['code'] = $key;
+                    return $value;
                 }
             }
         }
+    }
+
+    /**
+     * @param string $paymentCode
+     * @return array|mixed
+     */
+    public function getPaymentMethodByCode(string $paymentCode)
+    {
+        $paymentMethodList = $this->paymentHelper->getPaymentMethods();
+        return $paymentMethodList[$paymentCode] ?? [];
     }
 }

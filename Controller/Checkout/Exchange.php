@@ -92,6 +92,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         $action = !empty($params['action']) ? strtolower($params['action']) : '';
         $payOrderId = isset($params['order_id']) ? $params['order_id'] : null;
         $orderEntityId = isset($params['extra3']) ? $params['extra3'] : null;
+        $paymentProfileId = isset($params['payment_profile_id']) ? $params['payment_profile_id'] : null;
 
         if ($action == 'pending') {
             return $this->result->setContents('TRUE| Ignore pending');
@@ -201,10 +202,11 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
 
         if ($transaction->isPaid() || $transaction->isAuthorized()) {
             try {
-                $result = $this->payPayment->processPaidOrder($transaction, $order);
+                $result = $this->payPayment->processPaidOrder($transaction, $order, $paymentProfileId);
                 if (!$result) {
                     throw new \Exception('Cannot process order');
                 }
+
                 $message = 'TRUE| ' . (($transaction->isPaid()) ? "PAID" : "AUTHORIZED");
             } catch (\Exception $e) {
                 $message = 'FALSE| ' . $e->getMessage();
