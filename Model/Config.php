@@ -573,7 +573,7 @@ class Config
 
     /**
      * @param string $paymentProfileId
-     * @return void
+     * @return mixed|void
      */
     public function getPaymentMethod(string $paymentProfileId)
     {

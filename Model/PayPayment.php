@@ -215,8 +215,8 @@ class PayPayment
     /**
      * @param PayTransaction $transaction
      * @param Order $order
-     * @param $paymentProfileId
-     * @return bool
+     * @param integer $paymentProfileId
+     * @return boolean
      * @throws \Magento\Framework\Exception\AlreadyExistsException
      * @throws \Magento\Framework\Exception\InputException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
