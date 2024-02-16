@@ -215,12 +215,13 @@ class PayPayment
     /**
      * @param PayTransaction $transaction
      * @param Order $order
+     * @param integer $paymentProfileId
      * @return boolean
      * @throws \Magento\Framework\Exception\AlreadyExistsException
      * @throws \Magento\Framework\Exception\InputException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function processPaidOrder(PayTransaction $transaction, Order $order)
+    public function processPaidOrder(PayTransaction $transaction, Order $order, $paymentProfileId = null)
     {
         $returnResult = false;
         $multiShippingOrder = false;
@@ -257,6 +258,16 @@ class PayPayment
             $payment->setTransactionId($transaction->getId());
             $payment->setPreparedMessage('PAY. - ');
             $payment->setIsTransactionClosed(0);
+
+            if ($this->config->getFollowPaymentMethod()) {
+                $transactionMethod = $this->config->getPaymentMethod($paymentProfileId);
+                if ($transactionMethod['code'] !== $paymentMethod) {
+                    $payment->setMethod($transactionMethod['code']);
+                    $paymentMethodObj = $this->config->getPaymentMethodByCode($paymentMethod);
+                    $order->addStatusHistoryComment(__('PAY.: Payment method changed from %1 to %2', ($paymentMethodObj['title'] ?? ''), ($transactionMethod['title'] ?? '')))->save();
+                    $this->payHelper->logDebug('Follow payment method from ' . ($paymentMethodObj['title'] ?? '') . ' to ' . ($transactionMethod['title'] ?? ''));
+                }
+            }
 
             $orderAmount = round($order->getGrandTotal(), 2);
             $orderBaseAmount = round($order->getBaseGrandTotal(), 2);
@@ -351,10 +362,10 @@ class PayPayment
 
             $subProfile = $_detail['orderId'];
             $profileId = $_detail['paymentProfileId'];
-            $method = $_detail['paymentProfileName'];
+            $methodName = $_detail['paymentProfileName'];
             $amount = $_detail['amount']['value'] / 100;
             $currency = $_detail['amount']['currency'];
-            $methodCode = $this->config->getPaymentmethodCode($profileId);
+            $method = $this->config->getPaymentmethod($profileId);
 
             /** @var Interceptor $orderPayment */
             if (!$firstPayment) {
@@ -362,7 +373,7 @@ class PayPayment
             } else {
                 $orderPayment = $order->getPayment();
             }
-            $orderPayment->setMethod($methodCode);
+            $orderPayment->setMethod($method['code'] ?? '');
             $orderPayment->setOrder($order);
             $orderPayment->setBaseAmountPaid($amount);
             $orderPayment->save();
@@ -374,11 +385,11 @@ class PayPayment
                 ->build('capture')
                 ->setAdditionalInformation(
                     \Magento\Sales\Model\Order\Payment\Transaction::RAW_DETAILS,
-                    ["Paymentmethod" => $method, "Amount" => $amount, "Currency" => $currency]
+                    ["Paymentmethod" => $methodName, "Amount" => $amount, "Currency" => $currency]
                 );
             $transactionBuilder->save();
 
-            $order->addStatusHistoryComment(__('PAY.: Partial payment received: ' . $subProfile . ' - Amount ' . $currency . ' ' . $amount . ' Method: ' . $method));
+            $order->addStatusHistoryComment(__('PAY.: Partial payment received: ' . $subProfile . ' - Amount ' . $currency . ' ' . $amount . ' Method: ' . $methodName));
             $order->setTotalPaid($totalpaid / 100);
 
             $this->orderRepository->save($order);

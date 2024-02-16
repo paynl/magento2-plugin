@@ -12,6 +12,7 @@
                 <pay_style_checkout>1</pay_style_checkout>
                 <order_description_prefix>Order </order_description_prefix>
                 <pay_pending_page>1</pay_pending_page>
+                <follow_payment_method>1</follow_payment_method>
             </paynl>
             <paynl_payment_paylink>
                 <active>0</active>

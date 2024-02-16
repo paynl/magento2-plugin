@@ -379,6 +379,14 @@ class Config
     /**
      * @return boolean
      */
+    public function getFollowPaymentMethod()
+    {
+        return $this->store->getConfig('payment/paynl/follow_payment_method') == 1;
+    }
+
+    /**
+     * @return boolean
+     */
     public function sendEcommerceAnalytics()
     {
         return $this->store->getConfig('payment/paynl/google_analytics_ecommerce') == 1;
@@ -435,7 +443,7 @@ class Config
      */
     public function getApiToken()
     {
-        if (!empty($scope)) {
+        if (!empty($this->scope)) {
             return trim((string) $this->scopeConfig->getValue('payment/paynl/apitoken_encrypted', $this->scope, $this->scopeId));
         }
         return trim((string)$this->store->getConfig('payment/paynl/apitoken_encrypted'));
@@ -446,7 +454,7 @@ class Config
      */
     public function getTokencode()
     {
-        if (!empty($scope)) {
+        if (!empty($this->scope)) {
             return trim((string) $this->scopeConfig->getValue('payment/paynl/tokencode', $this->scope, $this->scopeId));
         }
         return trim((string)$this->store->getConfig('payment/paynl/tokencode'));
@@ -457,7 +465,7 @@ class Config
      */
     public function getServiceId()
     {
-        if (!empty($scope)) {
+        if (!empty($this->scope)) {
             return trim((string) $this->scopeConfig->getValue('payment/paynl/serviceid', $this->scope, $this->scopeId));
         }
         return trim((string)$this->store->getConfig('payment/paynl/serviceid'));
@@ -468,14 +476,14 @@ class Config
      */
     public function getFailoverGateway()
     {
-        if (!empty($scope)) {
+        if (!empty($this->scope)) {
             $gateway = $this->scopeConfig->getValue('payment/paynl/failover_gateway_select', $this->scope, $this->scopeId);
         } else {
             $gateway = $this->store->getConfig('payment/paynl/failover_gateway_select');
         }
 
         if ($gateway == 'custom') {
-            if (!empty($scope)) {
+            if (!empty($this->scope)) {
                 return trim((string) $this->scopeConfig->getValue('payment/paynl/failover_gateway', $this->scope, $this->scopeId));
             }
             return trim((string)$this->store->getConfig('payment/paynl/failover_gateway'));
@@ -565,20 +573,29 @@ class Config
 
     /**
      * @param string $paymentProfileId
-     * @return string
+     * @return mixed|void
      */
-    public function getPaymentmethodCode(string $paymentProfileId)
+    public function getPaymentMethod(string $paymentProfileId)
     {
-        # Get all PAY. methods
         $paymentMethodList = $this->paymentHelper->getPaymentMethods();
-
         foreach ($paymentMethodList as $key => $value) {
             if (strpos($key, 'paynl_') !== false && $key != 'paynl_payment_paylink') {
                 $code = $this->store->getConfig('payment/' . $key . '/payment_option_id');
                 if ($code == $paymentProfileId) {
-                    return $key;
+                    $value['code'] = $key;
+                    return $value;
                 }
             }
         }
+    }
+
+    /**
+     * @param string $paymentCode
+     * @return array|mixed
+     */
+    public function getPaymentMethodByCode(string $paymentCode)
+    {
+        $paymentMethodList = $this->paymentHelper->getPaymentMethods();
+        return $paymentMethodList[$paymentCode] ?? [];
     }
 }
