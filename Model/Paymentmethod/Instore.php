@@ -64,15 +64,12 @@ class Instore extends PaymentMethod
 
         $additionalData = $order->getPayment()->getAdditionalInformation();
 
-        $pinmoment = $additionalData['pinmoment'];
-        if (
-            ($pinmoment == "1" && !$fromAdmin)
-            || ($this->getPinMoment() == "1" && !$fromAdmin)
-        ) {
-            $pinmoment = ($this->getPinMoment() == "1") ? "1" : $pinmoment;
-            $order->addStatusHistoryComment(__('Pay.: Order was created for payment at moment of pick up at the store'))->save();
+        $pinMoment = $additionalData['pinmoment'];
+        if (($pinMoment == "1" && !$fromAdmin) || ($this->getPinMoment() == "1" && !$fromAdmin)) {
+            $pinMoment = ($this->getPinMoment() == "1") ? "1" : $pinMoment;
+            $order->addStatusHistoryComment(__('PAY.: Payment at pick-up'))->save();
         }
-        $pinmoment = !$fromAdmin ? $pinmoment : false;
+        $pinMoment = !$fromAdmin ? $pinMoment : false;
 
         $terminalId = null;
         if (isset($additionalData['payment_option'])) {
@@ -85,7 +82,7 @@ class Instore extends PaymentMethod
                 throw new \Exception(__('Please select a pin-terminal'), 201);
             }
 
-            if ($pinmoment !== '1') {
+            if ($pinMoment !== '1') {
                 $transaction = (new PayPaymentCreate($order, $this))->create();
 
                 $instorePayment = \Paynl\Instore::payment(['transactionId' => $transaction->getTransactionId(), 'terminalId' => $terminalId]);
@@ -99,7 +96,7 @@ class Instore extends PaymentMethod
             $order->getPayment()->setAdditionalInformation($additionalData);
             $order->save();
 
-            $url = ($pinmoment == '1') ? $order->getStore()->getBaseUrl() . 'paynl/order/pickup' : $instorePayment->getRedirectUrl();
+            $url = ($pinMoment == '1') ? $order->getStore()->getBaseUrl() . 'paynl/order/pickup' : $instorePayment->getRedirectUrl();
         } catch (\Exception $e) {
             $this->payHelper->logCritical($e->getMessage(), [], $store);
 
