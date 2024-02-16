@@ -216,7 +216,7 @@
 "Payment location","Payment location"
 "Pay by card","Pay by card"
 "Pay later, at pickup","Pay later, at pickup"
-"Allow customers to choose to pay when picking up the order at the store. 'Start Pay. Pin' button will be visible in the order view.","Allow customers to choose to pay when picking up the order at the store. 'Start Pay. Pin' button will be visible in the order view."
+"Setting for where the payment should take place: instant, or at pickup location. Or provide this choice in the checkout.","Setting for where the payment should take place: instant, or at pickup location. Or provide this choice in the checkout."
 "PAY.: Payment at pick-up","PAY.: Payment at pick-up"
 "Directly payment initialization(default)","Directly payment initialization(default)"
 "Let payment take place at the pickup location, only create a backorder","Let payment take place at the pickup location, only create a backorder"

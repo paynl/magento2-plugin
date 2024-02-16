@@ -163,7 +163,7 @@
 "Payment location","Pin-Moment"
 "Pay by card","Jetzt pinnen"
 "Pay later, at pickup","PIN bei der Abholung im Geschäft"
-"Allow customers to choose to pay when picking up the order at the store. 'Start Pay. Pin' button will be visible in the order view.","Ermöglichen Sie den Kunden, bei der Abholung der Bestellung im Geschäft zu bezahlen. In der Bestellansicht wird ein Pin-Button angezeigt."
+"Setting for where the payment should take place: instant, or at pickup location. Or provide this choice in the checkout.","Ermöglichen Sie den Kunden, bei der Abholung der Bestellung im Geschäft zu bezahlen. In der Bestellansicht wird ein Pin-Button angezeigt."
 "PAY.: Payment at pick-up","Pay.: Die Bestellung wurde zum Zeitpunkt der Abholung im Geschäft zur Zahlung erstellt"
 "Directly payment initialization(default)","Nur Direktzahlungsoption bereitstellen (Standard)"
 "Let payment take place at the pickup location, only create a backorder","Verwenden Sie die Zahlung nur, wenn die Abholung im Geschäft ausgewählt ist"

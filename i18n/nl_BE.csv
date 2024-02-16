@@ -220,7 +220,7 @@
 "Payment location","Pin-moment"
 "Pay by card","Nu pinnen"
 "Pay later, at pickup","Bij afhalen in de winkel pinnen"
-"Allow customers to choose to pay when picking up the order at the store. 'Start Pay. Pin' button will be visible in the order view.","Geef klanten de mogelijkheid om te kiezen om te betalen bij het ophalen van de bestelling in de winkel. In het orderoverzicht is een pinknop zichtbaar."
+"Setting for where the payment should take place: instant, or at pickup location. Or provide this choice in the checkout.","Geef klanten de mogelijkheid om te kiezen om te betalen bij het ophalen van de bestelling in de winkel. In het orderoverzicht is een pinknop zichtbaar."
 "PAY.: Payment at pick-up","De bestelling is aangemaakt voor betaling op het moment van ophalen in de winkel"
 "Directly payment initialization(default)","Bied de betaaloptie direct aan aan (standaard)"
 "Let payment take place at the pickup location, only create a backorder","Gebruik alleen betaling als ophalen in de winkel is geselecteerd"
