@@ -182,6 +182,7 @@ class Finish extends PayAction
                 if (empty($successUrl)) {
                     $successUrl = ($payment->getMethod() == 'paynl_payment_paylink' || $this->config->sendEcommerceAnalytics()) ? Config::FINISH_PAY : Config::FINISH_STANDARD;
                 }
+                $this->payHelper->logDebug('Finish succes,', [$successUrl, $payOrderId, $bSuccess, $bVerify]);
                 $resultRedirect->setPath($successUrl, ['_query' => ['utm_nooverride' => '1']]);
                 if ($isPinTransaction && $pinStatus->getTransactionState() !== 'approved') {
                     $this->messageManager->addNoticeMessage(__('Order has been placed and payment is pending'));
@@ -206,6 +207,7 @@ class Finish extends PayAction
                 } elseif ($this->config->sendEcommerceAnalytics()) {
                     $successUrl = Config::FINISH_PAY;
                 }
+                $this->payHelper->logDebug('Finish succes,', [$successUrl, $payOrderId]);
                 $resultRedirect->setPath($successUrl, ['_query' => ['utm_nooverride' => '1']]);
                 $this->deactivateCart($order, $payOrderId);
             } else {
@@ -220,7 +222,9 @@ class Finish extends PayAction
                         $session->replaceQuote($quote);
                     }
                 }
-                $resultRedirect->setPath($payment->getMethod() == 'paynl_payment_paylink' ? Config::CANCEL_PAY : $this->config->getCancelURL());
+                $cancelUrl = $payment->getMethod() == 'paynl_payment_paylink' ? Config::CANCEL_PAY : $this->config->getCancelURL();
+                $this->payHelper->logDebug('Finish cancel/denied. Message: ' . $cancelMessage, [$multiShipFinish, $payOrderId, $cancelUrl]);
+                $resultRedirect->setPath($cancelUrl);
             }
         } catch (\Exception $e) {
             $this->payHelper->logCritical($e->getCode() . ': ' . $e->getMessage(), $params);
