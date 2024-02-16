@@ -46,7 +46,7 @@
             </comment>
         </field>
         <field id="pinmoment" translate="label" type="select" sortOrder="28" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Payment</label>
+            <label>Payment location</label>
             <source_model>Paynl\Payment\Model\Config\Source\PinMoment</source_model>
             <depends>
                 <field id="active">1</field>
