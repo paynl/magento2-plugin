@@ -30,8 +30,9 @@ class PinMoment implements ArrayInterface
     public function toArray()
     {
         return [
-            '0' => __("Don't show in checkout (default)"),
-            '1' => __("Show in checkout by pickup"),
+            '0' => __("Only provide direct payment option (default)"),
+            '1' => __("Only use payment when instore pickup is selected"),
+            '2' => __("Provide option to customer"),
         ];
     }
 }

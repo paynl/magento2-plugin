@@ -77,6 +77,9 @@ define(
                 if (!this.currentAgentIsValid()) {
                     return false;
                 }
+                if (!this.showPin()){
+                    return false;
+                }
                 return true;
             },
             getCurrentShippingMethod: function () {
@@ -155,7 +158,17 @@ define(
             },
             getPinMoment: function () {
                 var currentShippingMethod = this.getCurrentShippingMethod();
-                return (typeof window.checkoutConfig.payment.showpinmoment !== 'undefined' && currentShippingMethod === 'instore_pickup') ? window.checkoutConfig.payment.showpinmoment[this.item.method] : '';
+                return (typeof window.checkoutConfig.payment.showpinmoment !== 'undefined' && window.checkoutConfig.payment.showpinmoment[this.item.method] === '2' && currentShippingMethod === 'instore_pickup') ? window.checkoutConfig.payment.showpinmoment[this.item.method] : '';
+            },
+            showPin: function () {
+                var currentShippingMethod = this.getCurrentShippingMethod();
+                var showPinMomentConfig = (typeof window.checkoutConfig.payment.showpinmoment !== 'undefined') ? window.checkoutConfig.payment.showpinmoment[this.item.method] : '';
+
+                if (showPinMomentConfig === '1' && currentShippingMethod !== 'instore_pickup') {
+                    return false
+                }
+
+                return true
             },
             showKVKDOB: function () {
                 return this.getKVKDOB() > 0;

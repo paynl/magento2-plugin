@@ -65,7 +65,9 @@ class Instore extends PaymentMethod
         $additionalData = $order->getPayment()->getAdditionalInformation();
 
         $pinmoment = $additionalData['pinmoment'];
-        if ($pinmoment == "1" && !$fromAdmin) {
+        if (($pinmoment == "1" && !$fromAdmin) ||
+            $this->getPinMoment() == "1" && !$fromAdmin) {
+            $pinmoment = ($this->getPinMoment() == "1") ? "1" : $pinmoment;
             $order->addStatusHistoryComment(__('Pay.: Order was created for payment at moment of pick up at the store'))->save();
         }
         $pinmoment = !$fromAdmin ? $pinmoment : false;
