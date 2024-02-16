@@ -225,3 +225,6 @@
 "Only provide direct payment option (default)","Bied de betaaloptie direct aan aan (standaard)"
 "Only use payment when instore pickup is selected","Gebruik alleen betaling als ophalen in de winkel is geselecteerd"
 "Provide option to customer","Geef de klant de optie om te kiezen"
+"Follow payment method","Follow payment method"
+"This will ensure the order is updated with the actual payment method used to complete the order. This can differ from the payment method initially selected","Dit zorgt ervoor dat de bestelling wordt bijgewerkt met de daadwerkelijke betaalmethode die is gebruikt om de bestelling te voltooien. Dit kan afwijken van de aanvankelijk gekozen betaalmethode"
+"PAY.: Updated payment method from %1 to %2","PAY.: Betaalmethode gewijzigd van %1 naar %2"

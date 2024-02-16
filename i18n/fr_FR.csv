@@ -167,3 +167,6 @@
 "Only provide direct payment option (default)","Proposez uniquement l'option de paiement direct (par défaut)"
 "Only use payment when instore pickup is selected","Utiliser le paiement uniquement lorsque le retrait en magasin est sélectionné"
 "Provide option to customer","Offrir le choix au client"
+"Follow payment method","Follow payment method"
+"This will ensure the order is updated with the actual payment method used to complete the order. This can differ from the payment method initially selected","Cela garantira que la commande est mise à jour avec le mode de paiement réel utilisé pour finaliser la commande. Celui-ci peut différer du mode de paiement initialement sélectionné"
+"PAY.: Updated payment method from %1 to %2","PAY.: Mode de paiement modifié de %1 à %2"

@@ -221,3 +221,6 @@
 "Only provide direct payment option (default)","Only provide direct payment option (default)"
 "Only use payment when instore pickup is selected","Only use payment when instore pickup is selected"
 "Provide option to customer","Provide option to customer"
+"Follow payment method","Follow payment method"
+"This will ensure the order is updated with the actual payment method used to complete the order. This can differ from the payment method initially selected","This will ensure the order is updated with the actual payment method used to complete the order. This can differ from the payment method initially selected"
+"PAY.: Updated payment method from %1 to %2","PAY.: Updated payment method from %1 to %2"
