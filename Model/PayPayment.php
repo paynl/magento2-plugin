@@ -259,7 +259,7 @@ class PayPayment
             $payment->setPreparedMessage('PAY. - ');
             $payment->setIsTransactionClosed(0);
 
-            if ($this->config->getFollowPaymentMethod()) {
+            if ($this->config->getFollowPaymentMethod() && !empty($paymentProfileId)) {
                 $transactionMethod = $this->config->getPaymentMethod($paymentProfileId);
                 if ($transactionMethod['code'] !== $paymentMethod) {
                     $payment->setMethod($transactionMethod['code']);
