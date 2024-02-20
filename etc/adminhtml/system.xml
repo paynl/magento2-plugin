@@ -94,7 +94,7 @@
                     </comment>
                     <config_path>payment/paynl/order_description_prefix</config_path>
                 </field>
-                <field id="auto_void" translate="label" type="select" sortOrder="108" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="follow_payment_method" translate="label" type="select" sortOrder="108" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Follow payment method</label>
                     <comment>
                         <![CDATA[This will ensure the order is updated with the actual payment method used to complete the order. This can differ from the payment method initially selected]]>
