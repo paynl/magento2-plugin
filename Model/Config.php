@@ -16,6 +16,7 @@ class Config
     public const PENDING_PAY = 'paynl/order/pending';
     public const CANCEL_PAY = 'paynl/order/cancel';
     public const FINISH_STANDARD = 'checkout/onepage/success';
+    public const FINISH_PICKUP = 'paynl/order/pickup';
     public const ORDERSTATUS_PAID = 100;
     public const ORDERSTATUS_PENDING = array(20, 25, 40, 50, 90);
     public const ORDERSTATUS_DENIED = -63;

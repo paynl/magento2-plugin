@@ -94,14 +94,18 @@ class Finish extends PayAction
      * @param Order $order
      * @param string $orderId
      * @param Session $session
+     * @param $pickupMode
      * @return void
      */
-    private function checkSession(Order $order, string $orderId, Session $session)
+    private function checkSession(Order $order, string $orderId, Session $session, $pickupMode = null)
     {
         if ($session->getLastOrderId() != $order->getId()) {
             $additionalInformation = $order->getPayment()->getAdditionalInformation();
             $transactionId = (isset($additionalInformation['transactionId'])) ? $additionalInformation['transactionId'] : null;
-            if ($orderId == $transactionId) {
+            if (
+                ($orderId == $transactionId)
+                || (!empty($pickupMode))
+            ) {
                 $this->checkoutSession->setLastQuoteId($order->getQuoteId())
                     ->setLastSuccessQuoteId($order->getQuoteId())
                     ->setLastOrderId($order->getId())
@@ -139,6 +143,7 @@ class Finish extends PayAction
         $orderStatusId = empty($params['orderStatusId']) ? null : (int)$params['orderStatusId'];
         $magOrderId = empty($params['entityid']) ? null : $params['entityid'];
         $orderIds = empty($params['order_ids']) ? null : $params['order_ids'];
+        $pickupMode = !empty($params['pickup']);
         $bSuccess = $orderStatusId === Config::ORDERSTATUS_PAID;
         $bPending = in_array($orderStatusId, Config::ORDERSTATUS_PENDING);
         $bDenied = $orderStatusId === Config::ORDERSTATUS_DENIED;
@@ -148,6 +153,15 @@ class Finish extends PayAction
         $multiShipFinish = is_array($orderIds);
 
         try {
+            if ($pickupMode) {
+                $order = $this->orderRepository->get($magOrderId);
+                $payOrderId = '';
+                $this->deactivateCart($order, $payOrderId, true);
+                $successUrl = Config::FINISH_PICKUP;
+                $resultRedirect->setPath($successUrl, ['_query' => ['utm_nooverride' => '1']]);
+                return $resultRedirect;
+            }
+
             $this->checkEmpty($payOrderId, 'payOrderid', 101);
             $this->checkEmpty($magOrderId, 'magOrderId', 1012);
 
@@ -260,14 +274,15 @@ class Finish extends PayAction
     /**
      * @param Order $order
      * @param string $payOrderId
+     * @param $pickupMode
      * @return void
      */
-    private function deactivateCart(Order $order, string $payOrderId)
+    private function deactivateCart(Order $order, string $payOrderId, $pickupMode = null)
     {
         # Make the cart inactive
         $session = $this->checkoutSession;
 
-        $this->checkSession($order, $payOrderId, $session);
+        $this->checkSession($order, $payOrderId, $session, $pickupMode);
 
         $quote = $session->getQuote();
         $quote->setIsActive(false);

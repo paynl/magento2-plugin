@@ -96,7 +96,7 @@ class Instore extends PaymentMethod
             $order->getPayment()->setAdditionalInformation($additionalData);
             $order->save();
 
-            $url = ($pinMoment == '1') ? $order->getStore()->getBaseUrl() . 'paynl/order/pickup' : $instorePayment->getRedirectUrl();
+            $url = ($pinMoment == '1') ? $order->getStore()->getBaseUrl() . 'paynl/checkout/finish/?entityid=' . $order->getEntityId() . '&pickup=1' : $instorePayment->getRedirectUrl();
         } catch (\Exception $e) {
             $this->payHelper->logCritical($e->getMessage(), [], $store);
 
@@ -198,6 +198,14 @@ class Instore extends PaymentMethod
     public function getDefaultPaymentOption()
     {
         return $this->_scopeConfig->getValue('payment/' . $this->_code . '/default_terminal', 'store');
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPinMomentTerminal()
+    {
+        return $this->_scopeConfig->getValue('payment/' . $this->_code . '/pinmoment_terminal', 'store');
     }
 
     /**

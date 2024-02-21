@@ -140,6 +140,7 @@ class ConfigProvider implements ConfigProviderInterface
                 $config['payment']['showvat'][$code]      = $this->getVAT($code);
                 $config['payment']['showdob'][$code]      = $this->getDOB($code);
                 $config['payment']['showpinmoment'][$code] = $this->getPinMoment($code);
+                $config['payment']['pinmomentterminal'][$code] = $this->getPinMomentTerminal($code);
                 $config['payment']['showforcompany'][$code] = $this->getCompany($code);
                 $config['payment']['showforgroup'][$code] = $this->getCustomerGroup($code);
 
@@ -246,6 +247,15 @@ class ConfigProvider implements ConfigProviderInterface
     protected function getPinMoment($code)
     {
         return $this->methods[$code]->getPinMoment();
+    }
+
+    /**
+     * @param string $code
+     * @return mixed
+     */
+    protected function getPinMomentTerminal($code)
+    {
+        return $this->methods[$code]->getPinMomentTerminal();
     }
 
     /**

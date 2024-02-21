@@ -23,7 +23,7 @@
         <p data-bind="html: getInstructions();"></p>
         <div class="field-select-billing">
             <!-- ko if: showPaymentOptions() -->
-            <select data-bind="options: getPaymentOptions(), optionsText: 'visibleName', optionsValue: 'id', value: paymentOption"></select>
+            <select data-bind="visible: showPinOption, options: getPaymentOptions(), optionsText: 'visibleName', optionsValue: 'id', value: paymentOption"></select>
             <!-- /ko -->
         </div>
         <div data-bind="visible: showPaymentOptionsList()" class="field-select-billing">
@@ -41,7 +41,7 @@
         </div>
         <div data-bind="visible: showPinMoment()" class="field-select-billing">
             <label for="pinmoment" data-bind="i18n: 'Payment'"></label>
-            <select data-bind="optionsValue: 'id', name: 'pinmoment', value: pinmoment">
+            <select data-bind="event:{change: pinmomentChange}, name: 'pinmoment', value: pinmoment" id="pinmoment">
                 <option value="0" data-bind="i18n: 'Pay by card'"></option>
                 <option value="1" data-bind="i18n: 'Pay later, at pickup'"></option>
             </select>

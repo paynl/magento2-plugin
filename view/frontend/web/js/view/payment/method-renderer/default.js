@@ -10,9 +10,10 @@ define(
         'Magento_Ui/js/modal/alert',
         'Magento_Checkout/js/model/payment/additional-validators',
         'mage/translate',
-        'Magento_Customer/js/model/customer'
+        'Magento_Customer/js/model/customer',
+        'ko'
     ],
-    function ($, Component, url, placeOrderAction, quote, alert, additionalValidators, translate, customer) {
+    function ($, Component, url, placeOrderAction, quote, alert, additionalValidators, translate, customer, ko) {
         'use strict';
         return Component.extend({
             redirectAfterPlaceOrder: false,
@@ -176,8 +177,35 @@ define(
             getKVKDOB: function () {
                 return (this.getDOB() > 0 && this.getKVK() > 0);
             },
+            showPinOption: ko.observable(true),
             showPaymentOptions: function () {
+                var pinmoment = window.checkoutConfig.payment.showpinmoment[this.item.method];
+                var currentShippingMethod = this.getCurrentShippingMethod();
+
+                if (
+                    currentShippingMethod === 'instore_pickup'
+                    && pinmoment === '1'
+                    && typeof window.checkoutConfig.payment.pinmomentterminal !== 'undefined'
+                    && window.checkoutConfig.payment.pinmomentterminal[this.item.method] !== '0'
+                ) {
+                    this.paymentOption = this.getDefaultPaymomentTerminal();
+                    return false;
+                }
+
                 return window.checkoutConfig.payment.paymentoptions[this.item.method].length > 0 && window.checkoutConfig.payment.showpaymentoptions[this.item.method] == 1;
+            },
+            pinmomentChange: function (obj, event) {
+                if (
+                    event.target.value === '1'
+                    && window.checkoutConfig.payment.showpinmoment[this.item.method] === '2'
+                    && typeof window.checkoutConfig.payment.pinmomentterminal !== 'undefined'
+                    && window.checkoutConfig.payment.pinmomentterminal[this.item.method] !== '0'
+                ) {
+                    this.paymentOption = this.getDefaultPaymomentTerminal();
+                    this.showPinOption(false);
+                } else {
+                    this.showPinOption(true);
+                }
             },
             showPaymentOptionsList: function () {
                 return window.checkoutConfig.payment.paymentoptions[this.item.method].length >= 1 && window.checkoutConfig.payment.showpaymentoptions[this.item.method] == 2;
@@ -223,6 +251,9 @@ define(
             },
             getDefaultPaymentOption: function () {
                 return window.checkoutConfig.payment.defaultpaymentoption[this.item.method];
+            },
+            getDefaultPaymomentTerminal: function () {
+                return window.checkoutConfig.payment.pinmomentterminal[this.item.method];
             },
             afterPlaceOrder: function () {
                 window.location.replace(url.build('paynl/checkout/redirect?nocache=' + (new Date().getTime())));
