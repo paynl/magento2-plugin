@@ -94,10 +94,10 @@ class Finish extends PayAction
      * @param Order $order
      * @param string $orderId
      * @param Session $session
-     * @param $pickupMode
+     * @param bool $pickupMode
      * @return void
      */
-    private function checkSession(Order $order, string $orderId, Session $session, $pickupMode = null)
+    private function checkSession(Order $order, string $orderId, Session $session, bool $pickupMode = null)
     {
         if ($session->getLastOrderId() != $order->getId()) {
             $additionalInformation = $order->getPayment()->getAdditionalInformation();
@@ -274,10 +274,10 @@ class Finish extends PayAction
     /**
      * @param Order $order
      * @param string $payOrderId
-     * @param $pickupMode
+     * @param bool $pickupMode
      * @return void
      */
-    private function deactivateCart(Order $order, string $payOrderId, $pickupMode = null)
+    private function deactivateCart(Order $order, string $payOrderId, bool $pickupMode = null)
     {
         # Make the cart inactive
         $session = $this->checkoutSession;
