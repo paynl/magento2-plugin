@@ -261,7 +261,7 @@ class PayPayment
 
             if ($this->config->getFollowPaymentMethod() && !empty($paymentProfileId)) {
                 $transactionMethod = $this->config->getPaymentMethod($paymentProfileId);
-                if ($transactionMethod['code'] !== $paymentMethod) {
+                if (!empty($transactionMethod['code']) && $transactionMethod['code'] !== $paymentMethod) {
                     $payment->setMethod($transactionMethod['code']);
                     $paymentMethodObj = $this->config->getPaymentMethodByCode($paymentMethod);
                     $order->addStatusHistoryComment(__('PAY.: Payment method changed from %1 to %2', ($paymentMethodObj['title'] ?? ''), ($transactionMethod['title'] ?? '')))->save();
