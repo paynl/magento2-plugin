@@ -79,7 +79,10 @@
                     </comment>
                     <source_model>Paynl\Payment\Model\Config\Source\AutoCapture</source_model>
                     <config_path>payment/paynl/auto_capture</config_path>
-                    <tooltip>Off - No autocapture. On (yes) - Automatically capture payments with the status AUTHORIZE when a shipment is created in Magento (Picqer is also supported in this). On - via Wuunder - Capture automatically via Wuunder. On - via Sherpa - Capture automatically via Sherpa.</tooltip>
+                    <tooltip>Off - No autocapture.
+                             On (yes) - Automatically capture payments with the status AUTHORIZE when a shipment is created in Magento (Picqer is also supported in this).
+                             On - via Wuunder - Capture automatically via Wuunder.
+                             On - via Sherpa - Capture automatically via Sherpa.</tooltip>
                 </field>
                 <field id="auto_void" translate="label" type="select" sortOrder="106" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Auto void</label>
