@@ -33,7 +33,9 @@ class DefaultPaymentOption implements ArrayInterface
     /**
      * constructor.
      * @param Config $paymentConfig
+     * @param RequestInterface $request
      * @param ScopeConfigInterface $scopeConfigInterface
+     * @param PaymentMethodList $paymentMethodList
      */
     public function __construct(
         Config $paymentConfig,
