@@ -20,12 +20,6 @@ class DefaultPaymentOption implements ArrayInterface
      */
     protected $scopeConfigInterface;
 
-    /** @var  string */
-    private $scope;
-
-    /** @var  integer */
-    private $scopeId;
-
     /**
      * @var RequestInterface
      */
@@ -77,6 +71,18 @@ class DefaultPaymentOption implements ArrayInterface
     public function toArray()
     {
         $storeId = $this->request->getParam('store');
+        $websiteId = $this->request->getParam('website');
+
+        $scope = 'default';
+        $scopeId = 0;
+
+        if ($storeId) {
+            $scopeId = $storeId;
+        }
+        if ($websiteId) {
+            $scope = 'websites';
+            $scopeId = $websiteId;
+        }
 
         $activePaymentMethods = $this->paymentMethodList->getActiveList($storeId);
 
@@ -85,7 +91,7 @@ class DefaultPaymentOption implements ArrayInterface
         $active_paynl_methods[0] = __('None');
         foreach ($activePaymentMethods as $key => $value) {
             if (strpos($value->getCode(), 'paynl') !== false && $value->getCode() != 'paynl_payment_paylink') {
-                $active_paynl_methods[$key] = $this->scopeConfigInterface->getValue('payment/' . $value->getCode() . '/title');
+                $active_paynl_methods[$key] = $this->scopeConfigInterface->getValue('payment/' . $value->getCode() . '/title', $scope, $scopeId);
             }
         }
         return $active_paynl_methods;
