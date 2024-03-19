@@ -76,16 +76,14 @@ class Instore extends PaymentMethod
 
             $transaction = (new PayPaymentCreate($order, $this))->create();
 
-            $instorePayment = \Paynl\Instore::payment(['transactionId' => $transaction->getTransactionId(), 'terminalId' => $terminalId]);
-
             $additionalData['transactionId'] = $transaction->getTransactionId();
-            $additionalData['terminal_hash'] = $instorePayment->getHash();
+            $additionalData['terminal_hash'] = $transaction->getData()['terminal']['hash'];
             $additionalData['payment_option'] = $terminalId;
 
             $order->getPayment()->setAdditionalInformation($additionalData);
             $order->save();
 
-            $url = $instorePayment->getRedirectUrl();
+            $url = $transaction->getRedirectUrl();
         } catch (\Exception $e) {
             $this->payHelper->logCritical($e->getMessage(), [], $store);
 
