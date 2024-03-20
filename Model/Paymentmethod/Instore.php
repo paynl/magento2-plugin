@@ -84,7 +84,7 @@ class Instore extends PaymentMethod
                 $additionalData['terminal_hash'] = $instorePayment->getHash();
                 $url = $instorePayment->getRedirectUrl();
             }
-            
+
             $additionalData['transactionId'] = $transaction->getTransactionId();
             $additionalData['payment_option'] = $terminalId;
 
