@@ -225,7 +225,7 @@
 "Off - No autocapture.
 On (yes) - Automatically capture payments with the status AUTHORIZE when a shipment is created in Magento (Picqer is also supported in this).
 On - via Wuunder - Capture automatically via Wuunder.
-On - via Sherpa - Capture automatically via Sherpa.","Off - Geen autocapture.
-On (ja) - Capture automatisch betalingen met de status AUTHORIZE wanneer een shipment in Magento wordt aangemaakt (Picqer wordt hierin ook ondersteund).
-On - via Wuunder - Capture automatisch via Wuunder.
-On - via Sherpa - Capture automatisch via Sherpa."
+On - via Sherpa - Capture automatically via Sherpa.","Uit - Geen autocapture.
+Aan - Capture automatisch betalingen met de status AUTHORIZE wanneer een shipment in Magento wordt aangemaakt (Picqer wordt hierin ook ondersteund).
+Aan - via Wuunder - Capture automatisch via Wuunder.
+Aan - via Sherpa - Capture automatisch via Sherpa."
