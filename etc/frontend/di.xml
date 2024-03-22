@@ -9,4 +9,7 @@
             </argument>
         </arguments>
     </type>
+    <type name="Magento\Checkout\Block\Checkout\LayoutProcessor">
+        <plugin name="paynl_payment_custom_fields" type="Paynl\Payment\Plugin\Checkout\LayoutProcessor" sortOrder="10"/>
+    </type>
 </config>

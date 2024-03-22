@@ -203,20 +203,35 @@ define(
                 window.location.replace(url.build('paynl/checkout/redirect?nocache=' + (new Date().getTime())));
             },
             getData: function () {
-                var dob_format = '';
-                if (this.dateofbirth != null) {
-                    var dob = new Date(this.dateofbirth);
-                    var dd = dob.getDate(), mm = dob.getMonth() + 1, yyyy = dob.getFullYear();
-                    dd = (dd < 10) ? '0' + dd : dd;
-                    mm = (mm < 10) ? '0' + mm : mm;
-                    dob_format = dd + '-' + mm + '-' + yyyy;
+                var customFields = [];
+
+                if (quote.billingAddress.hasOwnProperty('_latestValue') && typeof quote.billingAddress._latestValue !== 'undefined' && quote.billingAddress._latestValue !== null) {
+                    $.each(quote.billingAddress._latestValue.customAttributes, function (i, l) {
+                        var field = quote.billingAddress._latestValue.customAttributes[i]
+                        customFields[field.attribute_code] = field.value
+                    })
                 }
+
+                var dateofbirth_val = ((customFields.hasOwnProperty('paynl_dob')) ? customFields['paynl_dob'] : this.dateofbirth)
+                var cocnumber_val = ((customFields.hasOwnProperty('paynl_coc_number')) ? customFields['paynl_coc_number'] : this.cocnumber)
+                var vatnumber_val = ((customFields.hasOwnProperty('paynl_vat_number')) ? customFields['paynl_vat_number'] : this.vatnumber)
+        
+                var dob_format = ''
+        
+                if (dateofbirth_val != null) {
+                    var dob = new Date(dateofbirth_val)
+                    var dd = dob.getDate(), mm = dob.getMonth() + 1, yyyy = dob.getFullYear()
+                    dd = (dd < 10) ? '0' + dd : dd
+                    mm = (mm < 10) ? '0' + mm : mm
+                    dob_format = dd + '-' + mm + '-' + yyyy
+                }           
+
                 return {
                     'method': this.item.method,
                     'po_number': null,
                     'additional_data': {
-                        "cocnumber": this.cocnumber,
-                        "vatnumber": this.vatnumber,
+                        "cocnumber": cocnumber_val,
+                        "vatnumber": vatnumber_val,
                         "companyfield": this.companyfield,
                         "dob": dob_format,
                         "billink_agree": this.billink_agree,
