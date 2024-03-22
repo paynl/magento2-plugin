@@ -166,7 +166,7 @@ class Finish extends PayAction
                 $pinStatus = $this->handlePin($information['terminal_hash'], $order);
                 if (!empty($pinStatus)) {
                     $bSuccess = true;
-                } else {                
+                } else {
                     $bPending = false;
                 }
             }
