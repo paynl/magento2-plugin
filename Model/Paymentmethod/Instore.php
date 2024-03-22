@@ -76,7 +76,7 @@ class Instore extends PaymentMethod
 
             $transaction = (new PayPaymentCreate($order, $this))->create();
 
-            if ($this->getPaymentOptionId() == '1927') {
+            if ($this->getPaymentOptionId() === 1927) {
                 $additionalData['terminal_hash'] = $transaction->getData()['terminal']['hash'];
                 $url = $transaction->getRedirectUrl();
             } else {
