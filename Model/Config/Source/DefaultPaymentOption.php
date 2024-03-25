@@ -86,7 +86,11 @@ class DefaultPaymentOption implements ArrayInterface
             $scopeId = $websiteId;
         }
 
-        $activePaymentMethods = $this->paymentMethodList->getActiveList($storeId);
+        if (!empty($storeId)) {
+            $activePaymentMethods = $this->paymentMethodList->getActiveList($storeId);
+        } else {
+            $activePaymentMethods = $this->paymentConfig->getActiveMethods();
+        }
 
         //get only PAY. Methods
         $active_paynl_methods = [];
