@@ -86,18 +86,21 @@ class DefaultPaymentOption implements ArrayInterface
             $scopeId = $websiteId;
         }
 
-        if (!empty($storeId)) {
-            $activePaymentMethods = $this->paymentMethodList->getActiveList($storeId);
-        } else {
-            $activePaymentMethods = $this->paymentConfig->getActiveMethods();
+        $paymentMethods = $this->scopeConfigInterface->getValue('payment', $scope, $scopeId);
+
+        $activePaymentMethods = [];
+        foreach ($paymentMethods as $code => $method) {
+            if (isset($method['active']) && $method['active'] == 1) {
+                $activePaymentMethods[$code] = $method;
+            }
         }
 
         //get only PAY. Methods
         $active_paynl_methods = [];
         $active_paynl_methods[0] = __('None');
         foreach ($activePaymentMethods as $key => $value) {
-            if (strpos($value->getCode(), 'paynl') !== false && $value->getCode() != 'paynl_payment_paylink') {
-                $active_paynl_methods[$key] = $this->scopeConfigInterface->getValue('payment/' . $value->getCode() . '/title', $scope, $scopeId);
+            if (strpos($key, 'paynl') !== false && $key != 'paynl_payment_paylink') {
+                $active_paynl_methods[$key] = $this->scopeConfigInterface->getValue('payment/' . $key . '/title', $scope, $scopeId);
             }
         }
         return $active_paynl_methods;
