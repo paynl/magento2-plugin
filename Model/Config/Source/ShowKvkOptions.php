@@ -30,9 +30,10 @@ class ShowKvkOptions implements ArrayInterface
     public function toArray()
     {
         return [
-        '0' => __('No'),
-        '1' => __('Optional'),
-        '2' => __('Required'),
+            '0' => __('Don\'t show at payment method.'),
+            '1' => __('Show COC field at method, but leave it optional.'),
+            '2' => __('Show COC field at method, make it required.'),
+            '3' => __('Don\'t show COC field at method, but set as required. Use COC field from checkout instead.'),
         ];
     }
 }

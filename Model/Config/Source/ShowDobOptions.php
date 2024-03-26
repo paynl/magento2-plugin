@@ -30,9 +30,10 @@ class ShowDobOptions implements ArrayInterface
     public function toArray()
     {
         return [
-        '0' => __('No'),
-        '1' => __('Optional'),
-        '2' => __('Required'),
+            '0' => __('Don\'t show at payment method.'),
+            '1' => __('Show DOB field at method, but leave it optional.'),
+            '2' => __('Show DOB field at method, make it required.'),
+            '3' => __('Don\'t show DOB field at method, but set as required. Use DOB field from checkout instead.'),
         ];
     }
 }

@@ -122,13 +122,13 @@ define(
                 return false;
             },
             showKVK: function () {
-                return this.getKVK() > 0;
+                return (this.getKVK() == 1 || this.getKVK() == 2);
             },
             getKVK: function () {
                 return (typeof window.checkoutConfig.payment.showkvk !== 'undefined') ? window.checkoutConfig.payment.showkvk[this.item.method] : '';
             },
             showVAT: function () {
-                return this.getVAT() > 0;
+                return (this.getVAT() == 1 || this.getVAT() == 2);
             },
             getVAT: function () {
                 if (this.getCompany().length == 0 && (!this.getCompanyField() || this.getCompanyField() == 0)) {
@@ -140,7 +140,7 @@ define(
                 return (typeof window.checkoutConfig.payment.useAdditionalValidation !== 'undefined') ? window.checkoutConfig.payment.useAdditionalValidation : false;
             },
             showDOB: function () {
-                return this.getDOB() > 0;
+                return (this.getDOB() == 1 || this.getDOB() == 2);
             },
             getDOB: function () {
                 return (typeof window.checkoutConfig.payment.showdob !== 'undefined') ? window.checkoutConfig.payment.showdob[this.item.method] : '';
@@ -149,7 +149,7 @@ define(
                 return this.getKVKDOB() > 0;
             },
             getKVKDOB: function () {
-                return (this.getDOB() > 0 && this.getKVK() > 0);
+                return ((this.getDOB() == 1 || this.getDOB() == 2) && (this.getKVK() == 1 || this.getKVK() == 2));
             },
             showPaymentOptions: function () {
                 return window.checkoutConfig.payment.paymentoptions[this.item.method].length > 0 && window.checkoutConfig.payment.showpaymentoptions[this.item.method] == 1;
@@ -202,21 +202,22 @@ define(
             afterPlaceOrder: function () {
                 window.location.replace(url.build('paynl/checkout/redirect?nocache=' + (new Date().getTime())));
             },
-            getData: function () {
+            getCustomField: function (fieldname) {    
                 var customFields = [];
-
                 if (quote.billingAddress.hasOwnProperty('_latestValue') && typeof quote.billingAddress._latestValue !== 'undefined' && quote.billingAddress._latestValue !== null) {
                     $.each(quote.billingAddress._latestValue.customAttributes, function (i, l) {
                         var field = quote.billingAddress._latestValue.customAttributes[i]
                         customFields[field.attribute_code] = field.value
                     })
                 }
+                return ((customFields.hasOwnProperty(fieldname)) ? customFields[fieldname] : null)
+            },
+            getData: function () {
+                var dateofbirth_val = (this.dateofbirth != null && this.dateofbirth.length > 0) ? this.dateofbirth : this.getCustomField('paynl_dob');
+                var cocnumber_val = (this.cocnumber != null && this.cocnumber.length > 0) ? this.cocnumber : this.getCustomField('paynl_coc_number');
+                var vatnumber_val = (this.vatnumber != null && this.vatnumber.length > 0) ? this.vatnumber : this.getCustomField('paynl_vat_number');
 
-                var dateofbirth_val = ((customFields.hasOwnProperty('paynl_dob')) ? customFields['paynl_dob'] : this.dateofbirth)
-                var cocnumber_val = ((customFields.hasOwnProperty('paynl_coc_number')) ? customFields['paynl_coc_number'] : this.cocnumber)
-                var vatnumber_val = ((customFields.hasOwnProperty('paynl_vat_number')) ? customFields['paynl_vat_number'] : this.vatnumber)
-        
-                var dob_format = ''
+                var dob_format = '';  
         
                 if (dateofbirth_val != null) {
                     var dob = new Date(dateofbirth_val)
@@ -247,9 +248,9 @@ define(
                 }
 
                 var placeOrder;
-                var cocRequired = this.getKVK() == 2;
-                var vatRequired = this.getVAT() == 2;
-                var dobRequired = this.getDOB() == 2;
+                var cocRequired = this.getKVK() >= 2;
+                var vatRequired = this.getVAT() >= 2;
+                var dobRequired = this.getDOB() >= 2;
                 var companyfieldRequired = this.getCompanyField() == 2;
 
                 if (companyfieldRequired) {
@@ -275,7 +276,9 @@ define(
                         });
                         return false;
                     }
-                    if (this.cocnumber == null || this.cocnumber.length < 8) {
+                    var cocMethodFieldCheck = (this.cocnumber == null || this.cocnumber.length < 8);
+                    var cocCustomFieldCheck = (this.getCustomField('paynl_coc_number') == null || this.getCustomField('paynl_coc_number').length < 8);
+                    if (cocMethodFieldCheck && cocCustomFieldCheck) {
                         alert({
                             title: $.mage.__('Invalid COC number'),
                             content: $.mage.__('Enter a valid COC number'),
@@ -287,10 +290,12 @@ define(
                     }
                 }
                 if (vatRequired) {
-                    if (this.vatnumber == null || this.vatnumber.length < 8) {
+                    var vatMethodFieldCheck = (this.vatnumber == null || this.vatnumber.length < 8);
+                    var vatCustomFieldCheck = (this.getCustomField('paynl_vat_number') == null || this.getCustomField('paynl_vat_number').length < 8);
+                    if (vatMethodFieldCheck && vatCustomFieldCheck) {
                         alert({
-                            title: $.mage.__('VAT number'),
-                            content: $.mage.__('VAT number'),
+                            title: $.mage.__('Invalid VAT number'),
+                            content: $.mage.__('Enter a valid VAT number'),
                             actions: {
                                 always: function (){}
                             }
@@ -299,7 +304,9 @@ define(
                     }
                 }
                 if (dobRequired) {
-                    if (this.dateofbirth == null || this.dateofbirth.length < 1) {
+                    var dobMethodFieldCheck = (this.dateofbirth == null || this.dateofbirth.length < 1);
+                    var dobCustomFieldCheck = (this.getCustomField('paynl_dob') == null || this.getCustomField('paynl_dob').length < 1);
+                    if (dobMethodFieldCheck && dobCustomFieldCheck) {
                         alert({
                             title: $.mage.__('Invalid date of birth'),
                             content: $.mage.__('Enter a valid date of birth'),

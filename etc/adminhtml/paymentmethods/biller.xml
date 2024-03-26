@@ -11,7 +11,7 @@
         </field>
         <field id="showcompanyfield" translate="label" type="select" sortOrder="64" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Show company field</label>
-            <source_model>Paynl\Payment\Model\Config\Source\ShowKvkOptions</source_model>
+            <source_model>Paynl\Payment\Model\Config\Source\ShowCustomFields</source_model>
             <depends>
                 <field id="active">1</field>
             </depends>

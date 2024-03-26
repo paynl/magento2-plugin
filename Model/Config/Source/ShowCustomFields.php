@@ -4,7 +4,7 @@ namespace Paynl\Payment\Model\Config\Source;
 
 use Magento\Framework\Option\ArrayInterface;
 
-class ShowNonPrivate implements ArrayInterface
+class ShowCustomFields implements ArrayInterface
 {
   /**
    * Options getter
@@ -30,10 +30,9 @@ class ShowNonPrivate implements ArrayInterface
     public function toArray()
     {
         return [
-            '0' => __('Don\'t show at payment method.'),
-            '1' => __('Show VAT field at method, but leave it optional.'),
-            '2' => __('Show VAT field at method, make it required.'),
-            '3' => __('Don\'t show VAT field at method, but set as required. Use VAT field from checkout instead.'),
+            '0' => __('No'),
+            '1' => __('Optional'),
+            '2' => __('Required'),
         ];
     }
 }

@@ -104,7 +104,7 @@
                 </field>
                 <field id="show_custom_field_dob" translate="label" type="select" sortOrder="108" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Show custom date of birth field</label>
-                    <source_model>Paynl\Payment\Model\Config\Source\ShowDobOptions</source_model>
+                    <source_model>Paynl\Payment\Model\Config\Source\ShowCustomFields</source_model>
                     <depends>
                         <field id="active">1</field>
                     </depends>
@@ -113,7 +113,7 @@
                 </field>
                 <field id="show_custom_field_kvk" translate="label" type="select" sortOrder="109" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Show custom COC field</label>
-                    <source_model>Paynl\Payment\Model\Config\Source\ShowKvkOptions</source_model>
+                    <source_model>Paynl\Payment\Model\Config\Source\ShowCustomFields</source_model>
                     <depends>
                         <field id="active">1</field>
                     </depends>
@@ -122,7 +122,7 @@
                 </field>
                 <field id="show_custom_field_vat" translate="label" type="select" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Show custom VAT field</label>
-                    <source_model>Paynl\Payment\Model\Config\Source\ShowNonPrivate</source_model>
+                    <source_model>Paynl\Payment\Model\Config\Source\ShowCustomFields</source_model>
                     <depends>
                         <field id="active">1</field>
                     </depends>
