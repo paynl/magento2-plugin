@@ -79,6 +79,7 @@ class DefaultPaymentOption implements ArrayInterface
         $scopeId = 0;
 
         if ($storeId) {
+            $scope = 'stores';
             $scopeId = $storeId;
         }
         if ($websiteId) {
