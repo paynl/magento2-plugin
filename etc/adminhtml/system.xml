@@ -143,7 +143,7 @@
                 <field id="always_base_currency" translate="label,comment" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Always use base currency</label>
                     <comment>
-                        <![CDATA[Set this to Yes if you always want to process payments in the base currency of this store. Magento acts strange when trying to register a payment in another currency than the base currency.]]>
+                        <![CDATA[Set this to Yes if you always want to process payments in the base currency of this store.]]>
                     </comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <config_path>payment/paynl/always_base_currency</config_path>

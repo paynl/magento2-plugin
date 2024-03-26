@@ -58,7 +58,7 @@
 "Payment methods","Payment methods"
 "When enabled, Magento will not cancel the order when the transaction is cancelled via Pay.","When enabled, Magento will not cancel the order when the transaction is cancelled via Pay."
 "Always use base currency","Always use base currency"
-"Set this to Yes if you always want to process payments in the base currency of this store. Magento acts strange when trying to register a payment in another currency than the base currency.","Set this to Yes if you always want to process payments in the base currency of this store. Magento acts strange when trying to register a payment in another currency than the base currency."
+"Set this to Yes if you always want to process payments in the base currency of this store.","Set this to Yes if you always want to process payments in the base currency of this store."
 "Skip fraud detection","Skip fraud detection"
 "Sometimes Magento incorrectly marks an order as fraudulent. This happens more often when using different currencies. Set this setting to Yes to skip fraud detection.","Sometimes Magento incorrectly marks an order as fraudulent. This happens more often when using different currencies. Set this setting to Yes to skip fraud detection."
 "Retrieve your AT-code <a target='_blank' href='https://my.pay.nl/company/tokens'>here</a>. Not registered with Pay? Sign up <a target='_blank' href='https://signup.pay.nl/'>here</a>!", "Retrieve your AT-code <a target='_blank' href='https://my.pay.nl/company/tokens'>here</a>. Not registered with Pay? Sign up <a target='_blank' href='https://signup.pay.nl/'>here</a>!"
