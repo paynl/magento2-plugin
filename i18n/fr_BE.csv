@@ -170,6 +170,6 @@
 On - Automatically capture payments with the status AUTHORIZE when a shipment is created in Magento (Picqer is also supported in this).
 On - via Wuunder - Capture automatically via Wuunder.
 On - via Sherpa - Capture automatically via Sherpa.","Désactivé - Pas de capture automatique.
-Activé (oui) - Capturer automatiquement les paiements avec le statut AUTORISER lorsqu'un envoi est créé dans Magento (Picqer est également pris en charge dans ce domaine).
+Activé - Capturer automatiquement les paiements avec le statut AUTORISER lorsqu'un envoi est créé dans Magento (Picqer est également pris en charge dans ce domaine).
 Activé - via Wuunder - Capture automatique via Wuunder.
 Activé - via Sherpa - Capture automatique via Sherpa."
