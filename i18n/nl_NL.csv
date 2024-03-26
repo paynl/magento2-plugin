@@ -70,7 +70,7 @@
 "Paylink is only available for orders created via the backend and won't appear in the checkout","Betaallink is alleen beschikbaar voor bestellingen aangemaakt via de backend van Magento en wordt daardoor niet in de checkout getoond"
 "Thank you for your order from ","Bedankt voor je bestelling bij "
 "If you have questions about your order, you can email us at ","Als u vragen heeft over uw bestelling, kunt u ons mailen op "
-"In order to pay for your order click the link below","Klik op onderstaande betaallink om uw bestelling te betalen"
+"To finish your order, click the link below","Klik op onderstaande betaallink om uw bestelling te betalen"
 "Pay. paylink","Pay. betaallink"
 "Paylink order","Betaallink bestelling"
 "A Pay. paylink has been sent to","Pay. betaallink is per mail verstuurd naar"
@@ -220,3 +220,12 @@
 "Follow payment method","Follow payment method"
 "This will ensure the order is updated with the actual payment method used to complete the order. This can differ from the payment method initially selected","Dit zorgt ervoor dat de bestelling wordt bijgewerkt met de daadwerkelijke betaalmethode die is gebruikt om de bestelling te voltooien. Dit kan afwijken van de aanvankelijk gekozen betaalmethode"
 "PAY.: Updated payment method from %1 to %2","PAY.: Betaalmethode gewijzigd van %1 naar %2"
+"Although an order is started with a certain payment method, it may still be completed with a different payment method. For example: Someone starts an order with IN3, but never completes it. When that person later receives a reminder email stating that the order is still open, he or she can complete it with iDEAL. When this option is enabled, iDEAL will be shown with the order. A note will also be placed in the order notes indicating that the payment method has changed.","Hoewel een order wordt gestart met een bepaalde betaalmethode, kan het toch zijn dat deze wordt afgerond met een andere betaalmethode. Bijvoorbeeld: Iemand start een order met IN3, maar rond deze nooit af. Wanneer die iemand later een herinneringsmail krijgt, met de melding dat de order nog open staat, kan hij of zij deze afronden met iDEAL. Wanneer deze optie dan is ingeschakeld, wordt iDEAL bij de order getoond. Ook wordt er een notitie geplaatst bij de order-notities waar aangegeven wordt dat de betaalmethode is gewijzigd."
+"Select the language in which payment screens open (such as the Credit Card screen or Transfer page). Please note: the language can also be changed from the payment screens.","Selecteer de taal waarin betaalschermen openen (zoals bijvoorbeeld het Creditcard scherm of Overboekingspagina). Let wel: de taal kan vanuit de betaalschermen ook gewijzigd worden."
+"Off - No autocapture.
+On - Automatically capture payments with the status AUTHORIZE when a shipment is created in Magento (Picqer is also supported in this).
+On - via Wuunder - Capture automatically via Wuunder.
+On - via Sherpa - Capture automatically via Sherpa.","Uit - Geen autocapture.
+Aan - Capture automatisch betalingen met de status AUTHORIZE wanneer een shipment in Magento wordt aangemaakt (Picqer wordt hierin ook ondersteund).
+Aan - via Wuunder - Capture automatisch via Wuunder.
+Aan - via Sherpa - Capture automatisch via Sherpa."

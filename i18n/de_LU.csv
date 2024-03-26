@@ -65,7 +65,7 @@
 "Paylink is only available for backorders and won't appear in the checkout","Die Zahlung per Link ist nur für Nachbestellungen verfügbar und wird nicht im Checkout angezeigt"
 "Thank you for your order from ","Vielen Dank für deine Bestellung bei "
 "If you have questions about your order, you can email us at","Wenn du Fragen zu deiner Bestellung hast, kannst du uns per E-Mail kontaktieren unter"
-"In order to pay for your order click the link below","Klicken Sie auf den unten stehenden Link, um Ihre Bestellung zu bezahlen"
+"To finish your order, click the link below","Klicken Sie auf den unten stehenden Link, um Ihre Bestellung zu bezahlen"
 "PAY. paylink","PAY. Zahlungslink"
 "Paylink order","Bestellungs-Zahlungslink"
 "A Pay. paylink has been sent to","Ein E-Mail mit einem PAY. Zahlungslink wird gesendet an"
@@ -87,6 +87,8 @@
 "The payment has been canceled.","Die Zahlung wurde storniert."
 "PAY. -Order has been shipped, but no invoice was found. Capturing the payment automatically.","PAY. -Die Bestellung wurde versandt, aber keine Rechnung wurde gefunden. Die Zahlung wird automatisch erfasst."
 "On","Ein"
+"On - via Wuunder","Ein – über Wuunder"
+"On - via Sherpa","Ein – über Sherpa"
 "Off","Aus"
 "Auto capture","Automatische Erfassung"
 "Automatically capture authorisation-transaction when creating the shipment for the order.","Erfasse automatisch eine Genehmigungs-Transaktion beim Erstellen der Lieferung für die Bestellung."
@@ -163,3 +165,12 @@
 "Follow payment method","Follow payment method"
 "This will ensure the order is updated with the actual payment method used to complete the order. This can differ from the payment method initially selected","Dadurch wird sichergestellt, dass die Bestellung mit der tatsächlichen Zahlungsmethode aktualisiert wird, die zum Abschluss der Bestellung verwendet wurde. Diese kann von der ursprünglich gewählten Zahlungsart abweichen"
 "PAY.: Updated payment method from %1 to %2","PAY.: Zahlungsmethode geändert von %1 bis %2"
+"Although an order is started with a certain payment method, it may still be completed with a different payment method. For example: Someone starts an order with IN3, but never completes it. When that person later receives a reminder email stating that the order is still open, he or she can complete it with iDEAL. When this option is enabled, iDEAL will be shown with the order. A note will also be placed in the order notes indicating that the payment method has changed.","Obwohl eine Bestellung mit einer bestimmten Zahlungsart gestartet wird, kann es dennoch vorkommen, dass sie mit einer anderen Zahlungsart abgeschlossen wird. Beispiel: Jemand beginnt eine Bestellung mit IN3, schließt sie jedoch nie ab. Wenn diese Person später eine Erinnerungs-E-Mail mit dem Hinweis erhält, dass die Bestellung noch offen ist, kann sie diese mit iDEAL abschließen. Wenn diese Option aktiviert ist, wird iDEAL bei der Bestellung angezeigt. Darüber hinaus wird in den Bestellnotizen ein Hinweis darauf angezeigt, dass sich die Zahlungsart geändert hat."
+"Select the language in which payment screens open (such as the Credit Card screen or Transfer page). Please note: the language can also be changed from the payment screens.","Wählen Sie die Sprache aus, in der die Zahlungsbildschirme geöffnet werden (z. B. der Kreditkartenbildschirm oder die Überweisungsseite). Bitte beachten Sie: Die Sprache kann auch auf den Zahlungsbildschirmen geändert werden."
+"Off - No autocapture.
+On - Automatically capture payments with the status AUTHORIZE when a shipment is created in Magento (Picqer is also supported in this).
+On - via Wuunder - Capture automatically via Wuunder.
+On - via Sherpa - Capture automatically via Sherpa.","Aus – Keine automatische Aufnahme.
+Ein – Zahlungen mit dem Status AUTORISIEREN automatisch erfassen, wenn eine Sendung in Magento erstellt wird (Picqer wird dabei auch unterstützt).
+Ein – über Wuunder – Automatische Erfassung über Wuunder.
+Ein – über Sherpa – Automatische Erfassung über Sherpa."
