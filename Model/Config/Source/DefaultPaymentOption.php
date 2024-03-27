@@ -3,8 +3,10 @@
 namespace Paynl\Payment\Model\Config\Source;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Option\ArrayInterface;
 use Magento\Payment\Model\Config;
+use Magento\Payment\Model\PaymentMethodList;
 
 class DefaultPaymentOption implements ArrayInterface
 {
@@ -19,16 +21,32 @@ class DefaultPaymentOption implements ArrayInterface
     protected $scopeConfigInterface;
 
     /**
+     * @var RequestInterface
+     */
+    protected $request;
+
+    /**
+     * @var PaymentMethodList
+     */
+    protected $paymentMethodList;
+
+    /**
      * constructor.
      * @param Config $paymentConfig
+     * @param RequestInterface $request
      * @param ScopeConfigInterface $scopeConfigInterface
+     * @param PaymentMethodList $paymentMethodList
      */
     public function __construct(
         Config $paymentConfig,
-        ScopeConfigInterface $scopeConfigInterface
+        RequestInterface $request,
+        ScopeConfigInterface $scopeConfigInterface,
+        PaymentMethodList $paymentMethodList
     ) {
         $this->paymentConfig = $paymentConfig;
+        $this->request = $request;
         $this->scopeConfigInterface = $scopeConfigInterface;
+        $this->paymentMethodList = $paymentMethodList;
     }
 
     /**
@@ -54,15 +72,37 @@ class DefaultPaymentOption implements ArrayInterface
      */
     public function toArray()
     {
-        $activePaymentMethods = $this->paymentConfig->getActiveMethods();
-        //get only PAY. Methods
+        $storeId = $this->request->getParam('store');
+        $websiteId = $this->request->getParam('website');
+
+        $scope = 'default';
+        $scopeId = 0;
+
+        if ($storeId) {
+            $scope = 'stores';
+            $scopeId = $storeId;
+        }
+        if ($websiteId) {
+            $scope = 'websites';
+            $scopeId = $websiteId;
+        }
+
+        $paymentMethods = $this->scopeConfigInterface->getValue('payment', $scope, $scopeId);
+
+        //get only active PAY. Methods
         $active_paynl_methods = [];
         $active_paynl_methods[0] = __('None');
-        foreach ($activePaymentMethods as $key => $value) {
-            if (strpos($key, 'paynl') !== false && $key != 'paynl_payment_paylink') {
-                $active_paynl_methods[$key] = $this->scopeConfigInterface->getValue('payment/' . $key . '/title');
+        foreach ($paymentMethods as $key => $method) {
+            if (
+                isset($method['active']) &&
+                $method['active'] == 1 &&
+                strpos($key, 'paynl') !== false &&
+                $key != 'paynl_payment_paylink'
+            ) {
+                $active_paynl_methods[$key] = $this->scopeConfigInterface->getValue('payment/' . $key . '/title', $scope, $scopeId);
             }
         }
+
         return $active_paynl_methods;
     }
 }
