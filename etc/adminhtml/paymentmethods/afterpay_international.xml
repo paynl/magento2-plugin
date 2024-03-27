@@ -113,7 +113,7 @@
                 <field id="active">1</field>
             </depends>
             <config_path>payment/paynl_payment_afterpay_international/showkvk</config_path>
-            <comment><![CDATA[When enabled, an extra field is added to the checkout for customers to enter their COC number.]]></comment>
+            <tooltip>When Enabled, this will add an extra field to the payment method for the customer to enter in their COC number. You can also choose to make the COC number required for this method by using the 4th option. This will require you to enable the 'Show custom COC field' setting in the 'Settings' tab, which adds the COC field to the checkout itself.</tooltip>
         </field>
         <field id="showvat" translate="label" type="select" sortOrder="66" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Show VAT field</label>
@@ -122,7 +122,7 @@
                 <field id="active">1</field>
             </depends>
             <config_path>payment/paynl_payment_afterpay_international/showvat</config_path>
-            <comment><![CDATA[When enabled, an extra field is added to the checkout for customers to enter their VAT number.]]></comment>
+            <tooltip>When Enabled, this will add an extra field to the payment method for the customer to enter in their VAT number. You can also choose to make the VAT number required for this method by using the 4th option. This will require you to enable the 'Show custom COC field' setting in the 'Settings' tab, which adds the VAT field to the checkout itself.</tooltip>
         </field>
         <field id="showdob" translate="label" type="select" sortOrder="67" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Show date of birth field</label>
@@ -131,7 +131,7 @@
                 <field id="active">1</field>
             </depends>
             <config_path>payment/paynl_payment_afterpay_international/showdob</config_path>
-            <comment><![CDATA[When enabled, a datepicker is added to the checkout for customers to enter their date of birth.]]></comment>
+            <tooltip>When Enabled, this will add an datepicker field to the payment method for the customer to enter in their date of birth. You can also choose to make this required for this method by using the 4th option. This will require you to enable the 'Show custom DOB field' setting in the 'Settings' tab, which adds the date of birth field to the checkout itself.</tooltip>
         </field>
         <field id="disallowedshipping" translate="label" type="multiselect" sortOrder="110" showInDefault="1"
                showInWebsite="1" showInStore="1">
