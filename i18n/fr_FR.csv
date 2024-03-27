@@ -52,7 +52,7 @@
 "Paymentmethods","Méthodes de paiement"
 "When enabled, Magento will not cancel the order when the transaction is cancelled via Pay.","Lorsque cette option est activée, Magento n'annule pas la commande lorsque la transaction est annulée via Pay."
 "Always use base currency","Toujours utiliser la devise de base"
-"Set this to yes if you always want to process payments in the base currency of this store. Magento acts strange when trying to register a payment in another currency than the base currency.","Définissez cette option sur oui si vous souhaitez toujours traiter les paiements dans la devise de base de ce magasin. Magento réagit de manière étrange lorsqu'il essaie d'enregistrer un paiement dans une autre devise que la devise de base. La devise de base DOIT être l'EUR"
+"Set this to yes if you always want to process payments in the base currency of this store.","Définissez cette option sur oui si vous souhaitez toujours traiter les paiements dans la devise de base de ce magasin."
 "Skip fraud detection","Ignorer la détection de fraude"
 "Sometimes magento incorrectly marks an order as fraudulent. this happens more often when using different currencies. Set this to yes to skip fraud detection.","Parfois, Magento marque incorrectement une commande comme frauduleuse. Cela se produit plus souvent lorsque vous utilisez différentes devises. Définissez cette option sur oui pour ignorer la détection de fraude."
 "Get your AT-code <a target='_blank' href='https://admin.pay.nl/company/tokens'>here</a>. Not registered at PAY? Sign up <a target='_blank' href='https://www.pay.nl/en?register'>here</a>!", "Obtenez votre code AT <a target='_blank' href='https://admin.pay.nl/company/tokens'>ici</a>. Pas encore enregistré chez PAY ? Inscrivez-vous <a target='_blank' href='https://www.pay.nl/en?register'>ici</a> !"
@@ -173,3 +173,4 @@ On - via Sherpa - Capture automatically via Sherpa.","Désactivé - Pas de captu
 Activé - Capturer automatiquement les paiements avec le statut AUTORISER lorsqu'un envoi est créé dans Magento (Picqer est également pris en charge dans ce domaine).
 Activé - via Wuunder - Capture automatique via Wuunder.
 Activé - via Sherpa - Capture automatique via Sherpa."
+"When the store currency deviates from the base currency setting in Magento, this setting will ensure the payment starts in the base currency instead of the store currency.","Lorsque la devise du magasin diffère de la devise de base dans Magento, ce paramètre garantit que le paiement commence dans la devise de base au lieu de la devise du magasin."

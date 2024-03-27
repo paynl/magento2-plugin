@@ -58,7 +58,7 @@
 "Payment methods","Betaalmethoden"
 "When enabled, Magento will not cancel the order when the transaction is cancelled via Pay.","Wanneer ingeschakeld, Magento zal de bestelling niet annuleren wanneer de transactie via Pay. wordt geannuleerd."
 "Always use base currency","Altijd base currency gebruiken"
-"Set to Yes if you always want to process payments in the base currency of this store. Magento acts strange when trying to register a payment in another currency than the base currency.","Stel deze optie in op Ja indien u alle transacties altijd in de standaard valuta wilt verwerken."
+"Set to Yes if you always want to process payments in the base currency of this store.","Stel deze optie in op Ja indien u alle transacties altijd in de standaard valuta wilt verwerken."
 "Skip fraud detection","Fraudedetectie overslaan"
 "Sometimes Magento incorrectly marks an order as fraudulent. This happens more often when using different currencies. Set this setting to Yes to skip fraud detection.","Soms markeert Magento transacties onterecht als frauduleus. Dit gebeurt vaak wanneer verschillende valuta’s worden gebruikt. Zet deze instelling op Ja om Magento's fraudedetectie over te slaan."
 "Retrieve your AT-code <a target='_blank' href='https://my.pay.nl/company/tokens'>here</a>. Not registered with Pay? Sign up <a target='_blank' href='https://signup.pay.nl/'>here</a>!", "De AT-code kun je <a target='_blank' href='https://my.pay.nl/company/tokens'>hier</a> ophalen. Nog geen account bij Pay? Registreer <a target='_blank' href='https://signup.pay.nl/'>hier</a>!"
@@ -201,7 +201,7 @@
 "Error","Fout"
 "PAY. - Refund initiated from Pay.","PAY. - Terugebetaling geïnitieerd vanuit Pay."
 "Set to `on` to accept refunds initiated from Pay.","Selecteer `Aan` om terugbetalingen vanuit Pay. te verwerken in Magento."
-"Set this to Yes if you always want to process payments in the base currency of this store. Magento acts strange when trying to register a payment in another currency than the base currency.","Zet dit op Ja als u betalingen altijd in de basisvaluta van deze winkel wilt verwerken. Magento gedraagt zich vreemd bij het registreren van een betaling in een andere valuta dan de basisvaluta."
+"Set this to Yes if you always want to process payments in the base currency of this store.","Zet dit op Ja als u betalingen altijd in de basisvaluta van deze winkel wilt verwerken."
 "You are up to date with the latest version","Je bent up to date met de laatste versie"
 "Enter your COC number","Vul uw KVK nummer in"
 "Enter your VAT number","Vul uw BTW nummer in"
@@ -229,3 +229,4 @@ On - via Sherpa - Capture automatically via Sherpa.","Uit - Geen autocapture.
 Aan - Capture automatisch betalingen met de status AUTHORIZE wanneer een shipment in Magento wordt aangemaakt (Picqer wordt hierin ook ondersteund).
 Aan - via Wuunder - Capture automatisch via Wuunder.
 Aan - via Sherpa - Capture automatisch via Sherpa."
+"When the store currency deviates from the base currency setting in Magento, this setting will ensure the payment starts in the base currency instead of the store currency.","Wanneer de winkelvaluta afwijkt van de basisvaluta-instelling in Magento, zorgt deze instelling ervoor dat de betalingen worden gestart in de basisvaluta in plaats van de winkelvaluta."

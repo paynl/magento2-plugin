@@ -146,11 +146,9 @@ On - via Sherpa - Capture automatically via Sherpa.</tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <config_path>payment/paynl/never_cancel</config_path>
                 </field>
-                <field id="always_base_currency" translate="label,comment" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="always_base_currency" translate="label,tooltip" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Always use base currency</label>
-                    <comment>
-                        <![CDATA[Set this to Yes if you always want to process payments in the base currency of this store. Magento acts strange when trying to register a payment in another currency than the base currency.]]>
-                    </comment>
+                    <tooltip>When the store currency deviates from the base currency setting in Magento, this setting will ensure the payment starts in the base currency instead of the store currency.</tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <config_path>payment/paynl/always_base_currency</config_path>
                 </field>
