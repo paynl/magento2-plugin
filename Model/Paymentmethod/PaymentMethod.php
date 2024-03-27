@@ -540,7 +540,7 @@ abstract class PaymentMethod extends AbstractMethod
      */
     public function getPaymentOptionId()
     {
-        $paymentOptionId = $this->getConfigData('payment_option_id');
+        $paymentOptionId = (int)$this->getConfigData('payment_option_id');
 
         if (empty($paymentOptionId)) {
             $paymentOptionId = $this->getDefaultPaymentOptionId();
