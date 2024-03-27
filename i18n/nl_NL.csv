@@ -229,3 +229,4 @@ On - via Sherpa - Capture automatically via Sherpa.","Uit - Geen autocapture.
 Aan - Capture automatisch betalingen met de status AUTHORIZE wanneer een shipment in Magento wordt aangemaakt (Picqer wordt hierin ook ondersteund).
 Aan - via Wuunder - Capture automatisch via Wuunder.
 Aan - via Sherpa - Capture automatisch via Sherpa."
+"When the store currency deviates from the base currency setting in Magento, this setting will ensure the payment starts in the base currency instead of the store currency.","Wanneer de winkelvaluta afwijkt van de basisvaluta-instelling in Magento, zorgt deze instelling ervoor dat de betalingen worden gestart in de basisvaluta in plaats van de winkelvaluta."

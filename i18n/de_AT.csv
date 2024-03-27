@@ -174,3 +174,4 @@ On - via Sherpa - Capture automatically via Sherpa.","Aus – Keine automatische
 Ein – Zahlungen mit dem Status AUTORISIEREN automatisch erfassen, wenn eine Sendung in Magento erstellt wird (Picqer wird dabei auch unterstützt).
 Ein – über Wuunder – Automatische Erfassung über Wuunder.
 Ein – über Sherpa – Automatische Erfassung über Sherpa."
+"When the store currency deviates from the base currency setting in Magento, this setting will ensure the payment starts in the base currency instead of the store currency.","When the store currency deviates from the base currency setting in Magento, this setting will ensure the payment starts in the base currency instead of the store currency."

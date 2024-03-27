@@ -173,3 +173,4 @@ On - via Sherpa - Capture automatically via Sherpa.","Désactivé - Pas de captu
 Activé - Capturer automatiquement les paiements avec le statut AUTORISER lorsqu'un envoi est créé dans Magento (Picqer est également pris en charge dans ce domaine).
 Activé - via Wuunder - Capture automatique via Wuunder.
 Activé - via Sherpa - Capture automatique via Sherpa."
+"When the store currency deviates from the base currency setting in Magento, this setting will ensure the payment starts in the base currency instead of the store currency.","Lorsque la devise du magasin diffère de la devise de base dans Magento, ce paramètre garantit que le paiement commence dans la devise de base au lieu de la devise du magasin."
