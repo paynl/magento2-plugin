@@ -65,6 +65,7 @@
                     <label>Language payment screen</label>
                     <source_model>Paynl\Payment\Model\Config\Source\Languages</source_model>
                     <config_path>payment/paynl/language</config_path>
+                    <tooltip>Select the language in which payment screens open (such as the Credit Card screen or Transfer page). Please note: the language can also be changed from the payment screens.</tooltip>
                 </field>
                 <field id="default_payment_option" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Select default payment option</label>
@@ -78,6 +79,10 @@
                     </comment>
                     <source_model>Paynl\Payment\Model\Config\Source\AutoCapture</source_model>
                     <config_path>payment/paynl/auto_capture</config_path>
+                    <tooltip>Off - No autocapture.
+On - Automatically capture payments with the status AUTHORIZE when a shipment is created in Magento (Picqer is also supported in this).
+On - via Wuunder - Capture automatically via Wuunder.
+On - via Sherpa - Capture automatically via Sherpa.</tooltip>
                 </field>
                 <field id="auto_void" translate="label" type="select" sortOrder="106" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Auto void</label>
@@ -101,6 +106,7 @@
                     </comment>
                     <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
                     <config_path>payment/paynl/follow_payment_method</config_path>
+                    <tooltip>Although an order is started with a certain payment method, it may still be completed with a different payment method. For example: Someone starts an order with IN3, but never completes it. When that person later receives a reminder email stating that the order is still open, he or she can complete it with iDEAL. When this option is enabled, iDEAL will be shown with the order. A note will also be placed in the order notes indicating that the payment method has changed.</tooltip>
                 </field>
             </group>
             <group id="paynl_layout_settings" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">

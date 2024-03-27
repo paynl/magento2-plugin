@@ -66,3 +66,14 @@
     color: #dd7536;
     font-weight: bold;
 }
+
+#paynl_settings_paynl_general_settings .tooltip-content {
+    color: #FFF;
+    width: 400px;
+    max-width: inherit;
+    white-space: pre-line;
+}
+
+#paynl_settings_paynl_general_settings .tooltip .help span::before, #paynl_settings_paynl_general_settings .tooltip .help a::before {
+    opacity: 0.5;
+}
