@@ -67,13 +67,21 @@
     font-weight: bold;
 }
 
-#paynl_settings_paynl_general_settings .tooltip-content {
+#paynl_settings_paynl_general_settings .tooltip-content,
+#paynl_settings_paynl_advanced_settings .tooltip-content {
     color: #FFF;
     width: 400px;
     max-width: inherit;
     white-space: pre-line;
 }
 
-#paynl_settings_paynl_general_settings .tooltip .help span::before, #paynl_settings_paynl_general_settings .tooltip .help a::before {
+#paynl_settings_paynl_general_settings .tooltip .help span::before, #paynl_settings_paynl_general_settings .tooltip .help a::before,
+#paynl_settings_paynl_advanced_settings .tooltip .help span::before, #paynl_settings_paynl_advanced_settings .tooltip .help a::before {
     opacity: 0.5;
+}
+
+#paynl_settings_paynl_general_settings td.use-default,
+#paynl_settings_paynl_advanced_settings td.use-default {
+    float: left;
+    margin-left: 10px;
 }
