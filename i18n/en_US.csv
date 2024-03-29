@@ -238,4 +238,10 @@ On - via Sherpa - Capture automatically via Sherpa.","Off - No autocapture.
 On- Automatically capture payments with the status AUTHORIZE when a shipment is created in Magento (Picqer is also supported in this).
 On - via Wuunder - Capture automatically via Wuunder.
 On - via Sherpa - Capture automatically via Sherpa."
-"When the store currency deviates from the base currency setting in Magento, this setting will ensure the payment starts in the base currency instead of the store currency.","When the store currency deviates from the base currency setting in Magento, this setting will ensure the payment starts in the base currency instead of the store currency."
+"When the store currency deviates from the base currency setting in Magento, this setting will ensure the payment starts in the base currency instead of the store currency. Example: Store currency is in Dollar, Base currency is Euro. Pay. will start payments in Euro.","When the store currency deviates from the base currency setting in Magento, this setting will ensure the payment starts in the base currency instead of the store currency. Example: Store currency is in Dollar, Base currency is Euro. Pay. will start payments in Euro."
+"When Enabled, this will add an extra field to the checkout for the customer to enter in their COC number.","When Enabled, this will add an extra field to the checkout for the customer to enter in their COC number."
+"When Enabled, this will add an extra field to the checkout for the customer to enter in their VAT number.","When Enabled, this will add an extra field to the checkout for the customer to enter in their VAT number."
+"When Enabled, this will add an datepicker field to the checkout for the customer to enter in their date of birth.","When Enabled, this will add an datepicker field to the checkout for the customer to enter in their date of birth."
+"Show custom COC field","Show custom COC field"
+"Show custom VAT field","Show custom VAT field"
+"Show custom date of birth field","Show custom date of birth field"

@@ -186,4 +186,10 @@ On - via Sherpa - Capture automatically via Sherpa.","Désactivé - Pas de captu
 Activé - Capturer automatiquement les paiements avec le statut AUTORISER lorsqu'un envoi est créé dans Magento (Picqer est également pris en charge dans ce domaine).
 Activé - via Wuunder - Capture automatique via Wuunder.
 Activé - via Sherpa - Capture automatique via Sherpa."
-"When the store currency deviates from the base currency setting in Magento, this setting will ensure the payment starts in the base currency instead of the store currency.","Lorsque la devise du magasin diffère de la devise de base dans Magento, ce paramètre garantit que le paiement commence dans la devise de base au lieu de la devise du magasin."
+"When the store currency deviates from the base currency setting in Magento, this setting will ensure the payment starts in the base currency instead of the store currency. Example: Store currency is in Dollar, Base currency is Euro. Pay. will start payments in Euro.","Lorsque la devise du magasin diffère de la devise de base dans Magento, ce paramètre garantit que le paiement commence dans la devise de base au lieu de la devise du magasin. Exemple : La devise du magasin est le dollar, la devise de base est l'euro. Pay. commencera les paiements en euros."
+"When Enabled, this will add an extra field to the checkout for the customer to enter in their COC number.","Lorsque cette option est activée, un champ supplémentaire est ajouté à la caisse pour permettre au client d'entrer son numéro de Chambre de Commerce."
+"When Enabled, this will add an extra field to the checkout for the customer to enter in their VAT number.","Lorsque cette option est activée, un champ supplémentaire est ajouté à la caisse pour permettre au client d'entrer son numéro de TVA."
+"When Enabled, this will add an datepicker field to the checkout for the customer to enter in their date of birth.","Lorsque cette option est activée, elle ajoute un champ de sélection de date à la caisse pour permettre au client d'entrer sa date de naissance."
+"Show custom COC field","Afficher le champ de numéro de Chambre de Commerce. personnalisé"
+"Show custom VAT field","Afficher le champ de numéro de TVA personnalisé"
+"Show custom date of birth field","Afficher le champ personnalisé de la date de naissance"

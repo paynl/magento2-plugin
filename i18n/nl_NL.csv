@@ -242,4 +242,10 @@ On - via Sherpa - Capture automatically via Sherpa.","Uit - Geen autocapture.
 Aan - Capture automatisch betalingen met de status AUTHORIZE wanneer een shipment in Magento wordt aangemaakt (Picqer wordt hierin ook ondersteund).
 Aan - via Wuunder - Capture automatisch via Wuunder.
 Aan - via Sherpa - Capture automatisch via Sherpa."
-"When the store currency deviates from the base currency setting in Magento, this setting will ensure the payment starts in the base currency instead of the store currency.","Wanneer de winkelvaluta afwijkt van de basisvaluta-instelling in Magento, zorgt deze instelling ervoor dat de betalingen worden gestart in de basisvaluta in plaats van de winkelvaluta."
+"When the store currency deviates from the base currency setting in Magento, this setting will ensure the payment starts in the base currency instead of the store currency. Example: Store currency is in Dollar, Base currency is Euro. Pay. will start payments in Euro.","Wanneer de winkelvaluta afwijkt van de basisvaluta-instelling in Magento, zorgt deze instelling ervoor dat de betalingen worden gestart in de basisvaluta in plaats van de winkelvaluta. Voorbeeld: Winkelvaluta is in dollar, basisvaluta is euro. Pay. start betalingen in euro."
+"When Enabled, this will add an extra field to the checkout for the customer to enter in their COC number.","Als deze optie is ingeschakeld, wordt er een extra veld aan de checkout toegevoegd waarin de klant het KVK-nummer kan invoeren."
+"When Enabled, this will add an extra field to the checkout for the customer to enter in their VAT number.","Als deze optie is ingeschakeld, wordt er een extra veld aan de checkout toegevoegd waarin de klant het BTW-nummer kan invoeren."
+"When Enabled, this will add an datepicker field to the checkout for the customer to enter in their date of birth.","Als deze optie is ingeschakeld, zal dit een datepickerveld toevoegen aan de checkout zodat de klant zijn geboortedatum kan invoeren"
+"Show custom COC field","Toon KVK-nummer veld"
+"Show custom VAT field","Toon BTW-nummer veld"
+"Show custom date of birth field","Show geboortedatum veld"

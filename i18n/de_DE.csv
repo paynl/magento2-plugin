@@ -187,4 +187,10 @@ On - via Sherpa - Capture automatically via Sherpa.","Aus – Keine automatische
 Ein – Zahlungen mit dem Status AUTORISIEREN automatisch erfassen, wenn eine Sendung in Magento erstellt wird (Picqer wird dabei auch unterstützt).
 Ein – über Wuunder – Automatische Erfassung über Wuunder.
 Ein – über Sherpa – Automatische Erfassung über Sherpa."
-"When the store currency deviates from the base currency setting in Magento, this setting will ensure the payment starts in the base currency instead of the store currency.","Wenn die Shopwährung von der Basiswährungseinstellung in Magento abweicht, sorgt diese Einstellung dafür, dass die Zahlung in der Basiswährung und nicht in der Shopwährung beginnt."
+"When the store currency deviates from the base currency setting in Magento, this setting will ensure the payment starts in the base currency instead of the store currency. Example: Store currency is in Dollar, Base currency is Euro. Pay. will start payments in Euro.","When the store currency deviates from the base currency setting in Magento, this setting will ensure the payment starts in the base currency instead of the store currency. Example: Store currency is in Dollar, Base currency is Euro. Pay. will start payments in Euro. Beispiel: Die Geschäftswährung ist Dollar, die Basiswährung ist Euro. Pay. startet Zahlungen in Euro."
+"When Enabled, this will add an extra field to the checkout for the customer to enter in their COC number.","Wenn aktiviert, wird ein zusätzliches Feld zur Checkout hinzugefügt, in das der Kunde seine Handelsregisternummer-Nummer eingeben kann."
+"When Enabled, this will add an extra field to the checkout for the customer to enter in their VAT number.","Wenn aktiviert, wird ein zusätzliches Feld zur Checkout hinzugefügt, in das der Kunde seine USt-IdNr-Nummer eingeben kann."
+"When Enabled, this will add an datepicker field to the checkout for the customer to enter in their date of birth.","Wenn aktiviert, wird der Checkout ein Datumsauswahlfeld hinzugefügt, in das der Kunde sein Geburtsdatum eingeben kann."
+"Show custom COC field","Benutzerdefiniertes Handelsregisternummer-Nummer-Feld anzeigen"
+"Show custom VAT field","Benutzerdefiniertes USt-IdNr-Nummer-Feld anzeigen"
+"Show custom date of birth field","Benutzerdefiniertes Feld für das Geburtsdatum anzeigen"
