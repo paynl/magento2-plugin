@@ -67,13 +67,24 @@
     font-weight: bold;
 }
 
-#paynl_settings_paynl_general_settings .tooltip-content {
+[id^="paynl_setup_paynl"] .tooltip-content,
+[id^="paynl_settings_paynl"] .tooltip-content,
+[id^="paynl_paymentmethods_paynl_payment"] .tooltip-content {
     color: #FFF;
     width: 400px;
     max-width: inherit;
     white-space: pre-line;
 }
 
-#paynl_settings_paynl_general_settings .tooltip .help span::before, #paynl_settings_paynl_general_settings .tooltip .help a::before {
+[id^="paynl_setup_paynl"] .tooltip .help span::before, [id^="paynl_setup_paynl"] .tooltip .help a::before,
+[id^="paynl_settings_paynl"] .tooltip .help span::before, [id^="paynl_settings_paynl"] .tooltip .help a::before,
+[id^="paynl_paymentmethods_paynl_payment"] .tooltip .help span::before, [id^="paynl_paymentmethods_paynl_payment"] .tooltip .help a::before {
     opacity: 0.5;
+}
+
+[id^="paynl_setup_paynl"] td.use-default,
+[id^="paynl_settings_paynl"] td.use-default,
+[id^="paynl_paymentmethods_paynl_payment"] td.use-default {
+    float: left;
+    margin-left: 10px;
 }
