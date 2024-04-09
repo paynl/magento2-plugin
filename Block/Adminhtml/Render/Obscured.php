@@ -30,6 +30,7 @@ class Obscured extends Field
      *
      * @param Context $context
      * @param ScopeConfigInterface $scopeConfig
+     * @param RequestInterface $request
      */
     public function __construct(Context $context, ScopeConfigInterface $scopeConfig, RequestInterface $request)
     {
@@ -45,7 +46,6 @@ class Obscured extends Field
      * @return string
      */
     protected function _getElementHtml(AbstractElement $element) // phpcs:ignore
-
     {
         $this->configPath = $element->getData('field_config')['config_path'];
         $this->setNamePrefix($element->getName())
