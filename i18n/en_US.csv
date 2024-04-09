@@ -222,7 +222,7 @@
 On - Automatically capture payments with the status AUTHORIZE when a shipment is created in Magento (Picqer is also supported in this).
 On - via Wuunder - Capture automatically via Wuunder.
 On - via Sherpa - Capture automatically via Sherpa.","Off - No autocapture.
-On- Automatically capture payments with the status AUTHORIZE when a shipment is created in Magento (Picqer is also supported in this).
+On - Automatically capture payments with the status AUTHORIZE when a shipment is created in Magento (Picqer is also supported in this).
 On - via Wuunder - Capture automatically via Wuunder.
 On - via Sherpa - Capture automatically via Sherpa."
 "When the store currency deviates from the base currency setting in Magento, this setting will ensure the payment starts in the base currency instead of the store currency.","When the store currency deviates from the base currency setting in Magento, this setting will ensure the payment starts in the base currency instead of the store currency."
