@@ -27,13 +27,14 @@
                     </comment>
                     <config_path>payment/paynl/tokencode</config_path>
                 </field>
-                <field id="apitoken_encrypted" translate="label, comment" type="obscure" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="apitoken_encrypted" translate="label, comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>API token</label>
                     <comment>
                         <![CDATA[Your API token, you can find your tokens <a target='_blank' href='https://my.pay.nl/company/tokens'>here</a>.]]>
                     </comment>
-                    <config_path>payment/paynl/apitoken_encrypted</config_path>
-                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                    <frontend_model>Paynl\Payment\Block\Adminhtml\Render\Obscured</frontend_model>
+                    <config_path>payment/paynl/apitoken_encrypted</config_path>    
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>                
                 </field>
                 <field id="serviceid" translate="label, comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Sales location</label>
