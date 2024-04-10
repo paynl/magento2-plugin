@@ -226,3 +226,10 @@ On- Automatically capture payments with the status AUTHORIZE when a shipment is 
 On - via Wuunder - Capture automatically via Wuunder.
 On - via Sherpa - Capture automatically via Sherpa."
 "When the store currency deviates from the base currency setting in Magento, this setting will ensure the payment starts in the base currency instead of the store currency.","When the store currency deviates from the base currency setting in Magento, this setting will ensure the payment starts in the base currency instead of the store currency."
+"Customer Type","Customer Type"
+"By default payment methods are available in the checkout for all customer types.
+Private, B2C: Only show this payment method when the customer didn't enter a company name.
+Business, BB2: Only show this payment method when the customer entered a company name.","By default payment methods are available in the checkout for all customer types.
+Private, B2C: Only show this payment method when the customer didn't enter a company name.
+Business, BB2: Only show this payment method when the customer entered a company name."
+"Specify which type of customer this payment method should be available to.","Specify which type of customer this payment method should be available to."

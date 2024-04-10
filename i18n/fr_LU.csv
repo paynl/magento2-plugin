@@ -173,4 +173,10 @@ On - via Sherpa - Capture automatically via Sherpa.","Désactivé - Pas de captu
 Activé - Capturer automatiquement les paiements avec le statut AUTORISER lorsqu'un envoi est créé dans Magento (Picqer est également pris en charge dans ce domaine).
 Activé - via Wuunder - Capture automatique via Wuunder.
 Activé - via Sherpa - Capture automatique via Sherpa."
-"When the store currency deviates from the base currency setting in Magento, this setting will ensure the payment starts in the base currency instead of the store currency.","Lorsque la devise du magasin diffère de la devise de base dans Magento, ce paramètre garantit que le paiement commence dans la devise de base au lieu de la devise du magasin."
+"When the store currency deviates from the base currency setting in Magento, this setting will ensure the payment starts in the base currency instead of the store currency.","Lorsque la devise du magasin diffère de la devise de base dans Magento, ce paramètre garantit que le paiement commence dans la devise de base au lieu de la devise du magasin.""Customer Type","Type de client"
+"By default payment methods are available in the checkout for all customer types.
+Private, B2C: Only show this payment method when the customer didn't enter a company name.
+Business, BB2: Only show this payment method when the customer entered a company name.","Par défaut, les méthodes de paiement sont disponibles dans la caisse pour tous les types de clients.
+Privé, B2C : N'affiche ce mode de paiement que si le client n'a pas saisi de nom d'entreprise.
+Business, BB2 : n'affiche ce mode de paiement que lorsque le client a saisi un nom d'entreprise."
+"Specify which type of customer this payment method should be available to.","Spécifiez à quel type de client ce mode de paiement doit être disponible."
