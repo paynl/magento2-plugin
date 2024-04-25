@@ -107,7 +107,7 @@ On - via Sherpa - Capture automatically via Sherpa.</tooltip>
                     </comment>
                     <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
                     <config_path>payment/paynl/follow_payment_method</config_path>
-                    <tooltip>Although an order is started with a certain payment method, it may still be completed with a different payment method. For example: Someone starts an order with iDeal in3, but never completes it. When that person later receives a reminder email stating that the order is still open, he or she can complete it with iDEAL. When this option is enabled, iDEAL will be shown with the order. A note will also be placed in the order notes indicating that the payment method has changed.</tooltip>
+                    <tooltip>Although an order is started with a certain payment method, it may still be completed with a different payment method. For example: Someone starts an order with iDEAL in3, but never completes it. When that person later receives a reminder email stating that the order is still open, he or she can complete it with iDEAL. When this option is enabled, iDEAL will be shown with the order. A note will also be placed in the order notes indicating that the payment method has changed.</tooltip>
                 </field>
             </group>
             <group id="paynl_layout_settings" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">

@@ -2,7 +2,7 @@
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
     <group id="paynl_payment_capayable_gespreid" sortOrder="910" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>iDeal in3</label>
+        <label>iDEAL in3</label>
         <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1"
                showInStore="1">
             <label>Enabled</label>
