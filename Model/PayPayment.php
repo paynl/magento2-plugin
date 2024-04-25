@@ -191,7 +191,7 @@ class PayPayment
             $this->updateCouponUsages->execute($order, true);
         }
         $this->eventManager->dispatch('order_uncancel_after', ['order' => $order]);
-    }    
+    }
 
     /**
      * @param integer $orderEntityId
