@@ -191,6 +191,25 @@ class PayPayment
             $this->updateCouponUsages->execute($order, true);
         }
         $this->eventManager->dispatch('order_uncancel_after', ['order' => $order]);
+    }    
+
+    /**
+     * @param integer $orderEntityId
+     * @return true
+     * @throws \Exception
+     */
+    public function chargebackOrder($orderEntityId)
+    {
+        try {
+            $order = $this->orderRepository->get($orderEntityId);
+            $creditmemo = $this->cmFac->createByOrder($order);
+            $this->cmService->refund($creditmemo);
+
+            $order->addStatusHistoryComment(__('PAY. - Chargeback initiated by customer'))->save();
+        } catch (\Exception $e) {
+            throw new \Exception('Could not chargeback');
+        }
+        return true;
     }
 
     /**

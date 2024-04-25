@@ -182,6 +182,20 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             }
         }
 
+        if ($transaction->isChargeBack() && substr($action, 0, 10) == 'chargeback') {
+            if ($this->config->chargebackFromPay() && $order->getTotalDue() == 0) {
+                if ($order->getBaseTotalRefunded() == $order->getBaseGrandTotal()) {
+                    return $this->result->setContents('TRUE|Order total already 0');
+                }
+                try {
+                    $response = $this->payPayment->chargebackOrder($orderEntityId);
+                } catch (Exception $e) {
+                    $response = $e->getMessage();
+                }
+                return $this->result->setContents($response === true ? 'TRUE|ChargeBack success' : 'FALSE|' . $response);
+            }
+        }
+
         if ($order->getTotalDue() <= 0) {
             $this->payHelper->logDebug($action . '. Ignoring - already paid: ' . $orderEntityId);
             if (!$this->config->registerPartialPayments()) {
