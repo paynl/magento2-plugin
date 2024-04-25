@@ -223,7 +223,7 @@ To finish your order, click the link below
             </paynl_payment_boekenbon>
             <paynl_payment_capayable_gespreid>
                 <active>0</active>
-                <title>in3 keer betalen, 0% rente</title>
+                <title>iDeal in3</title>
                 <payment_option_id>1813</payment_option_id>
                 <order_status>pending_payment</order_status>
                 <order_status_authorized>processing</order_status_authorized>
