@@ -204,7 +204,7 @@ class PayPayment
             $order = $this->orderRepository->get($orderEntityId);
             if (!$this->config->chargebackFromPayEnabled() || $order->getTotalDue() != 0 || $order->getBaseTotalRefunded() == $order->getBaseGrandTotal()) {
                 return 'TRUE|Ignoring chargeback';
-            }     
+            }
             $creditmemo = $this->cmFac->createByOrder($order);
             $this->cmService->refund($creditmemo);
             $order->addStatusHistoryComment(__('PAY. - Chargeback initiated by customer'))->save();
