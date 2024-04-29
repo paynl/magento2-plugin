@@ -182,8 +182,8 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             }
         }
 
-        if ($transaction->isChargeBack() && substr($action, 0, 10) == 'chargeback') {            
-            $response = $this->payPayment->chargebackOrder($orderEntityId);             
+        if ($transaction->isChargeBack() && substr($action, 0, 10) == 'chargeback') {
+            $response = $this->payPayment->chargebackOrder($orderEntityId);
             return $this->result->setContents($response);
         }
 
