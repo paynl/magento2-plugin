@@ -574,7 +574,7 @@ class Config
     /**
      * @return string|null
      */
-    public function chargebackFromPay()
+    public function chargebackFromPayEnabled()
     {
         return $this->store->getConfig('payment/paynl/allow_chargeback_from_pay');
     }
