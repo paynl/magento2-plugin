@@ -175,3 +175,6 @@ Ein – Zahlungen mit dem Status AUTORISIEREN automatisch erfassen, wenn eine Se
 Ein – über Wuunder – Automatische Erfassung über Wuunder.
 Ein – über Sherpa – Automatische Erfassung über Sherpa."
 "When the store currency deviates from the base currency setting in Magento, this setting will ensure the payment starts in the base currency instead of the store currency.","Wenn die Shopwährung von der Basiswährungseinstellung in Magento abweicht, sorgt diese Einstellung dafür, dass die Zahlung in der Basiswährung und nicht in der Shopwährung beginnt."
+"Chargebacks","Rückbuchungen"
+"Set to `on` to accept chargebacks initiated from Pay.","Setzen Sie diese Option auf "Ein", um von Pay initiierte Rückbuchungen zu akzeptieren."
+"When this settings is enabled, chargebacks initiated by customers will refund the order in Magento.","Wenn diese Einstellung aktiviert ist, werden Rückbuchungen, die von Kunden initiiert wurden, in Magento erstattet."

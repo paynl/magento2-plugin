@@ -200,19 +200,19 @@ class PayPayment
      */
     public function chargebackOrder($orderEntityId)
     {
-        try {
-            $order = $this->orderRepository->get($orderEntityId);
-            if (!$this->config->chargebackFromPayEnabled() || $order->getTotalDue() != 0 || $order->getBaseTotalRefunded() == $order->getBaseGrandTotal()) {
-                return 'TRUE|Ignoring chargeback';
-            }
+        $order = $this->orderRepository->get($orderEntityId);
+        if (!$this->config->chargebackFromPayEnabled() || $order->getTotalDue() != 0 || $order->getBaseTotalRefunded() == $order->getBaseGrandTotal()) {
+            throw new \Exception("Ignoring chargeback");
+        }
+        try {            
             $creditmemo = $this->cmFac->createByOrder($order);
             $this->cmService->refund($creditmemo);
             $order->addStatusHistoryComment(__('PAY. - Chargeback initiated by customer'))->save();
         } catch (\Exception $e) {
             $this->payHelper->logDebug('Chargeback failed:', ['error' => $e->getMessage(), 'orderEntityId' => $orderEntityId]);
-            return 'FALSE|Could not chargeback';
+            throw new \Exception('Could not chargeback');
         }
-        return 'TRUE|ChargeBack success';
+        return true;
     }
 
     /**

@@ -175,3 +175,4 @@ Ein – Zahlungen mit dem Status AUTORISIEREN automatisch erfassen, wenn eine Se
 Ein – über Wuunder – Automatische Erfassung über Wuunder.
 Ein – über Sherpa – Automatische Erfassung über Sherpa."
 "When the store currency deviates from the base currency setting in Magento, this setting will ensure the payment starts in the base currency instead of the store currency.","When the store currency deviates from the base currency setting in Magento, this setting will ensure the payment starts in the base currency instead of the store currency."
+"When this settings is enabled, chargebacks initiated by customers will refund the order in Magento.",""

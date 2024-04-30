@@ -140,10 +140,11 @@ On - via Sherpa - Capture automatically via Sherpa.</tooltip>
                     <config_path>payment/paynl/allow_refund_from_pay</config_path>
                 </field>
                 <field id="allow_chargeback_from_pay" translate="label" type="select" sortOrder="107" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Chargeback from Pay.</label>
+                    <label>Chargebacks</label>
                     <comment>
                         <![CDATA[Set to `on` to accept chargebacks initiated from Pay.]]>
                     </comment>
+                    <tooltip>When this settings is enabled, chargebacks initiated by customers will refund the order in Magento.</tooltip>
                     <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
                     <config_path>payment/paynl/allow_chargeback_from_pay</config_path>
                 </field>
