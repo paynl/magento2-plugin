@@ -226,3 +226,6 @@ On - Automatically capture payments with the status AUTHORIZE when a shipment is
 On - via Wuunder - Capture automatically via Wuunder.
 On - via Sherpa - Capture automatically via Sherpa."
 "When the store currency deviates from the base currency setting in Magento, this setting will ensure the payment starts in the base currency instead of the store currency.","When the store currency deviates from the base currency setting in Magento, this setting will ensure the payment starts in the base currency instead of the store currency."
+"Chargebacks","Chargebacks"
+"Set to `on` to accept chargebacks initiated from Pay.","Set to `on` to accept chargebacks initiated from Pay."
+"When this settings is enabled, chargebacks initiated by customers will refund the order in Magento.","When this settings is enabled, chargebacks initiated by customers will refund the order in Magento."
