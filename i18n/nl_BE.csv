@@ -1,4 +1,4 @@
-"Order confirmation sent","Orderbevestiging verstuurd"
+4"Order confirmation sent","Orderbevestiging verstuurd"
 "You notified customer about invoice #%1","Factuur #%1 verstuurd naar de klant"
 "Pay. - order cancelled","Pay. - bestelling geannuleerd"
 "Pay. - order uncancelled","Pay. - bestelling geannuleerd"
@@ -230,6 +230,13 @@ Aan - Capture automatisch betalingen met de status AUTHORIZE wanneer een shipmen
 Aan - via Wuunder - Capture automatisch via Wuunder.
 Aan - via Sherpa - Capture automatisch via Sherpa."
 "When the store currency deviates from the base currency setting in Magento, this setting will ensure the payment starts in the base currency instead of the store currency.","Wanneer de winkelvaluta afwijkt van de basisvaluta-instelling in Magento, zorgt deze instelling ervoor dat de betalingen worden gestart in de basisvaluta in plaats van de winkelvaluta."
+"Customer Type","Type klant"
+"By default payment methods are available in the checkout for all customer types.
+Private, B2C: Only show this payment method when the customer didn't enter a company name.
+Business, BB2: Only show this payment method when the customer entered a company name.","Standaard zijn betaalmethoden beschikbaar in de checkout voor alle klanttypen.
+Particulier, B2C: Laat deze betaalmethode alleen zien als de klant geen bedrijfsnaam heeft ingevoerd.
+Zakelijk, BB2: Laat deze betaalmethode alleen zien als de klant een bedrijfsnaam heeft opgegeven."
+"Specify which type of customer this payment method should be available to.","Specificeer voor welk type klant deze betaalmethode beschikbaar moet zijn."
 "Chargebacks","Terugboekingen"
 "Set to `on` to accept chargebacks initiated from Pay.","Stel in op `aan` om chargebacks te accepteren die zijn geïnitieerd vanuit Pay."
 "When this settings is enabled, chargebacks initiated by customers will refund the order in Magento.","Als deze instelling is ingeschakeld, zullen chargebacks die door klanten worden geïnitieerd de bestelling refunden in Magento."
