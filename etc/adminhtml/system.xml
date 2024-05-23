@@ -27,13 +27,14 @@
                     </comment>
                     <config_path>payment/paynl/tokencode</config_path>
                 </field>
-                <field id="apitoken_encrypted" translate="label, comment" type="obscure" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="apitoken_encrypted" translate="label, comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>API token</label>
                     <comment>
                         <![CDATA[Your API token, you can find your tokens <a target='_blank' href='https://my.pay.nl/company/tokens'>here</a>.]]>
                     </comment>
-                    <config_path>payment/paynl/apitoken_encrypted</config_path>
-                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                    <frontend_model>Paynl\Payment\Block\Adminhtml\Render\Obscured</frontend_model>
+                    <config_path>payment/paynl/apitoken_encrypted</config_path>    
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>                
                 </field>
                 <field id="serviceid" translate="label, comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Sales location</label>
@@ -106,7 +107,7 @@ On - via Sherpa - Capture automatically via Sherpa.</tooltip>
                     </comment>
                     <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
                     <config_path>payment/paynl/follow_payment_method</config_path>
-                    <tooltip>Although an order is started with a certain payment method, it may still be completed with a different payment method. For example: Someone starts an order with IN3, but never completes it. When that person later receives a reminder email stating that the order is still open, he or she can complete it with iDEAL. When this option is enabled, iDEAL will be shown with the order. A note will also be placed in the order notes indicating that the payment method has changed.</tooltip>
+                    <tooltip>Although an order is started with a certain payment method, it may still be completed with a different payment method. For example: Someone starts an order with iDEAL in3, but never completes it. When that person later receives a reminder email stating that the order is still open, he or she can complete it with iDEAL. When this option is enabled, iDEAL will be shown with the order. A note will also be placed in the order notes indicating that the payment method has changed.</tooltip>
                 </field>
             </group>
             <group id="paynl_layout_settings" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -137,6 +138,15 @@ On - via Sherpa - Capture automatically via Sherpa.</tooltip>
                     </comment>
                     <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
                     <config_path>payment/paynl/allow_refund_from_pay</config_path>
+                </field>
+                <field id="allow_chargeback_from_pay" translate="label" type="select" sortOrder="107" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Chargebacks</label>
+                    <comment>
+                        <![CDATA[Set to `on` to accept chargebacks initiated from Pay.]]>
+                    </comment>
+                    <tooltip>When this settings is enabled, chargebacks initiated by customers will refund the order in Magento.</tooltip>
+                    <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
+                    <config_path>payment/paynl/allow_chargeback_from_pay</config_path>
                 </field>
                 <field id="never_cancel" translate="label,comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Never cancel order</label>

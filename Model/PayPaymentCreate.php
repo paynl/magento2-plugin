@@ -333,7 +333,7 @@ class PayPaymentCreate
             }
 
             $shippingAddress = [
-                'initials' => $arrShippingAddress['firstname'],
+                'initials' => mb_substr($arrShippingAddress['firstname'], 0, 32),
                 'lastName' => $arrShippingAddress['lastname'],
             ];
             $arrAddress2 = \Paynl\Helper::splitAddress($arrShippingAddress['street']);
@@ -358,7 +358,7 @@ class PayPaymentCreate
         if ($arrBillingAddress) {
             $arrBillingAddress = $arrBillingAddress->toArray();
             $enduser = [
-                'initials' => $arrBillingAddress['firstname'],
+                'initials' => mb_substr($arrBillingAddress['firstname'], 0, 32),
                 'lastName' => $arrBillingAddress['lastname'],
                 'phoneNumber' => payHelper::validatePhoneNumber($arrBillingAddress['telephone']),
                 'emailAddress' => $arrBillingAddress['email'],
@@ -403,7 +403,7 @@ class PayPaymentCreate
             $arrBillingAddress = $arrBillingAddress->toArray();
 
             $invoiceAddress = [
-                'initials' => $arrBillingAddress['firstname'] ?? '',
+                'initials' => mb_substr($arrBillingAddress['firstname'] ?? '', 0, 32),
                 'lastName' => $arrBillingAddress['lastname'] ?? '',
             ];
 
