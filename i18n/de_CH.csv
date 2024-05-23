@@ -184,4 +184,4 @@ Geschäftlich, BB2: Zeigen Sie diese Zahlungsmethode nur an, wenn der Kunde eine
 "Specify which type of customer this payment method should be available to.","Geben Sie an, für welche Art von Kunden diese Zahlungsmethode verfügbar sein soll."
 "Chargebacks","Rückbuchungen"
 "Set to `on` to accept chargebacks initiated from Pay.","Setzen Sie diese Option auf "Ein", um von Pay initiierte Rückbuchungen zu akzeptieren."
-"When this setting
+"When this settings is enabled, chargebacks initiated by customers will refund the order in Magento.","Wenn diese Einstellung aktiviert ist, werden Rückbuchungen, die von Kunden initiiert wurden, in Magento erstattet."

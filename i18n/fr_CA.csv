@@ -183,4 +183,4 @@ Business, BB2 : n'affiche ce mode de paiement que lorsque le client a saisi un n
 "Specify which type of customer this payment method should be available to.","Spécifiez à quel type de client ce mode de paiement doit être disponible."
 "Chargebacks","Refacturation"
 "Set to `on` to accept chargebacks initiated from Pay.","Réglez ce paramètre sur "on" pour accepter les rétrofacturations initiées par Pay."
-"When this setting
+"When this settings is enabled, chargebacks initiated by customers will refund the order in Magento.","Lorsque ce paramètre est activé, les rétrocessions initiées par les clients rembourseront la commande dans Magento."
