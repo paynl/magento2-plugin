@@ -293,5 +293,5 @@ class Finish extends PayAction
         $quote->setIsActive(true)->setReservedOrderId(null);
         $this->checkoutSession->replaceQuote($quote);
         $this->quoteRepository->save($quote);
-    }    
+    }
 }
