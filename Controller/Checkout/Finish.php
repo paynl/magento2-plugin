@@ -215,6 +215,7 @@ class Finish extends PayAction
             } else {
                 $cancelMessage = $bDenied ? __('Payment denied') : __('Payment cancelled');
                 $this->messageManager->addNoticeMessage($cancelMessage);
+                $this->reactivateCart($order);
                 if ($multiShipFinish) {
                     $session = $this->checkoutSession;
                     $sessionId = $session->getLastQuoteId();
@@ -236,6 +237,7 @@ class Finish extends PayAction
             } else {
                 $this->messageManager->addNoticeMessage(__('Unfortunately something went wrong'));
             }
+            $this->reactivateCart($order);
             $resultRedirect->setPath('checkout/cart');
         }
 
@@ -279,4 +281,17 @@ class Finish extends PayAction
         $quote->setIsActive(false);
         $this->quoteRepository->save($quote);
     }
+
+    /**
+     * @param Order $order
+     * @return void
+     */
+    private function reactivateCart(Order $order)
+    {
+        # Make the cart active
+        $quote = $this->quoteRepository->get($order->getQuoteId());
+        $quote->setIsActive(true)->setReservedOrderId(null);
+        $this->checkoutSession->replaceQuote($quote);
+        $this->quoteRepository->save($quote);
+    }    
 }
