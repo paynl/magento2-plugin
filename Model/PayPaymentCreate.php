@@ -406,7 +406,7 @@ class PayPaymentCreate
                 'initials' => mb_substr($arrBillingAddress['firstname'] ?? '', 0, 32),
                 'lastName' => mb_substr($arrBillingAddress['lastname'] ?? '', 0, 64),
             ];
-            $arrAddress = \Paynl\Helper::splitAddress($arrBillingAddress['street']);  
+            $arrAddress = \Paynl\Helper::splitAddress($arrBillingAddress['street']);
             $invoiceAddress['streetName'] = mb_substr($arrAddress[0] ?? '', 0, 128);
             $invoiceAddress['houseNumber'] = mb_substr($arrAddress[1] ?? '', 0, 10);
             $invoiceAddress['zipCode'] = mb_substr($arrBillingAddress['postcode'] ?? '', 0, 24);
