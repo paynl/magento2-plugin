@@ -61,7 +61,7 @@ class Instore extends PaymentMethod
     public function startTransaction(Order $order, $fromAdmin = false)
     {
         $store = $order->getStore();
-        $url = $store->getBaseUrl() . 'checkout/cart/';
+        $redirectUrl = $store->getBaseUrl() . 'checkout/cart/';
 
         $additionalData = $order->getPayment()->getAdditionalInformation();
         $pinLocation = PinMoment::LOCATION_CHECKOUT;
@@ -84,7 +84,7 @@ class Instore extends PaymentMethod
         try {
             if (empty($terminalId)) {
                 if (!$fromAdmin) {
-                    $this->messageManager->addNoticeMessage(__('Please select a pin-termina'));
+                    $this->messageManager->addNoticeMessage(__('Please select a pin-terminal'));
                     return;
                 }
                 throw new \Exception(__('Please select a pin-terminal'), 201);
@@ -92,23 +92,22 @@ class Instore extends PaymentMethod
 
             $this->payHelper->logDebug('pinlocation', [$pinLocation], $store);
 
-            if ($pinLocation != PinMoment::LOCATION_PICKUP) {
-                $this->payHelper->logDebug('pay here', [$pinLocation], $store);
+            if ($pinLocation == PinMoment::LOCATION_PICKUP) {
+                $redirectUrl = $order->getStore()->getBaseUrl() . 'paynl/checkout/finish/?entityid=' . $order->getEntityId() . '&pickup=1';
+                $order->addStatusHistoryComment(__('PAY.: Payment at pick-up'));
+            } else {
                 $transaction = (new PayPaymentCreate($order, $this))->create();
 
                 if ($this->getPaymentOptionId() === 1927) {
                     $additionalData['terminal_hash'] = $transaction->getData()['terminal']['hash'];
-                    $url = $transaction->getRedirectUrl();
+                    $redirectUrl = $transaction->getRedirectUrl();
                 } else {
                     $instorePayment = \Paynl\Instore::payment(['transactionId' => $transaction->getTransactionId(), 'terminalId' => $terminalId]);
                     $additionalData['terminal_hash'] = $instorePayment->getHash();
-                    $url = $instorePayment->getRedirectUrl();
+                    $redirectUrl = $instorePayment->getRedirectUrl();
                 }
 
                 $additionalData['transactionId'] = $transaction->getTransactionId();
-            } else {
-                $url = $order->getStore()->getBaseUrl() . 'paynl/checkout/finish/?entityid=' . $order->getEntityId() . '&pickup=1';
-                $order->addStatusHistoryComment(__('PAY.: Payment at pick-up'));
             }
 
             $additionalData['payment_option'] = $terminalId;
@@ -133,7 +132,7 @@ class Instore extends PaymentMethod
             }
         }
 
-        return $url;
+        return $redirectUrl;
     }
 
     /**
