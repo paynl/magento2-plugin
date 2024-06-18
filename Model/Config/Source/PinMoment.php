@@ -6,10 +6,10 @@ use Magento\Framework\Option\ArrayInterface;
 
 class PinMoment implements ArrayInterface
 {
-    const LOCATION_CHECKOUT = 0;
-    const LOCATION_PICKUP = 1;
-    const LOCATION_CHOICE = 2;
-    
+    public const LOCATION_CHECKOUT = 0;
+    public const LOCATION_PICKUP = 1;
+    public const LOCATION_CHOICE = 2;
+
     /**
      * Options getter
      *
