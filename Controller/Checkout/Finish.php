@@ -151,21 +151,17 @@ class Finish extends PayAction
         $multiShipFinish = is_array($orderIds);
 
         try {
+            $this->checkEmpty($magOrderId, 'magOrderId', 1012);
+            $order = $this->orderRepository->get($magOrderId);
+            $this->checkEmpty($order, 'order', 1013);
+
             if ($pickupMode) {
-                $order = $this->orderRepository->get($magOrderId);
-                $payOrderId = '';
-                $this->deactivateCart($order, $payOrderId, true);
-                $successUrl = Config::FINISH_PICKUP;
-                $resultRedirect->setPath($successUrl, ['_query' => ['utm_nooverride' => '1']]);
+                $this->deactivateCart($order, '', true);
+                $resultRedirect->setPath(Config::FINISH_PICKUP, ['_query' => ['utm_nooverride' => '1']]);
                 return $resultRedirect;
             }
 
             $this->checkEmpty($payOrderId, 'payOrderid', 101);
-            $this->checkEmpty($magOrderId, 'magOrderId', 1012);
-
-            $order = $this->orderRepository->get($magOrderId);
-            $this->checkEmpty($order, 'order', 1013);
-
             $this->config->setStore($order->getStore());
 
             $payment = $order->getPayment();
