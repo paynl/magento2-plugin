@@ -67,12 +67,11 @@ class Instore extends PaymentMethod
         $pinLocation = PinMoment::LOCATION_CHECKOUT;
 
         if ($fromAdmin === false) {
-            # Betaling start vanuit checkout
-            if ($this->getPinMoment() == PinMoment::LOCATION_CHOICE) {
-                # Checkout gebruiker maakt de keuze
+            $pinLocation = $this->getPinMoment();
+            # Payment starts from checkout
+            if ($pinLocation == PinMoment::LOCATION_CHOICE) {
+                # Checkout user chooses pinlocation
                 $pinLocation = $additionalData['pinmoment'] ?? PinMoment::LOCATION_CHECKOUT;
-            } else {
-                $pinLocation = $this->getPinMoment();
             }
         }
 
