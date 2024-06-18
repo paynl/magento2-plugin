@@ -4,6 +4,7 @@ namespace Paynl\Payment\Model\Paymentmethod;
 
 use Magento\Sales\Model\Order;
 use Paynl\Payment\Helper\PayHelper;
+use Paynl\Payment\Model\Config\Source\PinMoment;
 use Paynl\Payment\Model\PayPaymentCreate;
 
 class Instore extends PaymentMethod
@@ -63,13 +64,17 @@ class Instore extends PaymentMethod
         $url = $store->getBaseUrl() . 'checkout/cart/';
 
         $additionalData = $order->getPayment()->getAdditionalInformation();
+        $pinLocation = PinMoment::LOCATION_CHECKOUT;
 
-        $pinMoment = $additionalData['pinmoment'];
-        if (($pinMoment == "1" && !$fromAdmin) || ($this->getPinMoment() == "1" && !$fromAdmin)) {
-            $pinMoment = ($this->getPinMoment() == "1") ? "1" : $pinMoment;
-            $order->addStatusHistoryComment(__('PAY.: Payment at pick-up'))->save();
+        if ($fromAdmin === false) {
+            # Betaling start vanuit checkout
+            if ($this->getPinMoment() == PinMoment::LOCATION_CHOICE) {
+                # Checkout gebruiker maakt de keuze
+                $pinLocation = $additionalData['pinmoment'] ?? PinMoment::LOCATION_CHECKOUT;
+            } else {
+                $pinLocation = $this->getPinMoment();
+            }
         }
-        $pinMoment = !$fromAdmin ? $pinMoment : false;
 
         $terminalId = null;
         if (isset($additionalData['payment_option'])) {
@@ -79,24 +84,34 @@ class Instore extends PaymentMethod
 
         try {
             if (empty($terminalId)) {
+                if (!$fromAdmin) {
+                    $this->messageManager->addNoticeMessage(__('Please select a pin-termina'));
+                    return;
+                }
                 throw new \Exception(__('Please select a pin-terminal'), 201);
             }
 
-            if ($pinMoment !== '1') {
+            $this->payHelper->logDebug('pinlocation', [$pinLocation], $store);
+
+            if ($pinLocation != PinMoment::LOCATION_PICKUP) {
+                $this->payHelper->logDebug('pay here', [$pinLocation], $store);
                 $transaction = (new PayPaymentCreate($order, $this))->create();
 
                 $instorePayment = \Paynl\Instore::payment(['transactionId' => $transaction->getTransactionId(), 'terminalId' => $terminalId]);
 
                 $additionalData['terminal_hash'] = $instorePayment->getHash();
                 $additionalData['transactionId'] = $transaction->getTransactionId();
+
+                $url = $instorePayment->getRedirectUrl();
+            } else {
+                $url = $order->getStore()->getBaseUrl() . 'paynl/checkout/finish/?entityid=' . $order->getEntityId() . '&pickup=1';
+                $order->addStatusHistoryComment(__('PAY.: Payment at pick-up'));
             }
 
             $additionalData['payment_option'] = $terminalId;
 
             $order->getPayment()->setAdditionalInformation($additionalData);
             $order->save();
-
-            $url = ($pinMoment == '1') ? $order->getStore()->getBaseUrl() . 'paynl/checkout/finish/?entityid=' . $order->getEntityId() . '&pickup=1' : $instorePayment->getRedirectUrl();
         } catch (\Exception $e) {
             $this->payHelper->logCritical($e->getMessage(), [], $store);
 
@@ -203,7 +218,7 @@ class Instore extends PaymentMethod
     /**
      * @return mixed
      */
-    public function getPinMomentTerminal()
+    public function getPinLocationTerminal()
     {
         return $this->_scopeConfig->getValue('payment/' . $this->_code . '/pinmoment_terminal', 'store');
     }

@@ -6,6 +6,10 @@ use Magento\Framework\Option\ArrayInterface;
 
 class PinMoment implements ArrayInterface
 {
+    const LOCATION_CHECKOUT = 0;
+    const LOCATION_PICKUP = 1;
+    const LOCATION_CHOICE = 2;
+    
     /**
      * Options getter
      *
@@ -30,9 +34,9 @@ class PinMoment implements ArrayInterface
     public function toArray()
     {
         return [
-            '0' => __("Directly payment initialization(default)"),
-            '1' => __("Let payment take place at the pickup location, only create a backorder"),
-            '2' => __("Show a selection for the checkout-user to choose between direct payment or payment at location"),
+            '0' => __("Direct checkout payment (default)"),
+            '1' => __("Payment takes place at the pickup location, only create a backorder"),
+            '2' => __("Provide this choice in the checkout"),
         ];
     }
 }
