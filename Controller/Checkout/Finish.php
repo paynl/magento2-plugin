@@ -102,10 +102,8 @@ class Finish extends PayAction
         if ($session->getLastOrderId() != $order->getId()) {
             $additionalInformation = $order->getPayment()->getAdditionalInformation();
             $transactionId = (isset($additionalInformation['transactionId'])) ? $additionalInformation['transactionId'] : null;
-            if (
-                ($orderId == $transactionId)
-                || (!empty($pickupMode))
-            ) {
+
+            if ($orderId == $transactionId || !empty($pickupMode)) {
                 $this->checkoutSession->setLastQuoteId($order->getQuoteId())
                     ->setLastSuccessQuoteId($order->getQuoteId())
                     ->setLastOrderId($order->getId())
