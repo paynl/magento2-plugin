@@ -178,6 +178,8 @@ class Finish extends PayAction
                 $pinStatus = $this->handlePin($information['terminal_hash'], $order);
                 if (!empty($pinStatus)) {
                     $bSuccess = true;
+                } else {
+                    $bPending = false;
                 }
             }
 
@@ -194,6 +196,7 @@ class Finish extends PayAction
                 if (empty($successUrl)) {
                     $successUrl = ($payment->getMethod() == 'paynl_payment_paylink' || $this->config->sendEcommerceAnalytics()) ? Config::FINISH_PAY : Config::FINISH_STANDARD;
                 }
+                $this->payHelper->logDebug('Finish succes', [$successUrl, $payOrderId, $bSuccess, $bVerify]);
                 $resultRedirect->setPath($successUrl, ['_query' => ['utm_nooverride' => '1']]);
                 if ($isPinTransaction && $pinStatus->getTransactionState() !== 'approved') {
                     $this->messageManager->addNoticeMessage(__('Order has been placed and payment is pending'));
@@ -218,11 +221,13 @@ class Finish extends PayAction
                 } elseif ($this->config->sendEcommerceAnalytics()) {
                     $successUrl = Config::FINISH_PAY;
                 }
+                $this->payHelper->logDebug('Finish succes', [$successUrl, $payOrderId]);
                 $resultRedirect->setPath($successUrl, ['_query' => ['utm_nooverride' => '1']]);
                 $this->deactivateCart($order, $payOrderId);
             } else {
                 $cancelMessage = $bDenied ? __('Payment denied') : __('Payment cancelled');
                 $this->messageManager->addNoticeMessage($cancelMessage);
+                $this->reactivateCart($order);
                 if ($multiShipFinish) {
                     $session = $this->checkoutSession;
                     $sessionId = $session->getLastQuoteId();
@@ -232,7 +237,9 @@ class Finish extends PayAction
                         $session->replaceQuote($quote);
                     }
                 }
-                $resultRedirect->setPath($payment->getMethod() == 'paynl_payment_paylink' ? Config::CANCEL_PAY : $this->config->getCancelURL());
+                $cancelUrl = $payment->getMethod() == 'paynl_payment_paylink' ? Config::CANCEL_PAY : $this->config->getCancelURL();
+                $this->payHelper->logDebug('Finish cancel/denied. Message: ' . $cancelMessage, [$multiShipFinish, $payOrderId, $cancelUrl]);
+                $resultRedirect->setPath($cancelUrl);
             }
         } catch (\Exception $e) {
             $this->payHelper->logCritical($e->getCode() . ': ' . $e->getMessage(), $params);
@@ -242,6 +249,7 @@ class Finish extends PayAction
             } else {
                 $this->messageManager->addNoticeMessage(__('Unfortunately something went wrong'));
             }
+            $this->reactivateCart($order);
             $resultRedirect->setPath('checkout/cart');
         }
 
@@ -284,6 +292,19 @@ class Finish extends PayAction
 
         $quote = $session->getQuote();
         $quote->setIsActive(false);
+        $this->quoteRepository->save($quote);
+    }
+
+    /**
+     * @param Order $order
+     * @return void
+     */
+    private function reactivateCart(Order $order)
+    {
+        # Make the cart active
+        $quote = $this->quoteRepository->get($order->getQuoteId());
+        $quote->setIsActive(true)->setReservedOrderId(null);
+        $this->checkoutSession->replaceQuote($quote);
         $this->quoteRepository->save($quote);
     }
 }

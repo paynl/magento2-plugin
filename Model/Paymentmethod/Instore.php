@@ -95,13 +95,17 @@ class Instore extends PaymentMethod
             if ($pinLocation != PinMoment::LOCATION_PICKUP) {
                 $this->payHelper->logDebug('pay here', [$pinLocation], $store);
                 $transaction = (new PayPaymentCreate($order, $this))->create();
-
-                $instorePayment = \Paynl\Instore::payment(['transactionId' => $transaction->getTransactionId(), 'terminalId' => $terminalId]);
-
-                $additionalData['terminal_hash'] = $instorePayment->getHash();
+              
+                if ($this->getPaymentOptionId() === 1927) {
+                    $additionalData['terminal_hash'] = $transaction->getData()['terminal']['hash'];
+                    $url = $transaction->getRedirectUrl();
+                } else {
+                    $instorePayment = \Paynl\Instore::payment(['transactionId' => $transaction->getTransactionId(), 'terminalId' => $terminalId]);
+                    $additionalData['terminal_hash'] = $instorePayment->getHash();
+                    $url = $instorePayment->getRedirectUrl();
+                }
+              
                 $additionalData['transactionId'] = $transaction->getTransactionId();
-
-                $url = $instorePayment->getRedirectUrl();
             } else {
                 $url = $order->getStore()->getBaseUrl() . 'paynl/checkout/finish/?entityid=' . $order->getEntityId() . '&pickup=1';
                 $order->addStatusHistoryComment(__('PAY.: Payment at pick-up'));

@@ -31,7 +31,8 @@ class CancelURL implements ArrayInterface
     {
         return [
             'checkout/cart' => __('checkout/cart'),
-            'checkout' => __('checkout')
+            'checkout' => __('checkout'),
+            'paynl/order/cancel' => __('Pay. Cancel Page')
         ];
     }
 }

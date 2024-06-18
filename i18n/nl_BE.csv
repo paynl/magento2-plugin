@@ -1,4 +1,4 @@
-"Order confirmation sent","Orderbevestiging verstuurd"
+4"Order confirmation sent","Orderbevestiging verstuurd"
 "You notified customer about invoice #%1","Factuur #%1 verstuurd naar de klant"
 "Pay. - order cancelled","Pay. - bestelling geannuleerd"
 "Pay. - order uncancelled","Pay. - bestelling geannuleerd"
@@ -58,7 +58,7 @@
 "Payment methods","Betaalmethoden"
 "When enabled, Magento will not cancel the order when the transaction is cancelled via Pay.","Wanneer ingeschakeld, Magento zal de bestelling niet annuleren wanneer de transactie via Pay. wordt geannuleerd."
 "Always use base currency","Altijd base currency gebruiken"
-"Set to Yes if you always want to process payments in the base currency of this store. Magento acts strange when trying to register a payment in another currency than the base currency.","Stel deze optie in op Ja indien u alle transacties altijd in de standaard valuta wilt verwerken."
+"Set to Yes if you always want to process payments in the base currency of this store.","Stel deze optie in op Ja indien u alle transacties altijd in de standaard valuta wilt verwerken."
 "Skip fraud detection","Fraudedetectie overslaan"
 "Sometimes Magento incorrectly marks an order as fraudulent. This happens more often when using different currencies. Set this setting to Yes to skip fraud detection.","Soms markeert Magento transacties onterecht als frauduleus. Dit gebeurt vaak wanneer verschillende valuta’s worden gebruikt. Zet deze instelling op Ja om Magento's fraudedetectie over te slaan."
 "Retrieve your AT-code <a target='_blank' href='https://my.pay.nl/company/tokens'>here</a>. Not registered with Pay? Sign up <a target='_blank' href='https://signup.pay.nl/'>here</a>!", "De AT-code kun je <a target='_blank' href='https://my.pay.nl/company/tokens'>hier</a> ophalen. Nog geen account bij Pay? Registreer <a target='_blank' href='https://signup.pay.nl/'>hier</a>!"
@@ -70,7 +70,7 @@
 "Paylink is only available for orders created via the backend and won't appear in the checkout","Betaallink is alleen beschikbaar voor bestellingen aangemaakt via de backend van Magento en wordt daardoor niet in de checkout getoond"
 "Thank you for your order from ","Bedankt voor je bestelling bij "
 "If you have questions about your order, you can email us at ","Als u vragen heeft over uw bestelling, kunt u ons mailen op "
-"In order to pay for your order click the link below","Klik op onderstaande betaallink om uw bestelling te betalen"
+"To finish your order, click the link below","Klik op onderstaande betaallink om uw bestelling te betalen"
 "Pay. paylink","Pay. betaallink"
 "Paylink order","Betaallink bestelling"
 "A Pay. paylink has been sent to","Pay. betaallink is per mail verstuurd naar"
@@ -201,7 +201,7 @@
 "Error","Fout"
 "PAY. - Refund initiated from Pay.","PAY. - Terugebetaling geïnitieerd vanuit Pay."
 "Set to `on` to accept refunds initiated from Pay.","Selecteer `Aan` om terugbetalingen vanuit Pay. te verwerken in Magento."
-"Set this to Yes if you always want to process payments in the base currency of this store. Magento acts strange when trying to register a payment in another currency than the base currency.","Zet dit op Ja als u betalingen altijd in de basisvaluta van deze winkel wilt verwerken. Magento gedraagt zich vreemd bij het registreren van een betaling in een andere valuta dan de basisvaluta."
+"Set this to Yes if you always want to process payments in the base currency of this store.","Zet dit op Ja als u betalingen altijd in de basisvaluta van deze winkel wilt verwerken."
 "You are up to date with the latest version","Je bent up to date met de laatste versie"
 "Enter your COC number","Vul uw KVK nummer in"
 "Enter your VAT number","Vul uw BTW nummer in"
@@ -228,3 +228,23 @@
 "Follow payment method","Follow payment method"
 "This will ensure the order is updated with the actual payment method used to complete the order. This can differ from the payment method initially selected","Dit zorgt ervoor dat de bestelling wordt bijgewerkt met de daadwerkelijke betaalmethode die is gebruikt om de bestelling te voltooien. Dit kan afwijken van de aanvankelijk gekozen betaalmethode"
 "PAY.: Updated payment method from %1 to %2","PAY.: Betaalmethode gewijzigd van %1 naar %2"
+"Although an order is started with a certain payment method, it may still be completed with a different payment method. For example: Someone starts an order with iDEAL in3, but never completes it. When that person later receives a reminder email stating that the order is still open, he or she can complete it with iDEAL. When this option is enabled, iDEAL will be shown with the order. A note will also be placed in the order notes indicating that the payment method has changed.","Hoewel een order wordt gestart met een bepaalde betaalmethode, kan het toch zijn dat deze wordt afgerond met een andere betaalmethode. Bijvoorbeeld: Iemand start een order met iDEAL in3, maar rond deze nooit af. Wanneer die iemand later een herinneringsmail krijgt, met de melding dat de order nog open staat, kan hij of zij deze afronden met iDEAL. Wanneer deze optie dan is ingeschakeld, wordt iDEAL bij de order getoond. Ook wordt er een notitie geplaatst bij de order-notities waar aangegeven wordt dat de betaalmethode is gewijzigd."
+"Select the language in which payment screens open (such as the Credit Card screen or Transfer page). Please note: the language can also be changed from the payment screens.","Selecteer de taal waarin betaalschermen openen (zoals bijvoorbeeld het Creditcard scherm of Overboekingspagina). Let wel: de taal kan vanuit de betaalschermen ook gewijzigd worden."
+"Off - No autocapture.
+On - Automatically capture payments with the status AUTHORIZE when a shipment is created in Magento (Picqer is also supported in this).
+On - via Wuunder - Capture automatically via Wuunder.
+On - via Sherpa - Capture automatically via Sherpa.","Uit - Geen autocapture.
+Aan - Capture automatisch betalingen met de status AUTHORIZE wanneer een shipment in Magento wordt aangemaakt (Picqer wordt hierin ook ondersteund).
+Aan - via Wuunder - Capture automatisch via Wuunder.
+Aan - via Sherpa - Capture automatisch via Sherpa."
+"When the store currency deviates from the base currency setting in Magento, this setting will ensure the payment starts in the base currency instead of the store currency.","Wanneer de winkelvaluta afwijkt van de basisvaluta-instelling in Magento, zorgt deze instelling ervoor dat de betalingen worden gestart in de basisvaluta in plaats van de winkelvaluta."
+"Customer Type","Type klant"
+"By default payment methods are available in the checkout for all customer types.
+Private, B2C: Only show this payment method when the customer didn't enter a company name.
+Business, BB2: Only show this payment method when the customer entered a company name.","Standaard zijn betaalmethoden beschikbaar in de checkout voor alle klanttypen.
+Particulier, B2C: Laat deze betaalmethode alleen zien als de klant geen bedrijfsnaam heeft ingevoerd.
+Zakelijk, BB2: Laat deze betaalmethode alleen zien als de klant een bedrijfsnaam heeft opgegeven."
+"Specify which type of customer this payment method should be available to.","Specificeer voor welk type klant deze betaalmethode beschikbaar moet zijn."
+"Chargebacks","Terugboekingen"
+"Set to `on` to accept chargebacks initiated from Pay.","Stel in op `aan` om chargebacks te accepteren die zijn geïnitieerd vanuit Pay."
+"When this settings is enabled, chargebacks initiated by customers will refund the order in Magento.","Als deze instelling is ingeschakeld, zullen chargebacks die door klanten worden geïnitieerd de bestelling refunden in Magento."

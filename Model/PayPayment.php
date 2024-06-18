@@ -198,6 +198,28 @@ class PayPayment
      * @return true
      * @throws \Exception
      */
+    public function chargebackOrder($orderEntityId)
+    {
+        $order = $this->orderRepository->get($orderEntityId);
+        if (!$this->config->chargebackFromPayEnabled() || $order->getTotalDue() != 0 || $order->getBaseTotalRefunded() == $order->getBaseGrandTotal()) {
+            throw new \Exception("Ignoring chargeback");
+        }
+        try {
+            $creditmemo = $this->cmFac->createByOrder($order);
+            $this->cmService->refund($creditmemo);
+            $order->addStatusHistoryComment(__('PAY. - Chargeback initiated by customer'))->save();
+        } catch (\Exception $e) {
+            $this->payHelper->logDebug('Chargeback failed:', ['error' => $e->getMessage(), 'orderEntityId' => $orderEntityId]);
+            throw new \Exception('Could not chargeback');
+        }
+        return true;
+    }
+
+    /**
+     * @param integer $orderEntityId
+     * @return true
+     * @throws \Exception
+     */
     public function refundOrder($orderEntityId)
     {
         try {
@@ -259,9 +281,9 @@ class PayPayment
             $payment->setPreparedMessage('PAY. - ');
             $payment->setIsTransactionClosed(0);
 
-            if ($this->config->getFollowPaymentMethod()) {
+            if ($this->config->getFollowPaymentMethod() && !empty($paymentProfileId)) {
                 $transactionMethod = $this->config->getPaymentMethod($paymentProfileId);
-                if ($transactionMethod['code'] !== $paymentMethod) {
+                if (!empty($transactionMethod['code']) && $transactionMethod['code'] !== $paymentMethod) {
                     $payment->setMethod($transactionMethod['code']);
                     $paymentMethodObj = $this->config->getPaymentMethodByCode($paymentMethod);
                     $order->addStatusHistoryComment(__('PAY.: Payment method changed from %1 to %2', ($paymentMethodObj['title'] ?? ''), ($transactionMethod['title'] ?? '')))->save();

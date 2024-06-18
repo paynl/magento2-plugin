@@ -468,17 +468,22 @@ abstract class PaymentMethod extends AbstractMethod
      */
     public function capture(InfoInterface $payment, $amount)
     {
-        try {
-            $payment->setAdditionalInformation('manual_capture', 'true');
-            $order = $payment->getOrder();
-            $order->save();
-            $this->paynlConfig->setStore($order->getStore());
-            $this->paynlConfig->configureSDK();
-            $transactionId = $payment->getParentTransactionId();
-            Transaction::capture($transactionId);
-        } catch (\Exception $e) {
-            $message = strtolower($e->getMessage());
-            $this->payHelper->logCritical('Pay. could not process capture (' . $message . '). Transaction: ' . $transactionId . '. OrderId: ' . $order->getIncrementId());
+        $transactionId = $payment->getParentTransactionId();
+
+        if (empty($transactionId)) {
+            $this->payHelper->logCritical('Pay. transaction ID missing, could not process capture.');
+        } else {
+            try {
+                $payment->setAdditionalInformation('manual_capture', 'true');
+                $order = $payment->getOrder();
+                $order->save();
+                $this->paynlConfig->setStore($order->getStore());
+                $this->paynlConfig->configureSDK();
+                Transaction::capture($transactionId);
+            } catch (\Exception $e) {
+                $message = strtolower($e->getMessage());
+                $this->payHelper->logCritical('Pay. could not process capture (' . $message . '). Transaction: ' . $transactionId . '. OrderId: ' . $order->getIncrementId());
+            }
         }
         return $this;
     }
@@ -489,15 +494,20 @@ abstract class PaymentMethod extends AbstractMethod
      */
     public function void(InfoInterface $payment)
     {
-        try {
-            $order = $payment->getOrder();
-            $this->paynlConfig->setStore($order->getStore());
-            $this->paynlConfig->configureSDK();
-            $transactionId = $payment->getParentTransactionId();
-            Transaction::void($transactionId);
-        } catch (\Exception $e) {
-            $message = strtolower($e->getMessage());
-            $this->payHelper->logCritical('Pay. could not process void (' . $message . '). Transaction: ' . $transactionId . '. OrderId: ' . $order->getIncrementId());
+        $transactionId = $payment->getParentTransactionId();
+
+        if (empty($transactionId)) {
+            $this->payHelper->logCritical('Pay. transaction ID missing, could not process capture.');
+        } else {
+            try {
+                $order = $payment->getOrder();
+                $this->paynlConfig->setStore($order->getStore());
+                $this->paynlConfig->configureSDK();
+                Transaction::void($transactionId);
+            } catch (\Exception $e) {
+                $message = strtolower($e->getMessage());
+                $this->payHelper->logCritical('Pay. could not process void (' . $message . '). Transaction: ' . $transactionId . '. OrderId: ' . $order->getIncrementId());
+            }
         }
         return $this;
     }
@@ -538,7 +548,7 @@ abstract class PaymentMethod extends AbstractMethod
      */
     public function getPaymentOptionId()
     {
-        $paymentOptionId = $this->getConfigData('payment_option_id');
+        $paymentOptionId = (int)$this->getConfigData('payment_option_id');
 
         if (empty($paymentOptionId)) {
             $paymentOptionId = $this->getDefaultPaymentOptionId();

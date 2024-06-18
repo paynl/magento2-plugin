@@ -53,7 +53,7 @@
 "Paymentmethods","Zahlungsmethoden"
 "When enabled, Magento will not cancel the order when the transaction is cancelled via Pay.","Wenn diese Option aktiviert ist, wird Magento die Bestellung nicht stornieren, wenn die Transaktion über Pay abgebrochen wird."
 "Always use base currency","Immer die Basiskurrency verwenden"
-"Set this to yes if you always want to process payments in the base currency of this store. Magento acts strange when trying to register a payment in another currency than the base currency.","Setze dies auf Ja, wenn du Zahlungen immer in der Basiskurrency dieses Geschäfts verarbeiten möchtest. Magento verhält sich seltsam, wenn versucht wird, eine Zahlung in einer anderen Währung als der Basiskurrency zu registrieren. Die Basiskurrency MUSS EUR sein"
+"Set this to yes if you always want to process payments in the base currency of this store.","Setze dies auf Ja, wenn du Zahlungen immer in der Basiskurrency dieses Geschäfts verarbeiten möchtest."
 "Skip fraud detection","Betrugserkennung überspringen"
 "Sometimes magento incorrectly marks an order as fraudulent. this happens more often when using different currencies. Set this to yes to skip fraud detection.","Manchmal markiert Magento eine Bestellung fälschlicherweise als betrügerisch. Dies passiert häufiger, wenn verschiedene Währungen verwendet werden. Setze dies auf Ja, um die Betrugserkennung zu überspringen."
 "Get your AT-code <a target='_blank' href='https://admin.pay.nl/company/tokens'>here</a>. Not registered at PAY? Sign up <a target='_blank' href='https://www.pay.nl/en?register'>here</a>!", "Hol dir deinen AT-Code <a target='_blank' href='https://admin.pay.nl/company/tokens'>hier</a>. Noch nicht bei PAY registriert? Melde dich <a target='_blank' href='https://www.pay.nl/en?register'>hier</a> an!"
@@ -65,7 +65,7 @@
 "Paylink is only available for backorders and won't appear in the checkout","Die Zahlung per Link ist nur für Nachbestellungen verfügbar und wird nicht im Checkout angezeigt"
 "Thank you for your order from ","Vielen Dank für deine Bestellung bei "
 "If you have questions about your order, you can email us at","Wenn du Fragen zu deiner Bestellung hast, kannst du uns per E-Mail kontaktieren unter"
-"In order to pay for your order click the link below","Klicken Sie auf den unten stehenden Link, um Ihre Bestellung zu bezahlen"
+"To finish your order, click the link below","Klicken Sie auf den unten stehenden Link, um Ihre Bestellung zu bezahlen"
 "PAY. paylink","PAY. Zahlungslink"
 "Paylink order","Bestellungs-Zahlungslink"
 "A Pay. paylink has been sent to","Ein E-Mail mit einem PAY. Zahlungslink wird gesendet an"
@@ -87,6 +87,8 @@
 "The payment has been canceled.","Die Zahlung wurde storniert."
 "PAY. -Order has been shipped, but no invoice was found. Capturing the payment automatically.","PAY. -Die Bestellung wurde versandt, aber keine Rechnung wurde gefunden. Die Zahlung wird automatisch erfasst."
 "On","Ein"
+"On - via Wuunder","Ein – über Wuunder"
+"On - via Sherpa","Ein – über Sherpa"
 "Off","Aus"
 "Auto capture","Automatische Erfassung"
 "Automatically capture authorisation-transaction when creating the shipment for the order.","Erfasse automatisch eine Genehmigungs-Transaktion beim Erstellen der Lieferung für die Bestellung."
@@ -170,3 +172,21 @@
 "Follow payment method","Follow payment method"
 "This will ensure the order is updated with the actual payment method used to complete the order. This can differ from the payment method initially selected","Dadurch wird sichergestellt, dass die Bestellung mit der tatsächlichen Zahlungsmethode aktualisiert wird, die zum Abschluss der Bestellung verwendet wurde. Diese kann von der ursprünglich gewählten Zahlungsart abweichen"
 "PAY.: Updated payment method from %1 to %2","PAY.: Zahlungsmethode geändert von %1 bis %2"
+"Although an order is started with a certain payment method, it may still be completed with a different payment method. For example: Someone starts an order with iDEAL in3, but never completes it. When that person later receives a reminder email stating that the order is still open, he or she can complete it with iDEAL. When this option is enabled, iDEAL will be shown with the order. A note will also be placed in the order notes indicating that the payment method has changed.","Obwohl eine Bestellung mit einer bestimmten Zahlungsart gestartet wird, kann es dennoch vorkommen, dass sie mit einer anderen Zahlungsart abgeschlossen wird. Beispiel: Jemand beginnt eine Bestellung mit iDEAL in3, schließt sie jedoch nie ab. Wenn diese Person später eine Erinnerungs-E-Mail mit dem Hinweis erhält, dass die Bestellung noch offen ist, kann sie diese mit iDEAL abschließen. Wenn diese Option aktiviert ist, wird iDEAL bei der Bestellung angezeigt. Darüber hinaus wird in den Bestellnotizen ein Hinweis darauf angezeigt, dass sich die Zahlungsart geändert hat."
+"Select the language in which payment screens open (such as the Credit Card screen or Transfer page). Please note: the language can also be changed from the payment screens.","Wählen Sie die Sprache aus, in der die Zahlungsbildschirme geöffnet werden (z. B. der Kreditkartenbildschirm oder die Überweisungsseite). Bitte beachten Sie: Die Sprache kann auch auf den Zahlungsbildschirmen geändert werden."
+"Off - No autocapture.
+On - Automatically capture payments with the status AUTHORIZE when a shipment is created in Magento (Picqer is also supported in this).
+On - via Wuunder - Capture automatically via Wuunder.
+On - via Sherpa - Capture automatically via Sherpa.","Aus – Keine automatische Aufnahme.
+Ein – Zahlungen mit dem Status AUTORISIEREN automatisch erfassen, wenn eine Sendung in Magento erstellt wird (Picqer wird dabei auch unterstützt).
+Ein – über Wuunder – Automatische Erfassung über Wuunder.
+Ein – über Sherpa – Automatische Erfassung über Sherpa."
+"When the store currency deviates from the base currency setting in Magento, this setting will ensure the payment starts in the base currency instead of the store currency.","When the store currency deviates from the base currency setting in Magento, this setting will ensure the payment starts in the base currency instead of the store currency."
+"Customer Type","Kundentyp"
+"By default payment methods are available in the checkout for all customer types.
+Private, B2C: Only show this payment method when the customer didn't enter a company name.
+Business, BB2: Only show this payment method when the customer entered a company name.","Standardmäßig sind die Zahlungsmethoden in der Kasse für alle Kundentypen verfügbar.
+Privat, B2C: Diese Zahlungsart wird nur angezeigt, wenn der Kunde keinen Firmennamen eingegeben hat.
+Geschäftlich, BB2: Zeigen Sie diese Zahlungsmethode nur an, wenn der Kunde einen Firmennamen eingegeben hat."
+"Specify which type of customer this payment method should be available to.","Geben Sie an, für welche Art von Kunden diese Zahlungsmethode verfügbar sein soll."
+"When this settings is enabled, chargebacks initiated by customers will refund the order in Magento.","Wenn diese Einstellung aktiviert ist, werden Rückbuchungen, die von Kunden initiiert wurden, in Magento erstattet."

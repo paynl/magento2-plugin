@@ -9,6 +9,7 @@
                 <apitoken_encrypted backend_model="Magento\Config\Model\Config\Backend\Encrypted"></apitoken_encrypted>
                 <model>Paynl\Payment\Model\Paymentmethod\Invisible</model>
                 <discount_tax>1</discount_tax>
+                <cancelurl>checkout/cart</cancelurl>
                 <pay_style_checkout>1</pay_style_checkout>
                 <order_description_prefix>Order </order_description_prefix>
                 <pay_pending_page>1</pay_pending_page>
@@ -33,7 +34,7 @@ Thank you for your order from ((store_name)).
 
 If you have questions about your order, you can email us at ((support_email))
 
-In order to pay for your order click the link below
+To finish your order, click the link below
 ((paylink))
                 </paylink_body>
 
@@ -222,7 +223,7 @@ In order to pay for your order click the link below
             </paynl_payment_boekenbon>
             <paynl_payment_capayable_gespreid>
                 <active>0</active>
-                <title>in3 keer betalen, 0% rente</title>
+                <title>iDEAL in3</title>
                 <payment_option_id>1813</payment_option_id>
                 <order_status>pending_payment</order_status>
                 <order_status_authorized>processing</order_status_authorized>
@@ -463,7 +464,7 @@ In order to pay for your order click the link below
             <paynl_payment_in3business>
                 <active>0</active>
                 <title>In3 Business</title>
-                <payment_option_id>10</payment_option_id>
+                <payment_option_id>3192</payment_option_id>
                 <order_status>pending_payment</order_status>
                 <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>

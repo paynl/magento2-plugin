@@ -333,14 +333,14 @@ class PayPaymentCreate
             }
 
             $shippingAddress = [
-                'initials' => $arrShippingAddress['firstname'],
-                'lastName' => $arrShippingAddress['lastname'],
+                'initials' => mb_substr($arrShippingAddress['firstname'] ?? '', 0, 32),
+                'lastName' => mb_substr($arrShippingAddress['lastname'] ?? '', 0, 64),
             ];
             $arrAddress2 = \Paynl\Helper::splitAddress($arrShippingAddress['street']);
-            $shippingAddress['streetName'] = $arrAddress2[0] ?? '';
-            $shippingAddress['houseNumber'] = $arrAddress2[1] ?? '';
-            $shippingAddress['zipCode'] = $arrShippingAddress['postcode'];
-            $shippingAddress['city'] = $arrShippingAddress['city'];
+            $shippingAddress['streetName'] = mb_substr($arrAddress2[0] ?? '', 0, 128);
+            $shippingAddress['houseNumber'] = mb_substr($arrAddress2[1] ?? '', 0, 10);
+            $shippingAddress['zipCode'] = mb_substr($arrShippingAddress['postcode'] ?? '', 0, 24);
+            $shippingAddress['city'] = mb_substr($arrShippingAddress['city'] ?? '', 0, 40);
             $shippingAddress['country'] = $arrShippingAddress['country_id'];
         }
 
@@ -358,33 +358,33 @@ class PayPaymentCreate
         if ($arrBillingAddress) {
             $arrBillingAddress = $arrBillingAddress->toArray();
             $enduser = [
-                'initials' => $arrBillingAddress['firstname'],
-                'lastName' => $arrBillingAddress['lastname'],
+                'initials' => mb_substr($arrBillingAddress['firstname'] ?? '', 0, 32),
+                'lastName' => mb_substr($arrBillingAddress['lastname'] ?? '', 0, 64),
                 'phoneNumber' => payHelper::validatePhoneNumber($arrBillingAddress['telephone']),
-                'emailAddress' => $arrBillingAddress['email'],
+                'emailAddress' => mb_substr($arrBillingAddress['email'] ?? '', 0, 100),
             ];
-            if (isset($this->additionalData['dob'])) {
-                $enduser['dob'] = $this->additionalData['dob'];
+            if (isset($this->additionalData['dob']) && !empty($this->additionalData['dob'])) {
+                $enduser['dob'] = mb_substr($this->additionalData['dob'], 0, 32);
             }
             if (isset($this->additionalData['gender'])) {
-                $enduser['gender'] = $this->additionalData['gender'];
+                $enduser['gender'] = mb_substr($this->additionalData['gender'], 0, 1);
             }
             $enduser['gender'] = payHelper::genderConversion((empty($enduser['gender'])) ? $this->order->getCustomerGender($this->order) : $enduser['gender']);
             if (!empty($arrBillingAddress['company'])) {
-                $enduser['company']['name'] = $arrBillingAddress['company'];
+                $enduser['company']['name'] = mb_substr($arrBillingAddress['company'], 0, 128);
             } elseif (!empty($this->companyField)) {
-                $enduser['company']['name'] = $this->companyField;
+                $enduser['company']['name'] = mb_substr($this->companyField, 0, 128);
             }
             if (!empty($arrBillingAddress['country_id'])) {
-                $enduser['company']['countryCode'] = $arrBillingAddress['country_id'];
+                $enduser['company']['countryCode'] = mb_substr($arrBillingAddress['country_id'], 0, 2);
             }
             if (!empty($this->cocNumber)) {
-                $enduser['company']['cocNumber'] = $this->cocNumber;
+                $enduser['company']['cocNumber'] = mb_substr($this->cocNumber, 0, 64);
             }
             if (!empty($arrBillingAddress['vat_id'])) {
-                $enduser['company']['vatNumber'] = $arrBillingAddress['vat_id'];
+                $enduser['company']['vatNumber'] = mb_substr($arrBillingAddress['vat_id'], 0, 32);
             } elseif (!empty($this->vatNumber)) {
-                $enduser['company']['vatNumber'] = $this->vatNumber;
+                $enduser['company']['vatNumber'] = mb_substr($this->vatNumber, 0, 32);
             }
         }
 
@@ -403,15 +403,14 @@ class PayPaymentCreate
             $arrBillingAddress = $arrBillingAddress->toArray();
 
             $invoiceAddress = [
-                'initials' => $arrBillingAddress['firstname'] ?? '',
-                'lastName' => $arrBillingAddress['lastname'] ?? '',
+                'initials' => mb_substr($arrBillingAddress['firstname'] ?? '', 0, 32),
+                'lastName' => mb_substr($arrBillingAddress['lastname'] ?? '', 0, 64),
             ];
-
             $arrAddress = \Paynl\Helper::splitAddress($arrBillingAddress['street']);
-            $invoiceAddress['streetName'] = $arrAddress[0];
-            $invoiceAddress['houseNumber'] = $arrAddress[1];
-            $invoiceAddress['zipCode'] = $arrBillingAddress['postcode'];
-            $invoiceAddress['city'] = $arrBillingAddress['city'];
+            $invoiceAddress['streetName'] = mb_substr($arrAddress[0] ?? '', 0, 128);
+            $invoiceAddress['houseNumber'] = mb_substr($arrAddress[1] ?? '', 0, 10);
+            $invoiceAddress['zipCode'] = mb_substr($arrBillingAddress['postcode'] ?? '', 0, 24);
+            $shippingAddress['city'] = mb_substr($arrBillingAddress['city'] ?? '', 0, 40);
             $invoiceAddress['country'] = $arrBillingAddress['country_id'];
         }
 

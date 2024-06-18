@@ -85,12 +85,6 @@ class Redirect extends PayAction
                 throw new Error('No order found in session, please try again');
             }
 
-          # Restore the quote
-            $quote = $this->quoteRepository->get($order->getQuoteId());
-            $quote->setIsActive(true)->setReservedOrderId(null);
-            $this->checkoutSession->replaceQuote($quote);
-            $this->quoteRepository->save($quote);
-
             $payment = $order->getPayment();
 
             if (empty($payment)) {

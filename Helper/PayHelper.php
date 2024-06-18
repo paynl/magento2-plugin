@@ -105,7 +105,7 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
 
     /**
      * @param string $text
-     * @param array $params
+     * @param array $params Optional debug parameters
      * @param \Magento\Store\Model\Store|null $store
      * @return void
      */
