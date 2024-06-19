@@ -2,5 +2,6 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
         <css src="Paynl_Payment::css/configtab.css" />
+        <link src="Paynl_Payment::js/configtab.js"/>
     </head>
 </page>

@@ -104,13 +104,16 @@
             <comment><![CDATA[Hold CTRL button to select/deselect multiple]]></comment>
         </field>
         <field id="showforcompany" translate="label" type="select" sortOrder="150" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Show for</label>
+            <label>Customer Type</label>
             <source_model>Paynl\Payment\Model\Config\Source\ShowCompanyOptions</source_model>
             <depends>
                 <field id="active">1</field>
             </depends>
             <config_path>payment/paynl_payment_yourgreengift/showforcompany</config_path>
-            <comment><![CDATA[Show payment method for both business and private customers, private customers only or businesses only.]]></comment>
+            <tooltip>By default payment methods are available in the checkout for all customer types.
+Private, B2C: Only show this payment method when the customer didn't enter a company name.
+Business, BB2: Only show this payment method when the customer entered a company name.</tooltip>
+            <comment><![CDATA[Specify which type of customer this payment method should be available to.]]></comment>
         </field>
         <field id="showforgroup" translate="label" type="select" sortOrder="160" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Customer Group</label>

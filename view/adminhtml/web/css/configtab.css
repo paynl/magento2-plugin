@@ -69,7 +69,10 @@
 
 [id^="paynl_setup_paynl"] .tooltip-content,
 [id^="paynl_settings_paynl"] .tooltip-content,
-[id^="paynl_paymentmethods_paynl_payment"] .tooltip-content {
+[id^="paynl_paymentmethods_paynl_payment"] .tooltip-content,
+#paynl_settings_paynl_general_settings .tooltip-content,
+#paynl_settings_paynl_advanced_settings .tooltip-content,
+.accordion [id^="paynl_paymentmethods_paynl_payment_"].config .value.with-tooltip .tooltip-content {
     color: #FFF;
     width: 400px;
     max-width: inherit;
@@ -84,7 +87,49 @@
 
 [id^="paynl_setup_paynl"] td.use-default,
 [id^="paynl_settings_paynl"] td.use-default,
-[id^="paynl_paymentmethods_paynl_payment"] td.use-default {
+[id^="paynl_paymentmethods_paynl_payment"] td.use-default,
+#paynl_settings_paynl_general_settings .tooltip .help span::before, #paynl_settings_paynl_general_settings .tooltip .help a::before,
+#paynl_settings_paynl_advanced_settings .tooltip .help span::before, #paynl_settings_paynl_advanced_settings .tooltip .help a::before,
+.accordion [id^="paynl_paymentmethods_paynl_payment_"].config .tooltip .help span::before, #paynl_settings_paynl_advanced_settings .tooltip .help a::before {
+    opacity: 0.5;
+}
+
+#paynl_settings_paynl_general_settings td.use-default,
+#paynl_settings_paynl_advanced_settings td.use-default,
+.accordion [id^="paynl_paymentmethods_paynl_payment_"].config td.use-default {
     float: left;
     margin-left: 10px;
+}
+
+.obscuredField {
+    position: relative;
+}
+
+.obscuredField input{
+    text-security: disc;
+    -webkit-text-security: disc;
+    -moz-text-security: disc;
+}
+
+.obscuredField input.display{
+    text-security: none;
+    -webkit-text-security: none;
+    -moz-text-security: none;
+}
+
+.obscuredField .obscuredDisplay{
+    position: absolute;
+    right: 10px;
+    top: 0;
+    cursor: pointer;
+}
+
+.obscuredField .obscuredDisplay::before{
+    content: '\e60f';
+    -webkit-font-smoothing: antialiased;
+    font-family: 'Admin Icons';
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+    speak: none;
 }
