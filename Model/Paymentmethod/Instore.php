@@ -99,7 +99,7 @@ class Instore extends PaymentMethod
                 $transaction = (new PayPaymentCreate($order, $this))->create();
 
                 if ($this->getPaymentOptionId() === 1927) {
-                    if (array_key_exists('terminal', $transaction->getData())){
+                    if (array_key_exists('terminal', $transaction->getData())) {
                         $additionalData['terminal_hash'] = $transaction->getData()['terminal']['hash'];
                     } else {
                         throw new \Exception(__('Pin transaction can not be started in test mode'));
