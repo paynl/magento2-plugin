@@ -67,7 +67,12 @@ class InstoreButton
             $currentUrl = $this->urlInterface->getCurrentUrl();
 
             if (!isset($buttonList->getItems()['paynl']['start_instore_payment'])) {
-                if ($payment_method == 'paynl_payment_instore' && !$order->hasInvoices() && $store->getConfig('payment/paynl_payment_instore/show_pin_button') == 1) {
+                if (
+                    $payment_method == 'paynl_payment_instore'
+                    && !$order->hasInvoices()
+                    && ($store->getConfig('payment/paynl_payment_instore/show_pin_button') == 1
+                        || $store->getConfig('payment/paynl_payment_instore/pinmoment') > 0)
+                ) {
                     $instoreUrl = $this->backendUrl->getUrl('paynl/order/instore') . '?order_id=' . $order_id . '&return_url=' . urlencode($currentUrl);
                     $buttonList->add(
                         'start_instore_payment',

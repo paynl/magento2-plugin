@@ -4,6 +4,7 @@ namespace Paynl\Payment\Model\Paymentmethod;
 
 use Magento\Sales\Model\Order;
 use Paynl\Payment\Helper\PayHelper;
+use Paynl\Payment\Model\Config\Source\PinMoment;
 use Paynl\Payment\Model\PayPaymentCreate;
 
 class Instore extends PaymentMethod
@@ -60,9 +61,20 @@ class Instore extends PaymentMethod
     public function startTransaction(Order $order, $fromAdmin = false)
     {
         $store = $order->getStore();
-        $url = $store->getBaseUrl() . 'checkout/cart/';
+        $redirectUrl = $store->getBaseUrl() . 'checkout/cart/';
 
         $additionalData = $order->getPayment()->getAdditionalInformation();
+        $pinLocation = PinMoment::LOCATION_CHECKOUT;
+
+        if ($fromAdmin === false) {
+            $pinLocation = $this->getPinMoment();
+            # Payment starts from checkout
+            if ($pinLocation == PinMoment::LOCATION_CHOICE) {
+                # Checkout user chooses pinlocation
+                $pinLocation = $additionalData['pinmoment'] ?? PinMoment::LOCATION_CHECKOUT;
+            }
+        }
+
         $terminalId = null;
         if (isset($additionalData['payment_option'])) {
             $terminalId = $additionalData['payment_option'];
@@ -71,21 +83,38 @@ class Instore extends PaymentMethod
 
         try {
             if (empty($terminalId)) {
+                if (!$fromAdmin) {
+                    $this->messageManager->addNoticeMessage(__('Please select a pin-terminal'));
+                    return;
+                }
                 throw new \Exception(__('Please select a pin-terminal'), 201);
             }
 
-            $transaction = (new PayPaymentCreate($order, $this))->create();
+            $this->payHelper->logDebug('pinlocation', [$pinLocation], $store);
 
-            if ($this->getPaymentOptionId() === 1927) {
-                $additionalData['terminal_hash'] = $transaction->getData()['terminal']['hash'];
-                $url = $transaction->getRedirectUrl();
+            if ($pinLocation == PinMoment::LOCATION_PICKUP) {
+                $redirectUrl = $order->getStore()->getBaseUrl() . 'paynl/checkout/finish/?entityid=' . $order->getEntityId() . '&pickup=1';
+                $order->addStatusHistoryComment(__('PAY.: Payment at pick-up'));
             } else {
-                $instorePayment = \Paynl\Instore::payment(['transactionId' => $transaction->getTransactionId(), 'terminalId' => $terminalId]);
-                $additionalData['terminal_hash'] = $instorePayment->getHash();
-                $url = $instorePayment->getRedirectUrl();
+                $transaction = (new PayPaymentCreate($order, $this))->create();
+
+                if ($this->getPaymentOptionId() === 1927) {
+                    if (array_key_exists('terminal', $transaction->getData())) {
+                        $additionalData['terminal_hash'] = $transaction->getData()['terminal']['hash'];
+                    } else {
+                        throw new \Exception(__('Pin transaction can not be started in test mode'));
+                    }
+
+                    $redirectUrl = $transaction->getRedirectUrl();
+                } else {
+                    $instorePayment = \Paynl\Instore::payment(['transactionId' => $transaction->getTransactionId(), 'terminalId' => $terminalId]);
+                    $additionalData['terminal_hash'] = $instorePayment->getHash();
+                    $redirectUrl = $instorePayment->getRedirectUrl();
+                }
+
+                $additionalData['transactionId'] = $transaction->getTransactionId();
             }
 
-            $additionalData['transactionId'] = $transaction->getTransactionId();
             $additionalData['payment_option'] = $terminalId;
 
             $order->getPayment()->setAdditionalInformation($additionalData);
@@ -108,7 +137,7 @@ class Instore extends PaymentMethod
             }
         }
 
-        return $url;
+        return $redirectUrl;
     }
 
     /**
@@ -191,6 +220,14 @@ class Instore extends PaymentMethod
     public function getDefaultPaymentOption()
     {
         return $this->_scopeConfig->getValue('payment/' . $this->_code . '/default_terminal', 'store');
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPinLocationTerminal()
+    {
+        return $this->_scopeConfig->getValue('payment/' . $this->_code . '/pinmoment_terminal', 'store');
     }
 
     /**
