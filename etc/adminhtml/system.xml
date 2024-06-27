@@ -109,6 +109,33 @@ On - via Sherpa - Capture automatically via Sherpa.</tooltip>
                     <config_path>payment/paynl/follow_payment_method</config_path>
                     <tooltip>Although an order is started with a certain payment method, it may still be completed with a different payment method. For example: Someone starts an order with iDEAL in3, but never completes it. When that person later receives a reminder email stating that the order is still open, he or she can complete it with iDEAL. When this option is enabled, iDEAL will be shown with the order. A note will also be placed in the order notes indicating that the payment method has changed.</tooltip>
                 </field>
+                <field id="show_custom_field_dob" translate="label" type="select" sortOrder="108" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show custom date of birth field</label>
+                    <source_model>Paynl\Payment\Model\Config\Source\ShowCustomFields</source_model>
+                    <depends>
+                        <field id="active">1</field>
+                    </depends>
+                    <config_path>payment/paynl/show_custom_field_dob</config_path>
+                    <tooltip>When Enabled, this will add an datepicker field to the checkout for the customer to enter in their date of birth.</tooltip>
+                </field>
+                <field id="show_custom_field_kvk" translate="label" type="select" sortOrder="109" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show custom COC field</label>
+                    <source_model>Paynl\Payment\Model\Config\Source\ShowCustomFields</source_model>
+                    <depends>
+                        <field id="active">1</field>
+                    </depends>
+                    <config_path>payment/paynl/show_custom_field_kvk</config_path>
+                    <tooltip>When Enabled, this will add an extra field to the checkout for the customer to enter in their COC number.</tooltip>
+                </field>
+                <field id="show_custom_field_vat" translate="label" type="select" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show custom VAT field</label>
+                    <source_model>Paynl\Payment\Model\Config\Source\ShowCustomFields</source_model>
+                    <depends>
+                        <field id="active">1</field>
+                    </depends>
+                    <config_path>payment/paynl/show_custom_field_vat</config_path>
+                    <tooltip>When Enabled, this will add an extra field to the checkout for the customer to enter in their VAT number.</tooltip>
+                </field>    
             </group>
             <group id="paynl_layout_settings" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Pay. - Layout Settings</label>
@@ -158,7 +185,7 @@ On - via Sherpa - Capture automatically via Sherpa.</tooltip>
                 </field>
                 <field id="always_base_currency" translate="label,tooltip" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Always use base currency</label>
-                    <tooltip>When the store currency deviates from the base currency setting in Magento, this setting will ensure the payment starts in the base currency instead of the store currency.</tooltip>
+                    <tooltip>When the store currency deviates from the base currency setting in Magento, this setting will ensure the payment starts in the base currency instead of the store currency. Example: Store currency is in Dollar, Base currency is Euro. Pay. will start payments in Euro. Example: Store currency is in Dollar, Base currency is Euro. Pay. will start payments in Euro.</tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <config_path>payment/paynl/always_base_currency</config_path>
                 </field>

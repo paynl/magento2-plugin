@@ -16,7 +16,7 @@
                 <field id="active">1</field>
             </depends>
             <config_path>payment/paynl_payment_billink/showkvk</config_path>
-            <comment><![CDATA[When enabled, an extra field is added to the checkout for customers to enter their COC number.]]></comment>
+            <tooltip>When Enabled, this will add an extra field to the payment method for the customer to enter in their COC number. You can also choose to make the COC number required for this method by using the 4th option. This will require you to enable the 'Show custom COC field' setting in the 'Settings' tab, which adds the COC field to the checkout itself.</tooltip>
         </field>
         <field id="showvat" translate="label" type="select" sortOrder="66" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Show VAT field</label>
@@ -25,7 +25,7 @@
                 <field id="active">1</field>
             </depends>
             <config_path>payment/paynl_payment_billink/showvat</config_path>
-            <comment><![CDATA[When enabled, an extra field is added to the checkout for customers to enter their VAT number.]]></comment>
+            <tooltip>When Enabled, this will add an extra field to the payment method for the customer to enter in their VAT number. You can also choose to make the VAT number required for this method by using the 4th option. This will require you to enable the 'Show custom COC field' setting in the 'Settings' tab, which adds the VAT field to the checkout itself.</tooltip>
         </field>
         <field id="showdob" translate="label" type="select" sortOrder="67" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Show date of birth field</label>

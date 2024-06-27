@@ -67,6 +67,9 @@
     font-weight: bold;
 }
 
+[id^="paynl_setup_paynl"] .tooltip-content,
+[id^="paynl_settings_paynl"] .tooltip-content,
+[id^="paynl_paymentmethods_paynl_payment"] .tooltip-content,
 #paynl_settings_paynl_general_settings .tooltip-content,
 #paynl_settings_paynl_advanced_settings .tooltip-content,
 .accordion [id^="paynl_paymentmethods_paynl_payment_"].config .value.with-tooltip .tooltip-content {
@@ -76,6 +79,15 @@
     white-space: pre-line;
 }
 
+[id^="paynl_setup_paynl"] .tooltip .help span::before, [id^="paynl_setup_paynl"] .tooltip .help a::before,
+[id^="paynl_settings_paynl"] .tooltip .help span::before, [id^="paynl_settings_paynl"] .tooltip .help a::before,
+[id^="paynl_paymentmethods_paynl_payment"] .tooltip .help span::before, [id^="paynl_paymentmethods_paynl_payment"] .tooltip .help a::before {
+    opacity: 0.5;
+}
+
+[id^="paynl_setup_paynl"] td.use-default,
+[id^="paynl_settings_paynl"] td.use-default,
+[id^="paynl_paymentmethods_paynl_payment"] td.use-default,
 #paynl_settings_paynl_general_settings .tooltip .help span::before, #paynl_settings_paynl_general_settings .tooltip .help a::before,
 #paynl_settings_paynl_advanced_settings .tooltip .help span::before, #paynl_settings_paynl_advanced_settings .tooltip .help a::before,
 .accordion [id^="paynl_paymentmethods_paynl_payment_"].config .tooltip .help span::before, #paynl_settings_paynl_advanced_settings .tooltip .help a::before {
