@@ -213,3 +213,10 @@ Geschäftlich, BB2: Zeigen Sie diese Zahlungsmethode nur an, wenn der Kunde eine
 "Chargebacks","Rückbuchungen"
 "Set to `on` to accept chargebacks initiated from Pay.","Setzen Sie diese Option auf "Ein", um von Pay initiierte Rückbuchungen zu akzeptieren."
 "When this settings is enabled, chargebacks initiated by customers will refund the order in Magento.","Wenn diese Einstellung aktiviert ist, werden Rückbuchungen, die von Kunden initiiert wurden, in Magento erstattet."
+"Pickup location needs to be turned on to make this setting work.
+Direct checkout payment: pin transaction will be started right when the instore is selected in the checkout.
+Payment takes place at the pickup location: the order is created in the Magento admin, the pin transaction can be started from there when the customer comes to pick up the order.
+Provide this choice in the checkout: the customer can choose in the checkout between the options given above.","Damit diese Einstellung funktioniert, muss der Abholort aktiviert werden.
+Direkte Zahlung an der Kasse: Die PIN-Transaktion wird direkt gestartet, wenn die Zahlungsmethode an der Kasse ausgewählt wird.
+Die Zahlung erfolgt am Abholort: Die Bestellung wird in der Magento-Verwaltung erstellt, die PIN-Transaktion kann von dort aus gestartet werden, wenn der Kunde die Bestellung abholt.
+Stellen Sie diese Auswahl an der Kasse bereit: Der Kunde kann an der Kasse zwischen den oben angegebenen Optionen wählen."
