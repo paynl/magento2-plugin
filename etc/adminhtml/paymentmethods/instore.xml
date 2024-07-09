@@ -52,6 +52,10 @@
                 <field id="active">1</field>
             </depends>
             <config_path>payment/paynl_payment_instore/pinmoment</config_path>
+            <tooltip>Pickup location needs to be turned on to make this setting work.
+Direct checkout payment: pin transaction will be started right when the instore is selected in the checkout.
+Payment takes place at the pickup location: the order is created in the Magento admin, the pin transaction can be started from there when the customer comes to pick up the order.
+Provide this choice in the checkout: the customer can choose in the checkout between the options given above.</tooltip>
             <comment>
                 <![CDATA[Setting for where the payment should take place: instant, or at pickup location. Or provide this choice in the checkout.]]>
             </comment>
