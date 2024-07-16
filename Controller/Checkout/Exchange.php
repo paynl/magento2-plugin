@@ -191,6 +191,15 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             return $this->result->setContents($response === true ? 'TRUE|Chargeback success' : 'FALSE|' . $response);
         }
 
+        if ($paymentProfileId == '2351' && $action == 'new_ppt') {
+            try {
+                $response = $this->payPayment->refundOrder($orderEntityId);
+            } catch (Exception $e) {
+                $response = $e->getMessage();
+            }
+            return $this->result->setContents($response === true ? 'TRUE|Retourpin success' : 'FALSE|' . $response);
+        }
+
         if ($order->getTotalDue() <= 0) {
             $this->payHelper->logDebug($action . '. Ignoring - already paid: ' . $orderEntityId);
             if (!$this->config->registerPartialPayments()) {

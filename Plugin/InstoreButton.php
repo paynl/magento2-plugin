@@ -5,6 +5,7 @@ namespace Paynl\Payment\Plugin;
 use Magento\Sales\Block\Adminhtml\Order\View as OrderView;
 use Paynl\Payment\Helper\PayHelper;
 use Magento\Framework\UrlInterface;
+use Paynl\Payment\Helper\PayHelper;
 
 class InstoreButton
 {
@@ -87,6 +88,24 @@ class InstoreButton
                 }
 
                 $this->payHelper->deleteCookie('pinError');
+            }
+
+            if (!isset($buttonList->getItems()['paynl']['start_retour_pin'])) {
+                if ($payment_method == 'paynl_payment_instore' && $order->hasInvoices() && $order->getBaseTotalRefunded() == 0) {
+                    $retourPinUrl = $this->backendUrl->getUrl('paynl/order/retourpin') . '?order_id=' . $order_id . '&return_url=' . urlencode($currentUrl);
+                    $buttonList->add(
+                        'start_retour_pin',
+                        ['label' => __('PAY. Retour Pin'), 'onclick' => 'setLocation(\'' . $retourPinUrl . '\')', 'class' => 'save'],
+                        'paynl'
+                    );
+                }
+                $error = $this->payHelper->getCookie('retourPinError');
+
+                if (!empty($error)) {
+                    $this->messageManager->addError($error);
+                }
+
+                $this->payHelper->deleteCookie('retourPinError');
             }
         }
 
