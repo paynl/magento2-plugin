@@ -2,8 +2,6 @@
 
 namespace Paynl\Payment\Plugin;
 
-use Magento\Sales\Block\Adminhtml\Order\View as OrderView;
-use Paynl\Payment\Helper\PayHelper;
 use Magento\Framework\UrlInterface;
 use Paynl\Payment\Helper\PayHelper;
 
@@ -77,7 +75,7 @@ class InstoreButton
                     $instoreUrl = $this->backendUrl->getUrl('paynl/order/instore') . '?order_id=' . $order_id . '&return_url=' . urlencode($currentUrl);
                     $buttonList->add(
                         'start_instore_payment',
-                        ['label' => __('Start PAY. Pin'), 'onclick' => 'setLocation(\'' . $instoreUrl . '\')', 'class' => 'save'],
+                        ['label' => __('Start Pay. Pin'), 'onclick' => 'setLocation(\'' . $instoreUrl . '\')', 'class' => 'save'],
                         'paynl'
                     );
                 }
@@ -90,22 +88,22 @@ class InstoreButton
                 $this->payHelper->deleteCookie('pinError');
             }
 
-            if (!isset($buttonList->getItems()['paynl']['start_retour_pin'])) {
+            if (!isset($buttonList->getItems()['paynl']['start_card_refund'])) {
                 if ($payment_method == 'paynl_payment_instore' && $order->hasInvoices() && $order->getBaseTotalRefunded() == 0) {
-                    $retourPinUrl = $this->backendUrl->getUrl('paynl/order/retourpin') . '?order_id=' . $order_id . '&return_url=' . urlencode($currentUrl);
+                    $cardRefundUrl = $this->backendUrl->getUrl('paynl/order/cardrefundform') . '?order_id=' . $order_id . '&return_url=' . urlencode($currentUrl);
                     $buttonList->add(
-                        'start_retour_pin',
-                        ['label' => __('PAY. Retour Pin'), 'onclick' => 'setLocation(\'' . $retourPinUrl . '\')', 'class' => 'save'],
+                        'start_card_refund',
+                        ['label' => __('Pay. Refund by card'), 'onclick' => 'setLocation(\'' . $cardRefundUrl . '\')', 'class' => 'save'],
                         'paynl'
                     );
                 }
-                $error = $this->payHelper->getCookie('retourPinError');
+                $error = $this->payHelper->getCookie('cardRefundError');
 
                 if (!empty($error)) {
                     $this->messageManager->addError($error);
                 }
 
-                $this->payHelper->deleteCookie('retourPinError');
+                $this->payHelper->deleteCookie('cardRefundError');
             }
         }
 

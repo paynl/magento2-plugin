@@ -235,6 +235,27 @@ class PayPayment
     }
 
     /**
+     * @param integer $orderEntityId
+     * @return true
+     * @throws \Exception
+     */
+    public function retourpinOrder($orderEntityId)
+    {
+        $order = $this->orderRepository->get($orderEntityId);
+        if (!$this->config->chargebackFromPayEnabled() || $order->getTotalDue() != 0 || $order->getBaseTotalRefunded() == $order->getBaseGrandTotal()) {
+            throw new \Exception("Ignoring chargeback");
+        }
+        try {            
+            $creditmemo = $this->cmFac->createByOrder($order);
+            $this->cmService->refund($creditmemo);
+            $order->addStatusHistoryComment(__('PAY. - Refund via Pin initiated from Magento2 Backend'))->save();
+        } catch (\Exception $e) {
+            throw new \Exception('Could not process Refund via Pin');
+        }
+        return true;
+    }
+
+    /**
      * @param PayTransaction $transaction
      * @param Order $order
      * @param integer $paymentProfileId

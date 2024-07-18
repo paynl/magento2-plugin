@@ -6,9 +6,9 @@ use Magento\Sales\Model\Order;
 use Paynl\Payment\Helper\PayHelper;
 use Paynl\Payment\Model\PayPaymentCreate;
 
-class Retourpin extends PaymentMethod
+class Cardrefund extends PaymentMethod
 {
-    protected $_code = 'paynl_payment_retourpin';
+    protected $_code = 'paynl_payment_cardrefund';
 
     /**
      * Paylink payment block paths
@@ -76,10 +76,12 @@ class Retourpin extends PaymentMethod
                     $order->save();
                 } else {
                     throw new \Exception(__('Please select a pin-terminal'), 201);
-                }                
+                }
             }
 
-            $transaction = (new PayPaymentCreate($order, $this))->create();
+            $transation = (new PayPaymentCreate($order, $this));
+            $transation->setAmount($additionalData['refund_amount']);
+            $transaction = $transation->create();
 
             $order->getPayment()->setAdditionalInformation($additionalData);
             $order->save();
@@ -100,7 +102,7 @@ class Retourpin extends PaymentMethod
                 }
             }
         }
-        
+
         return $transaction->getRedirectUrl();
     }
 
@@ -123,8 +125,8 @@ class Retourpin extends PaymentMethod
             }
         }
         return $this;
-    }  
-    
+    }
+
     /**
      * @return mixed
      */

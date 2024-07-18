@@ -105,26 +105,26 @@
     position: relative;
 }
 
-.obscuredField input{
+.obscuredField input {
     text-security: disc;
     -webkit-text-security: disc;
     -moz-text-security: disc;
 }
 
-.obscuredField input.display{
+.obscuredField input.display {
     text-security: none;
     -webkit-text-security: none;
     -moz-text-security: none;
 }
 
-.obscuredField .obscuredDisplay{
+.obscuredField .obscuredDisplay {
     position: absolute;
     right: 10px;
     top: 0;
     cursor: pointer;
 }
 
-.obscuredField .obscuredDisplay::before{
+.obscuredField .obscuredDisplay::before {
     content: '\e60f';
     -webkit-font-smoothing: antialiased;
     font-family: 'Admin Icons';
@@ -134,9 +134,55 @@
     speak: none;
 }
 
-#start_retour_pin span{
+#start_card_refund span {
     border: 1px solid #0000002b;
     padding: 10px;
     border-radius: 4px;
     background: #0000001a;
+}
+
+#paynl_cardrefund {
+    font-size: 1.6rem;
+    letter-spacing: .025em;
+    text-shadow: none;
+    color: #41362f;
+}
+
+#paynl_cardrefund a,
+#paynl_cardrefund a:hover {
+    color: black;
+    text-decoration: none;
+}
+
+#cardrefund_back_button:before {
+    -webkit-font-smoothing: antialiased;
+    font-family: 'Admin Icons';
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+    speak: none;
+    content: '\e626';
+    margin-right: .5em;
+    position: relative;
+    top: 1px;
+}
+
+#cardrefund_form {
+    margin-top: 20px;
+}
+
+
+#cardrefund_form .form-group,
+#cardrefund_submit {
+    margin-top: 10px;
+}
+
+
+#cardrefund_form label {
+    min-width: 80px;
+}
+
+#cardrefund_form .col-md {
+    display: inline-block;
+    margin-right: 5px;
 }
