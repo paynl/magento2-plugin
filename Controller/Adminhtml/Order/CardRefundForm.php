@@ -1,4 +1,5 @@
 <?php
+
 namespace Paynl\Payment\Controller\Adminhtml\Order;
 
 use Magento\Framework\Controller\ResultFactory;

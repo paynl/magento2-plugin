@@ -14,7 +14,6 @@ use Paynl\Payment\Model\Config;
 
 class CardRefundForm extends Template
 {
-    public const PAY_TRANSACTION_URL = 'https://my.pay.nl/transactions/info/';
     private $orderRepository;
     protected $payHelper;
     protected $backendUrl;
@@ -27,6 +26,11 @@ class CardRefundForm extends Template
      * @param Context $context
      * @param OrderRepository $orderRepository
      * @param PayHelper $payHelper
+     * @param BackendUrl $backendUrl
+     * @param StoreManagerInterface $storeManager
+     * @param Config $config
+     * @param CacheInterface $cache
+     * @param Store $store
      */
     public function __construct(
         Context $context,
@@ -84,9 +88,7 @@ class CardRefundForm extends Template
         $configured = $this->config->configureSDK();
 
         if ($this->config->isPaymentMethodActive('paynl_payment_instore')) {
-
             if ($configured) {
-
                 $cacheName = 'paynl_terminals_' . $store->getConfig('payment/paynl_payment_instore/payment_option_id') . '_' . $storeId;
                 $terminalJson = $this->cache->load($cacheName);
 
@@ -156,5 +158,4 @@ class CardRefundForm extends Template
 
         return $order;
     }
-
 }

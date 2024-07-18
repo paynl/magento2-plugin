@@ -134,5 +134,4 @@ class Cardrefund extends PaymentMethod
     {
         return $this->_scopeConfig->getValue('payment/paynl_payment_instore/default_terminal', 'store');
     }
-
 }
