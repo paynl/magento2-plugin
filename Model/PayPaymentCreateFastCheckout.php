@@ -3,7 +3,6 @@
 namespace Paynl\Payment\Model;
 
 use Paynl\Payment\Model\PayPaymentCreate;
-use PayNL\Sdk\Model\Order;
 
 class PayPaymentCreateFastCheckout extends PayPaymentCreate
 {
@@ -123,12 +122,12 @@ class PayPaymentCreateFastCheckout extends PayPaymentCreate
 
         foreach ($this->products as $i => $arrProduct) {
             $product = [];
-            $product['id'] = $arrProduct['id'] ?? 'p'.$i;
-            $product['description'] = $arrProduct['description'] ?? '';         
-            $product['type'] = $arrProduct['type'] ?? '';    
+            $product['id'] = $arrProduct['id'] ?? 'p' . $i;
+            $product['description'] = $arrProduct['description'] ?? '';
+            $product['type'] = $arrProduct['type'] ?? '';
             $product['price'] = [
-             'value' => $arrProduct['price'],
-             'currency' => $arrProduct['currecny'],
+                'value' => $arrProduct['price'],
+                'currency' => $arrProduct['currecny'],
             ];
             $product['quantity'] = $arrProduct['quantity'] ?? 0;
             $product['vatPercentage'] = $arrProduct['vatPercentage'] ?? '';
@@ -153,7 +152,7 @@ class PayPaymentCreateFastCheckout extends PayPaymentCreate
         #TODO: Make dynamic for failovergateway
         $url = 'https://connect.payments.nl/v1/orders';
 
-        $rawResponse = (array)$this->sendCurlRequest($url, $payload, $this->payConfig->getTokencode(), $this->payConfig->getApiToken());
+        $rawResponse = (array) $this->sendCurlRequest($url, $payload, $this->payConfig->getTokencode(), $this->payConfig->getApiToken());
 
         $redirectURL = $rawResponse['links']->redirect ?? '';
 
@@ -212,6 +211,6 @@ class PayPaymentCreateFastCheckout extends PayPaymentCreate
             throw new \Exception($field . ': ' . ($response->violations[0]->message ?? ''));
         }
 
-        return (array)$response;
+        return (array) $response;
     }
 }

@@ -4,12 +4,11 @@ namespace Paynl\Payment\Block\Checkout;
 
 use Magento\Catalog\Block\Product\Context;
 use Magento\Catalog\Block\Product\ProductList\Item\Block;
-use Magento\Framework\App\ActionInterface;
 use Magento\Framework\Url\Helper\Data as UrlHelper;
 use Magento\Framework\View\Page\Config;
 use Magento\Store\Model\Store;
 
-class QuickCheckout extends Block
+class FastCheckout extends Block
 {
     /**
      * @var UrlHelper
@@ -30,7 +29,7 @@ class QuickCheckout extends Block
         array $data = []
     ) {
         $this->urlHelper = $urlHelper;
-        $page->addPageAsset('Paynl_Payment::css/payQuickCheckout.css');
+        $page->addPageAsset('Paynl_Payment::css/payFastCheckout.css');
         parent::__construct($context, $data);
     }
 

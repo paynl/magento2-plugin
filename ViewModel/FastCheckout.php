@@ -4,9 +4,8 @@ namespace Paynl\Payment\ViewModel;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\View\Element\Block\ArgumentInterface;
-use Magento\Store\Model\ScopeInterface;
 
-class QuickCheckout implements ArgumentInterface
+class FastCheckout implements ArgumentInterface
 {
     /**
      * @var ScopeConfigInterface
@@ -21,5 +20,5 @@ class QuickCheckout implements ArgumentInterface
         ScopeConfigInterface $scopeConfig
     ) {
         $this->scopeConfig = $scopeConfig;
-    }    
+    }
 }

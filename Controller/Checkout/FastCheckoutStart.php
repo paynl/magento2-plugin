@@ -2,10 +2,10 @@
 
 namespace Paynl\Payment\Controller\Checkout;
 
-use Paynl\Payment\Model\PayPaymentCreateFastCheckout;
 use Magento\Payment\Helper\Data as PaymentHelper;
 use Magento\Store\Model\StoreManagerInterface;
 use Paynl\Payment\Helper\PayHelper;
+use Paynl\Payment\Model\PayPaymentCreateFastCheckout;
 
 class FastCheckoutStart extends \Magento\Framework\App\Action\Action
 {
@@ -69,9 +69,9 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
     {
         $products = $this->cart->getItems();
         $productArr = [];
-        
-        foreach ($products as $key => $product) { 
-            if($product->getPrice() > 0){       
+
+        foreach ($products as $key => $product) {
+            if ($product->getPrice() > 0) {
                 $productArr[] = [
                     'id' => $product->getProductId(),
                     'quantity' => $product->getQty(),
@@ -79,11 +79,11 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
                     'price' => $product->getPrice() * 100,
                     'currecny' => $this->storeManager->getStore()->getCurrentCurrencyCode(),
                     'type' => 'product',
-                    'vatPercentage' => ($product->getPriceInclTax() - $product->getBasePrice()) / $product->getBasePrice() * 100
+                    'vatPercentage' => ($product->getPriceInclTax() - $product->getBasePrice()) / $product->getBasePrice() * 100,
                 ];
             }
         }
-        
+
         return $productArr;
     }
 
@@ -92,7 +92,7 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
         $methodInstance = $this->paymentHelper->getMethodInstance('paynl_payment_ideal');
         $arrProducts = $this->getProducts();
         $fcAmount = $this->cart->getQuote()->getGrandTotal();
-        try {            
+        try {
             if (empty($fcAmount)) {
                 throw new \Exception('empty amount', FastCheckoutStart::FC_EMPTY_BASKET);
             }
@@ -113,22 +113,22 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
                 );
             } catch (\Exception $e) {
                 throw new \Exception($e->getMessage(), FastCheckoutStart::FC_DB_ERROR);
-            }          
+            }
 
             $this->getResponse()->setNoCacheHeaders();
-            $this->getResponse()->setRedirect($payTransaction->getRedirectUrl());      
+            $this->getResponse()->setRedirect($payTransaction->getRedirectUrl());
 
         } catch (\Exception $e) {
             $message = __('Something went wrong, please try again later');
             if ($e->getCode() == FastCheckoutStart::FC_EMPTY_BASKET) {
-                $message = __('Please put something in the basket');             
-            } elseif ($e->getCode() == FastCheckoutStart::FC_DB_ERROR) {                
+                $message = __('Please put something in the basket');
+            } elseif ($e->getCode() == FastCheckoutStart::FC_DB_ERROR) {
                 $this->payHelper->logCritical('FC DB ERROR: ' . $e->getMessage(), []);
-            } else {                
+            } else {
                 $this->payHelper->logCritical('FC ERROR: ' . $e->getMessage(), []);
             }
-        
-            $this->messageManager->addExceptionMessage($e, $message);   
+
+            $this->messageManager->addExceptionMessage($e, $message);
             $this->_redirect('checkout/cart');
         }
     }

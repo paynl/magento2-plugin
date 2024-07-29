@@ -2,8 +2,8 @@
 
 namespace Paynl\Payment\Controller\Checkout;
 
-use Magento\Framework\App\Request\InvalidRequestException;
 use Magento\Framework\App\RequestInterface;
+use Magento\Framework\App\Request\InvalidRequestException;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderRepository;
 use Paynl\Payment\Controller\CsrfAwareActionInterface;
@@ -97,7 +97,6 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         parent::__construct($context);
     }
 
-
     /**
      * @return array|false
      */
@@ -168,7 +167,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             'internalStateId' => $internalStateId ?? null,
             'internalStateName' => $internalStateName ?? null,
             'checkoutData' => $checkoutData ?? null,
-            'orgData' => $data
+            'orgData' => $data,
         ];
     }
 
@@ -179,7 +178,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
     private function isFastCheckout($params)
     {
         return $params['orderId'] == 'fastcheckout' && !empty($params['checkoutData'] ?? '');
-    }   
+    }
 
     /**
      * @return \Magento\Framework\Controller\Result\Raw
@@ -200,8 +199,8 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
 
             $checkoutData = $params['checkoutData'];
 
-            $fcOrder = $this->payPaymentProcessFastCheckout->processFastCheckout($params);  
-        
+            $fcOrder = $this->payPaymentProcessFastCheckout->processFastCheckout($params);
+
             $this->config->setStore($fcOrder->getStore());
 
             try {
