@@ -15,8 +15,8 @@ use Paynl\Payment\Model\PayPaymentCreateFastCheckout;
 
 class FastCheckoutStart extends \Magento\Framework\App\Action\Action
 {
-    const FC_GENERAL_ERROR = 8000;
-    const FC_EMPTY_BASKET = 8005;
+    public const FC_GENERAL_ERROR = 8000;
+    public const FC_EMPTY_BASKET = 8005;
 
     /**
      * @var Cart
@@ -57,7 +57,7 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
      * @param PayHelper $payHelper
      * @param StoreManagerInterface $storeManager
      * @param CustomerFactory $customerFactory
-     * @param CustomerRepositoryInterface $customerRepository,
+     * @param CustomerRepositoryInterface $customerRepository
      */
     public function __construct(
         Context $context,
@@ -83,8 +83,9 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
     }
 
     /**
-     * @param quote $qoute
+     * @param quote $quote
      * @return void
+     * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
      */
     private function quoteSetDummyData($quote)
     {
@@ -185,6 +186,9 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
         return $productArr;
     }
 
+    /**
+     * @return void
+     */
     public function execute()
     {
         $methodInstance = $this->paymentHelper->getMethodInstance('paynl_payment_ideal');
@@ -211,7 +215,6 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
 
             $this->getResponse()->setNoCacheHeaders();
             $this->getResponse()->setRedirect($payTransaction->getRedirectUrl());
-
         } catch (\Exception $e) {
             $message = __('Something went wrong, please try again later');
             if ($e->getCode() == FastCheckoutStart::FC_EMPTY_BASKET) {

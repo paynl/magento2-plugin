@@ -110,7 +110,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
     }
 
     /**
-     * @return bool
+     * @return boolean
      */
     private function isSignExchange()
     {
@@ -120,9 +120,10 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
     }
 
     /**
-     * @param  $request
+     * @param object $_request
      * @return array
      * @throws Exception
+     * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
      */
     private function getPayLoad($_request)
     {
@@ -134,7 +135,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             $action = $request->action ?? null;
             $paymentProfile = $request->payment_profile_id ?? null;
             $payOrderId = $request->order_id ?? null;
-            $orderId = $request->extra1 ?? null;          
+            $orderId = $request->extra1 ?? null;
             $data = null;
         } else {
             # TGU
@@ -173,13 +174,14 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
     }
 
     /**
-     * @param $params
-     * @return bool
+     * @param array $params
+     * @return boolean
+     * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
      */
     private function isFastCheckout($params)
-    {        
+    {
         return str_contains($params['orderId'], 'fastcheckout') && !empty($params['checkoutData'] ?? '');
-    }   
+    }
 
     /**
      * @return \Magento\Framework\Controller\Result\Raw
@@ -204,7 +206,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             } catch (\Exception $e) {
                 $this->payHelper->logCritical($e, $params);
                 return $this->result->setContents('FALSE| Error creating fast checkout order. ' . $e->getMessage());
-            }        
+            }
         }
 
         if (empty($payOrderId) || empty($orderEntityId)) {
@@ -212,7 +214,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             return $this->result->setContents('FALSE| order_id is not set in the request');
         }
 
-        if(empty($order)){
+        if (empty($order)) {
             try {
                 $order = $this->orderRepository->get($orderEntityId);
                 if (empty($order)) {

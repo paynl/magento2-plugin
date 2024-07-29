@@ -22,11 +22,12 @@ class PayPaymentCreateFastCheckout extends PayPaymentCreate
     private $reference = '';
 
     /**
-     * @param $methodInstance
-     * @param $amount Amount to start fastCheckout with
-     * @param $products Procucts to buy with fastCheckout
-     * @param $baseUrl
+     * @param \Paynl\Payment\Model\Paymentmethod\Paymentmethod $methodInstance
+     * @param string $amount Amount to start fastCheckout with
+     * @param array $products Procucts to buy with fastCheckout
+     * @param string $baseUrl
      * @throws \Exception
+     * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
      */
     public function __construct($methodInstance, $amount, $products, $baseUrl, $quoteId, $currency)
     {
@@ -44,8 +45,9 @@ class PayPaymentCreateFastCheckout extends PayPaymentCreate
     }
 
     /**
-     * @param $products
+     * @param array $products
      * @return void
+     * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
      */
     public function setProducts($products)
     {
@@ -101,12 +103,13 @@ class PayPaymentCreateFastCheckout extends PayPaymentCreate
     }
 
     /**
-     * @param $returnArr
-     * @param $field
-     * @param $value
+     * @param array $returnArr
+     * @param string $field
+     * @param string $value
      * @return void
+     * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
      */
-    private function _add(&$returnArr, $field, $value)
+    private function _add(&$returnArr, $field, $value) // phpcs:ignore
     {
         if (!empty($value)) {
             $returnArr = array_merge($returnArr, [$field => $value]);
@@ -165,13 +168,14 @@ class PayPaymentCreateFastCheckout extends PayPaymentCreate
     }
 
     /**
-     * @param $requestUrl
-     * @param $payload
-     * @param $tokenCode
-     * @param $apiToken
-     * @param $method
+     * @param string $requestUrl
+     * @param string $payload
+     * @param string $tokenCode
+     * @param string $apiToken
+     * @param string $method
      * @return array
      * @throws \Exception
+     * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
      */
     public function sendCurlRequest($requestUrl, $payload, $tokenCode, $apiToken, $method = 'POST')
     {
@@ -179,7 +183,8 @@ class PayPaymentCreateFastCheckout extends PayPaymentCreate
 
         $curl = curl_init();
         curl_setopt_array(
-            $curl, [
+            $curl,
+            [
                 CURLOPT_URL => $requestUrl,
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING => "",

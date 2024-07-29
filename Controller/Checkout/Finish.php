@@ -152,23 +152,23 @@ class Finish extends PayAction
         $multiShipFinish = is_array($orderIds);
 
         try {
-            if ($magOrderId == 'fc') {                
-                if($bSuccess){                       
+            if ($magOrderId == 'fc') {
+                if ($bSuccess) {
                     $resultRedirect->setPath(Config::FINISH_PAY_FC, ['_query' => ['utm_nooverride' => '1']]);
-                } elseif($bPending){
+                } elseif ($bPending) {
                     $resultRedirect->setPath(Config::PENDING_PAY, ['_query' => ['utm_nooverride' => '1']]);
                 } else {
                     $resultRedirect->setPath(Config::CANCEL_PAY, ['_query' => ['utm_nooverride' => '1']]);
                 }
 
-                if($bSuccess || $bPending){
+                if ($bSuccess || $bPending) {
                     $session = $this->checkoutSession;
                     $quote = $session->getQuote();
                     $quote->setIsActive(false);
                     $this->quoteRepository->save($quote);
                 }
-                
-                return $resultRedirect;               
+
+                return $resultRedirect;
             }
             $this->checkEmpty($magOrderId, 'magOrderId', 1012);
             $order = $this->orderRepository->get($magOrderId);

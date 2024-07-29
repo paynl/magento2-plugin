@@ -19,6 +19,8 @@ class FastCheckout extends Block
      * ListProduct constructor.
      * @param Context $context
      * @param UrlHelper $urlHelper
+     * @param Config $page
+     * @param Store $store
      * @param array $data
      */
     public function __construct(
@@ -32,5 +34,4 @@ class FastCheckout extends Block
         $page->addPageAsset('Paynl_Payment::css/payFastCheckout.css');
         parent::__construct($context, $data);
     }
-
 }

@@ -19,6 +19,7 @@ class OrderCreateResponse
 
     /**
      * @param mixed $links
+     * @return void
      */
     public function setLinks($links)
     {
@@ -26,8 +27,9 @@ class OrderCreateResponse
     }
 
     /**
-     * @param $transactionId
+     * @param string $transactionId
      * @return void
+     * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
      */
     public function setTransactionId($transactionId)
     {
@@ -52,6 +54,8 @@ class OrderCreateResponse
 
     /**
      * @param mixed $redirectUrl
+     * @return void
+     * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
      */
     public function setRedirectUrl($redirectUrl)
     {
@@ -68,6 +72,8 @@ class OrderCreateResponse
 
     /**
      * @param mixed $paymentReference
+     * @return void
+     * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
      */
     public function setPaymentReference($paymentReference)
     {

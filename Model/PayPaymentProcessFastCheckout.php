@@ -60,6 +60,17 @@ class PayPaymentProcessFastCheckout
      */
     protected $orderRepository;
 
+    /**
+     * @param Context $context
+     * @param PageFactory $pageFactory
+     * @param StoreManagerInterface $storeManager
+     * @param QuoteFactory $quote
+     * @param QuoteManagement $quoteManagement
+     * @param CustomerFactory $customerFactory
+     * @param CustomerRepositoryInterface $customerRepository
+     * @param OrderFactory $orderFactory
+     * @param PayHelper $payHelper
+     */
     public function __construct(
         Context $context,
         PageFactory $pageFactory,
@@ -84,6 +95,7 @@ class PayPaymentProcessFastCheckout
     /**
      * @param array $params
      * @return Order
+     * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
      */
     public function processFastCheckout($params)
     {
@@ -190,5 +202,4 @@ class PayPaymentProcessFastCheckout
 
         return $order;
     }
-
 }

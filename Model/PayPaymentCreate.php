@@ -87,7 +87,7 @@ class PayPaymentCreate
     private $order;
 
     /**
-     * @param Order $order
+     * @param null|Order $order
      * @param PaymentMethod $methodInstance
      * @throws \Exception
      */
@@ -99,7 +99,7 @@ class PayPaymentCreate
         $this->scopeConfig = $methodInstance->getScopeConfig();
         $finishUrl = $exchangeUrl = '';
 
-        if($order instanceof Order) {
+        if ($order instanceof Order) {
             $this->order = $order;
             $this->orderId = $order->getIncrementId();
             $this->additionalData = $order->getPayment()->getAdditionalInformation();
@@ -196,7 +196,6 @@ class PayPaymentCreate
     }
 
     /**
-     * @param string $finishUrl
      * @return $this
      */
     public function getFinishURL()
