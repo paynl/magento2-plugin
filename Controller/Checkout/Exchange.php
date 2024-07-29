@@ -10,6 +10,7 @@ use Paynl\Payment\Controller\CsrfAwareActionInterface;
 use Paynl\Payment\Controller\PayAction;
 use Paynl\Payment\Helper\PayHelper;
 use Paynl\Payment\Model\PayPayment;
+use Paynl\Payment\Model\PayPaymentProcessFastCheckout;
 use Paynl\Transaction;
 
 class Exchange extends PayAction implements CsrfAwareActionInterface
@@ -35,10 +36,20 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
     private $payPayment;
 
     /**
+     * @var PayPaymentProcessFastCheckout
+     */
+    private $payPaymentProcessFastCheckout;
+
+    /**
      *
      * @var \Paynl\Payment\Helper\PayHelper;
      */
     private $payHelper;
+
+    /**
+     * @var
+     */
+    private $headers;
 
     /**
      *
@@ -65,6 +76,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
      * @param \Magento\Framework\Controller\Result\Raw $result
      * @param OrderRepository $orderRepository
      * @param PayPayment $payPayment
+     * @param PayPaymentProcessFastCheckout $payPaymentProcessFastCheckout
      * @param PayHelper $payHelper
      */
     public function __construct(
@@ -73,29 +85,144 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         \Magento\Framework\Controller\Result\Raw $result,
         OrderRepository $orderRepository,
         PayPayment $payPayment,
+        PayPaymentProcessFastCheckout $payPaymentProcessFastCheckout,
         PayHelper $payHelper
     ) {
         $this->result = $result;
         $this->config = $config;
         $this->orderRepository = $orderRepository;
         $this->payPayment = $payPayment;
+        $this->payPaymentProcessFastCheckout = $payPaymentProcessFastCheckout;
         $this->payHelper = $payHelper;
         parent::__construct($context);
     }
+
+
+    /**
+     * @return array|false
+     */
+    private function getHeaders()
+    {
+        if (empty($this->headers)) {
+            $this->headers = array_change_key_case(getallheaders(), CASE_LOWER);
+        }
+        return $this->headers;
+    }
+
+    /**
+     * @return bool
+     */
+    private function isSignExchange()
+    {
+        $headers = $this->getHeaders();
+        $signingMethod = $headers['signature-method'] ?? null;
+        return $signingMethod === 'HMAC';
+    }
+
+    /**
+     * @param  $request
+     * @return array
+     * @throws Exception
+     */
+    private function getPayLoad($_request)
+    {
+        $request = (object) $_request->getParams() ?? null;
+
+        $action = $request->action ?? null;
+        if (!empty($action)) {
+            # The argument "action" tells us this is not coming from TGU. Todo: check should be better
+            $action = $request->action ?? null;
+            $paymentProfile = $request->payment_profile_id ?? null;
+            $payOrderId = $request->order_id ?? null;
+            $orderId = $request->extra1 ?? null;
+        } else {
+            # TGU
+            if ($_request->isGet() || !$this->isSignExchange()) {
+                $data['object'] = $request->object;
+            } else {
+                $rawBody = file_get_contents('php://input');
+                $data = json_decode($rawBody, true, 512, 4194304);
+                $exchangeType = $data['type'] ?? null;
+
+                # Volgens documentatie alleen type order verwerken. https://developer.pay.nl/docs/signing
+                if ($exchangeType != 'order') {
+                    throw new Exception('Cant handle exchange type other then order');
+                }
+            }
+            $this->payHelper->logDebug('payload', $data);
+            $payOrderId = $data['object']['orderId'] ?? '';
+            $internalStateId = $data['object']['status']['code'] ?? '';
+            $internalStateName = $data['object']['status']['action'] ?? '';
+            $orderId = $data['object']['reference'] ?? '';
+            $action = ($internalStateId == 100 || $internalStateName == 95) ? 'new_ppt' : 'pending';
+            $checkoutData = $data['object']['checkoutData'] ?? '';
+        }
+
+        // Return mapped data so it works for all type of exchanges.
+        return [
+            'action' => $action,
+            'paymentProfile' => $paymentProfile ?? null,
+            'payOrderId' => $payOrderId,
+            'orderId' => $orderId,
+            'internalStateId' => $internalStateId ?? null,
+            'internalStateName' => $internalStateName ?? null,
+            'checkoutData' => $checkoutData ?? null,
+            'orgData' => $data
+        ];
+    }
+
+    /**
+     * @param $params
+     * @return bool
+     */
+    private function isFastCheckout($params)
+    {
+        return $params['orderId'] == 'fastcheckout' && !empty($params['checkoutData'] ?? '');
+    }   
 
     /**
      * @return \Magento\Framework\Controller\Result\Raw
      */
     public function execute()
     {
-        $params = $this->getRequest()->getParams();
+        $params = $this->getPayLoad($this->getRequest());
         $action = !empty($params['action']) ? strtolower($params['action']) : '';
-        $payOrderId = isset($params['order_id']) ? $params['order_id'] : null;
+        $payOrderId = isset($params['payOrderId']) ? $params['payOrderId'] : null;
         $orderEntityId = isset($params['extra3']) ? $params['extra3'] : null;
-        $paymentProfileId = isset($params['payment_profile_id']) ? $params['payment_profile_id'] : null;
+        $paymentProfileId = isset($params['paymentProfile']) ? $params['paymentProfile'] : null;
 
         if ($action == 'pending') {
             return $this->result->setContents('TRUE| Ignore pending');
+        }
+
+        if ($this->isFastCheckout($params)) {
+
+            $checkoutData = $params['checkoutData'];
+
+            $fcOrder = $this->payPaymentProcessFastCheckout->processFastCheckout($params);  
+        
+            $this->config->setStore($fcOrder->getStore());
+
+            try {
+                $this->config->configureSDK(true);
+                $transaction = Transaction::get($payOrderId);
+            } catch (\Exception $e) {
+                $this->payHelper->logCritical($e, $params, $fcOrder->getStore());
+                return $this->result->setContents('FALSE| Error fetching transaction. ' . $e->getMessage());
+            }
+
+            try {
+                $result = $this->payPayment->processPaidOrder($transaction, $fcOrder, $paymentProfileId);
+                if (!$result) {
+                    throw new \Exception('Cannot process order');
+                }
+
+                $message = 'TRUE| ' . (($transaction->isPaid()) ? "PAID" : "AUTHORIZED");
+            } catch (\Exception $e) {
+                $message = 'FALSE| ' . $e->getMessage();
+            }
+
+            return $this->result->setContents($message);
         }
 
         if (empty($payOrderId) || empty($orderEntityId)) {

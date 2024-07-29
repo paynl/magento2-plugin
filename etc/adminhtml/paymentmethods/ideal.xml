@@ -148,6 +148,28 @@ Business, BB2: Only show this payment method when the customer entered a company
             </depends>
             <config_path>payment/paynl_payment_ideal/showforgroup</config_path>
             <comment><![CDATA[Show payment method only to specific customer groups.]]></comment>
+        </field>       
+        <field id="fast_checkout_enabled" translate="label" type="select" sortOrder="170" showInDefault="1"
+               showInWebsite="1"
+               showInStore="1">
+            <label>Enable fast checkout</label>
+            <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
+            <config_path>payment/paynl_payment_ideal/fast_checkout_enabled</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+            <tooltip>Allows users to checkout directly from the cart without the need to fill in their address.</tooltip>
+        </field>
+        <field id="fast_checkout_shipping" translate="label" type="select" sortOrder="180" showInDefault="1"
+               showInWebsite="1"
+               showInStore="1">
+            <label>Fast checkout Shipping method</label>
+            <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>   
+            <config_path>payment/paynl_payment_ideal/fast_checkout_shipping</config_path>
+            <depends>
+                <field id="active">1</field>
+                <field id="fast_checkout_enabled">1</field>
+            </depends>
         </field>
         <group id="advanced" translate="label" sortOrder="200" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Advanced</label>

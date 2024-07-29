@@ -139,6 +139,7 @@ class Finish extends PayAction
         $params = $this->getRequest()->getParams();
         $payOrderId = empty($params['orderId']) ? (empty($params['orderid']) ? null : $params['orderid']) : $params['orderId'];
         $orderStatusId = empty($params['orderStatusId']) ? null : (int)$params['orderStatusId'];
+        $orderStatusId = (empty($orderStatusId) && !empty($params['statusCode'])) ? (int)$params['statusCode'] : $orderStatusId;
         $magOrderId = empty($params['entityid']) ? null : $params['entityid'];
         $orderIds = empty($params['order_ids']) ? null : $params['order_ids'];
         $pickupMode = !empty($params['pickup']);
@@ -151,6 +152,25 @@ class Finish extends PayAction
         $multiShipFinish = is_array($orderIds);
 
         try {
+            if ($magOrderId == 'fc') {                
+                if($bSuccess){
+                    # Make the cart inactive                    
+                    $resultRedirect->setPath(Config::FINISH_PAY, ['_query' => ['utm_nooverride' => '1']]);
+                } elseif($bPending){
+                    $resultRedirect->setPath(Config::PENDING_PAY, ['_query' => ['utm_nooverride' => '1']]);
+                } else {
+                    $resultRedirect->setPath(Config::CANCEL_PAY, ['_query' => ['utm_nooverride' => '1']]);
+                }
+
+                if($bSuccess || $bPending){
+                    $session = $this->checkoutSession;
+                    $quote = $session->getQuote();
+                    $quote->setIsActive(false);
+                    $this->quoteRepository->save($quote);
+                }
+                
+                return $resultRedirect;               
+            }
             $this->checkEmpty($magOrderId, 'magOrderId', 1012);
             $order = $this->orderRepository->get($magOrderId);
             $this->checkEmpty($order, 'order', 1013);

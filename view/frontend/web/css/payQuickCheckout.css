@@ -1,0 +1,19 @@
+#paynl_quick_checkout_cart{
+    display:block;
+    width:100%;
+}
+
+#paynl_quick_checkout_cart button,
+#top-cart-quick-checkout{
+    width: 100%;
+    line-height: 2.2rem;
+    padding: 14px 17px;
+    font-size: 1.8rem;
+    margin-top: -10px;
+    background: #c90066;
+    border-color: #c90066;
+    background-image: url("../images/quickCheckoutIdeal.png");
+    background-repeat: no-repeat;
+    background-size: 51px;
+    background-position: 8px center;
+}

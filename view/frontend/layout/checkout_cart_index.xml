@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>        
+        <referenceBlock name="checkout.cart.methods">
+            <block class="Paynl\Payment\Block\Checkout\QuickCheckout" name="paynl.quickcheckout.cart" after="checkout.cart.methods.onepage.bottom" template="Paynl_Payment::pay_quick_checkout_cart.phtml" ifconfig="payment/paynl_payment_ideal/fast_checkout_enabled" >
+                <arguments>
+                    <argument name="view_model" xsi:type="object">Paynl\Payment\ViewModel\QuickCheckout</argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+    </body>
+</page>
