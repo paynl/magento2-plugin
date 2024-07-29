@@ -135,6 +135,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             $paymentProfile = $request->payment_profile_id ?? null;
             $payOrderId = $request->order_id ?? null;
             $orderId = $request->extra1 ?? null;
+            $data = null;
         } else {
             # TGU
             if ($_request->isGet() || !$this->isSignExchange()) {
@@ -188,7 +189,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         $params = $this->getPayLoad($this->getRequest());
         $action = !empty($params['action']) ? strtolower($params['action']) : '';
         $payOrderId = isset($params['payOrderId']) ? $params['payOrderId'] : null;
-        $orderEntityId = isset($params['extra3']) ? $params['extra3'] : null;
+        $orderEntityId = isset($params['orderId']) ? $params['orderId'] : null;
         $paymentProfileId = isset($params['paymentProfile']) ? $params['paymentProfile'] : null;
 
         if ($action == 'pending') {
