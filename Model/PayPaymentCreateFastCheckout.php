@@ -26,6 +26,8 @@ class PayPaymentCreateFastCheckout extends PayPaymentCreate
      * @param string $amount Amount to start fastCheckout with
      * @param array $products Procucts to buy with fastCheckout
      * @param string $baseUrl
+     * @param string $quoteId
+     * @param string $currency
      * @throws \Exception
      * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
      */
@@ -37,7 +39,7 @@ class PayPaymentCreateFastCheckout extends PayPaymentCreate
         $exchangeUrl = $baseUrl . 'paynl/checkout/exchange/';
 
         $fastCheckout->setAmount($amount);
-        $fastCheckout->setCurrency('EUR');
+        $fastCheckout->setCurrency($currency);
         $fastCheckout->setFinishURL($finishUrl);
         $fastCheckout->setExchangeURL($exchangeUrl);
         $fastCheckout->setProducts($products);

@@ -20,6 +20,7 @@ class OrderCreateResponse
     /**
      * @param mixed $links
      * @return void
+     * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
      */
     public function setLinks($links)
     {

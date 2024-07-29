@@ -179,7 +179,7 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
                 'price' => $this->cart->getQuote()->getShippingAddress()->getShippingAmount() * 100,
                 'currecny' => $this->storeManager->getStore()->getCurrentCurrencyCode(),
                 'type' => \Paynl\Transaction::PRODUCT_TYPE_SHIPPING,
-                'vatPercentage' => ($this->cart->getQuote()->getShippingAddress()->getBaseShippingInclTax() - $this->cart->getQuote()->getShippingAddress()->getBaseShippingAmount()) / $this->cart->getQuote()->getShippingAddress()->getBaseShippingAmount() * 100,
+                'vatPercentage' => ($this->cart->getQuote()->getShippingAddress()->getBaseShippingInclTax() - $this->cart->getQuote()->getShippingAddress()->getBaseShippingAmount()) / $this->cart->getQuote()->getShippingAddress()->getBaseShippingAmount() * 100,  // phpcs:ignore
             ];
         }
 
