@@ -153,9 +153,8 @@ class Finish extends PayAction
 
         try {
             if ($magOrderId == 'fc') {                
-                if($bSuccess){
-                    # Make the cart inactive                    
-                    $resultRedirect->setPath(Config::FINISH_PAY, ['_query' => ['utm_nooverride' => '1']]);
+                if($bSuccess){                       
+                    $resultRedirect->setPath(Config::FINISH_PAY_FC, ['_query' => ['utm_nooverride' => '1']]);
                 } elseif($bPending){
                     $resultRedirect->setPath(Config::PENDING_PAY, ['_query' => ['utm_nooverride' => '1']]);
                 } else {

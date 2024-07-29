@@ -28,7 +28,7 @@ class PayPaymentCreateFastCheckout extends PayPaymentCreate
      * @param $baseUrl
      * @throws \Exception
      */
-    public function __construct($methodInstance, $amount, $products, $baseUrl)
+    public function __construct($methodInstance, $amount, $products, $baseUrl, $quoteId, $currency)
     {
         $fastCheckout = parent::__construct(null, $methodInstance);
 
@@ -36,11 +36,11 @@ class PayPaymentCreateFastCheckout extends PayPaymentCreate
         $exchangeUrl = $baseUrl . 'paynl/checkout/exchange/';
 
         $fastCheckout->setAmount($amount);
-        $fastCheckout->setCurrency('EUR'); // todo: make variable
+        $fastCheckout->setCurrency('EUR');
         $fastCheckout->setFinishURL($finishUrl);
         $fastCheckout->setExchangeURL($exchangeUrl);
         $fastCheckout->setProducts($products);
-        $fastCheckout->reference = 'fastcheckout';
+        $fastCheckout->reference = 'fastcheckout' . $quoteId;
     }
 
     /**
@@ -149,7 +149,6 @@ class PayPaymentCreateFastCheckout extends PayPaymentCreate
         $payload = $this->getData();
 
         $payload = json_encode($payload);
-        #TODO: Make dynamic for failovergateway
         $url = 'https://connect.payments.nl/v1/orders';
 
         $rawResponse = (array) $this->sendCurlRequest($url, $payload, $this->payConfig->getTokencode(), $this->payConfig->getApiToken());

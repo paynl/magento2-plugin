@@ -2,6 +2,12 @@
 
 namespace Paynl\Payment\Controller\Checkout;
 
+use Magento\Checkout\Model\Cart;
+use Magento\Customer\Api\CustomerRepositoryInterface;
+use Magento\Customer\Model\CustomerFactory;
+use Magento\Framework\App\Action\Context;
+use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\HTTP\PhpEnvironment\RemoteAddress;
 use Magento\Payment\Helper\Data as PaymentHelper;
 use Magento\Store\Model\StoreManagerInterface;
 use Paynl\Payment\Helper\PayHelper;
@@ -10,56 +16,135 @@ use Paynl\Payment\Model\PayPaymentCreateFastCheckout;
 class FastCheckoutStart extends \Magento\Framework\App\Action\Action
 {
     const FC_GENERAL_ERROR = 8000;
-    const FC_DB_ERROR = 8001;
     const FC_EMPTY_BASKET = 8005;
 
+    /**
+     * @var Cart
+     */
     private $cart;
-    private $payConfig;
-    private $resource;
-    private $remoteAddress;
+
+    /**
+     * @var paymentHelper
+     */
     private $paymentHelper;
 
     /**
-     * @var \Magento\Store\Model\StoreManagerInterface
-     */
-    public $storeManager;
-
-    /**
-     * @var \Paynl\Payment\Helper\PayHelper;
+     * @var PayHelper;
      */
     private $payHelper;
 
     /**
-     * @param \Magento\Framework\App\Action\Context $context
-     * @param \Magento\Framework\View\Result\PageFactory $pageFactory
-     * @param \Magento\Checkout\Model\Cart $cart
-     * @param \Paynl\Payment\Model\Config $payConfig
-     * @param \Magento\Framework\App\ResourceConnection $resource
-     * @param \Magento\Framework\HTTP\PhpEnvironment\RemoteAddress $remoteAddress
+     * @var StoreManagerInterface
+     */
+    private $storeManager;
+
+    /**
+     * @var CustomerFactory
+     */
+    private $customerFactory;
+
+    /**
+     * @var CustomerRepositoryInterface
+     */
+    private $customerRepository;
+
+    /**
+     * @param Context $context
+     * @param Cart $cart
+     * @param ResourceConnection $resource
+     * @param RemoteAddress $remoteAddress
      * @param PaymentHelper $paymentHelper
      * @param PayHelper $payHelper
      * @param StoreManagerInterface $storeManager
+     * @param CustomerFactory $customerFactory
+     * @param CustomerRepositoryInterface $customerRepository,
      */
     public function __construct(
-        \Magento\Framework\App\Action\Context $context,
-        \Magento\Framework\View\Result\PageFactory $pageFactory,
-        \Magento\Checkout\Model\Cart $cart,
-        \Paynl\Payment\Model\Config $payConfig,
-        \Magento\Framework\App\ResourceConnection $resource,
-        \Magento\Framework\HTTP\PhpEnvironment\RemoteAddress $remoteAddress,
+        Context $context,
+        Cart $cart,
+        ResourceConnection $resource,
+        RemoteAddress $remoteAddress,
         PaymentHelper $paymentHelper,
         PayHelper $payHelper,
-        StoreManagerInterface $storeManager
+        StoreManagerInterface $storeManager,
+        CustomerFactory $customerFactory,
+        CustomerRepositoryInterface $customerRepository
     ) {
         $this->cart = $cart;
-        $this->payConfig = $payConfig;
         $this->remoteAddress = $remoteAddress;
         $this->resource = $resource;
         $this->paymentHelper = $paymentHelper;
         $this->storeManager = $storeManager;
         $this->payHelper = $payHelper;
+        $this->customerFactory = $customerFactory;
+        $this->customerRepository = $customerRepository;
 
         return parent::__construct($context);
+    }
+
+    /**
+     * @param quote $qoute
+     * @return void
+     */
+    private function quoteSetDummyData($quote)
+    {
+        $store = $this->storeManager->getStore();
+        $websiteId = $store->getWebsiteId();
+
+        $email = 'fastcheckout@pay.nl';
+        $customer = $this->customerFactory->create()
+            ->setWebsiteId($websiteId)
+            ->loadByEmail($email);
+
+        if (!$customer->getEntityId()) {
+            $customer->setWebsiteId($websiteId)
+                ->setStore($store)
+                ->setFirstname('firstname')
+                ->setLastname('lastname')
+                ->setEmail($email)
+                ->setPassword($email);
+            $customer->save();
+        }
+
+        $customer = $this->customerRepository->getById($customer->getEntityId());
+
+        $quote->assignCustomer($customer);
+        $quote->setSendConfirmation(1);
+
+        $dummyData = array(
+            'customer_address_id' => '',
+            'prefix' => '',
+            'firstname' => 'firstname',
+            'middlename' => '',
+            'lastname' => 'lastname',
+            'suffix' => '',
+            'company' => '',
+            'street' => array(
+                '0' => 'streetname',
+                '1' => 'streetnumber',
+            ),
+            'city' => 'city',
+            'country_id' => 'NL',
+            'region' => '',
+            'postcode' => '1234AB',
+            'telephone' => 'phone',
+            'fax' => '',
+            'vat_id' => '',
+            'save_in_address_book' => 0,
+        );
+
+        $billingAddress = $quote->getBillingAddress()->addData($dummyData);
+        $shippingAddress = $quote->getShippingAddress()->addData($dummyData);
+
+        $shippingAddress = $quote->getShippingAddress();
+        $shippingAddress->setCollectShippingRates(true)->collectShippingRates()->setShippingMethod($store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping'));
+
+        $quote->setPaymentMethod('paynl_payment_ideal');
+        $quote->setInventoryProcessed(false);
+        $quote->save();
+
+        $quote->getPayment()->importData(['method' => 'paynl_payment_ideal']);
+        $quote->collectTotals()->save();
     }
 
     /**
@@ -78,10 +163,23 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
                     'description' => $product->getName(),
                     'price' => $product->getPrice() * 100,
                     'currecny' => $this->storeManager->getStore()->getCurrentCurrencyCode(),
-                    'type' => 'product',
+                    'type' => \Paynl\Transaction::PRODUCT_TYPE_ARTICLE,
                     'vatPercentage' => ($product->getPriceInclTax() - $product->getBasePrice()) / $product->getBasePrice() * 100,
                 ];
             }
+        }
+
+        if ($this->cart->getQuote()->getShippingAddress()->getShippingAmount() > 0) {
+            $shippingMethodArr = explode('_', $this->cart->getQuote()->getShippingAddress()->getShippingMethod());
+            $productArr[] = [
+                'id' => $shippingMethodArr[0],
+                'quantity' => 1,
+                'description' => $shippingMethodArr[1],
+                'price' => $this->cart->getQuote()->getShippingAddress()->getShippingAmount() * 100,
+                'currecny' => $this->storeManager->getStore()->getCurrentCurrencyCode(),
+                'type' => \Paynl\Transaction::PRODUCT_TYPE_SHIPPING,
+                'vatPercentage' => ($this->cart->getQuote()->getShippingAddress()->getBaseShippingInclTax() - $this->cart->getQuote()->getShippingAddress()->getBaseShippingAmount()) / $this->cart->getQuote()->getShippingAddress()->getBaseShippingAmount() * 100,
+            ];
         }
 
         return $productArr;
@@ -90,7 +188,12 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
     public function execute()
     {
         $methodInstance = $this->paymentHelper->getMethodInstance('paynl_payment_ideal');
+
+        $quote = $this->cart->getQuote();
+        $this->quoteSetDummyData($quote);
+
         $arrProducts = $this->getProducts();
+
         $fcAmount = $this->cart->getQuote()->getGrandTotal();
         try {
             if (empty($fcAmount)) {
@@ -101,19 +204,10 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
                 $methodInstance,
                 $fcAmount * 100,
                 $arrProducts,
-                $this->storeManager->getStore()->getBaseUrl()
+                $this->storeManager->getStore()->getBaseUrl(),
+                $this->cart->getQuote()->getId(),
+                $this->storeManager->getStore()->getCurrentCurrencyCode()
             ))->create();
-
-            try {
-                $connection = $this->resource->getConnection();
-                $tableName = $this->resource->getTableName('pay_fast_checkout');
-
-                $connection->insertOnDuplicate(
-                    $tableName, ['payOrderId' => $payTransaction->getTransactionId(), 'products' => json_encode($arrProducts), 'storeId' => $this->storeManager->getStore()->getId(), 'orderId' => null], ['payOrderId', 'products', 'storeId', 'orderId', 'created_at']
-                );
-            } catch (\Exception $e) {
-                throw new \Exception($e->getMessage(), FastCheckoutStart::FC_DB_ERROR);
-            }
 
             $this->getResponse()->setNoCacheHeaders();
             $this->getResponse()->setRedirect($payTransaction->getRedirectUrl());
@@ -122,8 +216,6 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
             $message = __('Something went wrong, please try again later');
             if ($e->getCode() == FastCheckoutStart::FC_EMPTY_BASKET) {
                 $message = __('Please put something in the basket');
-            } elseif ($e->getCode() == FastCheckoutStart::FC_DB_ERROR) {
-                $this->payHelper->logCritical('FC DB ERROR: ' . $e->getMessage(), []);
             } else {
                 $this->payHelper->logCritical('FC ERROR: ' . $e->getMessage(), []);
             }

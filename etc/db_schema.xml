@@ -9,19 +9,5 @@
         <constraint xsi:type="unique" referenceId="UNIQUE">
             <column name="payOrderId" />
         </constraint>
-    </table>
-    <table name="pay_fast_checkout">
-        <column xsi:type="int" name="id" unsigned="true" nullable="false" comment="Id" identity="true" />
-        <column xsi:type="varchar" name="payOrderId" nullable="false" length="255" comment="payOrderId" />
-        <column xsi:type="text" name="	products" nullable="false" length="255" comment="Products Json" />
-        <column xsi:type="varchar" name="storeId" nullable="false" length="255" comment="Store ID" />
-        <column xsi:type="varchar" name="orderId" nullable="true" length="255" comment="Order ID" />
-        <column xsi:type="timestamp" name="created_at" default="CURRENT_TIMESTAMP" on_update="true" comment="Added" />
-        <constraint xsi:type="primary" referenceId="PRIMARY">
-            <column name="id" />
-        </constraint>
-        <constraint xsi:type="unique" referenceId="UNIQUE">
-            <column name="payOrderId" />
-        </constraint>
-    </table>
+    </table> 
 </schema>
