@@ -6,8 +6,6 @@ use Magento\Checkout\Model\Cart;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Model\CustomerFactory;
 use Magento\Framework\App\Action\Context;
-use Magento\Framework\App\ResourceConnection;
-use Magento\Framework\HTTP\PhpEnvironment\RemoteAddress;
 use Magento\Payment\Helper\Data as PaymentHelper;
 use Magento\Store\Model\StoreManagerInterface;
 use Paynl\Payment\Helper\PayHelper;
@@ -51,8 +49,6 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
     /**
      * @param Context $context
      * @param Cart $cart
-     * @param ResourceConnection $resource
-     * @param RemoteAddress $remoteAddress
      * @param PaymentHelper $paymentHelper
      * @param PayHelper $payHelper
      * @param StoreManagerInterface $storeManager
@@ -62,8 +58,6 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
     public function __construct(
         Context $context,
         Cart $cart,
-        ResourceConnection $resource,
-        RemoteAddress $remoteAddress,
         PaymentHelper $paymentHelper,
         PayHelper $payHelper,
         StoreManagerInterface $storeManager,
@@ -71,8 +65,6 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
         CustomerRepositoryInterface $customerRepository
     ) {
         $this->cart = $cart;
-        $this->remoteAddress = $remoteAddress;
-        $this->resource = $resource;
         $this->paymentHelper = $paymentHelper;
         $this->storeManager = $storeManager;
         $this->payHelper = $payHelper;
@@ -179,7 +171,7 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
                 'price' => $this->cart->getQuote()->getShippingAddress()->getShippingAmount() * 100,
                 'currecny' => $this->storeManager->getStore()->getCurrentCurrencyCode(),
                 'type' => \Paynl\Transaction::PRODUCT_TYPE_SHIPPING,
-                'vatPercentage' => ($this->cart->getQuote()->getShippingAddress()->getBaseShippingInclTax() - $this->cart->getQuote()->getShippingAddress()->getBaseShippingAmount()) / $this->cart->getQuote()->getShippingAddress()->getBaseShippingAmount() * 100,  // phpcs:ignore
+                'vatPercentage' => ($this->cart->getQuote()->getShippingAddress()->getBaseShippingInclTax() - $this->cart->getQuote()->getShippingAddress()->getBaseShippingAmount()) / $this->cart->getQuote()->getShippingAddress()->getBaseShippingAmount() * 100, // phpcs:ignore
             ];
         }
 
@@ -191,15 +183,20 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
      */
     public function execute()
     {
-        $methodInstance = $this->paymentHelper->getMethodInstance('paynl_payment_ideal');
-
-        $quote = $this->cart->getQuote();
-        $this->quoteSetDummyData($quote);
-
-        $arrProducts = $this->getProducts();
-
-        $fcAmount = $this->cart->getQuote()->getGrandTotal();
         try {
+            $methodInstance = $this->paymentHelper->getMethodInstance('paynl_payment_ideal');
+
+            $store = $this->storeManager->getStore();
+            if (empty($store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping'))) {
+                throw new \Exception('No shipping method selected', FastCheckoutStart::FC_GENERAL_ERROR);
+            }
+
+            $quote = $this->cart->getQuote();
+            $this->quoteSetDummyData($quote);
+
+            $arrProducts = $this->getProducts();
+            $fcAmount = $this->cart->getQuote()->getGrandTotal();
+
             if (empty($fcAmount)) {
                 throw new \Exception('empty amount', FastCheckoutStart::FC_EMPTY_BASKET);
             }

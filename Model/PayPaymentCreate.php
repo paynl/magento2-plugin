@@ -90,8 +90,9 @@ class PayPaymentCreate
      * @param null|Order $order
      * @param PaymentMethod $methodInstance
      * @throws \Exception
+     * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
      */
-    public function __construct(null|Order $order, PaymentMethod $methodInstance)
+    public function __construct($order, PaymentMethod $methodInstance)
     {
         $this->methodInstance = $methodInstance;
         $this->payConfig = $methodInstance->paynlConfig;

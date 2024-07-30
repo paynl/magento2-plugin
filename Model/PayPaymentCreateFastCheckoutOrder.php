@@ -4,21 +4,14 @@ namespace Paynl\Payment\Model;
 
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Model\CustomerFactory;
-use Magento\Framework\App\Action\Context;
-use Magento\Framework\View\Result\PageFactory;
 use Magento\Quote\Model\QuoteFactory;
 use Magento\Quote\Model\QuoteManagement;
 use Magento\Sales\Model\OrderFactory;
 use Magento\Store\Model\StoreManagerInterface;
 use Paynl\Payment\Helper\PayHelper;
-use Paynl\Payment\Model\Config;
 
-class PayPaymentProcessFastCheckout
+class PayPaymentCreateFastCheckoutOrder
 {
-    /**
-     * @var Config
-     */
-    protected $pageFactory;
 
     /**
      * @var StoreManagerInterface
@@ -51,29 +44,19 @@ class PayPaymentProcessFastCheckout
     protected $orderFactory;
 
     /**
-     * @var PayHelper
-     */
-    protected $payHelper;
-
-    /**
      * @var OrderRepositoryInterface
      */
     protected $orderRepository;
 
     /**
-     * @param Context $context
-     * @param PageFactory $pageFactory
      * @param StoreManagerInterface $storeManager
      * @param QuoteFactory $quote
      * @param QuoteManagement $quoteManagement
      * @param CustomerFactory $customerFactory
      * @param CustomerRepositoryInterface $customerRepository
      * @param OrderFactory $orderFactory
-     * @param PayHelper $payHelper
      */
     public function __construct(
-        Context $context,
-        PageFactory $pageFactory,
         StoreManagerInterface $storeManager,
         QuoteFactory $quote,
         QuoteManagement $quoteManagement,
@@ -82,14 +65,12 @@ class PayPaymentProcessFastCheckout
         OrderFactory $orderFactory,
         PayHelper $payHelper
     ) {
-        $this->pageFactory = $pageFactory;
         $this->storeManager = $storeManager;
         $this->quote = $quote;
         $this->quoteManagement = $quoteManagement;
         $this->customerFactory = $customerFactory;
         $this->customerRepository = $customerRepository;
         $this->orderFactory = $orderFactory;
-        $this->payHelper = $payHelper;
     }
 
     /**
@@ -97,7 +78,7 @@ class PayPaymentProcessFastCheckout
      * @return Order
      * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
      */
-    public function processFastCheckout($params)
+    public function create($params)
     {
         $checkoutData = $params['checkoutData'];
 
@@ -199,6 +180,8 @@ class PayPaymentProcessFastCheckout
         $additionalData['transactionId'] = $payOrderId;
         $order->getPayment()->setAdditionalInformation($additionalData);
         $order->save();
+
+        $order->addStatusHistoryComment(__('PAY. - Fast checkout order created'))->save();
 
         return $order;
     }

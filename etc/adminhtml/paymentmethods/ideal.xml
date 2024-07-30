@@ -164,7 +164,7 @@ Business, BB2: Only show this payment method when the customer entered a company
                showInWebsite="1"
                showInStore="1">
             <label>Fast checkout Shipping method</label>
-            <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>   
+            <source_model>Paynl\Payment\Model\Config\Source\ActiveShippingMethods</source_model>
             <config_path>payment/paynl_payment_ideal/fast_checkout_shipping</config_path>
             <depends>
                 <field id="active">1</field>

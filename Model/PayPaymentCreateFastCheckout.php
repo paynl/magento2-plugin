@@ -76,7 +76,7 @@ class PayPaymentCreateFastCheckout extends PayPaymentCreate
         $this->_add($parameters, 'reference', $this->reference);
         $this->_add($parameters, 'exchangeUrl', $this->paymentData['exchangeURL']);
 
-        $parameters['integration']['test'] = /*$this->testMode === */true;
+        $parameters['integration']['test'] = $this->testMode;
 
         $optimize['flow'] = 'fastCheckout';
         $optimize['shippingAddress'] = true;
