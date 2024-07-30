@@ -8,11 +8,9 @@ use Magento\Quote\Model\QuoteFactory;
 use Magento\Quote\Model\QuoteManagement;
 use Magento\Sales\Model\OrderFactory;
 use Magento\Store\Model\StoreManagerInterface;
-use Paynl\Payment\Helper\PayHelper;
 
 class PayPaymentCreateFastCheckoutOrder
 {
-
     /**
      * @var StoreManagerInterface
      */
@@ -62,8 +60,7 @@ class PayPaymentCreateFastCheckoutOrder
         QuoteManagement $quoteManagement,
         CustomerFactory $customerFactory,
         CustomerRepositoryInterface $customerRepository,
-        OrderFactory $orderFactory,
-        PayHelper $payHelper
+        OrderFactory $orderFactory
     ) {
         $this->storeManager = $storeManager;
         $this->quote = $quote;

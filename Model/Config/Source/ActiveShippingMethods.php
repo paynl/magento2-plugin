@@ -8,7 +8,6 @@ use Magento\Shipping\Model\Config;
 
 class ActiveShippingMethods implements ArrayInterface
 {
-
     /**
      * @var Config
      */
@@ -58,7 +57,6 @@ class ActiveShippingMethods implements ArrayInterface
         $methods = [];
         $activeCarriers = $this->shipconfig->getActiveCarriers();
         foreach ($activeCarriers as $carrierCode => $carrierModel) {
-
             if ($carrierMethods = $carrierModel->getAllowedMethods()) {
                 foreach ($carrierMethods as $methodCode => $method) {
                     $code = $carrierCode . '_' . $methodCode;
