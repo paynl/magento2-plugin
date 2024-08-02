@@ -81,7 +81,7 @@ class PayPaymentCreateFastCheckout extends PayPaymentCreate
         $optimize['flow'] = 'fastCheckout';
         $optimize['shippingAddress'] = true;
         $optimize['billingAddress'] = true;
-        $optimize['contactDetails'] = '';
+        $optimize['contactDetails'] = true;
 
         $this->_add($parameters, 'optimize', $optimize);
 

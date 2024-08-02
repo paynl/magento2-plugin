@@ -79,9 +79,13 @@ class PayPaymentCreateFastCheckoutOrder
     {
         $checkoutData = $params['checkoutData'];
 
-        $customerData = $checkoutData['customer'];
-        $billingAddressData = $checkoutData['billingAddress'];
-        $shippingAddressData = $checkoutData['shippingAddress'];
+        $customerData = $checkoutData['customer'] ?? null;
+        $billingAddressData = $checkoutData['billingAddress'] ?? null;
+        $shippingAddressData = $checkoutData['shippingAddress'] ?? null;
+
+        if (empty($customerData) || empty($billingAddressData) || empty($shippingAddressData)) {
+            throw new \Exception("Missing data, cannot create order.");
+        }
 
         $payOrderId = $params['payOrderId'];
 
@@ -117,14 +121,14 @@ class PayPaymentCreateFastCheckoutOrder
         $billingAddress = $quote->getBillingAddress()->addData(array(
             'customer_address_id' => '',
             'prefix' => '',
-            'firstname' => $customerData['firstName'],
+            'firstname' => $billingAddressData['firstName'] ?? $customerData['firstName'],
             'middlename' => '',
-            'lastname' => $customerData['lastName'],
+            'lastname' => $billingAddressData['lastName'] ?? $customerData['lastName'],
             'suffix' => '',
             'company' => $customerData['company'] ?? '',
             'street' => array(
                 '0' => $billingAddressData['streetName'],
-                '1' => $billingAddressData['streetNumber'] . $billingAddressData['streetNumberAddition'],
+                '1' => $billingAddressData['streetNumber'] . ($billingAddressData['streetNumberAddition'] ?? ''),
             ),
             'city' => $billingAddressData['city'],
             'country_id' => $billingAddressData['countryCode'],
@@ -139,14 +143,14 @@ class PayPaymentCreateFastCheckoutOrder
         $shippingAddress = $quote->getShippingAddress()->addData(array(
             'customer_address_id' => '',
             'prefix' => '',
-            'firstname' => $customerData['firstName'],
+            'firstname' => $shippingAddressData['firstName'] ?? $customerData['firstName'],
             'middlename' => '',
-            'lastname' => $customerData['lastName'],
+            'lastname' => $shippingAddressData['lastName'] ?? $customerData['lastName'],
             'suffix' => '',
             'company' => $customerData['company'] ?? '',
             'street' => array(
                 '0' => $shippingAddressData['streetName'],
-                '1' => $shippingAddressData['streetNumber'] . $shippingAddressData['streetNumberAddition'],
+                '1' => $shippingAddressData['streetNumber'] . ($shippingAddressData['streetNumberAddition'] ?? ''),
             ),
             'city' => $shippingAddressData['city'],
             'country_id' => $shippingAddressData['countryCode'],
