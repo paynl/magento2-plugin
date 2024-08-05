@@ -28,6 +28,15 @@ class FastCheckoutProduct extends \Magento\Checkout\Controller\Cart\Add
 
     /**
      * @param Context $context
+     * @param ResolverInterface $resolverInterface
+     * @param PayHelper $payHelper
+     * @param ScopeConfigInterface $scopeConfig
+     * @param Session $checkoutSession
+     * @param StoreManagerInterface $storeManager
+     * @param Validator $formKeyValidator
+     * @param CustomerCart $cart
+     * @param ProductRepositoryInterface $productRepository
+     * @param RequestQuantityProcessor $quantityProcessor
      */
     public function __construct(
         Context $context,
@@ -96,8 +105,8 @@ class FastCheckoutProduct extends \Magento\Checkout\Controller\Cart\Add
             );
 
             $baseUrl = $this->_url->getBaseUrl();
-            return $this->goBack($baseUrl . 'paynl/checkout/fastcheckoutstart/');
 
+            return $this->goBack($baseUrl . 'paynl/checkout/fastcheckoutstart/');
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
             $this->payHelper->logCritical('FC Product ERROR: ' . $e->getMessage(), []);
             if ($this->_checkoutSession->getUseNotice(true)) {
