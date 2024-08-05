@@ -3,7 +3,6 @@
 namespace Paynl\Payment\Controller\Checkout;
 
 use Magento\Checkout\Model\Session;
-use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Event\ManagerInterface;
 use Magento\Quote\Model\QuoteFactory;
@@ -138,8 +137,8 @@ class Finish extends PayAction
         $resultRedirect = $this->resultRedirectFactory->create();
         $params = $this->getRequest()->getParams();
         $payOrderId = empty($params['orderId']) ? (empty($params['orderid']) ? null : $params['orderid']) : $params['orderId'];
-        $orderStatusId = empty($params['orderStatusId']) ? null : (int)$params['orderStatusId'];
-        $orderStatusId = (empty($orderStatusId) && !empty($params['statusCode'])) ? (int)$params['statusCode'] : $orderStatusId;
+        $orderStatusId = empty($params['orderStatusId']) ? null : (int) $params['orderStatusId'];
+        $orderStatusId = (empty($orderStatusId) && !empty($params['statusCode'])) ? (int) $params['statusCode'] : $orderStatusId;
         $magOrderId = empty($params['entityid']) ? null : $params['entityid'];
         $orderIds = empty($params['order_ids']) ? null : $params['order_ids'];
         $pickupMode = !empty($params['pickup']);
@@ -158,14 +157,18 @@ class Finish extends PayAction
                 } elseif ($bPending) {
                     $resultRedirect->setPath(Config::PENDING_PAY, ['_query' => ['utm_nooverride' => '1']]);
                 } else {
-                    $resultRedirect->setPath(Config::CANCEL_PAY, ['_query' => ['utm_nooverride' => '1']]);
+                    $resultRedirect->setPath('checkout/cart', ['_query' => ['utm_nooverride' => '1']]);
                 }
 
+                $session = $this->checkoutSession;
+                $quote = $session->getQuote();
                 if ($bSuccess || $bPending) {
-                    $session = $this->checkoutSession;
-                    $quote = $session->getQuote();
                     $quote->setIsActive(false);
                     $this->quoteRepository->save($quote);
+                } else {
+                    $quote->setIsActive(true);
+                    $this->quoteRepository->save($quote);
+                    $session->replaceQuote($quote);
                 }
 
                 return $resultRedirect;

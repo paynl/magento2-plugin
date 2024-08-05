@@ -7,6 +7,7 @@ use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Model\CustomerFactory;
 use Magento\Framework\App\Action\Context;
 use Magento\Payment\Helper\Data as PaymentHelper;
+use Magento\Quote\Api\ShippingMethodManagementInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Paynl\Payment\Helper\PayHelper;
 use Paynl\Payment\Model\PayPaymentCreateFastCheckout;
@@ -47,6 +48,11 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
     private $customerRepository;
 
     /**
+     * @var ShippingMethodManagementInterface
+     */
+    private $shippingMethodManagementInterface;
+
+    /**
      * @param Context $context
      * @param Cart $cart
      * @param PaymentHelper $paymentHelper
@@ -54,6 +60,7 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
      * @param StoreManagerInterface $storeManager
      * @param CustomerFactory $customerFactory
      * @param CustomerRepositoryInterface $customerRepository
+     * @param ShippingMethodManagementInterface $shippingMethodManagementInterface
      */
     public function __construct(
         Context $context,
@@ -62,7 +69,8 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
         PayHelper $payHelper,
         StoreManagerInterface $storeManager,
         CustomerFactory $customerFactory,
-        CustomerRepositoryInterface $customerRepository
+        CustomerRepositoryInterface $customerRepository,
+        ShippingMethodManagementInterface $shippingMethodManagementInterface
     ) {
         $this->cart = $cart;
         $this->paymentHelper = $paymentHelper;
@@ -70,6 +78,7 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
         $this->payHelper = $payHelper;
         $this->customerFactory = $customerFactory;
         $this->customerRepository = $customerRepository;
+        $this->shippingMethodManagementInterface = $shippingMethodManagementInterface;
 
         return parent::__construct($context);
     }
@@ -83,26 +92,6 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
     {
         $store = $this->storeManager->getStore();
         $websiteId = $store->getWebsiteId();
-
-        $email = 'fastcheckout@pay.nl';
-        $customer = $this->customerFactory->create()
-            ->setWebsiteId($websiteId)
-            ->loadByEmail($email);
-
-        if (!$customer->getEntityId()) {
-            $customer->setWebsiteId($websiteId)
-                ->setStore($store)
-                ->setFirstname('firstname')
-                ->setLastname('lastname')
-                ->setEmail($email)
-                ->setPassword($email);
-            $customer->save();
-        }
-
-        $customer = $this->customerRepository->getById($customer->getEntityId());
-
-        $quote->assignCustomer($customer);
-        $quote->setSendConfirmation(1);
 
         $dummyData = array(
             'customer_address_id' => '',
@@ -123,20 +112,35 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
             'telephone' => 'phone',
             'fax' => '',
             'vat_id' => '',
-            'save_in_address_book' => 0,
+            'save_in_address_book' => 1,
         );
 
         $billingAddress = $quote->getBillingAddress()->addData($dummyData);
         $shippingAddress = $quote->getShippingAddress()->addData($dummyData);
 
-        $shippingAddress = $quote->getShippingAddress();
-        $shippingAddress->setCollectShippingRates(true)->collectShippingRates()->setShippingMethod($store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping'));
-
-        $quote->setPaymentMethod('paynl_payment_ideal');
-        $quote->setInventoryProcessed(false);
         $quote->save();
 
-        $quote->getPayment()->importData(['method' => 'paynl_payment_ideal']);
+        $shippingAddress = $quote->getShippingAddress();
+        $shippingAddress->setCollectShippingRates(true)->collectShippingRates();
+
+        $shippingData = $this->shippingMethodManagementInterface->getList($quote->getId());
+        $shippingMethodsAvaileble = [];
+        foreach ($shippingData as $shipping) {
+            $code = $shipping->getCarrierCode() . '_' . $shipping->getMethodCode();
+            $shippingMethodsAvaileble[$code] = $code;
+        }
+
+        if (!empty($shippingMethodsAvaileble[$store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping')])) {
+            $shippingMethod = $store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping');
+        } elseif (!empty($shippingMethodsAvaileble[$store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping_backup')])) {
+            $shippingMethod = $store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping_backup');
+        }
+
+        if (empty($shippingMethod)) {
+            throw new \Exception("No shipping method availeble");
+        }
+
+        $shippingAddress->setShippingMethod($shippingMethod);
         $quote->collectTotals()->save();
     }
 
@@ -213,14 +217,13 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
             $this->getResponse()->setNoCacheHeaders();
             $this->getResponse()->setRedirect($payTransaction->getRedirectUrl());
         } catch (\Exception $e) {
-            $message = __('Something went wrong, please try again later');
+            $message = __('Unfortunately fast checkout is currently not possible.');
             if ($e->getCode() == FastCheckoutStart::FC_EMPTY_BASKET) {
                 $message = __('Please put something in the basket');
             } else {
                 $this->payHelper->logCritical('FC ERROR: ' . $e->getMessage(), []);
             }
-
-            $this->messageManager->addExceptionMessage($e, $message);
+            $this->messageManager->addNoticeMessage($message);
             $this->_redirect('checkout/cart');
         }
     }

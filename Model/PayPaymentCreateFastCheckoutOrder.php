@@ -4,6 +4,7 @@ namespace Paynl\Payment\Model;
 
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Model\CustomerFactory;
+use Magento\Quote\Api\ShippingMethodManagementInterface;
 use Magento\Quote\Model\QuoteFactory;
 use Magento\Quote\Model\QuoteManagement;
 use Magento\Sales\Model\OrderFactory;
@@ -47,12 +48,18 @@ class PayPaymentCreateFastCheckoutOrder
     protected $orderRepository;
 
     /**
+     * @var ShippingMethodManagementInterface
+     */
+    private $shippingMethodManagementInterface;
+
+    /**
      * @param StoreManagerInterface $storeManager
      * @param QuoteFactory $quote
      * @param QuoteManagement $quoteManagement
      * @param CustomerFactory $customerFactory
      * @param CustomerRepositoryInterface $customerRepository
      * @param OrderFactory $orderFactory
+     * @param ShippingMethodManagementInterface $shippingMethodManagementInterface
      */
     public function __construct(
         StoreManagerInterface $storeManager,
@@ -60,7 +67,8 @@ class PayPaymentCreateFastCheckoutOrder
         QuoteManagement $quoteManagement,
         CustomerFactory $customerFactory,
         CustomerRepositoryInterface $customerRepository,
-        OrderFactory $orderFactory
+        OrderFactory $orderFactory,
+        ShippingMethodManagementInterface $shippingMethodManagementInterface
     ) {
         $this->storeManager = $storeManager;
         $this->quote = $quote;
@@ -68,6 +76,7 @@ class PayPaymentCreateFastCheckoutOrder
         $this->customerFactory = $customerFactory;
         $this->customerRepository = $customerRepository;
         $this->orderFactory = $orderFactory;
+        $this->shippingMethodManagementInterface = $shippingMethodManagementInterface;
     }
 
     /**
@@ -163,7 +172,26 @@ class PayPaymentCreateFastCheckoutOrder
         ));
 
         $shippingAddress = $quote->getShippingAddress();
-        $shippingAddress->setCollectShippingRates(true)->collectShippingRates()->setShippingMethod($store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping'));
+        $shippingAddress->setCollectShippingRates(true)->collectShippingRates();
+
+        $shippingData = $this->shippingMethodManagementInterface->getList($quote->getId());
+        $shippingMethodsAvailable = [];
+        foreach ($shippingData as $shipping) {
+            $code = $shipping->getCarrierCode() . '_' . $shipping->getMethodCode();
+            $shippingMethodsAvailable[$code] = $code;
+        }
+
+        if (!empty($shippingMethodsAvailable[$store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping')])) {
+            $shippingMethod = $store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping');
+        } elseif (!empty($shippingMethodsAvailable[$store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping_backup')])) {
+            $shippingMethod = $store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping_backup');
+        }
+
+        if (empty($shippingMethod)) {
+            throw new \Exception("No shipping method availeble");
+        }
+
+        $shippingAddress->setShippingMethod($shippingMethod);
 
         $quote->setPaymentMethod('paynl_payment_ideal');
         $quote->setInventoryProcessed(false);

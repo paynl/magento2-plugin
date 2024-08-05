@@ -3,7 +3,15 @@
     width: 100%;
 }
 
+#paynl_fast_checkout_product {
+    display: block;
+    margin-bottom: 0;
+    margin-right: 1%;
+    width: 49%;
+}
+
 #paynl_fast_checkout_cart button,
+#paynl_fast_checkout_product button,
 #top-cart-fast-checkout {
     width: 100%;
     line-height: 2.2rem;
