@@ -1,14 +1,16 @@
 
 <?php
 /** @var \Paynl\Payment\Block\Checkout\FastCheckout $block */
+    $viewModel = $block->getViewModel();
 ?>
-
-<div class="paynl-fast_checkout" data-mage-init='{"Paynl_Payment/js/reloadCart": {}}'>
-    <form action="/paynl/checkout/fastcheckoutstart" id="paynl_fast_checkout_cart" method="post">
-        <button type="submit"
-                title="Fast Checkout"
-                class="action tocart primary paynl-fast_checkout-btn">
-            <span>Fast Checkout</span>
-        </button>
-    </form>
-</div>
+<?php if($viewModel->getVisibility()): ?>
+    <div class="paynl-fast_checkout" data-mage-init='{"Paynl_Payment/js/reloadCart": {}}'>
+        <form action="/paynl/checkout/fastcheckoutstart" id="paynl_fast_checkout_cart" method="post">
+            <button type="submit"
+                    title="Fast Checkout"
+                    class="action tocart primary paynl-fast_checkout-btn">
+                <span>Fast Checkout</span>
+            </button>
+        </form>
+    </div>
+<?php endif ?>
