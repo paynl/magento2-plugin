@@ -148,53 +148,62 @@ Business, BB2: Only show this payment method when the customer entered a company
             </depends>
             <config_path>payment/paynl_payment_ideal/showforgroup</config_path>
             <comment><![CDATA[Show payment method only to specific customer groups.]]></comment>
-        </field>      
+        </field>
         <group id="fastcheckout" translate="label" sortOrder="180" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Fast checkout</label>
             <field id="fast_checkout_cart_enabled" translate="label" type="select" sortOrder="170" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Enable on cart page</label>
+                <label>Cart page</label>
                 <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
                 <config_path>payment/paynl_payment_ideal/fast_checkout_cart_enabled</config_path>
                 <depends>
                     <field id="active">1</field>
                 </depends>
-                <tooltip>Allows users to checkout directly from the cart without the need to fill in their address.</tooltip>
+                <tooltip>Show the fastcheckout button on the cart page.
+
+This button allows users to checkout directly from the cart without the need to fill in their address.</tooltip>
             </field>
             <field id="fast_checkout_product_enabled" translate="label" type="select" sortOrder="171" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Enable on product page</label>
+                <label>Product page</label>
                 <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
                 <config_path>payment/paynl_payment_ideal/fast_checkout_product_enabled</config_path>
                 <depends>
                     <field id="active">1</field>
                 </depends>
-                <tooltip>Allows users to checkout directly from the product page without the need to fill in their address.</tooltip>
+                <tooltip>Show the fastcheckout button on every product page.
+
+This button allows users to checkout directly from the cart without the need to fill in their address.</tooltip>
             </field>
             <field id="fast_checkout_note" translate="label" type="text" sortOrder="172" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Note</label>
                 <frontend_model>Paynl\Payment\Block\Adminhtml\Render\CacheButton</frontend_model>
-            </field>  
+            </field>
             <field id="fast_checkout_shipping" translate="label" type="select" sortOrder="180" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label> Default shipping method</label>
+                <label>Default shipping method</label>
                 <source_model>Paynl\Payment\Model\Config\Source\ActiveShippingMethods</source_model>
                 <config_path>payment/paynl_payment_ideal/fast_checkout_shipping</config_path>
                 <depends>
-                    <field id="active">1</field>     
+                    <field id="active">1</field>
                 </depends>
+                <comment>Select the shipping method that should be applied first.</comment>
             </field>
             <field id="fast_checkout_shipping_backup" translate="label" type="select" sortOrder="181" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Backup shipping method</label>
+                <label>Fallback shipping method</label>
                 <source_model>Paynl\Payment\Model\Config\Source\ActiveShippingMethods</source_model>
                 <config_path>payment/paynl_payment_ideal/fast_checkout_shipping_backup</config_path>
                 <depends>
-                    <field id="active">1</field>     
+                    <field id="active">1</field>
                 </depends>
-                <tooltip>In case the selected default method is not applicable to the order the backup shiping method will be used.</tooltip>
+                <comment>Select the fallback shipping method, which will be applied when the default shipping method could not be applied.</comment>
+                <tooltip>In case the priority shipping method could not by applied, this shiping method will be used.</tooltip>
             </field>
             <field id="fast_checkout_guest_only" translate="label" type="select" sortOrder="182" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Guest checkout only</label>
                 <frontend_model>Paynl\Payment\Block\Adminhtml\Render\Checkbox</frontend_model>
                 <config_path>payment/paynl_payment_ideal/fast_checkout_guest_only</config_path>
-                <tooltip>Only shows the fast checkout button on cart page for guest users.</tooltip>
+                <tooltip>When enabled, the fastCheckout button will only be shown on the cart page for guest users.
+
+This setting does not effect the product page. If fastCheckout is enabled for the product page, the fastCheckout button will always be shown. </tooltip>
+                <comment>Show the fastCheckout button on cart, only for guest customers.</comment>
             </field>
         </group>
         <group id="advanced" translate="label" sortOrder="200" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -209,4 +218,3 @@ Business, BB2: Only show this payment method when the customer entered a company
         </group>
     </group>
 </include>
-                

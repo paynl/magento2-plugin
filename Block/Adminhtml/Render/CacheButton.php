@@ -39,7 +39,7 @@ class CacheButton extends Field
         $currentUrl = $this->urlInterface->getCurrentUrl();
         $payUrl = str_replace("system_config/edit/section/paynl_paymentmethods", "cache", $currentUrl);
 
-        $text = __('After enabling fast checkout on product page please flush the cache') . ' <a href="' . $payUrl . '">' . __('here') . '</a>.';
+        $text = __('When updating this setting, please flush Magento\'s cache afterwards ') . ' <a href="' . $payUrl . '">' . __('here') . '</a>.';
         $html = '<tr id="row_' . $element->getHtmlId() . '" class="PaynlCacheButton">';
         $html .= '<td></td><td class="value">' . $text . '</td>';
         $html .= '</tr>';
