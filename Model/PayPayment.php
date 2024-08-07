@@ -242,7 +242,7 @@ class PayPayment
     public function cardRefundOrder($orderEntityId)
     {
         $order = $this->orderRepository->get($orderEntityId);
-        if (!$this->config->chargebackFromPayEnabled() || $order->getTotalDue() != 0 || $order->getBaseTotalRefunded() == $order->getBaseGrandTotal()) {
+        if ($order->getTotalDue() != 0 || $order->getBaseTotalRefunded() == $order->getBaseGrandTotal()) {
             throw new \Exception("Ignoring chargeback");
         }
         try {
