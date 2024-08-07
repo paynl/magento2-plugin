@@ -203,7 +203,7 @@ This button allows users to checkout directly from the cart without the need to 
                 <tooltip>When enabled, the fastCheckout button will only be shown on the cart page for guest users.
 
 This setting does not effect the product page. If fastCheckout is enabled for the product page, the fastCheckout button will always be shown. </tooltip>
-                <comment>Show the fastCheckout button on cart, only for guest customers.</comment>
+                <comment>Show the fastCheckout button on the cart page, only for guest customers.</comment>
             </field>
         </group>
         <group id="advanced" translate="label" sortOrder="200" showInDefault="1" showInWebsite="1" showInStore="1">
