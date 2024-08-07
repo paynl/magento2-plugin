@@ -104,6 +104,8 @@ class PayPaymentCreateFastCheckoutOrder
         $quote = $this->quote->create()->loadByIdWithoutStore($quoteId);
         $storeId = $quote->getStoreId();
 
+        $shippingMethodQuote = $quote->getShippingAddress()->getShippingMethod();
+
         $store = $this->storeManager->getStore($storeId);
         $websiteId = $store->getWebsiteId();
 
@@ -175,15 +177,17 @@ class PayPaymentCreateFastCheckoutOrder
         $shippingAddress->setCollectShippingRates(true)->collectShippingRates();
 
         $shippingData = $this->shippingMethodManagementInterface->getList($quote->getId());
-        $shippingMethodsAvailable = [];
+        $shippingMethodsAvaileble = [];
         foreach ($shippingData as $shipping) {
             $code = $shipping->getCarrierCode() . '_' . $shipping->getMethodCode();
-            $shippingMethodsAvailable[$code] = $code;
+            $shippingMethodsAvaileble[$code] = $code;
         }
 
-        if (!empty($shippingMethodsAvailable[$store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping')])) {
+        if (!empty($shippingMethodsAvaileble[$shippingMethodQuote])) {
+            $shippingMethod = $shippingMethodQuote;
+        } elseif (!empty($shippingMethodsAvaileble[$store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping')])) {
             $shippingMethod = $store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping');
-        } elseif (!empty($shippingMethodsAvailable[$store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping_backup')])) {
+        } elseif (!empty($shippingMethodsAvaileble[$store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping_backup')])) {
             $shippingMethod = $store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping_backup');
         }
 

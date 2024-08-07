@@ -3,8 +3,6 @@
 namespace Paynl\Payment\Controller\Checkout;
 
 use Magento\Checkout\Model\Cart;
-use Magento\Customer\Api\CustomerRepositoryInterface;
-use Magento\Customer\Model\CustomerFactory;
 use Magento\Framework\App\Action\Context;
 use Magento\Payment\Helper\Data as PaymentHelper;
 use Magento\Quote\Api\ShippingMethodManagementInterface;
@@ -16,6 +14,8 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
 {
     public const FC_GENERAL_ERROR = 8000;
     public const FC_EMPTY_BASKET = 8005;
+    public const FC_ESITMATE_ERROR = 8006;
+    public const FC_SHIPPING_ERROR = 8006;
 
     /**
      * @var Cart
@@ -38,16 +38,6 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
     private $storeManager;
 
     /**
-     * @var CustomerFactory
-     */
-    private $customerFactory;
-
-    /**
-     * @var CustomerRepositoryInterface
-     */
-    private $customerRepository;
-
-    /**
      * @var ShippingMethodManagementInterface
      */
     private $shippingMethodManagementInterface;
@@ -58,8 +48,6 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
      * @param PaymentHelper $paymentHelper
      * @param PayHelper $payHelper
      * @param StoreManagerInterface $storeManager
-     * @param CustomerFactory $customerFactory
-     * @param CustomerRepositoryInterface $customerRepository
      * @param ShippingMethodManagementInterface $shippingMethodManagementInterface
      */
     public function __construct(
@@ -68,16 +56,12 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
         PaymentHelper $paymentHelper,
         PayHelper $payHelper,
         StoreManagerInterface $storeManager,
-        CustomerFactory $customerFactory,
-        CustomerRepositoryInterface $customerRepository,
         ShippingMethodManagementInterface $shippingMethodManagementInterface
     ) {
         $this->cart = $cart;
         $this->paymentHelper = $paymentHelper;
         $this->storeManager = $storeManager;
         $this->payHelper = $payHelper;
-        $this->customerFactory = $customerFactory;
-        $this->customerRepository = $customerRepository;
         $this->shippingMethodManagementInterface = $shippingMethodManagementInterface;
 
         return parent::__construct($context);
@@ -88,7 +72,7 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
      * @return void
      * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
      */
-    private function quoteSetDummyData($quote)
+    private function quoteSetDummyData($quote, $params)
     {
         $store = $this->storeManager->getStore();
         $websiteId = $store->getWebsiteId();
@@ -106,9 +90,9 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
                 '1' => 'streetnumber',
             ),
             'city' => 'city',
-            'country_id' => 'NL',
+            'country_id' => $params['selected_estimate_country'] ?? 'NL',
             'region' => '',
-            'postcode' => '1234AB',
+            'postcode' => $params['selected_estimate_zip'] ?? '1234AB',
             'telephone' => 'phone',
             'fax' => '',
             'vat_id' => '',
@@ -130,7 +114,15 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
             $shippingMethodsAvaileble[$code] = $code;
         }
 
-        if (!empty($shippingMethodsAvaileble[$store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping')])) {
+        if ($store->getConfig('payment/paynl_payment_ideal/fast_checkout_use_estimate_selection') == 2) {
+            if (empty($shippingMethodsAvaileble[$params['selected_estimate_shipping']])) {
+                throw new \Exception('Shipping method not availeble', FastCheckoutStart::FC_SHIPPING_ERROR);
+            }
+        }
+
+        if (isset($params['selected_estimate_shipping']) && !empty($params['selected_estimate_shipping']) && !empty($shippingMethodsAvaileble[$params['selected_estimate_shipping']]) && $store->getConfig('payment/paynl_payment_ideal/fast_checkout_use_estimate_selection') > 0) {
+            $shippingMethod = $params['selected_estimate_shipping'];
+        } elseif (!empty($shippingMethodsAvaileble[$store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping')])) {
             $shippingMethod = $store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping');
         } elseif (!empty($shippingMethodsAvaileble[$store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping_backup')])) {
             $shippingMethod = $store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping_backup');
@@ -189,14 +181,21 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
     {
         try {
             $methodInstance = $this->paymentHelper->getMethodInstance('paynl_payment_ideal');
-
             $store = $this->storeManager->getStore();
-            if (empty($store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping'))) {
+            $params = $this->getRequest()->getParams();
+
+            if ($store->getConfig('payment/paynl_payment_ideal/fast_checkout_use_estimate_selection') == 2) {
+                if (isset($params['selected_estimate_shipping']) && empty($params['selected_estimate_shipping'])) {
+                    throw new \Exception('No estimate shipping method selected', FastCheckoutStart::FC_ESITMATE_ERROR);
+                }
+            }
+
+            if (empty($store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping')) && empty($params['selected_estimate_shipping'])) {
                 throw new \Exception('No shipping method selected', FastCheckoutStart::FC_GENERAL_ERROR);
             }
 
             $quote = $this->cart->getQuote();
-            $this->quoteSetDummyData($quote);
+            $this->quoteSetDummyData($quote, $params);
 
             $arrProducts = $this->getProducts();
             $fcAmount = $this->cart->getQuote()->getGrandTotal();
@@ -220,6 +219,10 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
             $message = __('Unfortunately fast checkout is currently not possible.');
             if ($e->getCode() == FastCheckoutStart::FC_EMPTY_BASKET) {
                 $message = __('Please put something in the basket');
+            } elseif ($e->getCode() == FastCheckoutStart::FC_ESITMATE_ERROR) {
+                $message = __('Please select a shipping method from the estimate.');
+            } elseif ($e->getCode() == FastCheckoutStart::FC_SHIPPING_ERROR) {
+                $message = __('Selected shipping method is not available.');
             } else {
                 $this->payHelper->logCritical('FC ERROR: ' . $e->getMessage(), []);
             }

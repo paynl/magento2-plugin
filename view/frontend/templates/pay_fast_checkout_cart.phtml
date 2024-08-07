@@ -3,12 +3,16 @@
 /** @var \Paynl\Payment\Block\Checkout\FastCheckout $block */
     $viewModel = $block->getViewModel();
 ?>
-<?php if($viewModel->getVisibility()): ?>
+<?php if($viewModel->getVisibility()): ?>    
     <div class="paynl-fast_checkout" data-mage-init='{"Paynl_Payment/js/reloadCart": {}}'>
-        <form action="/paynl/checkout/fastcheckoutstart" id="paynl_fast_checkout_cart" method="post">
+        <form action="/paynl/checkout/fastcheckoutstart" id="paynl_fast_checkout_cart" method="post">   
+            <input type="hidden" value="" name="selected_estimate_shipping" id="selected_estimate_shipping" />
+            <input type="hidden" value="" name="selected_estimate_country" id="selected_estimate_country" />
+            <input type="hidden" value="" name="selected_estimate_zip" id="selected_estimate_zip" />
             <button type="submit"
                     title="Fast Checkout"
-                    class="action tocart primary paynl-fast_checkout-btn">
+                    class="action tocart primary paynl-fast_checkout-btn"
+                    data-mage-init='{"Paynl_Payment/js/fast-checkout-cart-view": {}}'>
                 <span>Fast Checkout</span>
             </button>
         </form>
