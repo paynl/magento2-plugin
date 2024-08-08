@@ -1,0 +1,92 @@
+#row_paynl_feature_request_paynl_general_settings_feature_email .label {
+    display: none;
+}
+
+#row_paynl_feature_request_paynl_general_settings_feature_email .value {
+    width: 100%;
+}
+
+#row_paynl_feature_request_paynl_general_settings_feature_email .value b {
+    width: 60px;
+    display: inline-block;
+}
+
+#row_paynl_feature_request_paynl_general_settings_feature_email .value .pay_feature_error {
+    color: red;
+    margin-left: 15px;
+    font-style: italic;
+    display: none;
+}
+
+#FR_Notices {
+    display: none;
+}
+
+#cardrefund_form {
+    line-height: 45px;
+}
+
+#cardrefund_submit {
+
+    background-color: rgb(235, 82, 2);
+    color: white;
+    float: right;
+    border-width: 0px;
+    font-size: 16px;
+    padding: 13px;
+    margin-top: 0px;
+
+}
+
+
+#start_card_refund span {
+    border: 1px solid #0000002b;
+    padding: 10px;
+    border-radius: 4px;
+    background: #0000001a;
+}
+
+#paynl_cardrefund {
+    font-size: 1.6rem;
+    letter-spacing: .025em;
+    text-shadow: none;
+    color: #41362f;
+}
+
+#paynl_cardrefund a,
+#paynl_cardrefund a:hover {
+    color: black;
+    text-decoration: none;
+}
+
+#cardrefund_back_button:before {
+    -webkit-font-smoothing: antialiased;
+    font-family: 'Admin Icons';
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+    speak: none;
+    content: '\e626';
+    margin-right: .5em;
+    position: relative;
+    top: 1px;
+}
+
+
+#cardrefund_form label {
+    min-width: 100px;
+}
+
+#cardrefund_form .col-md {
+    display: inline-block;
+    margin-right: 5px;
+}
+
+#refund_header {
+    background: #f8f8f8;
+    border-bottom: 1px solid #e3e3e3;
+    border-top: 1px solid #e3e3e3;
+    padding: 1.5rem;
+    margin-bottom: 28px;
+    height: 78px;
+}
