@@ -197,7 +197,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             } catch (\Exception $e) {
                 $response = $e->getMessage();
             }
-            return $this->result->setContents($response === true ? 'TRUE|Refund by card success' : 'FALSE|' . $response);
+            return $this->result->setContents($response === true ? 'TRUE|Refund by card success' : 'TRUE|' . $response);
         }
 
         if ($order->getTotalDue() <= 0) {

@@ -243,7 +243,7 @@ class PayPayment
     {
         $order = $this->orderRepository->get($orderEntityId);
         if ($order->getTotalDue() != 0 || $order->getBaseTotalRefunded() == $order->getBaseGrandTotal()) {
-            throw new \Exception("Ignoring chargeback");
+            throw new \Exception("Ignoring cardRefundOrder (" . $order->getTotalDue() . '|' . $order->getBaseTotalRefunded() . '|' . $order->getBaseGrandTotal());
         }
         try {
             $creditmemo = $this->cmFac->createByOrder($order);
