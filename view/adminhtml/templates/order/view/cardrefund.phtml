@@ -16,32 +16,48 @@ $orderAmount = round($order->getGrandTotal(), 2);
 $orderCurrency = $order->getOrderCurrencyCode();
 
 ?>
+<link rel="stylesheet" type="text/css" href="<?= $block->getViewFileUrl('Paynl_Payment::css/cardrefundform.css') ?>">
 
 <div id="paynl_cardrefund">
-    <a id="cardrefund_back_button" href="<?php echo $block->getReturnUrl() ?>">Back</a>
-    <form id="cardrefund_form" action="<?php echo $block->getSubmitUrl() ?>" method="get">
-        <input type="hidden" name="order_id" value="<?php echo $block->getOrderId() ?>" />
-        <input type="hidden" name="return_url" value="<?php echo $block->getReturnUrl() ?>" />
-        <input type="hidden" name="currency" id="currency" value="<?php echo $orderCurrency ?>" />
+    <form id="cardrefund_form" action="<?php
+    echo $block->getSubmitUrl() ?>" method="get">
+        <div id="refund_header">
+            <a id="cardrefund_back_button" href="<?php
+            echo $block->getReturnUrl() ?>">Back</a>
+            <button id="cardrefund_submit"><?php
+                echo __("Start Refund By Cart") ?></button>
+        </div>
+        <input type="hidden" name="order_id" value="<?php
+        echo $block->getOrderId() ?>"/>
+        <input type="hidden" name="return_url" value="<?php
+        echo $block->getReturnUrl() ?>"/>
+        <input type="hidden" name="currency" id="currency" value="<?php
+        echo $orderCurrency ?>"/>
         <div class="form-group">
-            <label class="col-md" for="refund_amount"><?php echo __("Amount") ?></label>
+            <label class="col-md" for="refund_amount"><?php
+                echo __("Amount") ?></label>
             <div class="col-md">
-                <input id="refund_amount" name="refund_amount" type="number" min="0" max="<?php echo $orderAmount; ?>" step="0.01" value="<?php echo $orderAmount; ?>">
+                <input id="refund_amount" name="refund_amount" type="number" min="0" max="<?php
+                echo $orderAmount; ?>" step="0.01" value="<?php
+                echo $orderAmount; ?>">
             </div>
-            <div class="col-md"><?php echo $orderCurrency; ?></div>
+            <div class="col-md"><?php
+                echo $orderCurrency; ?></div>
         </div>
         <div class="form-group">
-            <label class="col-md" for="paynl_terminal"><?php echo __("Terminal") ?></label>
+            <label class="col-md" for="paynl_terminal"><?php
+                echo __("Terminal") ?></label>
             <div class="col-md">
                 <select id="paynl_terminal" name="paynl_terminal">
-                    <?php foreach ($terminals as $key => $terminal): ?>
-                        <option value="<?=$key?>" <?=($key == $defaultTerminal) ? 'selected' : ''?>><?=$terminal?></option>
-                    <?php endforeach;?>
+                    <?php
+                    foreach ($terminals as $key => $terminal): ?>
+                        <option value="<?= $key ?>" <?= ($key == $defaultTerminal) ? 'selected' : '' ?>><?= $terminal ?></option>
+                    <?php
+                    endforeach; ?>
                 </select>
             </div>
         </div>
 
     </form>
 
-    <button id="cardrefund_submit"><?php echo __("Submit") ?></button>
 </div>
