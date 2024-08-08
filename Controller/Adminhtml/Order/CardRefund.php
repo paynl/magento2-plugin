@@ -104,12 +104,8 @@ class CardRefund extends \Magento\Backend\App\Action implements CsrfAwareActionI
         }
 
         $redirect = $this->resultFactory->create(\Magento\Framework\Controller\ResultFactory::TYPE_REDIRECT);
+        $redirect->setUrl(!empty($redirectUrl) ? $redirectUrl : $returnUrl);
 
-        if (!empty($redirectUrl)) {
-            $redirect->setUrl($redirectUrl);
-        } else {
-            $redirect->setUrl($returnUrl);
-        }
         return $redirect;
     }
 }

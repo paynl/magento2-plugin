@@ -27,7 +27,6 @@
 }
 
 #cardrefund_submit {
-
     background-color: rgb(235, 82, 2);
     color: white;
     float: right;
@@ -35,9 +34,7 @@
     font-size: 16px;
     padding: 13px;
     margin-top: 0px;
-
 }
-
 
 #start_card_refund span {
     border: 1px solid #0000002b;
@@ -71,7 +68,6 @@
     position: relative;
     top: 1px;
 }
-
 
 #cardrefund_form label {
     min-width: 100px;
