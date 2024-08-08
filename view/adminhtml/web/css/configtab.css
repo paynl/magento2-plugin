@@ -105,26 +105,26 @@
     position: relative;
 }
 
-.obscuredField input{
+.obscuredField input {
     text-security: disc;
     -webkit-text-security: disc;
     -moz-text-security: disc;
 }
 
-.obscuredField input.display{
+.obscuredField input.display {
     text-security: none;
     -webkit-text-security: none;
     -moz-text-security: none;
 }
 
-.obscuredField .obscuredDisplay{
+.obscuredField .obscuredDisplay {
     position: absolute;
     right: 10px;
     top: 0;
     cursor: pointer;
 }
 
-.obscuredField .obscuredDisplay::before{
+.obscuredField .obscuredDisplay::before {
     content: '\e60f';
     -webkit-font-smoothing: antialiased;
     font-family: 'Admin Icons';

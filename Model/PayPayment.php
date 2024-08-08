@@ -235,6 +235,27 @@ class PayPayment
     }
 
     /**
+     * @param integer $orderEntityId
+     * @return true
+     * @throws \Exception
+     */
+    public function cardRefundOrder($orderEntityId)
+    {
+        $order = $this->orderRepository->get($orderEntityId);
+        if ($order->getTotalDue() != 0 || $order->getBaseTotalRefunded() == $order->getBaseGrandTotal()) {
+            throw new \Exception("Ignoring cardRefundOrder (" . $order->getTotalDue() . '|' . $order->getBaseTotalRefunded() . '|' . $order->getBaseGrandTotal());
+        }
+        try {
+            $creditmemo = $this->cmFac->createByOrder($order);
+            $this->cmService->refund($creditmemo);
+            $order->addStatusHistoryComment(__('PAY. - Refund via Card initiated from Magento2 Backend'))->save();
+        } catch (\Exception $e) {
+            throw new \Exception('Could not process Refund via Card');
+        }
+        return true;
+    }
+
+    /**
      * @param PayTransaction $transaction
      * @param Order $order
      * @param integer $paymentProfileId

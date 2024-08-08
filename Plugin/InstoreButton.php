@@ -2,9 +2,8 @@
 
 namespace Paynl\Payment\Plugin;
 
-use Magento\Sales\Block\Adminhtml\Order\View as OrderView;
-use Paynl\Payment\Helper\PayHelper;
 use Magento\Framework\UrlInterface;
+use Paynl\Payment\Helper\PayHelper;
 
 class InstoreButton
 {
@@ -76,7 +75,7 @@ class InstoreButton
                     $instoreUrl = $this->backendUrl->getUrl('paynl/order/instore') . '?order_id=' . $order_id . '&return_url=' . urlencode($currentUrl);
                     $buttonList->add(
                         'start_instore_payment',
-                        ['label' => __('Start PAY. Pin'), 'onclick' => 'setLocation(\'' . $instoreUrl . '\')', 'class' => 'save'],
+                        ['label' => __('Start Pay. Pin'), 'onclick' => 'setLocation(\'' . $instoreUrl . '\')', 'class' => 'save'],
                         'paynl'
                     );
                 }
@@ -87,6 +86,24 @@ class InstoreButton
                 }
 
                 $this->payHelper->deleteCookie('pinError');
+            }
+
+            if (!isset($buttonList->getItems()['paynl']['start_card_refund'])) {
+                if ($payment_method == 'paynl_payment_instore' && $order->hasInvoices() && $order->getBaseTotalRefunded() == 0) {
+                    $cardRefundUrl = $this->backendUrl->getUrl('paynl/order/cardrefundform') . '?order_id=' . $order_id . '&return_url=' . urlencode($currentUrl);
+                    $buttonList->add(
+                        'start_card_refund',
+                        ['label' => __('Pay. Refund by card'), 'onclick' => 'setLocation(\'' . $cardRefundUrl . '\')', 'class' => 'save'],
+                        'paynl'
+                    );
+                }
+                $error = $this->payHelper->getCookie('cardRefundError');
+
+                if (!empty($error)) {
+                    $this->messageManager->addError($error);
+                }
+
+                $this->payHelper->deleteCookie('cardRefundError');
             }
         }
 
