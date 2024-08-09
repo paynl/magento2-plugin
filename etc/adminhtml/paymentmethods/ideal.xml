@@ -204,8 +204,17 @@ This button allows users to checkout directly from the cart without the need to 
                     <field id="active">1</field>     
                 </depends>
                 <tooltip>When the user selects a shipping method in the estimate on the cart page, this shipping method wil be used for fast checkout.</tooltip>
-            </field> 
-            <field id="fast_checkout_guest_only" translate="label" type="select" sortOrder="182" showInDefault="1" showInWebsite="1" showInStore="1">
+            </field>
+            <field id="fast_checkout_use_fallback" translate="label" type="select" sortOrder="183" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Use shipping fallback</label>
+                <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
+                <config_path>payment/paynl_payment_ideal/fast_checkout_use_fallback</config_path>
+                <depends>
+                    <field id="active">1</field>
+                </depends>
+                <tooltip>Allows users to select a shipping method themselves, in case the selected shipping method isn't available for the order.</tooltip>
+            </field>
+            <field id="fast_checkout_guest_only" translate="label" type="select" sortOrder="184" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Guest checkout only</label>
                 <frontend_model>Paynl\Payment\Block\Adminhtml\Render\Checkbox</frontend_model>
                 <config_path>payment/paynl_payment_ideal/fast_checkout_guest_only</config_path>

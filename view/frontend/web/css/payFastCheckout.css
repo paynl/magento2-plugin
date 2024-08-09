@@ -12,6 +12,7 @@
 
 #paynl_fast_checkout_cart button,
 #paynl_fast_checkout_product button,
+#paynl_fast_checkout_fallback button,
 #top-cart-fast-checkout {
     width: 100%;
     line-height: 2.2rem;
@@ -24,4 +25,8 @@
     background-repeat: no-repeat;
     background-size: 51px;
     background-position: 8px center;
+}
+
+#paynl_fast_checkout_fallback button {
+    max-width: 250px;
 }

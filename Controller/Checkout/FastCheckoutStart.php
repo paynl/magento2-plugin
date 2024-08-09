@@ -4,6 +4,7 @@ namespace Paynl\Payment\Controller\Checkout;
 
 use Magento\Checkout\Model\Cart;
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\App\CacheInterface;
 use Magento\Payment\Helper\Data as PaymentHelper;
 use Magento\Quote\Api\ShippingMethodManagementInterface;
 use Magento\Store\Model\StoreManagerInterface;
@@ -15,7 +16,7 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
     public const FC_GENERAL_ERROR = 8000;
     public const FC_EMPTY_BASKET = 8005;
     public const FC_ESITMATE_ERROR = 8006;
-    public const FC_SHIPPING_ERROR = 8006;
+    public const FC_SHIPPING_ERROR = 8007;
 
     /**
      * @var Cart
@@ -43,12 +44,18 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
     private $shippingMethodManagementInterface;
 
     /**
+     * @var CacheInterface
+     */
+    public $cache;
+
+    /**
      * @param Context $context
      * @param Cart $cart
      * @param PaymentHelper $paymentHelper
      * @param PayHelper $payHelper
      * @param StoreManagerInterface $storeManager
      * @param ShippingMethodManagementInterface $shippingMethodManagementInterface
+     * @param CacheInterface $cache
      */
     public function __construct(
         Context $context,
@@ -56,13 +63,15 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
         PaymentHelper $paymentHelper,
         PayHelper $payHelper,
         StoreManagerInterface $storeManager,
-        ShippingMethodManagementInterface $shippingMethodManagementInterface
+        ShippingMethodManagementInterface $shippingMethodManagementInterface,
+        CacheInterface $cache
     ) {
         $this->cart = $cart;
         $this->paymentHelper = $paymentHelper;
         $this->storeManager = $storeManager;
         $this->payHelper = $payHelper;
         $this->shippingMethodManagementInterface = $shippingMethodManagementInterface;
+        $this->cache = $cache;
 
         return parent::__construct($context);
     }
@@ -114,22 +123,25 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
             $shippingMethodsAvaileble[$code] = $code;
         }
 
-        if ($store->getConfig('payment/paynl_payment_ideal/fast_checkout_use_estimate_selection') == 2) {
-            if (empty($shippingMethodsAvaileble[$params['selected_estimate_shipping']])) {
-                throw new \Exception('Shipping method not availeble', FastCheckoutStart::FC_SHIPPING_ERROR);
+        if (isset($params['fallbackShippingMethod']) && !empty($params['fallbackShippingMethod']) && !empty($shippingMethodsAvaileble[$params['fallbackShippingMethod']])) {
+            $shippingMethod = $params['fallbackShippingMethod'];
+        } else {
+            if ($store->getConfig('payment/paynl_payment_ideal/fast_checkout_use_estimate_selection') == 2) {
+                if (isset($params['selected_estimate_shipping']) && empty($shippingMethodsAvaileble[$params['selected_estimate_shipping']])) {
+                    throw new \Exception('Shipping method not availeble', FastCheckoutStart::FC_ESITMATE_ERROR);
+                }
+            }
+            if (isset($params['selected_estimate_shipping']) && !empty($params['selected_estimate_shipping']) && !empty($shippingMethodsAvaileble[$params['selected_estimate_shipping']]) && $store->getConfig('payment/paynl_payment_ideal/fast_checkout_use_estimate_selection') > 0) {
+                $shippingMethod = $params['selected_estimate_shipping'];
+            } elseif (!empty($shippingMethodsAvaileble[$store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping')])) {
+                $shippingMethod = $store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping');
+            } elseif (!empty($shippingMethodsAvaileble[$store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping_backup')])) {
+                $shippingMethod = $store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping_backup');
             }
         }
 
-        if (isset($params['selected_estimate_shipping']) && !empty($params['selected_estimate_shipping']) && !empty($shippingMethodsAvaileble[$params['selected_estimate_shipping']]) && $store->getConfig('payment/paynl_payment_ideal/fast_checkout_use_estimate_selection') > 0) {
-            $shippingMethod = $params['selected_estimate_shipping'];
-        } elseif (!empty($shippingMethodsAvaileble[$store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping')])) {
-            $shippingMethod = $store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping');
-        } elseif (!empty($shippingMethodsAvaileble[$store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping_backup')])) {
-            $shippingMethod = $store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping_backup');
-        }
-
         if (empty($shippingMethod)) {
-            throw new \Exception("No shipping method availeble");
+            throw new \Exception("No shipping method availeble", FastCheckoutStart::FC_SHIPPING_ERROR);
         }
 
         $shippingAddress->setShippingMethod($shippingMethod);
@@ -175,6 +187,29 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
     }
 
     /**
+     * @param quote $quote
+     * @return void
+     * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
+     */
+    public function cacheShippingMethods()
+    {
+        $quote = $this->cart->getQuote();
+        $rates = $quote->getShippingAddress()->getAllShippingRates();
+        $currency = $this->storeManager->getStore()->getCurrentCurrency();
+        $shippingRates = [];
+        foreach ($rates as $rate) {
+            $shippingRates[$rate->getCode()] = [
+                'code' => $rate->getCode(),
+                'method' => $rate->getCarrierTitle(),
+                'title' => $rate->getMethodTitle(),
+                'price' => number_format($rate->getPrice(), 2, '.', ''),
+                'currency' => $currency->getCurrencySymbol(),
+            ];
+        }
+        $this->cache->save(json_encode($shippingRates), 'shipping_methods_' . $this->cart->getQuote()->getId());
+    }
+
+    /**
      * @return void
      */
     public function execute()
@@ -184,14 +219,16 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
             $store = $this->storeManager->getStore();
             $params = $this->getRequest()->getParams();
 
-            if ($store->getConfig('payment/paynl_payment_ideal/fast_checkout_use_estimate_selection') == 2) {
-                if (isset($params['selected_estimate_shipping']) && empty($params['selected_estimate_shipping'])) {
-                    throw new \Exception('No estimate shipping method selected', FastCheckoutStart::FC_ESITMATE_ERROR);
+            if (!isset($params['fallbackShippingMethod'])) {
+                if ($store->getConfig('payment/paynl_payment_ideal/fast_checkout_use_estimate_selection') == 2) {
+                    if (isset($params['selected_estimate_shipping']) && empty($params['selected_estimate_shipping'])) {
+                        throw new \Exception('No estimate shipping method selected', FastCheckoutStart::FC_ESITMATE_ERROR);
+                    }
                 }
             }
 
-            if (empty($store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping')) && empty($params['selected_estimate_shipping'])) {
-                throw new \Exception('No shipping method selected', FastCheckoutStart::FC_GENERAL_ERROR);
+            if (empty($store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping')) && (!isset($params['fallbackShippingMethod']) || empty($params['fallbackShippingMethod'])) && (!isset($params['selected_estimate_shipping']) || empty($params['selected_estimate_shipping']))) {
+                throw new \Exception('No shipping method selected', FastCheckoutStart::FC_SHIPPING_ERROR);
             }
 
             $quote = $this->cart->getQuote();
@@ -226,8 +263,14 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
             } else {
                 $this->payHelper->logCritical('FC ERROR: ' . $e->getMessage(), []);
             }
-            $this->messageManager->addNoticeMessage($message);
-            $this->_redirect('checkout/cart');
+
+            if ($store->getConfig('payment/paynl_payment_ideal/fast_checkout_use_fallback') == 1 && $e->getCode() == FastCheckoutStart::FC_SHIPPING_ERROR) {
+                $this->cacheShippingMethods();
+                $this->_redirect('paynl/checkout/fastcheckoutfallback');
+            } else {
+                $this->messageManager->addNoticeMessage($message);
+                $this->_redirect('checkout/cart');
+            }
         }
     }
 }
