@@ -196,7 +196,23 @@ This button allows users to checkout directly from the cart without the need to 
                 <comment>Select the fallback shipping method, which will be applied when the default shipping method could not be applied.</comment>
                 <tooltip>In case the default shipping method could not by applied, this shiping method will be used.</tooltip>
             </field>
-            <field id="fast_checkout_use_estimate_selection" translate="label" type="select" sortOrder="182" showInDefault="1" showInWebsite="1" showInStore="1">
+            <field id="fast_checkout_use_fallback" translate="label" type="select" sortOrder="182" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Fallback</label>
+                <source_model>Paynl\Payment\Model\Config\Source\FastCheckoutFallbackOptions</source_model>
+                <config_path>payment/paynl_payment_ideal/fast_checkout_use_fallback</config_path>
+                <depends>
+                    <field id="active">1</field>
+                </depends>
+                
+                <tooltip>Select what should happen when both shipping methods could not be applied:
+
+Show notice and abort fastcheckout:
+When This option is selected the fastcheckout will be aborted in case the selected shipping method does not work for the order, the customer is redirected back to the cart page and shown a notice. 
+
+Show intermediate screen to select shipping method:
+Using the intermediate screen will allow uses to select their own shipping method in case the selected shipping method does not work for the order. </tooltip>
+            </field>
+            <field id="fast_checkout_use_estimate_selection" translate="label" type="select" sortOrder="183" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Use estimate selection</label>
                 <source_model>Paynl\Payment\Model\Config\Source\UseEstimate</source_model>
                 <config_path>payment/paynl_payment_ideal/fast_checkout_use_estimate_selection</config_path>
@@ -204,15 +220,6 @@ This button allows users to checkout directly from the cart without the need to 
                     <field id="active">1</field>     
                 </depends>
                 <tooltip>When the user selects a shipping method in the estimate on the cart page, this shipping method wil be used for fast checkout.</tooltip>
-            </field>
-            <field id="fast_checkout_use_fallback" translate="label" type="select" sortOrder="183" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Shipping fallback</label>
-                <source_model>Paynl\Payment\Model\Config\Source\FastCheckoutFallbackOptions</source_model>
-                <config_path>payment/paynl_payment_ideal/fast_checkout_use_fallback</config_path>
-                <depends>
-                    <field id="active">1</field>
-                </depends>
-                <tooltip>Select what should happen when the shipping method settings cannot be used on the fast checkout order</tooltip>
             </field>
             <field id="fast_checkout_guest_only" translate="label" type="select" sortOrder="184" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Guest checkout only</label>
