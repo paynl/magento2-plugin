@@ -12,7 +12,6 @@ use Magento\Framework\View\Page\Config;
 
 class FastCheckoutFallback extends \Magento\Framework\View\Element\Template
 {
-
     /**
      * @var Request
      */
@@ -73,7 +72,6 @@ class FastCheckoutFallback extends \Magento\Framework\View\Element\Template
      * @return string
      */
     protected function _beforeToHtml() // phpcs:ignore
-
     {
         return parent::_beforeToHtml();
     }

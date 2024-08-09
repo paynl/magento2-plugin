@@ -78,6 +78,7 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
 
     /**
      * @param quote $quote
+     * @param array $params
      * @return void
      * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
      */
@@ -131,7 +132,7 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
                     throw new \Exception('Shipping method not availeble', FastCheckoutStart::FC_ESITMATE_ERROR);
                 }
             }
-            if (isset($params['selected_estimate_shipping']) && !empty($params['selected_estimate_shipping']) && !empty($shippingMethodsAvaileble[$params['selected_estimate_shipping']]) && $store->getConfig('payment/paynl_payment_ideal/fast_checkout_use_estimate_selection') > 0) {
+            if (isset($params['selected_estimate_shipping']) && !empty($params['selected_estimate_shipping']) && !empty($shippingMethodsAvaileble[$params['selected_estimate_shipping']]) && $store->getConfig('payment/paynl_payment_ideal/fast_checkout_use_estimate_selection') > 0) { // phpcs:ignore
                 $shippingMethod = $params['selected_estimate_shipping'];
             } elseif (!empty($shippingMethodsAvaileble[$store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping')])) {
                 $shippingMethod = $store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping');
@@ -187,9 +188,7 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
     }
 
     /**
-     * @param quote $quote
      * @return void
-     * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
      */
     public function cacheShippingMethods()
     {
@@ -227,7 +226,7 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
                 }
             }
 
-            if (empty($store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping')) && (!isset($params['fallbackShippingMethod']) || empty($params['fallbackShippingMethod'])) && (!isset($params['selected_estimate_shipping']) || empty($params['selected_estimate_shipping']))) {
+            if (empty($store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping')) && (!isset($params['fallbackShippingMethod']) || empty($params['fallbackShippingMethod'])) && (!isset($params['selected_estimate_shipping']) || empty($params['selected_estimate_shipping']))) { // phpcs:ignore
                 throw new \Exception('No shipping method selected', FastCheckoutStart::FC_SHIPPING_ERROR);
             }
 
