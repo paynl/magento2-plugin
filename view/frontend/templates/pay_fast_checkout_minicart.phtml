@@ -1,0 +1,8 @@
+<?php
+/** @var \Paynl\Payment\Block\Checkout\FastCheckout $block */
+    $viewModel = $block->getViewModel();
+?>
+
+<script>
+    window.fastCheckoutMinicart = <?= $viewModel->minicartEnabled() ? 'true' : 'false' ?>;
+</script>

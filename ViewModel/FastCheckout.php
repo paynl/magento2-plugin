@@ -2,9 +2,9 @@
 
 namespace Paynl\Payment\ViewModel;
 
-use Magento\Customer\Model\Session;
 use Magento\Framework\View\Element\Block\ArgumentInterface;
 use Magento\Store\Model\StoreManagerInterface;
+use Magento\Customer\Model\Session;
 
 class FastCheckout implements ArgumentInterface
 {
@@ -20,8 +20,7 @@ class FastCheckout implements ArgumentInterface
 
     /**
      * BuyNow constructor.
-     * @param StoreManagerInterface $storeManager
-     * @param Session $session
+     * @param ScopeConfigInterface $scopeConfig
      */
     public function __construct(
         StoreManagerInterface $storeManager,
@@ -31,15 +30,27 @@ class FastCheckout implements ArgumentInterface
         $this->session = $session;
     }
 
-    /**
-     * @return boolean
+    /**  
+     * @return string
      */
     public function getVisibility()
     {
         $store = $this->storeManager->getStore();
-        if ($this->session->isLoggedIn() && $store->getConfig('payment/paynl_payment_ideal/fast_checkout_guest_only') == 1) {
+        if($this->session->isLoggedIn() && $store->getConfig('payment/paynl_payment_ideal/fast_checkout_guest_only') == 1) {
             return false;
         }
-        return true;
+        return true;     
+    }
+
+    /**  
+     * @return string
+     */
+    public function minicartEnabled()
+    {
+        $store = $this->storeManager->getStore();
+        if($store->getConfig('payment/paynl_payment_ideal/fast_checkout_minicart_enabled') == 1 && $this->getVisibility()) {
+            return true;
+        }
+        return false;     
     }
 }
