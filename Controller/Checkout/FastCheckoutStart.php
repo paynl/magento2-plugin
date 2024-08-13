@@ -201,7 +201,7 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
                 'code' => $rate->getCode(),
                 'method' => $rate->getCarrierTitle(),
                 'title' => $rate->getMethodTitle(),
-                'price' => number_format($rate->getPrice(), 2, '.', ''),
+                'price' => number_format($rate->getPrice() ?? 0, 2, '.', ''),
                 'currency' => $currency->getCurrencySymbol(),
             ];
         }
