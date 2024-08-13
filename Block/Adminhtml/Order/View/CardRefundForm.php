@@ -117,7 +117,7 @@ class CardRefundForm extends Template
         $optionArr = [];
         $optionArr[0] = __('Select card terminal');
         foreach ($terminalArr as $terminal) {
-            $arr = (array) $terminal;
+            $arr = (array)$terminal;
             $optionArr[$arr['id']] = $arr['visibleName'];
         }
 
@@ -133,18 +133,16 @@ class CardRefundForm extends Template
     }
 
     /**
-     * @return mixed
+     * @return mixed|null
      */
     public function getOrderId()
     {
         $params = $this->getRequest()->getParams();
-        $orderId = isset($params['order_id']) ? $params['order_id'] : null;
-
-        return $orderId;
+        return isset($params['order_id']) ? $params['order_id'] : null;
     }
 
     /**
-     * @return mixed
+     * @return \Magento\Sales\Api\Data\OrderInterface
      */
     public function getOrder()
     {
@@ -154,7 +152,6 @@ class CardRefundForm extends Template
         } catch (\Exception $e) {
             $this->payHelper->logCritical($e, $params);
         }
-
         return $order;
     }
 }
