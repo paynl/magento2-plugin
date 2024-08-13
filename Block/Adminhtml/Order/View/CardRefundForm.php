@@ -67,8 +67,7 @@ class CardRefundForm extends Template
      */
     public function getSubmitUrl()
     {
-        $submitUrl = $this->backendUrl->getUrl('paynl/order/cardrefund');
-        return $submitUrl;
+        return $this->backendUrl->getUrl('paynl/order/cardrefund');
     }
 
     /**
