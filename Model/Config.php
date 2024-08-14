@@ -59,6 +59,7 @@ class Config
         "paynl_payment_afterpay" => "14",
         "paynl_payment_afterpay_international" => "14",
         "paynl_payment_alipay" => "82",
+        "paynl_payment_alma" => "321",
         "paynl_payment_amazonpay" => "22",
         "paynl_payment_amex" => "9",
         "paynl_payment_applepay" => "114",
