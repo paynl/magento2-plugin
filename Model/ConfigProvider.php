@@ -15,6 +15,7 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_afterpay',
         'paynl_payment_afterpay_international',
         'paynl_payment_alipay',
+        'paynl_payment_alipayplus',
         'paynl_payment_amazonpay',
         'paynl_payment_amex',
         'paynl_payment_applepay',
