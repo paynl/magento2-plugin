@@ -197,7 +197,7 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
         $currency = $this->storeManager->getStore()->getCurrentCurrency();
         $shippingRates = [];
         foreach ($rates as $rate) {
-            if(strpos($rate->getCode(), 'error') === false) {
+            if (strpos($rate->getCode(), 'error') === false) {
                 $shippingRates[$rate->getCode()] = [
                     'code' => $rate->getCode(),
                     'method' => $rate->getCarrierTitle(),
