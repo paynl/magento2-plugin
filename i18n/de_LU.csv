@@ -221,3 +221,14 @@ Provide this choice in the checkout: the customer can choose in the checkout bet
 Direkte Zahlung an der Kasse: Die PIN-Transaktion wird direkt gestartet, wenn die Zahlungsmethode an der Kasse ausgewählt wird.
 Die Zahlung erfolgt am Abholort: Die Bestellung wird in der Magento-Verwaltung erstellt, die PIN-Transaktion kann von dort aus gestartet werden, wenn der Kunde die Bestellung abholt.
 Stellen Sie diese Auswahl an der Kasse bereit: Der Kunde kann an der Kasse zwischen den oben angegebenen Optionen wählen."
+"Doesn't apply to fastcheckout.","Gilt nicht für Fastcheckout."
+
+"By default payment methods are available in the checkout for all customer types.
+Private, B2C: Only show this payment method when the customer didn't enter a company name.
+Business, BB2: Only show this payment method when the customer entered a company name.
+
+Doesn't apply to fastcheckout.","Standaard zijn betaalmethoden beschikbaar in de checkout voor alle klanttypen.
+Particulier, B2C: Laat deze betaalmethode alleen zien als de klant geen bedrijfsnaam heeft ingevoerd.
+Zakelijk, BB2: Laat deze betaalmethode alleen zien als de klant een bedrijfsnaam heeft opgegeven.
+
+Gilt nicht für Fastcheckout."

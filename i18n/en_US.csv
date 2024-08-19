@@ -272,3 +272,14 @@ Provide this choice in the checkout: the customer can choose in the checkout bet
 Direct checkout payment: pin transaction will be started right when the instore is selected in the checkout.
 Payment takes place at the pickup location: the order is created in the Magento admin, the pin transaction can be started from there when the customer comes to pick up the order.
 Provide this choice in the checkout: the customer can choose in the checkout between the options given above."
+"Doesn't apply to fastcheckout.","Doesn't apply to fastcheckout."
+
+"By default payment methods are available in the checkout for all customer types.
+Private, B2C: Only show this payment method when the customer didn't enter a company name.
+Business, BB2: Only show this payment method when the customer entered a company name.
+
+Doesn't apply to fastcheckout.","Standaard zijn betaalmethoden beschikbaar in de checkout voor alle klanttypen.
+Particulier, B2C: Laat deze betaalmethode alleen zien als de klant geen bedrijfsnaam heeft ingevoerd.
+Zakelijk, BB2: Laat deze betaalmethode alleen zien als de klant een bedrijfsnaam heeft opgegeven.
+
+Doesn't apply to fastcheckout."

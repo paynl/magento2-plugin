@@ -54,6 +54,7 @@
             <depends>
                 <field id="active">1</field>
             </depends>
+            <tooltip>Doesn't apply to fastcheckout.</tooltip>
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="50" showInDefault="1"
                showInWebsite="1" showInStore="1">
@@ -89,6 +90,7 @@
             <depends>
                 <field id="active">1</field>
             </depends>
+            <tooltip>Doesn't apply to fastcheckout.</tooltip>
         </field>
         <field id="max_order_total" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1"
                showInStore="1">
@@ -97,6 +99,7 @@
             <depends>
                 <field id="active">1</field>
             </depends>
+            <tooltip>Doesn't apply to fastcheckout.</tooltip>
         </field>
         <field id="sort_order" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1"
                showInStore="1">
@@ -137,7 +140,9 @@
             <config_path>payment/paynl_payment_ideal/showforcompany</config_path>
             <tooltip>By default payment methods are available in the checkout for all customer types.
 Private, B2C: Only show this payment method when the customer didn't enter a company name.
-Business, BB2: Only show this payment method when the customer entered a company name.</tooltip>
+Business, BB2: Only show this payment method when the customer entered a company name.
+
+Doesn't apply to fastcheckout.</tooltip>
             <comment><![CDATA[Specify which type of customer this payment method should be available to.]]></comment>
         </field>
         <field id="showforgroup" translate="label" type="select" sortOrder="160" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -147,6 +152,7 @@ Business, BB2: Only show this payment method when the customer entered a company
                 <field id="active">1</field>
             </depends>
             <config_path>payment/paynl_payment_ideal/showforgroup</config_path>
+            <tooltip>Doesn't apply to fastcheckout.</tooltip>
             <comment><![CDATA[Show payment method only to specific customer groups.]]></comment>
         </field>
         <group id="fastcheckout" translate="label" sortOrder="180" showInDefault="1" showInWebsite="1" showInStore="1">

@@ -220,3 +220,13 @@ Provide this choice in the checkout: the customer can choose in the checkout bet
 Paiement direct à la caisse : la transaction par code PIN sera lancée dès que le mode de paiement est sélectionné lors du paiement.
 Le paiement s'effectue au lieu de retrait : la commande est créée dans l'admin Magento, la transaction PIN peut être lancée à partir de là lorsque le client vient récupérer la commande.
 Proposer ce choix lors du paiement : le client peut choisir lors du paiement entre les options indiquées ci-dessus."
+"Doesn't apply to fastcheckout.","Ne s'applique pas au paiement rapide."
+"By default payment methods are available in the checkout for all customer types.
+Private, B2C: Only show this payment method when the customer didn't enter a company name.
+Business, BB2: Only show this payment method when the customer entered a company name.
+
+Doesn't apply to fastcheckout.","Standaard zijn betaalmethoden beschikbaar in de checkout voor alle klanttypen.
+Particulier, B2C: Laat deze betaalmethode alleen zien als de klant geen bedrijfsnaam heeft ingevoerd.
+Zakelijk, BB2: Laat deze betaalmethode alleen zien als de klant een bedrijfsnaam heeft opgegeven.
+
+Ne s'applique pas au paiement rapide."
