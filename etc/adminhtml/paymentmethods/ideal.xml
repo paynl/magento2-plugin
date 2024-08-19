@@ -151,7 +151,7 @@ This setting doesn't apply to Fastcheckout.</tooltip>
             <config_path>payment/paynl_payment_ideal/showforgroup</config_path>
             <tooltip>Select to which customer group iDEAL is available. Customer groups are defined in Magento (Menu: Customers->Customer Groups).
 
-This setting Doesn't apply to Fastcheckout.</tooltip>
+This setting doesn't apply to Fastcheckout.</tooltip>
             <comment><![CDATA[Show payment method only to specific customer groups.]]></comment>
         </field>
         <group id="fastcheckout" translate="label" sortOrder="180" showInDefault="1" showInWebsite="1" showInStore="1">
