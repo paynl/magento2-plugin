@@ -53,7 +53,7 @@
             <depends>
                 <field id="active">1</field>
             </depends>
-            <tooltip>Determine in which country iDEAL should be available. This settings doesn't apply to Fastcheckout.</tooltip>
+            <tooltip>Determine in which country iDEAL should be available. This setting doesn't apply to Fastcheckout.</tooltip>
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="50" showInDefault="1"
                showInWebsite="1" showInStore="1">

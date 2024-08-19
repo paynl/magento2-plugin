@@ -277,18 +277,30 @@ Directe betaling: de pintransactie wordt gestart zodra instore is geselecteerd b
 Betaling vindt plaats op de afhaallocatie: de bestelling wordt aangemaakt in de Magento admin, van daaruit kan de pintransactie gestart worden als de klant de bestelling komt ophalen.
 Geef deze keuze op bij het afrekenen: de klant kan bij het afrekenen kiezen tussen bovenstaande opties."
 "Doesn't apply to fastcheckout.","Geldt niet voor fastcheckout."
-"By default payment methods are available in the checkout for all customer types.
-Private, B2C: Only show this payment method when the customer didn't enter a company name.
-Business, BB2: Only show this payment method when the customer entered a company name.
-
-Doesn't apply to fastcheckout.","Standaard zijn betaalmethoden beschikbaar in de checkout voor alle klanttypen.
-Particulier, B2C: Laat deze betaalmethode alleen zien als de klant geen bedrijfsnaam heeft ingevoerd.
-Zakelijk, BB2: Laat deze betaalmethode alleen zien als de klant een bedrijfsnaam heeft opgegeven.
-
-Geldt niet voor fastcheckout."
 "Pay. Refund by card","Pay. Retourpin"
 "Amount","Bedrag"
 "Terminal","Terminal"
 "Refund amount must be greater than 0.00","Het bedrag moet groter zijn dan 0,00"
 "Refund amount must not exceed ","Het bedrag mag niet hoger zijn dan "
 "Select a terminal","Selecteer een terminal"
+"Determine in which country iDEAL should be available. This setting doesn't apply to Fastcheckout.","Bepaal in welk land iDEAL beschikbaar moet zijn. Deze instelling is niet van toepassing op Fastcheckout."
+"Set the minimum order amount for iDEAL to be available. Leave blank if you don't want to set a minimum amount. This setting doesn't apply to Fastcheckout.","Stel het minimale bestelbedrag in voor iDEAL. Laat leeg als u geen minimumbedrag wilt instellen. Deze instelling is niet van toepassing op Fastcheckout."
+"Set the maximum order amount for iDEAL to be available. Leave blank if you don't want to set a maximum amount. This setting doesn't apply to Fastcheckout.","Stel het maximale orderbedrag in voor iDEAL dat beschikbaar moet zijn. Laat dit leeg als u geen maximumbedrag wilt instellen. Deze instelling is niet van toepassing op Fastcheckout."
+"By default payment methods are available for all customer types. To limit this to a customer type, use one of the following options:
+
+Private, B2C: Only show this payment method when the customer didn't enter a company name.
+
+Business, BB2: Only show this payment method when the customer entered a company name.
+
+This setting doesn't apply to Fastcheckout.","Standaard zijn betaalmethoden beschikbaar voor alle klanttypen. Om dit te beperken tot een klanttype, gebruikt u een van de volgende opties:
+
+Privé, B2C: Toon deze betaalmethode alleen als de klant geen bedrijfsnaam heeft ingevoerd.
+
+Zakelijk, BB2: Toon deze betaalmethode alleen als de klant een bedrijfsnaam heeft ingevoerd.
+
+Deze instelling is niet van toepassing op Fastcheckout."
+"Select to which customer group iDEAL is available. Customer groups are defined in Magento (Menu: Customers->Customer Groups).
+
+This setting doesn't apply to Fastcheckout.","Selecteer voor welke klantgroep iDEAL beschikbaar is. Klantgroepen worden gedefinieerd in Magento (Menu: Customers->Customer Groups).
+
+Deze instelling is niet van toepassing op Fastcheckout."
