@@ -18,6 +18,7 @@ define(
             {type: 'paynl_payment_afterpay_international', component: defaultComponent},
             {type: 'paynl_payment_alipay', component: defaultComponent},
             {type: 'paynl_payment_alipayplus', component: defaultComponent},
+            {type: 'paynl_payment_alma', component: defaultComponent},
             {type: 'paynl_payment_amazonpay', component: defaultComponent},
             {type: 'paynl_payment_amex', component: defaultComponent},
             {type: 'paynl_payment_bataviacadeaukaart', component: defaultComponent},
