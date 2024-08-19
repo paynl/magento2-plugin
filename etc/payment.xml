@@ -18,6 +18,9 @@
         <method name="paynl_payment_alipay">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
+        <method name="paynl_payment_alipayplus">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
         <method name="paynl_payment_alma">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
