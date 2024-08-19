@@ -229,3 +229,9 @@ Particulier, B2C: Laat deze betaalmethode alleen zien als de klant geen bedrijfs
 Zakelijk, BB2: Laat deze betaalmethode alleen zien als de klant een bedrijfsnaam heeft opgegeven.
 
 Ne s'applique pas au paiement rapide."
+"Pay. Refund by card","Pay. Goupille de retour"
+"Amount","Montant"
+"Terminal","Terminal"
+"Refund amount must be greater than 0.00","Le montant doit être supérieur à 0,00"
+"Refund amount must not exceed ","Le montant ne peut excéder "
+"Select a terminal","Sélectionnez un terminal"

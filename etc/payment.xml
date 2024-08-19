@@ -18,6 +18,9 @@
         <method name="paynl_payment_alipay">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
+        <method name="paynl_payment_alma">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
         <method name="paynl_payment_amazonpay">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
@@ -160,6 +163,9 @@
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_przelewy24">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_cardrefund">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_shoesandsneakers">

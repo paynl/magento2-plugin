@@ -231,3 +231,9 @@ Particulier, B2C: Laat deze betaalmethode alleen zien als de klant geen bedrijfs
 Zakelijk, BB2: Laat deze betaalmethode alleen zien als de klant een bedrijfsnaam heeft opgegeven.
 
 Gilt nicht für Fastcheckout."
+"Pay. Refund by card","Pay. Rückholstift"
+"Amount","Menge"
+"Terminal","Terminal"
+"Refund amount must be greater than 0.00","Der Betrag muss größer als 0,00 sein"
+"Refund amount must not exceed ","Der Betrag darf nicht höher sein als "
+"Select a terminal","Wählen Sie ein Terminal aus"
