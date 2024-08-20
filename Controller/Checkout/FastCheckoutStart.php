@@ -121,7 +121,9 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
         $shippingMethodsAvaileble = [];
         foreach ($shippingData as $shipping) {
             $code = $shipping->getCarrierCode() . '_' . $shipping->getMethodCode();
-            $shippingMethodsAvaileble[$code] = $code;
+            if ($code != 'instore_pickup') {
+                $shippingMethodsAvaileble[$code] = $code;
+            }
         }
 
         if (isset($params['fallbackShippingMethod']) && !empty($params['fallbackShippingMethod']) && !empty($shippingMethodsAvaileble[$params['fallbackShippingMethod']])) {
@@ -197,7 +199,7 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
         $currency = $this->storeManager->getStore()->getCurrentCurrency();
         $shippingRates = [];
         foreach ($rates as $rate) {
-            if (strpos($rate->getCode(), 'error') === false) {
+            if (strpos($rate->getCode(), 'error') === false && $rate->getCode() != 'instore_pickup') {
                 $shippingRates[$rate->getCode()] = [
                     'code' => $rate->getCode(),
                     'method' => $rate->getCarrierTitle(),
