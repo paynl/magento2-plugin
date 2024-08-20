@@ -9,6 +9,7 @@ use Paynl\Payment\Model\PayPaymentCreate;
 class Cardrefund extends PaymentMethod
 {
     protected $_code = 'paynl_payment_cardrefund';
+    protected $_canUseInternal = false;
 
     /**
      * Paylink payment block paths
