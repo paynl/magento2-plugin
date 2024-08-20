@@ -430,7 +430,7 @@ class PayPaymentCreate
             $invoiceAddress['streetName'] = mb_substr($arrAddress[0] ?? '', 0, 128);
             $invoiceAddress['houseNumber'] = mb_substr($arrAddress[1] ?? '', 0, 10);
             $invoiceAddress['zipCode'] = mb_substr($arrBillingAddress['postcode'] ?? '', 0, 24);
-            $shippingAddress['city'] = mb_substr($arrBillingAddress['city'] ?? '', 0, 40);
+            $invoiceAddress['city'] = mb_substr($arrBillingAddress['city'] ?? '', 0, 40);
             $invoiceAddress['country'] = $arrBillingAddress['country_id'];
         }
 

@@ -46,14 +46,14 @@
             </depends>
             <config_path>payment/paynl_payment_ideal/order_status_processing</config_path>
         </field>
-        <field id="allowspecific" translate="label" type="allowspecific" sortOrder="40" showInDefault="1"
-               showInWebsite="1" showInStore="1">
+        <field id="allowspecific" translate="label" type="allowspecific" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Accepted billing country</label>
             <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
             <config_path>payment/paynl_payment_ideal/allowspecific</config_path>
             <depends>
                 <field id="active">1</field>
             </depends>
+            <tooltip>Determine in which country iDEAL should be available. This setting doesn't apply to Fastcheckout.</tooltip>
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="50" showInDefault="1"
                showInWebsite="1" showInStore="1">
@@ -89,17 +89,17 @@
             <depends>
                 <field id="active">1</field>
             </depends>
+            <tooltip>Set the minimum order amount for iDEAL to be available. Leave blank if you don't want to set a minimum amount. This setting doesn't apply to Fastcheckout.</tooltip>
         </field>
-        <field id="max_order_total" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1"
-               showInStore="1">
+        <field id="max_order_total" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Maximum order total</label>
             <config_path>payment/paynl_payment_ideal/max_order_total</config_path>
             <depends>
                 <field id="active">1</field>
             </depends>
+            <tooltip>Set the maximum order amount for iDEAL to be available. Leave blank if you don't want to set a maximum amount. This setting doesn't apply to Fastcheckout.</tooltip>
         </field>
-        <field id="sort_order" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1"
-               showInStore="1">
+        <field id="sort_order" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Sort order</label>
             <frontend_class>validate-number</frontend_class>
             <config_path>payment/paynl_payment_ideal/sort_order</config_path>
@@ -107,9 +107,7 @@
                 <field id="active">1</field>
             </depends>
         </field>
-        <field id="send_new_order_email" translate="label" type="select" sortOrder="100" showInDefault="1"
-               showInWebsite="1"
-               showInStore="1">
+        <field id="send_new_order_email" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Send order confirmation email</label>
             <source_model>Paynl\Payment\Model\Config\Source\SendNewOrderEmail</source_model>
             <config_path>payment/paynl_payment_ideal/send_new_order_email</config_path>
@@ -135,9 +133,13 @@
                 <field id="active">1</field>
             </depends>
             <config_path>payment/paynl_payment_ideal/showforcompany</config_path>
-            <tooltip>By default payment methods are available in the checkout for all customer types.
+            <tooltip>By default payment methods are available for all customer types. To limit this to a customer type, use one of the following options:
+
 Private, B2C: Only show this payment method when the customer didn't enter a company name.
-Business, BB2: Only show this payment method when the customer entered a company name.</tooltip>
+
+Business, BB2: Only show this payment method when the customer entered a company name.
+
+This setting doesn't apply to Fastcheckout.</tooltip>
             <comment><![CDATA[Specify which type of customer this payment method should be available to.]]></comment>
         </field>
         <field id="showforgroup" translate="label" type="select" sortOrder="160" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -147,6 +149,9 @@ Business, BB2: Only show this payment method when the customer entered a company
                 <field id="active">1</field>
             </depends>
             <config_path>payment/paynl_payment_ideal/showforgroup</config_path>
+            <tooltip>Select to which customer group iDEAL is available. Customer groups are defined in Magento (Menu: Customers->Customer Groups).
+
+This setting doesn't apply to Fastcheckout.</tooltip>
             <comment><![CDATA[Show payment method only to specific customer groups.]]></comment>
         </field>
         <group id="fastcheckout" translate="label" sortOrder="180" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -214,11 +219,11 @@ This button allows users to checkout directly from the cart without the need to 
                 <depends>
                     <field id="active">1</field>
                 </depends>
-                
+
                 <tooltip>Select what should happen when both shipping methods could not be applied:
 
 Show notice and abort fastcheckout:
-When This option is selected the fastcheckout will be aborted in case the selected shipping method does not work for the order, the customer is redirected back to the cart page and shown a notice. 
+When This option is selected the fastcheckout will be aborted in case the selected shipping method does not work for the order, the customer is redirected back to the cart page and shown a notice.
 
 Show intermediate screen to select shipping method:
 Using the intermediate screen will allow uses to select their own shipping method in case the selected shipping method does not work for the order. </tooltip>
@@ -228,7 +233,7 @@ Using the intermediate screen will allow uses to select their own shipping metho
                 <source_model>Paynl\Payment\Model\Config\Source\UseEstimate</source_model>
                 <config_path>payment/paynl_payment_ideal/fast_checkout_use_estimate_selection</config_path>
                 <depends>
-                    <field id="active">1</field>     
+                    <field id="active">1</field>
                 </depends>
                 <tooltip>When the user selects a shipping method in the estimate on the cart page, this shipping method wil be used for fast checkout.</tooltip>
             </field>

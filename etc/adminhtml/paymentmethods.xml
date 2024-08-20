@@ -6,6 +6,7 @@
     <include path="Paynl_Payment::paymentmethods/afterpay.xml" />
     <include path="Paynl_Payment::paymentmethods/afterpay_international.xml" />
     <include path="Paynl_Payment::paymentmethods/alipay.xml" />
+    <include path="Paynl_Payment::paymentmethods/alma.xml" />
     <include path="Paynl_Payment::paymentmethods/amazonpay.xml" />
     <include path="Paynl_Payment::paymentmethods/amex.xml" />
     <include path="Paynl_Payment::paymentmethods/applepay.xml" />
