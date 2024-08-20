@@ -53,7 +53,7 @@
             <depends>
                 <field id="active">1</field>
             </depends>
-            <tooltip>Determine in which country iDEAL should be available. This setting doesn't apply to Fastcheckout.</tooltip>
+            <tooltip>Determine in which country iDEAL should be available. This setting doesn't apply to fast checkout.</tooltip>
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="50" showInDefault="1"
                showInWebsite="1" showInStore="1">
@@ -89,7 +89,7 @@
             <depends>
                 <field id="active">1</field>
             </depends>
-            <tooltip>Set the minimum order amount for iDEAL to be available. Leave blank if you don't want to set a minimum amount. This setting doesn't apply to Fastcheckout.</tooltip>
+            <tooltip>Set the minimum order amount for iDEAL to be available. Leave blank if you don't want to set a minimum amount. This setting doesn't apply to fast checkout.</tooltip>
         </field>
         <field id="max_order_total" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Maximum order total</label>
@@ -97,7 +97,7 @@
             <depends>
                 <field id="active">1</field>
             </depends>
-            <tooltip>Set the maximum order amount for iDEAL to be available. Leave blank if you don't want to set a maximum amount. This setting doesn't apply to Fastcheckout.</tooltip>
+            <tooltip>Set the maximum order amount for iDEAL to be available. Leave blank if you don't want to set a maximum amount. This setting doesn't apply to fast checkout.</tooltip>
         </field>
         <field id="sort_order" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Sort order</label>
@@ -139,7 +139,7 @@ Private, B2C: Only show this payment method when the customer didn't enter a com
 
 Business, BB2: Only show this payment method when the customer entered a company name.
 
-This setting doesn't apply to Fastcheckout.</tooltip>
+This setting doesn't apply to fast checkout.</tooltip>
             <comment><![CDATA[Specify which type of customer this payment method should be available to.]]></comment>
         </field>
         <field id="showforgroup" translate="label" type="select" sortOrder="160" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -151,11 +151,11 @@ This setting doesn't apply to Fastcheckout.</tooltip>
             <config_path>payment/paynl_payment_ideal/showforgroup</config_path>
             <tooltip>Select to which customer group iDEAL is available. Customer groups are defined in Magento (Menu: Customers->Customer Groups).
 
-This setting doesn't apply to Fastcheckout.</tooltip>
+This setting doesn't apply to fast checkout.</tooltip>
             <comment><![CDATA[Show payment method only to specific customer groups.]]></comment>
         </field>
         <group id="fastcheckout" translate="label" sortOrder="180" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Fast checkout</label>
+            <label>iDEAL Fast checkout</label>
             <field id="fast_checkout_cart_enabled" translate="label" type="select" sortOrder="170" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Cart page</label>
                 <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
@@ -163,7 +163,7 @@ This setting doesn't apply to Fastcheckout.</tooltip>
                 <depends>
                     <field id="active">1</field>
                 </depends>
-                <tooltip>Show the fastcheckout button on the cart page.
+                <tooltip>Show the fast checkout button on the cart page.
 
 This button allows users to checkout directly from the cart without the need to fill in their address.</tooltip>
             </field>
@@ -174,7 +174,7 @@ This button allows users to checkout directly from the cart without the need to 
                 <depends>
                     <field id="active">1</field>
                 </depends>
-                <tooltip>Show the fastcheckout button on the minicart.
+                <tooltip>Show the fast checkout button on the minicart.
 
 This button allows users to checkout directly from the minicart without the need to fill in their address.</tooltip>
             </field>
@@ -185,7 +185,7 @@ This button allows users to checkout directly from the minicart without the need
                 <depends>
                     <field id="active">1</field>
                 </depends>
-                <tooltip>Show the fastcheckout button on every product page.
+                <tooltip>Show the fast checkout button on every product page.
 
 This button allows users to checkout directly from the cart without the need to fill in their address.</tooltip>
             </field>
@@ -201,6 +201,7 @@ This button allows users to checkout directly from the cart without the need to 
                     <field id="active">1</field>
                 </depends>
                 <comment>Select the shipping method that should be applied first.</comment>
+                <tooltip>The default shipping method will be applied to fast checkout orders.</tooltip>
             </field>
             <field id="fast_checkout_shipping_backup" translate="label" type="select" sortOrder="181" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Fallback shipping method</label>
@@ -219,14 +220,13 @@ This button allows users to checkout directly from the cart without the need to 
                 <depends>
                     <field id="active">1</field>
                 </depends>
-
                 <tooltip>Select what should happen when both shipping methods could not be applied:
 
-Show notice and abort fastcheckout:
-When This option is selected the fastcheckout will be aborted in case the selected shipping method does not work for the order, the customer is redirected back to the cart page and shown a notice.
+Show notice and abort fast checkout:
+When This option is selected the fast checkout will be aborted in case the selected shipping method does not work for the order, the customer is redirected back to the cart page and shown a notice.
 
 Show intermediate screen to select shipping method:
-Using the intermediate screen will allow uses to select their own shipping method in case the selected shipping method does not work for the order. </tooltip>
+Using the intermediate screen will allow uses to select their own shipping method in case the selected shipping method does not work for the order.</tooltip>
             </field>
             <field id="fast_checkout_use_estimate_selection" translate="label" type="select" sortOrder="183" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Use estimate selection</label>
@@ -241,10 +241,10 @@ Using the intermediate screen will allow uses to select their own shipping metho
                 <label>Guest checkout only</label>
                 <frontend_model>Paynl\Payment\Block\Adminhtml\Render\Checkbox</frontend_model>
                 <config_path>payment/paynl_payment_ideal/fast_checkout_guest_only</config_path>
-                <tooltip>When enabled, the fastCheckout button will only be shown on the cart page for guest users.
+                <tooltip>When enabled, the fast checkout button will only be shown on the cart page for guest users.
 
-This setting does not effect the product page. If fastCheckout is enabled for the product page, the fastCheckout button will always be shown. </tooltip>
-                <comment>Show the fastCheckout button on the cart page, only for guest customers.</comment>
+This setting does not effect the product page. If fast checkout is enabled for the product page, the fast checkout button will always be shown.</tooltip>
+                <comment>Show the fast checkout button on the cart page, only for guest customers.</comment>
             </field>
         </group>
         <group id="advanced" translate="label" sortOrder="200" showInDefault="1" showInWebsite="1" showInStore="1">

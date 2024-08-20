@@ -246,3 +246,54 @@ Ce paramètre ne s'applique pas à Fastcheckout."
 This setting doesn't apply to Fastcheckout.","Sélectionnez le groupe de clients auquel iDEAL est disponible. Les groupes de clients sont définis dans Magento (Menu: Clients->Groupes de clients).
 
 Ce paramètre ne s'applique pas à Fastcheckout."
+"Fast Checkout","Fastcheckout"
+"iDEAL Fast Checkout","iDEAL Fastcheckout"
+"Cart page","Page du panier"
+"Minicart","Mini-panier"
+"Product page","Page produit"
+"Default shipping method","Méthode d'expédition par défaut"
+"Fallback shipping method","Méthode d'expédition de secours"
+"Fallback","Retomber"
+"Use estimate selection","Utiliser la sélection d'estimation"
+"Guest checkout only","Paiement réservé aux invités uniquement"
+"Show the fast checkout button on the cart page.
+
+This button allows users to checkout directly from the cart without the need to fill in their address.","Afficher le bouton de paiement rapide sur la page du panier.
+
+Ce bouton permet aux utilisateurs de payer directement depuis le panier sans avoir à renseigner leur adresse."
+"Show the fast checkout button on the minicart.
+
+This button allows users to checkout directly from the minicart without the need to fill in their address.","Afficher le bouton de paiement rapide sur le mini-panier.
+
+Ce bouton permet aux utilisateurs de payer directement depuis le mini-panier sans avoir à renseigner leur adresse."
+"Show the fast checkout button on every product page.
+
+This button allows users to checkout directly from the cart without the need to fill in their address.","Affichez le bouton de paiement rapide sur chaque page produit.
+
+Ce bouton permet aux utilisateurs de payer directement depuis le panier sans avoir à renseigner leur adresse."
+"Select the shipping method that should be applied first.","Sélectionnez le mode d’expédition qui doit être appliqué en premier."
+"The default shipping method will be applied to fast checkout orders.","La méthode d'expédition par défaut sera appliquée aux commandes de paiement rapide."
+"Select the fallback shipping method, which will be applied when the default shipping method could not be applied.","Sélectionnez la méthode d'expédition de secours, qui sera appliquée lorsque la méthode d'expédition par défaut ne pourra pas être appliquée."
+"In case the default shipping method could not by applied, this shiping method will be used.","Dans le cas où le mode d'expédition par défaut ne pourrait pas être appliqué, ce mode d'expédition sera utilisé."
+"Select what should happen when both shipping methods could not be applied:
+
+Show notice and abort fast checkout:
+When This option is selected the fast checkout will be aborted in case the selected shipping method does not work for the order, the customer is redirected back to the cart page and shown a notice.
+
+Show intermediate screen to select shipping method:
+Using the intermediate screen will allow uses to select their own shipping method in case the selected shipping method does not work for the order.","Sélectionnez ce qui doit se produire lorsque les deux méthodes d'expédition ne peuvent pas être appliquées :
+
+Afficher un avis et abandonner le paiement rapide :
+Lorsque cette option est sélectionnée, le paiement rapide sera abandonné si le mode d'expédition sélectionné ne fonctionne pas pour la commande, le client sera redirigé vers la page du panier et un avis s'affichera.
+
+Afficher l'écran intermédiaire pour sélectionner le mode d'expédition :
+L'utilisation de l'écran intermédiaire permettra aux utilisateurs de sélectionner leur propre mode d'expédition au cas où le mode d'expédition sélectionné ne fonctionnerait pas pour la commande."
+"When the user selects a shipping method in the estimate on the cart page, this shipping method wil be used for fast checkout.","Lorsque l'utilisateur sélectionne un mode d'expédition dans l'estimation sur la page du panier, ce mode d'expédition sera utilisé pour un paiement rapide."
+"When enabled, the fast checkout button will only be shown on the cart page for guest users.
+
+This setting does not effect the product page. If fast checkout is enabled for the product page, the fast checkout button will always be shown.","Lorsque cette option est activée, le bouton de paiement rapide ne s'affiche sur la page du panier que pour les utilisateurs invités.
+
+Ce paramètre n'affecte pas la page produit. Si le paiement rapide est activé pour la page produit, le bouton de paiement rapide sera toujours affiché."
+"Show the fast checkout button on the cart page, only for guest customers.","Afficher le bouton de paiement rapide sur la page du panier, uniquement pour les clients invités."
+"When updating this setting, please flush Magento's cache afterwards ","Lors de la mise à jour de ce paramètre, veuillez ensuite vider le cache de Magento "
+"Continue","Continuer"

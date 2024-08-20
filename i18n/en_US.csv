@@ -310,3 +310,54 @@ This setting doesn't apply to Fastcheckout."
 This setting doesn't apply to Fastcheckout.","Select to which customer group iDEAL is available. Customer groups are defined in Magento (Menu: Customers->Customer Groups).
 
 This setting doesn't apply to Fastcheckout."
+"Fast Checkout","Fast Checkout"
+"iDEAL Fast Checkout","iDEAL Fast Checkout"
+"Cart page","Cart page"
+"Minicart","Minicart"
+"Product page","Product page"
+"Default shipping method","Default shipping method"
+"Fallback shipping method","Fallback shipping method"
+"Fallback","Fallback"
+"Use estimate selection","Use estimate selection"
+"Guest checkout only","Guest checkout only"
+"Show the fast checkout button on the cart page.
+
+This button allows users to checkout directly from the cart without the need to fill in their address.","Show the fast checkout button on the cart page.
+
+This button allows users to checkout directly from the cart without the need to fill in their address."
+"Show the fast checkout button on the minicart.
+
+This button allows users to checkout directly from the minicart without the need to fill in their address.","Show the fast checkout button on the minicart.
+
+This button allows users to checkout directly from the minicart without the need to fill in their address."
+"Show the fast checkout button on every product page.
+
+This button allows users to checkout directly from the cart without the need to fill in their address.","Show the fast checkout button on every product page.
+
+This button allows users to checkout directly from the cart without the need to fill in their address."
+"Select the shipping method that should be applied first.","Select the shipping method that should be applied first."
+"The default shipping method will be applied to fast checkout orders.","The default shipping method will be applied to fast checkout orders."
+"Select the fallback shipping method, which will be applied when the default shipping method could not be applied.","Select the fallback shipping method, which will be applied when the default shipping method could not be applied."
+"In case the default shipping method could not by applied, this shiping method will be used.","In case the default shipping method could not by applied, this shiping method will be used."
+"Select what should happen when both shipping methods could not be applied:
+
+Show notice and abort fast checkout:
+When This option is selected the fast checkout will be aborted in case the selected shipping method does not work for the order, the customer is redirected back to the cart page and shown a notice.
+
+Show intermediate screen to select shipping method:
+Using the intermediate screen will allow uses to select their own shipping method in case the selected shipping method does not work for the order.","Select what should happen when both shipping methods could not be applied:
+
+Show notice and abort fast checkout:
+When This option is selected the fast checkout will be aborted in case the selected shipping method does not work for the order, the customer is redirected back to the cart page and shown a notice.
+
+Show intermediate screen to select shipping method:
+Using the intermediate screen will allow uses to select their own shipping method in case the selected shipping method does not work for the order."
+"When the user selects a shipping method in the estimate on the cart page, this shipping method wil be used for fast checkout.","When the user selects a shipping method in the estimate on the cart page, this shipping method wil be used for fast checkout."
+"When enabled, the fast checkout button will only be shown on the cart page for guest users.
+
+This setting does not effect the product page. If fast checkout is enabled for the product page, the fast checkout button will always be shown.","When enabled, the fast checkout button will only be shown on the cart page for guest users.
+
+This setting does not effect the product page. If fast checkout is enabled for the product page, the fast checkout button will always be shown."
+"Show the fast checkout button on the cart page, only for guest customers.","Show the fast checkout button on the cart page, only for guest customers."
+"When updating this setting, please flush Magento's cache afterwards ","When updating this setting, please flush Magento's cache afterwards "
+"Continue","Continue"
