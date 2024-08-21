@@ -275,27 +275,27 @@ Geef deze keuze op bij het afrekenen: de klant kan bij het afrekenen kiezen tuss
 "Refund amount must be greater than 0.00","Het bedrag moet groter zijn dan 0,00"
 "Refund amount must not exceed ","Het bedrag mag niet hoger zijn dan "
 "Select a terminal","Selecteer een terminal"
-"Determine in which country iDEAL should be available. This setting doesn't apply to Fastcheckout.","Bepaal in welk land iDEAL beschikbaar moet zijn. Deze instelling is niet van toepassing op Fastcheckout."
-"Set the minimum order amount for iDEAL to be available. Leave blank if you don't want to set a minimum amount. This setting doesn't apply to Fastcheckout.","Stel het minimale bestelbedrag in voor iDEAL. Laat leeg als u geen minimumbedrag wilt instellen. Deze instelling is niet van toepassing op Fastcheckout."
-"Set the maximum order amount for iDEAL to be available. Leave blank if you don't want to set a maximum amount. This setting doesn't apply to Fastcheckout.","Stel het maximale orderbedrag in voor iDEAL dat beschikbaar moet zijn. Laat dit leeg als u geen maximumbedrag wilt instellen. Deze instelling is niet van toepassing op Fastcheckout."
+"Determine in which country iDEAL should be available. This setting doesn't apply to fast checkout.","Bepaal in welk land iDEAL beschikbaar moet zijn. Deze instelling is niet van toepassing op snel bestellen."
+"Set the minimum order amount for iDEAL to be available. Leave blank if you don't want to set a minimum amount. This setting doesn't apply to fast checkout.","Stel het minimale bestelbedrag in voor iDEAL. Laat leeg als u geen minimumbedrag wilt instellen. Deze instelling is niet van toepassing op snel bestellen."
+"Set the maximum order amount for iDEAL to be available. Leave blank if you don't want to set a maximum amount. This setting doesn't apply to fast checkout.","Stel het maximale orderbedrag in voor iDEAL dat beschikbaar moet zijn. Laat dit leeg als u geen maximumbedrag wilt instellen. Deze instelling is niet van toepassing op snel bestellen."
 "By default payment methods are available for all customer types. To limit this to a customer type, use one of the following options:
 
 Private, B2C: Only show this payment method when the customer didn't enter a company name.
 
 Business, BB2: Only show this payment method when the customer entered a company name.
 
-This setting doesn't apply to Fastcheckout.","Standaard zijn betaalmethoden beschikbaar voor alle klanttypen. Om dit te beperken tot een klanttype, gebruikt u een van de volgende opties:
+This setting doesn't apply to fast checkout.","Standaard zijn betaalmethoden beschikbaar voor alle klanttypen. Om dit te beperken tot een klanttype, gebruikt u een van de volgende opties:
 
 Privé, B2C: Toon deze betaalmethode alleen als de klant geen bedrijfsnaam heeft ingevoerd.
 
 Zakelijk, BB2: Toon deze betaalmethode alleen als de klant een bedrijfsnaam heeft ingevoerd.
 
-Deze instelling is niet van toepassing op Fastcheckout."
+Deze instelling is niet van toepassing op snel bestellen."
 "Select to which customer group iDEAL is available. Customer groups are defined in Magento (Menu: Customers->Customer Groups).
 
-This setting doesn't apply to Fastcheckout.","Selecteer voor welke klantgroep iDEAL beschikbaar is. Klantgroepen worden gedefinieerd in Magento (Menu: Customers->Customer Groups).
+This setting doesn't apply to fast checkout.","Selecteer voor welke klantgroep iDEAL beschikbaar is. Klantgroepen worden gedefinieerd in Magento (Menu: Customers->Customer Groups).
 
-Deze instelling is niet van toepassing op Fastcheckout."
+Deze instelling is niet van toepassing op snel bestellen."
 "Fast Checkout","Snel bestellen"
 "iDEAL Fast Checkout","iDEAL Snel bestellen"
 "Cart page","Winkelwagenpagina"
@@ -347,3 +347,7 @@ Deze instelling heeft geen effect op de productpagina. Als snel bestellen is ing
 "Show the fast checkout button on the cart page, only for guest customers.","Toon de knop voor snel bestellen op de winkelwagenpagina, alleen voor gastklanten."
 "When updating this setting, please flush Magento's cache afterwards ","Wanneer u deze instelling bijwerkt, moet u de cache van Magento daarna leegmaken "
 "Continue","Verder"
+"On - as Optional","Aan - als Optioneel"
+"On - as Required","Aan - als Verplicht"
+"Show notice and abort fast checkout","Toon melding en annuleer snel bestellen"
+"Show intermediate screen to select shipping method","Toon tussenscherm om verzendmethode te selecteren"

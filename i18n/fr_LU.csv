@@ -225,16 +225,16 @@ Proposer ce choix lors du paiement : le client peut choisir lors du paiement ent
 "Refund amount must be greater than 0.00","Le montant doit être supérieur à 0,00"
 "Refund amount must not exceed ","Le montant ne peut excéder "
 "Select a terminal","Sélectionnez un terminal"
-"Determine in which country iDEAL should be available. This setting doesn't apply to Fastcheckout.","Déterminez dans quel pays iDEAL doit être disponible. Ce paramètre ne s'applique pas à Fastcheckout."
-"Set the minimum order amount for iDEAL to be available. Leave blank if you don't want to set a minimum amount. This setting doesn't apply to Fastcheckout.","Définissez le montant minimum de commande pour que iDEAL soit disponible. Laissez ce champ vide si vous ne souhaitez pas définir de montant minimum. Ce paramètre ne s'applique pas à Fastcheckout."
-"Set the maximum order amount for iDEAL to be available. Leave blank if you don't want to set a maximum amount. This setting doesn't apply to Fastcheckout.","Définissez le montant maximum de commande pour que iDEAL soit disponible. Laissez ce champ vide si vous ne souhaitez pas définir de montant maximum. Ce paramètre ne s'applique pas à Fastcheckout."
+"Determine in which country iDEAL should be available. This setting doesn't apply to fast checkout.","Déterminez dans quel pays iDEAL doit être disponible. Ce paramètre ne s'applique pas à Fastcheckout."
+"Set the minimum order amount for iDEAL to be available. Leave blank if you don't want to set a minimum amount. This setting doesn't apply to fast checkout.","Définissez le montant minimum de commande pour que iDEAL soit disponible. Laissez ce champ vide si vous ne souhaitez pas définir de montant minimum. Ce paramètre ne s'applique pas à Fastcheckout."
+"Set the maximum order amount for iDEAL to be available. Leave blank if you don't want to set a maximum amount. This setting doesn't apply to fast checkout.","Définissez le montant maximum de commande pour que iDEAL soit disponible. Laissez ce champ vide si vous ne souhaitez pas définir de montant maximum. Ce paramètre ne s'applique pas à Fastcheckout."
 "By default payment methods are available for all customer types. To limit this to a customer type, use one of the following options:
 
 Private, B2C: Only show this payment method when the customer didn't enter a company name.
 
 Business, BB2: Only show this payment method when the customer entered a company name.
 
-This setting doesn't apply to Fastcheckout.","Par défaut, les modes de paiement sont disponibles pour tous les types de clients. Pour limiter cette option à un type de client, utilisez l'une des options suivantes:
+This setting doesn't apply to fast checkout.","Par défaut, les modes de paiement sont disponibles pour tous les types de clients. Pour limiter cette option à un type de client, utilisez l'une des options suivantes:
 
 Privé, B2C: affichez ce mode de paiement uniquement lorsque le client n'a pas saisi de nom d'entreprise.
 
@@ -243,7 +243,7 @@ Entreprise, BB2: affichez ce mode de paiement uniquement lorsque le client a sai
 Ce paramètre ne s'applique pas à Fastcheckout."
 "Select to which customer group iDEAL is available. Customer groups are defined in Magento (Menu: Customers->Customer Groups).
 
-This setting doesn't apply to Fastcheckout.","Sélectionnez le groupe de clients auquel iDEAL est disponible. Les groupes de clients sont définis dans Magento (Menu: Clients->Groupes de clients).
+This setting doesn't apply to fast checkout.","Sélectionnez le groupe de clients auquel iDEAL est disponible. Les groupes de clients sont définis dans Magento (Menu: Clients->Groupes de clients).
 
 Ce paramètre ne s'applique pas à Fastcheckout."
 "Fast Checkout","Fastcheckout"
@@ -297,3 +297,7 @@ Ce paramètre n'affecte pas la page produit. Si le paiement rapide est activé p
 "Show the fast checkout button on the cart page, only for guest customers.","Afficher le bouton de paiement rapide sur la page du panier, uniquement pour les clients invités."
 "When updating this setting, please flush Magento's cache afterwards ","Lors de la mise à jour de ce paramètre, veuillez ensuite vider le cache de Magento "
 "Continue","Continuer"
+"On - as Optional","Activé - en option"
+"On - as Required","Activé - en requis"
+"Show notice and abort fast checkout","Afficher un avis et abandonner le fastcheckout"
+"Show intermediate screen to select shipping method","Afficher l'écran intermédiaire pour sélectionner la méthode d'expédition"

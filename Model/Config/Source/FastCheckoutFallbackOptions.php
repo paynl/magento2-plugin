@@ -30,7 +30,7 @@ class FastCheckoutFallbackOptions implements ArrayInterface
     public function toArray()
     {
         return [
-            0 => __('Show notice and abort fastcheckout'),
+            0 => __('Show notice and abort fast checkout'),
             1 => __('Show intermediate screen to select shipping method')
         ];
     }
