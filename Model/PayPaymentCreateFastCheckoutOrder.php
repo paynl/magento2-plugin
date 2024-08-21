@@ -214,7 +214,7 @@ class PayPaymentCreateFastCheckoutOrder
         $order->getPayment()->setAdditionalInformation($additionalData);
         $order->save();
 
-        $order->addStatusHistoryComment(__('PAY. - Fast checkout order created'))->save();
+        $order->addStatusHistoryComment(__('PAY. - Created iDEAL Fast Checkout order'))->save();
 
         return $order;
     }

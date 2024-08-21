@@ -274,14 +274,14 @@ Ce bouton permet aux utilisateurs de payer directement depuis le panier sans avo
 "Select the shipping method that should be applied first.","Sélectionnez le mode d’expédition qui doit être appliqué en premier."
 "The default shipping method will be applied to fast checkout orders.","La méthode d'expédition par défaut sera appliquée aux commandes de paiement rapide."
 "Select the fallback shipping method, which will be applied when the default shipping method could not be applied.","Sélectionnez la méthode d'expédition de secours, qui sera appliquée lorsque la méthode d'expédition par défaut ne pourra pas être appliquée."
-"In case the default shipping method could not by applied, this shiping method will be used.","Dans le cas où le mode d'expédition par défaut ne pourrait pas être appliqué, ce mode d'expédition sera utilisé."
+"In case the default shipping method could not by applied, this shipping method will be used.","Dans le cas où le mode d'expédition par défaut ne pourrait pas être appliqué, ce mode d'expédition sera utilisé."
 "Select what should happen when both shipping methods could not be applied:
 
 Show notice and abort fast checkout:
-When This option is selected the fast checkout will be aborted in case the selected shipping method does not work for the order, the customer is redirected back to the cart page and shown a notice.
+When this option is selected the fast checkout will be aborted in case the selected shipping method does not work for the order, the customer is redirected back to the cart page and shown a notice.
 
 Show intermediate screen to select shipping method:
-Using the intermediate screen will allow uses to select their own shipping method in case the selected shipping method does not work for the order.","Sélectionnez ce qui doit se produire lorsque les deux méthodes d'expédition ne peuvent pas être appliquées :
+Using the intermediate screen will allow users to select their own shipping method in case the selected shipping method does not work for the order.","Sélectionnez ce qui doit se produire lorsque les deux méthodes d'expédition ne peuvent pas être appliquées :
 
 Afficher un avis et abandonner le paiement rapide :
 Lorsque cette option est sélectionnée, le paiement rapide sera abandonné si le mode d'expédition sélectionné ne fonctionne pas pour la commande, le client sera redirigé vers la page du panier et un avis s'affichera.

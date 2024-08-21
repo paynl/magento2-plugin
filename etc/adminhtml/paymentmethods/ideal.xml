@@ -155,7 +155,7 @@ This setting doesn't apply to fast checkout.</tooltip>
             <comment><![CDATA[Show payment method only to specific customer groups.]]></comment>
         </field>
         <group id="fastcheckout" translate="label" sortOrder="180" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>iDEAL Fast checkout</label>
+            <label>iDEAL Fast Checkout</label>
             <field id="fast_checkout_cart_enabled" translate="label" type="select" sortOrder="170" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Cart page</label>
                 <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
@@ -211,7 +211,7 @@ This button allows users to checkout directly from the cart without the need to 
                     <field id="active">1</field>
                 </depends>
                 <comment>Select the fallback shipping method, which will be applied when the default shipping method could not be applied.</comment>
-                <tooltip>In case the default shipping method could not by applied, this shiping method will be used.</tooltip>
+                <tooltip>In case the default shipping method could not by applied, this shipping method will be used.</tooltip>
             </field>
             <field id="fast_checkout_use_fallback" translate="label" type="select" sortOrder="182" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Fallback</label>
@@ -223,10 +223,10 @@ This button allows users to checkout directly from the cart without the need to 
                 <tooltip>Select what should happen when both shipping methods could not be applied:
 
 Show notice and abort fast checkout:
-When This option is selected the fast checkout will be aborted in case the selected shipping method does not work for the order, the customer is redirected back to the cart page and shown a notice.
+When this option is selected the fast checkout will be aborted in case the selected shipping method does not work for the order, the customer is redirected back to the cart page and shown a notice.
 
 Show intermediate screen to select shipping method:
-Using the intermediate screen will allow uses to select their own shipping method in case the selected shipping method does not work for the order.</tooltip>
+Using the intermediate screen will allow users to select their own shipping method in case the selected shipping method does not work for the order.</tooltip>
             </field>
             <field id="fast_checkout_use_estimate_selection" translate="label" type="select" sortOrder="183" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Use estimate selection</label>

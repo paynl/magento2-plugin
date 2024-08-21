@@ -338,20 +338,20 @@ This button allows users to checkout directly from the cart without the need to 
 "Select the shipping method that should be applied first.","Select the shipping method that should be applied first."
 "The default shipping method will be applied to fast checkout orders.","The default shipping method will be applied to fast checkout orders."
 "Select the fallback shipping method, which will be applied when the default shipping method could not be applied.","Select the fallback shipping method, which will be applied when the default shipping method could not be applied."
-"In case the default shipping method could not by applied, this shiping method will be used.","In case the default shipping method could not by applied, this shiping method will be used."
+"In case the default shipping method could not by applied, this shipping method will be used.","In case the default shipping method could not by applied, this shipping method will be used."
 "Select what should happen when both shipping methods could not be applied:
 
 Show notice and abort fast checkout:
-When This option is selected the fast checkout will be aborted in case the selected shipping method does not work for the order, the customer is redirected back to the cart page and shown a notice.
+When this option is selected the fast checkout will be aborted in case the selected shipping method does not work for the order, the customer is redirected back to the cart page and shown a notice.
 
 Show intermediate screen to select shipping method:
-Using the intermediate screen will allow uses to select their own shipping method in case the selected shipping method does not work for the order.","Select what should happen when both shipping methods could not be applied:
+Using the intermediate screen will allow users to select their own shipping method in case the selected shipping method does not work for the order.","Select what should happen when both shipping methods could not be applied:
 
 Show notice and abort fast checkout:
-When This option is selected the fast checkout will be aborted in case the selected shipping method does not work for the order, the customer is redirected back to the cart page and shown a notice.
+When this option is selected the fast checkout will be aborted in case the selected shipping method does not work for the order, the customer is redirected back to the cart page and shown a notice.
 
 Show intermediate screen to select shipping method:
-Using the intermediate screen will allow uses to select their own shipping method in case the selected shipping method does not work for the order."
+Using the intermediate screen will allow users to select their own shipping method in case the selected shipping method does not work for the order."
 "When the user selects a shipping method in the estimate on the cart page, this shipping method wil be used for fast checkout.","When the user selects a shipping method in the estimate on the cart page, this shipping method wil be used for fast checkout."
 "When enabled, the fast checkout button will only be shown on the cart page for guest users.
 

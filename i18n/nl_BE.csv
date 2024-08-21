@@ -332,14 +332,14 @@ Met deze knop kunnen gebruikers direct afrekenen vanuit de productpagina zonder 
 "Select the shipping method that should be applied first.","Selecteer de verzendmethode die als eerste moet worden toegepast."
 "The default shipping method will be applied to fast checkout orders.","Voor bestellingen met snel bestellen wordt de standaardverzendmethode toegepast."
 "Select the fallback shipping method, which will be applied when the default shipping method could not be applied.","Selecteer de alternatieve verzendmethode die wordt toegepast als de standaardverzendmethode niet kan worden toegepast."
-"In case the default shipping method could not by applied, this shiping method will be used.","Indien de standaard verzendmethode niet kan worden toegepast, wordt deze verzendmethode gebruikt."
+"In case the default shipping method could not by applied, this shipping method will be used.","Indien de standaard verzendmethode niet kan worden toegepast, wordt deze verzendmethode gebruikt."
 "Select what should happen when both shipping methods could not be applied:
 
 Show notice and abort fast checkout:
-When This option is selected the fast checkout will be aborted in case the selected shipping method does not work for the order, the customer is redirected back to the cart page and shown a notice.
+When this option is selected the fast checkout will be aborted in case the selected shipping method does not work for the order, the customer is redirected back to the cart page and shown a notice.
 
 Show intermediate screen to select shipping method:
-Using the intermediate screen will allow uses to select their own shipping method in case the selected shipping method does not work for the order.","Selecteer wat er moet gebeuren als beide verzendmethoden niet kunnen worden toegepast:
+Using the intermediate screen will allow users to select their own shipping method in case the selected shipping method does not work for the order.","Selecteer wat er moet gebeuren als beide verzendmethoden niet kunnen worden toegepast:
 
 Melding weergeven en snel bestellen afbreken:
 Wanneer deze optie is geselecteerd, wordt het snel bestellen afgebroken als de geselecteerde verzendmethode niet werkt voor de bestelling. De klant wordt teruggeleid naar de winkelwagenpagina en krijgt een melding te zien.

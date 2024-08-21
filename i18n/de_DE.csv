@@ -273,14 +273,14 @@ Mit diesem Button können Benutzer direkt vom Warenkorb aus zur Kaufabwicklung g
 "Select the shipping method that should be applied first.","Wählen Sie die Versandart aus, die zuerst angewendet werden soll."
 "The default shipping method will be applied to fast checkout orders.","Für Bestellungen mit fastcheckout wird die Standardversandmethode angewendet."
 "Select the fallback shipping method, which will be applied when the default shipping method could not be applied.","Wählen Sie die Fallback-Versandmethode aus, die angewendet wird, wenn die Standardversandmethode nicht angewendet werden konnte."
-"In case the default shipping method could not by applied, this shiping method will be used.","Falls die Standardversandart nicht angewendet werden konnte, wird diese Versandart verwendet."
+"In case the default shipping method could not by applied, this shipping method will be used.","Falls die Standardversandart nicht angewendet werden konnte, wird diese Versandart verwendet."
 "Select what should happen when both shipping methods could not be applied:
 
 Show notice and abort fast checkout:
-When This option is selected the fast checkout will be aborted in case the selected shipping method does not work for the order, the customer is redirected back to the cart page and shown a notice.
+When this option is selected the fast checkout will be aborted in case the selected shipping method does not work for the order, the customer is redirected back to the cart page and shown a notice.
 
 Show intermediate screen to select shipping method:
-Using the intermediate screen will allow uses to select their own shipping method in case the selected shipping method does not work for the order.","Wählen Sie aus, was passieren soll, wenn beide Versandmethoden nicht angewendet werden konnten:
+Using the intermediate screen will allow users to select their own shipping method in case the selected shipping method does not work for the order.","Wählen Sie aus, was passieren soll, wenn beide Versandmethoden nicht angewendet werden konnten:
 
 Hinweis anzeigen und Schnellkauf abbrechen:
 Wenn diese Option ausgewählt ist, wird der Schnellkauf abgebrochen, falls die ausgewählte Versandmethode für die Bestellung nicht funktioniert. Der Kunde wird zurück zur Warenkorbseite geleitet und erhält einen Hinweis.
