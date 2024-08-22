@@ -2,8 +2,10 @@
 
 namespace Paynl\Payment\Controller\Checkout;
 
+use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\Request\InvalidRequestException;
+use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderRepository;
 use Paynl\Payment\Controller\CsrfAwareActionInterface;
@@ -47,6 +49,16 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
     private $payHelper;
 
     /**
+     * @var OrderRepositoryInterface
+     */
+    private $orderRepositoryInterface;
+
+    /**
+     * @var SearchCriteriaBuilder
+     */
+    private $searchCriteriaBuilder;
+
+    /**
      * @var
      */
     private $headers;
@@ -78,6 +90,8 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
      * @param PayPayment $payPayment
      * @param PayPaymentCreateFastCheckoutOrder $payPaymentCreateFastCheckoutOrder
      * @param PayHelper $payHelper
+     * @param OrderRepositoryInterface $orderRepositoryInterface
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
      */
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
@@ -86,7 +100,9 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         OrderRepository $orderRepository,
         PayPayment $payPayment,
         PayPaymentCreateFastCheckoutOrder $payPaymentCreateFastCheckoutOrder,
-        PayHelper $payHelper
+        PayHelper $payHelper,
+        OrderRepositoryInterface $orderRepositoryInterface,
+        SearchCriteriaBuilder $searchCriteriaBuilder
     ) {
         $this->result = $result;
         $this->config = $config;
@@ -94,6 +110,8 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         $this->payPayment = $payPayment;
         $this->payPaymentCreateFastCheckoutOrder = $payPaymentCreateFastCheckoutOrder;
         $this->payHelper = $payHelper;
+        $this->orderRepositoryInterface = $orderRepositoryInterface;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         parent::__construct($context);
     }
 
@@ -200,7 +218,14 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
 
         if ($this->isFastCheckout($params)) {
             try {
-                $order = $this->payPaymentCreateFastCheckoutOrder->create($params);
+                $orderId = explode('fastcheckout', $params['orderId']);
+                $quoteId = $orderId[1];
+                $searchCriteria = $this->searchCriteriaBuilder->addFilter('quote_id', $quoteId)->create();
+                $searchResult = $this->orderRepositoryInterface->getList($searchCriteria)->getItems();
+                $order = array_shift($searchResult) ?? null;
+                if (empty($order)) {
+                    $order = $this->payPaymentCreateFastCheckoutOrder->create($params);
+                }
             } catch (\Exception $e) {
                 $this->payHelper->logCritical($e, $params);
                 return $this->result->setContents('FALSE| Error creating fast checkout order. ' . $e->getMessage());

@@ -64,7 +64,7 @@ class ActiveShippingMethods implements ArrayInterface
                 $carrierTitle = $this->scopeConfig->getValue('carriers/' . $carrierCode . '/title');
                 $carrierName = $this->scopeConfig->getValue('carriers/' . $carrierCode . '/name');
             }
-            if ($code != 'instore_pickup') {
+            if ($code != 'instore_pickup' && $code != 'instore_instore') {
                 $methods[$code] = '[' . $carrierTitle . '] ' . $carrierName;
             }
         }

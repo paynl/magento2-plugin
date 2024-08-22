@@ -121,7 +121,7 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
         $shippingMethodsAvaileble = [];
         foreach ($shippingData as $shipping) {
             $code = $shipping->getCarrierCode() . '_' . $shipping->getMethodCode();
-            if ($code != 'instore_pickup') {
+            if ($code != 'instore_pickup' && $code != 'instore_instore') {
                 $shippingMethodsAvaileble[$code] = $code;
             }
         }
@@ -199,7 +199,7 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
         $currency = $this->storeManager->getStore()->getCurrentCurrency();
         $shippingRates = [];
         foreach ($rates as $rate) {
-            if (strpos($rate->getCode(), 'error') === false && $rate->getCode() != 'instore_pickup') {
+            if (strpos($rate->getCode(), 'error') === false && $rate->getCode() != 'instore_pickup' && $rate->getCode() != 'instore_instore') {
                 $shippingRates[$rate->getCode()] = [
                     'code' => $rate->getCode(),
                     'method' => $rate->getCarrierTitle(),
