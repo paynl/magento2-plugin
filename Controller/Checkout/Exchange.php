@@ -208,7 +208,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         $params = $this->getPayLoad($this->getRequest());
         $action = strtolower($params['action'] ?? '');
         $payOrderId = $params['payOrderId'] ?? null;
-        $orderEntityId = $params['orderId'] ?? null;
+        $orderId = $params['orderId'] ?? null;
         $paymentProfileId = $params['paymentProfile'] ?? null;
         $order = null;
 
@@ -231,6 +231,25 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
                 return $this->result->setContents('FALSE| Error creating fast checkout order. ' . $e->getMessage());
             }
         }
+
+        try {
+            $this->config->configureSDK(true);
+            $transaction = Transaction::get($payOrderId);
+        } catch (\Exception $e) {
+            $this->payHelper->logCritical($e, $params, $order->getStore());
+            $this->removeProcessing($payOrderId, $action);
+            return $this->result->setContents('FALSE| Error fetching transaction. ' . $e->getMessage());
+        }
+
+        $orderIdTransaction = $transaction->getExtra1();
+
+        if ($orderId != $orderIdTransaction && !$this->isFastCheckout($params)) {
+            $this->payHelper->logCritical('Transaction mismatch ' . $orderId . ' / ' . $orderIdTransaction, $params, $order->getStore());
+            $this->removeProcessing($payOrderId, $action);
+            return $this->result->setContents('FALSE|Transaction mismatch:' . $transaction->getExtra3() . '-' . $transaction->getExtra1());
+        }
+
+        $orderEntityId = $transaction->getExtra3();
 
         if (empty($payOrderId) || empty($orderEntityId)) {
             $this->payHelper->logCritical('Exchange: order_id or orderEntity is not set', $params);
@@ -257,15 +276,6 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         }
 
         $this->config->setStore($order->getStore());
-
-        try {
-            $this->config->configureSDK(true);
-            $transaction = Transaction::get($payOrderId);
-        } catch (\Exception $e) {
-            $this->payHelper->logCritical($e, $params, $order->getStore());
-            $this->removeProcessing($payOrderId, $action);
-            return $this->result->setContents('FALSE| Error fetching transaction. ' . $e->getMessage());
-        }
 
         if ($transaction->isPending()) {
             if ($action == 'new_ppt') {
@@ -296,13 +306,6 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         }
 
         $payment = $order->getPayment();
-        $orderEntityIdTransaction = $transaction->getExtra3();
-
-        if ($orderEntityId != $orderEntityIdTransaction && !$this->isFastCheckout($params)) {
-            $this->payHelper->logCritical('Transaction mismatch ' . $orderEntityId . ' / ' . $orderEntityIdTransaction, $params, $order->getStore());
-            $this->removeProcessing($payOrderId, $action);
-            return $this->result->setContents('FALSE|Transaction mismatch');
-        }
 
         if ($transaction->isRefunded(false) && substr($action, 0, 6) == 'refund') {
             if ($this->config->refundFromPay() && $order->getTotalDue() == 0) {
