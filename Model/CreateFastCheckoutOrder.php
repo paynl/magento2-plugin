@@ -11,7 +11,7 @@ use Magento\Quote\Model\QuoteManagement;
 use Magento\Sales\Model\OrderFactory;
 use Magento\Store\Model\StoreManagerInterface;
 
-class PayPaymentCreateFastCheckoutOrder
+class CreateFastCheckoutOrder
 {
     /**
      * @var StoreManagerInterface

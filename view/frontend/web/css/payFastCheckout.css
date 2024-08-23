@@ -3,8 +3,6 @@
     width: 100%;
 }
 
-
-
 #paynl_fast_checkout_cart button,
 #paynl_fast_checkout_product button,
 #paynl_fast_checkout_fallback button,
@@ -23,7 +21,7 @@
     background-position: 8px center;
 }
 
-#top-cart-btn-fastcheckout{
+#top-cart-btn-fastcheckout {
     margin-top: 5px;
 }
 
@@ -51,15 +49,15 @@
     width: 100%;
 }
 
-@media all and (min-width: 769px),print {
+@media all and (min-width: 769px), print {
     #paynl_fast_checkout_product {
         display: block;
         margin-bottom: 0;
         margin-right: 1%;
         width: 49%;
     }
-    
-    #paynl_fast_checkout_fallback button{
+
+    #paynl_fast_checkout_fallback button {
         max-width: 250px;
     }
 }

@@ -130,6 +130,30 @@ class Finish extends PayAction
     }
 
     /**
+     * @return string
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    private function getFastCheckoutPath()
+    {
+        $path = $bSuccess ? Config::FINISH_PAY_FC : ($bPending ? Config::PENDING_PAY : 'checkout/cart');
+
+        $session = $this->checkoutSession;
+        $quote = $session->getQuote();
+
+        if ($bSuccess || $bPending) {
+            $quote->setIsActive(false);
+            $this->quoteRepository->save($quote);
+        } else {
+            $quote->setIsActive(true);
+            $this->quoteRepository->save($quote);
+            $session->replaceQuote($quote);
+        }
+
+        return $path;
+    }
+
+    /**
      * @return resultRedirectFactory|void
      */
     public function execute()
@@ -152,27 +176,10 @@ class Finish extends PayAction
 
         try {
             if ($magOrderId == 'fc') {
-                if ($bSuccess) {
-                    $resultRedirect->setPath(Config::FINISH_PAY_FC, ['_query' => ['utm_nooverride' => '1']]);
-                } elseif ($bPending) {
-                    $resultRedirect->setPath(Config::PENDING_PAY, ['_query' => ['utm_nooverride' => '1']]);
-                } else {
-                    $resultRedirect->setPath('checkout/cart', ['_query' => ['utm_nooverride' => '1']]);
-                }
-
-                $session = $this->checkoutSession;
-                $quote = $session->getQuote();
-                if ($bSuccess || $bPending) {
-                    $quote->setIsActive(false);
-                    $this->quoteRepository->save($quote);
-                } else {
-                    $quote->setIsActive(true);
-                    $this->quoteRepository->save($quote);
-                    $session->replaceQuote($quote);
-                }
-
+                $resultRedirect->setPath($this->getFastCheckoutPath(), ['_query' => ['utm_nooverride' => '1']]);
                 return $resultRedirect;
             }
+
             $this->checkEmpty($magOrderId, 'magOrderId', 1012);
             $order = $this->orderRepository->get($magOrderId);
             $this->checkEmpty($order, 'order', 1013);
