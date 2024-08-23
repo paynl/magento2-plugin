@@ -88,7 +88,6 @@ class PayPaymentCreateFastCheckoutOrder
     public function create($params)
     {
         try {
-
             $checkoutData = $params['checkoutData'];
 
             $customerData = $checkoutData['customer'] ?? null;
@@ -220,7 +219,6 @@ class PayPaymentCreateFastCheckoutOrder
             $order->addStatusHistoryComment(__('PAY. - Created iDEAL Fast Checkout order'))->save();
 
             return $order;
-
         } catch (NoSuchEntityException $e) {
             throw new \Exception("Order already exsists", 10001);
         }
