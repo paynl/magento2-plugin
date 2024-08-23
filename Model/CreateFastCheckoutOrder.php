@@ -4,10 +4,12 @@ namespace Paynl\Payment\Model;
 
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Model\CustomerFactory;
+use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Quote\Api\ShippingMethodManagementInterface;
 use Magento\Quote\Model\QuoteFactory;
 use Magento\Quote\Model\QuoteManagement;
+use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\OrderFactory;
 use Magento\Store\Model\StoreManagerInterface;
 
@@ -54,6 +56,16 @@ class CreateFastCheckoutOrder
     private $shippingMethodManagementInterface;
 
     /**
+     * @var OrderRepositoryInterface
+     */
+    private $orderRepositoryInterface;
+
+    /**
+     * @var SearchCriteriaBuilder
+     */
+    private $searchCriteriaBuilder;
+
+    /**
      * @param StoreManagerInterface $storeManager
      * @param QuoteFactory $quote
      * @param QuoteManagement $quoteManagement
@@ -61,6 +73,8 @@ class CreateFastCheckoutOrder
      * @param CustomerRepositoryInterface $customerRepository
      * @param OrderFactory $orderFactory
      * @param ShippingMethodManagementInterface $shippingMethodManagementInterface
+     * @param OrderRepositoryInterface $orderRepositoryInterface
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
      */
     public function __construct(
         StoreManagerInterface $storeManager,
@@ -69,7 +83,9 @@ class CreateFastCheckoutOrder
         CustomerFactory $customerFactory,
         CustomerRepositoryInterface $customerRepository,
         OrderFactory $orderFactory,
-        ShippingMethodManagementInterface $shippingMethodManagementInterface
+        ShippingMethodManagementInterface $shippingMethodManagementInterface,
+        OrderRepositoryInterface $orderRepositoryInterface,
+        SearchCriteriaBuilder $searchCriteriaBuilder
     ) {
         $this->storeManager = $storeManager;
         $this->quote = $quote;
@@ -78,6 +94,8 @@ class CreateFastCheckoutOrder
         $this->customerRepository = $customerRepository;
         $this->orderFactory = $orderFactory;
         $this->shippingMethodManagementInterface = $shippingMethodManagementInterface;
+        $this->orderRepositoryInterface = $orderRepositoryInterface;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
     }
 
     /**
@@ -87,22 +105,22 @@ class CreateFastCheckoutOrder
      */
     public function create($params)
     {
+        $checkoutData = $params['checkoutData'];
+
+        $customerData = $checkoutData['customer'] ?? null;
+        $billingAddressData = $checkoutData['billingAddress'] ?? null;
+        $shippingAddressData = $checkoutData['shippingAddress'] ?? null;
+
+        if (empty($customerData) || empty($billingAddressData) || empty($shippingAddressData)) {
+            throw new \Exception("Missing data, cannot create order.");
+        }
+
+        $payOrderId = $params['payOrderId'];
+
+        $orderId = explode('fastcheckout', $params['orderId']);
+        $quoteId = $orderId[1];
+
         try {
-            $checkoutData = $params['checkoutData'];
-
-            $customerData = $checkoutData['customer'] ?? null;
-            $billingAddressData = $checkoutData['billingAddress'] ?? null;
-            $shippingAddressData = $checkoutData['shippingAddress'] ?? null;
-
-            if (empty($customerData) || empty($billingAddressData) || empty($shippingAddressData)) {
-                throw new \Exception("Missing data, cannot create order.");
-            }
-
-            $payOrderId = $params['payOrderId'];
-
-            $orderId = explode('fastcheckout', $params['orderId']);
-            $quoteId = $orderId[1];
-
             $quote = $this->quote->create()->loadByIdWithoutStore($quoteId);
             $storeId = $quote->getStoreId();
 
@@ -217,10 +235,14 @@ class CreateFastCheckoutOrder
             $order->save();
 
             $order->addStatusHistoryComment(__('PAY. - Created iDEAL Fast Checkout order'))->save();
-
-            return $order;
         } catch (NoSuchEntityException $e) {
-            throw new \Exception("Order already exsists", 10001);
+            $searchCriteria = $this->searchCriteriaBuilder->addFilter('quote_id', $quoteId)->create();
+            $searchResult = $this->orderRepositoryInterface->getList($searchCriteria)->getItems();
+            $order = array_shift($searchResult) ?? null;
+            if (empty($order)) {
+                throw new \Exception("Order can't be found.");
+            }
         }
+        return $order;
     }
 }
