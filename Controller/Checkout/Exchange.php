@@ -246,7 +246,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         }
 
         # In case of fastcheckout, there may already be an order.
-        if (empty($order))
+        if (empty($order)) {
             try {
                 $order = $this->orderRepository->get($orderEntityId);
                 if (empty($order)) {
