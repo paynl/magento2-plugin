@@ -222,17 +222,21 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
 
         if ($this->isFastCheckout($params)) {
             try {
-                $orderId = explode('fastcheckout', $params['orderId']);
-                $quoteId = $orderId[1];
-                $searchCriteria = $this->searchCriteriaBuilder->addFilter('quote_id', $quoteId)->create();
-                $searchResult = $this->orderRepositoryInterface->getList($searchCriteria)->getItems();
-                $order = array_shift($searchResult) ?? null;
-                if (empty($order)) {
-                    $order = $this->payPaymentCreateFastCheckoutOrder->create($params);
-                }
+                $order = $this->payPaymentCreateFastCheckoutOrder->create($params);
             } catch (\Exception $e) {
-                $this->payHelper->logCritical($e, $params);
-                return $this->result->setContents('FALSE| Error creating fast checkout order. ' . $e->getMessage());
+                $this->payHelper->logCritical($e->getMessage(), $params);
+                if ($e->getCode() == 10001) {
+                    $orderId = explode('fastcheckout', $params['orderId']);
+                    $quoteId = $orderId[1];
+                    $searchCriteria = $this->searchCriteriaBuilder->addFilter('quote_id', $quoteId)->create();
+                    $searchResult = $this->orderRepositoryInterface->getList($searchCriteria)->getItems();
+                    $order = array_shift($searchResult) ?? null;
+                    if (empty($order)) {
+                        return $this->result->setContents('FALSE| Order can\'t be found.');
+                    }
+                } else {
+                    return $this->result->setContents('FALSE| Error creating fast checkout order. ' . $e->getMessage());
+                }
             }
         }
 
