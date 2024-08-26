@@ -130,9 +130,12 @@ class Finish extends PayAction
     }
 
     /**
+     * @param boolean $bSuccess
+     * @param boolean $bPending
      * @return string
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
      */
     private function getFastCheckoutPath($bSuccess, $bPending)
     {

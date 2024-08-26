@@ -240,6 +240,11 @@ class CreateFastCheckoutOrder
         return $order;
     }
 
+    /**
+     * @param string $quoteId
+     * @return Order
+     * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
+     */
     public function getExsistingOrder($quoteId)
     {
         $searchCriteria = $this->searchCriteriaBuilder->addFilter('quote_id', $quoteId)->create();
