@@ -41,7 +41,6 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
     private $createFastCheckoutOrder;
 
     /**
-     *
      * @var \Paynl\Payment\Helper\PayHelper;
      */
     private $payHelper;
@@ -52,7 +51,6 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
     private $headers;
 
     /**
-     *
      * @param RequestInterface $request
      * @return null
      */
@@ -138,7 +136,6 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             $extra3 = $request->extra3 ?? null;
             $data = null;
         } else {
-            # TGU
             if ($_request->isGet() || !$this->isSignExchange()) {
                 $data['object'] = $request->object ?? null;
             } else {
@@ -161,7 +158,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             $checkoutData = $data['object']['checkoutData'] ?? '';
         }
 
-        // Return mapped data so it works for all type of exchanges.
+        # Return mapped data so it works for all type of exchanges.
         return [
             'action' => $action,
             'paymentProfile' => $paymentProfile ?? null,

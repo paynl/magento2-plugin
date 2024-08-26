@@ -106,7 +106,6 @@ class CreateFastCheckoutOrder
     public function create($params)
     {
         $checkoutData = $params['checkoutData'];
-
         $customerData = $checkoutData['customer'] ?? null;
         $billingAddressData = $checkoutData['billingAddress'] ?? null;
         $shippingAddressData = $checkoutData['shippingAddress'] ?? null;
@@ -118,7 +117,7 @@ class CreateFastCheckoutOrder
         $payOrderId = $params['payOrderId'];
 
         $orderId = explode('fastcheckout', $params['orderId']);
-        $quoteId = $orderId[1];
+        $quoteId = $orderId[1] ?? '';
 
         try {
             $quote = $this->quote->create()->loadByIdWithoutStore($quoteId);
@@ -221,7 +220,7 @@ class CreateFastCheckoutOrder
             $quote->setInventoryProcessed(false);
             $quote->save();
 
-            // Set Sales Order Payment
+            # Set Sales Order Payment
             $quote->getPayment()->importData(['method' => 'paynl_payment_ideal']);
             $quote->collectTotals()->save();
 
@@ -238,7 +237,7 @@ class CreateFastCheckoutOrder
         } catch (NoSuchEntityException $e) {
             $searchCriteria = $this->searchCriteriaBuilder->addFilter('quote_id', $quoteId)->create();
             $searchResult = $this->orderRepositoryInterface->getList($searchCriteria)->getItems();
-            $order = array_shift($searchResult) ?? null;
+            $order = array_shift($searchResult ?? []) ?? null;
             if (empty($order)) {
                 throw new \Exception("Order can't be found.");
             }
