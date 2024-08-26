@@ -148,7 +148,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
                     throw new Exception('Cant handle exchange type other then order');
                 }
             }
-            $this->payHelper->logDebug('payload', $data);
+
             $payOrderId = $data['object']['orderId'] ?? '';
             $internalStateId = $data['object']['status']['code'] ?? '';
             $internalStateName = $data['object']['status']['action'] ?? '';
@@ -208,7 +208,8 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
                 return $this->result->setContents('FALSE| Error creating fast checkout order. ' . $e->getMessage());
             }
         } elseif (strpos($params['extra3'] ?? '', "fastcheckout") !== false) {
-            return $this->result->setContents('TRUE| Ignoring fastcheckout.');
+            # Disabled fastcheckout related actions.
+            return $this->result->setContents('TRUE| Ignoring fastcheckout action ' . $action);
         }
 
         if (empty($payOrderId)) {
@@ -220,7 +221,6 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         if (empty($order)) {
             try {
                 if (empty($orderEntityId)) {
-                    $this->payHelper->logCritical('Exchange: orderEntityId is not set', $params);
                     throw new \Exception('orderEntityId is not set in the request');
                 }
                 $order = $this->orderRepository->get($orderEntityId);

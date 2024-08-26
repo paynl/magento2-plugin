@@ -235,7 +235,7 @@ class CreateFastCheckoutOrder
 
             $order->addStatusHistoryComment(__('PAY. - Created iDEAL Fast Checkout order'))->save();
         } catch (NoSuchEntityException $e) {
-            $order = $this->getExsistingOrder($quoteId);
+            $order = $this->getExistingOrder($quoteId);
         }
         return $order;
     }
@@ -243,9 +243,10 @@ class CreateFastCheckoutOrder
     /**
      * @param string $quoteId
      * @return Order
+     * @throws \Exception
      * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
      */
-    public function getExsistingOrder($quoteId)
+    public function getExistingOrder($quoteId)
     {
         $searchCriteria = $this->searchCriteriaBuilder->addFilter('quote_id', $quoteId)->create();
         $searchResult = $this->orderRepositoryInterface->getList($searchCriteria)->getItems();
