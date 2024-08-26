@@ -235,12 +235,20 @@ class CreateFastCheckoutOrder
 
             $order->addStatusHistoryComment(__('PAY. - Created iDEAL Fast Checkout order'))->save();
         } catch (NoSuchEntityException $e) {
-            $searchCriteria = $this->searchCriteriaBuilder->addFilter('quote_id', $quoteId)->create();
-            $searchResult = $this->orderRepositoryInterface->getList($searchCriteria)->getItems();
-            $order = array_shift($searchResult ?? []) ?? null;
-            if (empty($order)) {
-                throw new \Exception("Order can't be found.");
-            }
+            $order = $this->getExsistingOrder($quoteId);
+        }
+        return $order;
+    }
+
+    public function getExsistingOrder($quoteId)
+    {
+        $searchCriteria = $this->searchCriteriaBuilder->addFilter('quote_id', $quoteId)->create();
+        $searchResult = $this->orderRepositoryInterface->getList($searchCriteria)->getItems();
+        if (is_array($searchResult) && !empty($searchResult)) {
+            $order = array_shift($searchResult);
+        }
+        if (empty($order)) {
+            throw new \Exception("Order can't be found.");
         }
         return $order;
     }

@@ -134,10 +134,9 @@ class Finish extends PayAction
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    private function getFastCheckoutPath()
+    private function getFastCheckoutPath($bSuccess, $bPending)
     {
         $path = $bSuccess ? Config::FINISH_PAY_FC : ($bPending ? Config::PENDING_PAY : 'checkout/cart');
-
         $session = $this->checkoutSession;
         $quote = $session->getQuote();
 
@@ -176,7 +175,7 @@ class Finish extends PayAction
 
         try {
             if ($magOrderId == 'fc') {
-                $resultRedirect->setPath($this->getFastCheckoutPath(), ['_query' => ['utm_nooverride' => '1']]);
+                $resultRedirect->setPath($this->getFastCheckoutPath($bSuccess, $bPending), ['_query' => ['utm_nooverride' => '1']]);
                 return $resultRedirect;
             }
 

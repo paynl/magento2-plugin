@@ -179,7 +179,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
      */
     private function isFastCheckout($params)
     {
-        return strpos($params['orderId'], "fastcheckout") !== false && !empty($params['checkoutData'] ?? '');
+        return strpos($params['orderId'] ?? '', "fastcheckout") !== false && !empty($params['checkoutData'] ?? '');
     }
 
     /**
@@ -202,20 +202,27 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         if ($this->isFastCheckout($params)) {
             try {
                 $order = $this->createFastCheckoutOrder->create($params);
+                $orderEntityId = $order->getId();
             } catch (\Exception $e) {
                 $this->payHelper->logCritical($e->getMessage(), $params);
                 return $this->result->setContents('FALSE| Error creating fast checkout order. ' . $e->getMessage());
             }
+        } elseif (strpos($params['extra3'] ?? '', "fastcheckout") !== false) {
+            return $this->result->setContents('TRUE| Ignoring fastcheckout.');
         }
 
-        if (empty($payOrderId) || empty($orderEntityId)) {
-            $this->payHelper->logCritical('Exchange: order_id or orderEntity is not set', $params);
+        if (empty($payOrderId)) {
+            $this->payHelper->logCritical('Exchange: order_id is not set', $params);
             return $this->result->setContents('FALSE| order_id is not set in the request');
         }
 
         # In case of fastcheckout, there may already be an order.
         if (empty($order)) {
             try {
+                if (empty($orderEntityId)) {
+                    $this->payHelper->logCritical('Exchange: orderEntityId is not set', $params);
+                    throw new \Exception('orderEntityId is not set in the request');
+                }
                 $order = $this->orderRepository->get($orderEntityId);
                 if (empty($order)) {
                     $this->payHelper->logCritical('Cannot load order: ' . $orderEntityId);
