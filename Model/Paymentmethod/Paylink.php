@@ -2,8 +2,8 @@
 
 namespace Paynl\Payment\Model\Paymentmethod;
 
-use Magento\Sales\Model\Order;
 use Magento\Framework\DataObject;
+use Magento\Sales\Model\Order;
 use Paynl\Payment\Helper\PayHelper;
 use Paynl\Payment\Model\PayPaymentCreate;
 
@@ -58,14 +58,14 @@ class Paylink extends PaymentMethod
             $status = $this->getConfigData('order_status');
             $url = $transaction->getRedirectUrl();
 
-            $haystack  = $this->getLocale->getLocale();
+            $haystack = $this->getLocale->getLocale();
             $lang = strstr($haystack, '_', true);
 
             $pos = strrpos($url, 'NL');
             if ($pos !== false) {
                 $url = substr_replace($url, strtoupper($lang), $pos, strlen('NL'));
             }
-            
+
             $send_paylink_email = $this->_scopeConfig->getValue('payment/paynl_payment_paylink/send_paylink_email', 'store', $storeId);
 
             if ($send_paylink_email == 0) {
@@ -122,12 +122,12 @@ class Paylink extends PaymentMethod
                         'body' => $body,
                         'order' => $order,
                         'store' => $store,
-                        'customer_name' =>  $order->getCustomerName(),
+                        'customer_name' => $order->getCustomerName(),
                         'paylink' => $url,
                         'support_email' => $supportEmail,
                         'current_language' => $lang,
-                        'order_id' =>  $order->getEntityId(),
-                        'order_increment_id' =>  $order->getIncrementId(),
+                        'order_id' => $order->getEntityId(),
+                        'order_increment_id' => $order->getIncrementId(),
                         'billing' => $order->getBillingAddress(),
                         'payment_html' => $orderHTML,
                         'formattedShippingAddress' => $order->getIsVirtual() ? null : $this->addressRenderer->format($order->getShippingAddress(), 'html'),
