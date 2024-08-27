@@ -46,6 +46,11 @@ class Paylink extends PaymentMethod
             $order = $this->getInfoInstance()->getOrder();
             $this->orderRepository->save($order);
 
+            $store = $order->getStore();
+            $storeId = $order->getStoreId();
+
+            $this->paynlConfig->setStore($store);
+
             $transaction = (new PayPaymentCreate($order, $this))->create();
 
             $order->getPayment()->setAdditionalInformation('transactionId', $transaction->getTransactionId());
@@ -60,9 +65,7 @@ class Paylink extends PaymentMethod
             if ($pos !== false) {
                 $url = substr_replace($url, strtoupper($lang), $pos, strlen('NL'));
             }
-
-            $store = $order->getStore();
-            $storeId = $order->getStoreId();
+            
             $send_paylink_email = $this->_scopeConfig->getValue('payment/paynl_payment_paylink/send_paylink_email', 'store', $storeId);
 
             if ($send_paylink_email == 0) {
