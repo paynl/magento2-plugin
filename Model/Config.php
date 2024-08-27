@@ -13,6 +13,7 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 class Config
 {
     public const FINISH_PAY = 'paynl/order/finish';
+    public const CONFIRM_PAY = 'paynl/order/confirm';
     public const PENDING_PAY = 'paynl/order/pending';
     public const CANCEL_PAY = 'paynl/order/cancel';
     public const FINISH_STANDARD = 'checkout/onepage/success';
@@ -22,6 +23,7 @@ class Config
     public const ORDERSTATUS_DENIED = -63;
     public const ORDERSTATUS_CANCELED = -90;
     public const ORDERSTATUS_VERIFY = 85;
+    public const ORDERSTATUS_CONFIRM = 98;
 
 
     /** @var  Store */
