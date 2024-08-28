@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Paynl_Payment::css/payFastCheckout.css" />
+    </head>
+    <body>
+        <referenceBlock name="head.components">
+            <block class="Paynl\Payment\Block\Checkout\FastCheckout" name="fast.checkout.settings" template="Paynl_Payment::pay_fast_checkout_minicart.phtml" cacheable="false">
+                <arguments>
+                    <argument name="view_model" xsi:type="object">Paynl\Payment\ViewModel\FastCheckout</argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+        <referenceContainer name="header-wrapper">            
+            <referenceBlock name="minicart">                
+                <arguments>
+                    <argument name="jsLayout" xsi:type="array">
+                        <item name="components" xsi:type="array">
+                            <item name="minicart_content" xsi:type="array">
+                                <item name="children" xsi:type="array">
+                                    <item name="extra_info" xsi:type="array">                                        
+                                        <item name="children" xsi:type="array">
+                                            <item name="extra_info_btn" xsi:type="array">
+                                                <item name="component" xsi:type="string">Paynl_Payment/js/minicart</item>
+                                            </item>
+                                        </item>
+                                    </item>                                 
+                                </item>
+                            </item>
+                        </item>
+                    </argument>
+                </arguments>
+            </referenceBlock>
+        </referenceContainer>       
+    </body>
+</page>

@@ -7,6 +7,7 @@ use Magento\InventoryInStorePickupShippingApi\Model\Carrier\InStorePickup;
 use Magento\Sales\Model\Order;
 use Paynl\Payment\Helper\PayHelper;
 use Paynl\Payment\Model\Paymentmethod\PaymentMethod;
+use Magento\Store\Model\StoreManagerInterface;
 
 class PayPaymentCreate
 {
@@ -43,17 +44,17 @@ class PayPaymentCreate
     /**
      * @var integer
      */
-    private $paymentMethodId;
+    protected $paymentMethodId;
 
     /**
      * @var integer
      */
-    private $testMode;
+    protected $testMode;
 
     /**
      * @var \Paynl\Payment\Model\Config
      */
-    private $payConfig;
+    protected $payConfig;
 
     /**
      * @var \Magento\Framework\App\Config\ScopeConfigInterface
@@ -63,12 +64,12 @@ class PayPaymentCreate
     /**
      * @var PaymentMethod
      */
-    private $methodInstance;
+    protected $methodInstance;
 
     /**
      * @var array
      */
-    private $paymentData = [];
+    protected $paymentData = [];
 
     /**
      * @var array
@@ -86,29 +87,40 @@ class PayPaymentCreate
     private $order;
 
     /**
-     * @param Order $order
+     * @param null|Order $order
      * @param PaymentMethod $methodInstance
      * @throws \Exception
+     * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
      */
-    public function __construct(Order $order, PaymentMethod $methodInstance)
+    public function __construct($order, PaymentMethod $methodInstance)
     {
         $this->methodInstance = $methodInstance;
         $this->payConfig = $methodInstance->paynlConfig;
         $this->testMode = $this->payConfig->isTestMode();
         $this->scopeConfig = $methodInstance->getScopeConfig();
-        $this->order = $order;
-        $this->orderId = $order->getIncrementId();
-        $this->additionalData = $order->getPayment()->getAdditionalInformation();
-        $this->setAmount($this->payConfig->isAlwaysBaseCurrency() ? $order->getBaseGrandTotal() : $order->getGrandTotal());
-        $this->setCurrency($this->payConfig->isAlwaysBaseCurrency() ? $order->getBaseCurrencyCode() : $order->getOrderCurrencyCode());
+        $finishUrl = $exchangeUrl = '';
+
+        if ($order instanceof Order) {
+            $this->order = $order;
+            $this->orderId = $order->getIncrementId();
+            $this->additionalData = $order->getPayment()->getAdditionalInformation();
+            $this->setAmount($this->payConfig->isAlwaysBaseCurrency() ? $order->getBaseGrandTotal() : $order->getGrandTotal());
+            $this->setCurrency($this->payConfig->isAlwaysBaseCurrency() ? $order->getBaseCurrencyCode() : $order->getOrderCurrencyCode());
+
+            $finishUrl = $order->getStore()->getBaseUrl() . 'paynl/checkout/finish/?entityid=' . $order->getEntityId();
+            $exchangeUrl = $order->getStore()->getBaseUrl() . 'paynl/checkout/exchange/';
+        }
+
         $this->setCompanyField($this->additionalData['companyfield'] ?? '');
         $this->setCocNumber($this->additionalData['cocnumber'] ?? '');
         $this->setVatNumber($this->additionalData['vatnumber'] ?? '');
         $this->setIssuer($this->additionalData['payment_option'] ?? '');
         $this->setExpireData((int)($this->additionalData['valid_days'] ?? ''));
-        $this->setFinishURL($this->additionalData['returnUrl'] ?? $order->getStore()->getBaseUrl() . 'paynl/checkout/finish/?entityid=' . $order->getEntityId());
-        $this->setExchangeURL($this->additionalData['exchangeUrl'] ?? $order->getStore()->getBaseUrl() . 'paynl/checkout/exchange/');
+        $this->setFinishURL($this->additionalData['returnUrl'] ?? $finishUrl);
+        $this->setExchangeURL($this->additionalData['exchangeUrl'] ?? $exchangeUrl);
         $this->setPaymentMethod($this->methodInstance->getPaymentOptionId());
+
+        return $this;
     }
 
     /**
@@ -182,6 +194,14 @@ class PayPaymentCreate
     {
         $this->paymentData['returnURL'] = $finishUrl;
         return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function getFinishURL()
+    {
+        return $this->paymentData['returnURL'];
     }
 
     /**

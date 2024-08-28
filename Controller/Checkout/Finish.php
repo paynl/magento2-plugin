@@ -3,7 +3,6 @@
 namespace Paynl\Payment\Controller\Checkout;
 
 use Magento\Checkout\Model\Session;
-use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Event\ManagerInterface;
 use Magento\Quote\Model\QuoteFactory;
@@ -131,6 +130,32 @@ class Finish extends PayAction
     }
 
     /**
+     * @param boolean $bSuccess
+     * @param boolean $bPending
+     * @return string
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
+     */
+    private function getFastCheckoutPath($bSuccess, $bPending)
+    {
+        $path = $bSuccess ? Config::FINISH_PAY_FC : ($bPending ? Config::PENDING_PAY : 'checkout/cart');
+        $session = $this->checkoutSession;
+        $quote = $session->getQuote();
+
+        if ($bSuccess || $bPending) {
+            $quote->setIsActive(false);
+            $this->quoteRepository->save($quote);
+        } else {
+            $quote->setIsActive(true);
+            $this->quoteRepository->save($quote);
+            $session->replaceQuote($quote);
+        }
+
+        return $path;
+    }
+
+    /**
      * @return resultRedirectFactory|void
      */
     public function execute()
@@ -138,7 +163,8 @@ class Finish extends PayAction
         $resultRedirect = $this->resultRedirectFactory->create();
         $params = $this->getRequest()->getParams();
         $payOrderId = empty($params['orderId']) ? (empty($params['orderid']) ? null : $params['orderid']) : $params['orderId'];
-        $orderStatusId = empty($params['orderStatusId']) ? null : (int)$params['orderStatusId'];
+        $orderStatusId = empty($params['orderStatusId']) ? null : (int) $params['orderStatusId'];
+        $orderStatusId = (empty($orderStatusId) && !empty($params['statusCode'])) ? (int) $params['statusCode'] : $orderStatusId;
         $magOrderId = empty($params['entityid']) ? null : $params['entityid'];
         $orderIds = empty($params['order_ids']) ? null : $params['order_ids'];
         $pickupMode = !empty($params['pickup']);
@@ -151,6 +177,11 @@ class Finish extends PayAction
         $multiShipFinish = is_array($orderIds);
 
         try {
+            if ($magOrderId == 'fc') {
+                $resultRedirect->setPath($this->getFastCheckoutPath($bSuccess, $bPending), ['_query' => ['utm_nooverride' => '1']]);
+                return $resultRedirect;
+            }
+
             $this->checkEmpty($magOrderId, 'magOrderId', 1012);
             $order = $this->orderRepository->get($magOrderId);
             $this->checkEmpty($order, 'order', 1013);
