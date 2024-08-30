@@ -173,6 +173,7 @@ class Finish extends PayAction
         $bDenied = $orderStatusId === Config::ORDERSTATUS_DENIED;
         $bCanceled = $orderStatusId === Config::ORDERSTATUS_CANCELED;
         $bVerify = $orderStatusId === Config::ORDERSTATUS_VERIFY;
+        $bConfirm = $orderStatusId === Config::ORDERSTATUS_CONFIRM;
         $isPinTransaction = false;
         $multiShipFinish = is_array($orderIds);
 
@@ -218,10 +219,13 @@ class Finish extends PayAction
                 $bSuccess = ($transaction->isPaid() || $transaction->isAuthorized());
             }
 
-            if ($bSuccess || $bVerify) {
+            if ($bSuccess || $bVerify || $bConfirm) {
                 $successUrl = $this->config->getSuccessPage($payment->getMethod());
                 if (empty($successUrl)) {
                     $successUrl = ($payment->getMethod() == 'paynl_payment_paylink' || $this->config->sendEcommerceAnalytics()) ? Config::FINISH_PAY : Config::FINISH_STANDARD;
+                }
+                if ($bConfirm) {
+                    $successUrl = Config::CONFIRM_PAY;
                 }
                 $this->payHelper->logDebug('Finish succes', [$successUrl, $payOrderId, $bSuccess, $bVerify]);
                 $resultRedirect->setPath($successUrl, ['_query' => ['utm_nooverride' => '1']]);
