@@ -1,0 +1,28 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+?>
+<?php /** @var $block \Paynl\Payment\Block\Page\FastCheckoutFallback */ ?>
+<div class="paynl-fast_checkout" data-mage-init='{"Paynl_Payment/js/reloadCart": {}}'>
+    <p><?= /* @escapeNotVerified */ __('Please select your shipping method:') ?></p>
+    <br/>    
+    <form action="/paynl/checkout/fastcheckoutstart" id="paynl_fast_checkout_fallback" method="post">   
+        <?php foreach ($block->getShippingMethods() as $key => $method) : ?>
+            <div style="margin-bottom:15px;">            
+                <input type="radio" class="radio" value="<?= $method->code ?>" id="<?= $method->code ?>" name="fallbackShippingMethod">
+                <label for="<?= $method->code ?>"><?= $method->method ?>: <?= $method->title ?> <b><?= $method->currency ?><?= $method->price ?></b></label>
+            </div>   
+        <?php endforeach; ?>
+        <br/>
+        <button type="submit"
+                title="Fast Checkout"
+                class="action tocart primary paynl-fast_checkout-btn">
+            <span><?= /* @escapeNotVerified */ __('Continue') ?></span>
+        </button>
+    </form>
+</div>

@@ -14,6 +14,7 @@ class Config
 {
     public const FINISH_PAY = 'paynl/order/finish';
     public const CONFIRM_PAY = 'paynl/order/confirm';
+    public const FINISH_PAY_FC = 'paynl/order/finishfc';
     public const PENDING_PAY = 'paynl/order/pending';
     public const CANCEL_PAY = 'paynl/order/cancel';
     public const FINISH_STANDARD = 'checkout/onepage/success';

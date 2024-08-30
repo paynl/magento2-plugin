@@ -275,3 +275,79 @@ Geef deze keuze op bij het afrekenen: de klant kan bij het afrekenen kiezen tuss
 "Refund amount must be greater than 0.00","Het bedrag moet groter zijn dan 0,00"
 "Refund amount must not exceed ","Het bedrag mag niet hoger zijn dan "
 "Select a terminal","Selecteer een terminal"
+"Determine in which country iDEAL should be available. This setting doesn't apply to fast checkout.","Bepaal in welk land iDEAL beschikbaar moet zijn. Deze instelling is niet van toepassing op snel bestellen."
+"Set the minimum order amount for iDEAL to be available. Leave blank if you don't want to set a minimum amount. This setting doesn't apply to fast checkout.","Stel het minimale bestelbedrag in voor iDEAL. Laat leeg als u geen minimumbedrag wilt instellen. Deze instelling is niet van toepassing op snel bestellen."
+"Set the maximum order amount for iDEAL to be available. Leave blank if you don't want to set a maximum amount. This setting doesn't apply to fast checkout.","Stel het maximale orderbedrag in voor iDEAL dat beschikbaar moet zijn. Laat dit leeg als u geen maximumbedrag wilt instellen. Deze instelling is niet van toepassing op snel bestellen."
+"By default payment methods are available for all customer types. To limit this to a customer type, use one of the following options:
+
+Private, B2C: Only show this payment method when the customer didn't enter a company name.
+
+Business, BB2: Only show this payment method when the customer entered a company name.
+
+This setting doesn't apply to fast checkout.","Standaard zijn betaalmethoden beschikbaar voor alle klanttypen. Om dit te beperken tot een klanttype, gebruikt u een van de volgende opties:
+
+Privé, B2C: Toon deze betaalmethode alleen als de klant geen bedrijfsnaam heeft ingevoerd.
+
+Zakelijk, BB2: Toon deze betaalmethode alleen als de klant een bedrijfsnaam heeft ingevoerd.
+
+Deze instelling is niet van toepassing op snel bestellen."
+"Select to which customer group iDEAL is available. Customer groups are defined in Magento (Menu: Customers->Customer Groups).
+
+This setting doesn't apply to fast checkout.","Selecteer voor welke klantgroep iDEAL beschikbaar is. Klantgroepen worden gedefinieerd in Magento (Menu: Customers->Customer Groups).
+
+Deze instelling is niet van toepassing op snel bestellen."
+"Fast Checkout","Snel bestellen"
+"iDEAL Fast Checkout","iDEAL Snel bestellen"
+"Cart page","Winkelwagenpagina"
+"Minicart","Minicart"
+"Product page","Productpagina"
+"Default shipping method","Standaardverzendmethode"
+"Fallback shipping method","Terugvalverzendmethode"
+"Fallback","Terugvaloptie"
+"Use estimate selection","Gebruik schattings selectie"
+"Guest checkout only","Alleen voor gasten toestaan"
+"Show the fast checkout button on the cart page.
+
+This button allows users to checkout directly from the cart without the need to fill in their address.","Toon de 'snel bestellen' knop op de winkelwagenpagina.
+
+Met deze knop kunnen gebruikers direct afrekenen vanuit de winkelwagen zonder dat ze hun adres hoeven in te vullen."
+"Show the fast checkout button on the minicart.
+
+This button allows users to checkout directly from the minicart without the need to fill in their address.","Toon de 'snel bestellen' knop op de minicart.
+
+Met deze knop kunnen gebruikers direct afrekenen vanuit de minicart zonder dat ze hun adres hoeven in te vullen."
+"Show the fast checkout button on every product page.
+
+This button allows users to checkout directly from the cart without the need to fill in their address.","Toon de 'snel bestellen' knop op elke productpagina.
+
+Met deze knop kunnen gebruikers direct afrekenen vanuit de productpagina zonder dat ze hun adres hoeven in te vullen."
+"Select the shipping method that should be applied first.","Selecteer de verzendmethode die als eerste moet worden toegepast."
+"The default shipping method will be applied to fast checkout orders.","Voor bestellingen met snel bestellen wordt de standaardverzendmethode toegepast."
+"Select the fallback shipping method, which will be applied when the default shipping method could not be applied.","Selecteer de alternatieve verzendmethode die wordt toegepast als de standaardverzendmethode niet kan worden toegepast."
+"In case the default shipping method could not by applied, this shipping method will be used.","Indien de standaard verzendmethode niet kan worden toegepast, wordt deze verzendmethode gebruikt."
+"Select what should happen when both shipping methods could not be applied:
+
+Show notice and abort fast checkout:
+When this option is selected the fast checkout will be aborted in case the selected shipping method does not work for the order, the customer is redirected back to the cart page and shown a notice.
+
+Show intermediate screen to select shipping method:
+Using the intermediate screen will allow users to select their own shipping method in case the selected shipping method does not work for the order.","Selecteer wat er moet gebeuren als beide verzendmethoden niet kunnen worden toegepast:
+
+Melding weergeven en snel bestellen afbreken:
+Wanneer deze optie is geselecteerd, wordt het snel bestellen afgebroken als de geselecteerde verzendmethode niet werkt voor de bestelling. De klant wordt teruggeleid naar de winkelwagenpagina en krijgt een melding te zien.
+
+Tussenscherm weergeven om verzendmethode te selecteren:
+Als u het tussenscherm gebruikt, kunnen gebruikers hun eigen verzendmethode selecteren als de geselecteerde verzendmethode niet werkt voor de bestelling."
+"When the user selects a shipping method in the estimate on the cart page, this shipping method wil be used for fast checkout.","Wanneer de gebruiker een verzendmethode selecteert in de offerte op de winkelwagenpagina, wordt deze verzendmethode gebruikt voor snel bestellen."
+"When enabled, the fast checkout button will only be shown on the cart page for guest users.
+
+This setting does not effect the product page. If fast checkout is enabled for the product page, the fast checkout button will always be shown.","Wanneer ingeschakeld, wordt de knop voor snel bestellen alleen weergegeven op de winkelwagenpagina voor gastgebruikers.
+
+Deze instelling heeft geen effect op de productpagina. Als snel bestellen is ingeschakeld voor de productpagina, wordt de knop voor snel bestellen altijd weergegeven."
+"Show the fast checkout button on the cart page, only for guest customers.","Toon de knop voor snel bestellen op de winkelwagenpagina, alleen voor gastklanten."
+"When updating this setting, please flush Magento's cache afterwards ","Wanneer u deze instelling bijwerkt, moet u de cache van Magento daarna leegmaken "
+"Continue","Verder"
+"On - as Optional","Aan - als Optioneel"
+"On - as Required","Aan - als Verplicht"
+"Show notice and abort fast checkout","Toon melding en annuleer snel bestellen"
+"Show intermediate screen to select shipping method","Toon tussenscherm om verzendmethode te selecteren"

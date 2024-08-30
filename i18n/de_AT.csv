@@ -224,3 +224,77 @@ Stellen Sie diese Auswahl an der Kasse bereit: Der Kunde kann an der Kasse zwisc
 "Refund amount must be greater than 0.00","Der Betrag muss größer als 0,00 sein"
 "Refund amount must not exceed ","Der Betrag darf nicht höher sein als "
 "Select a terminal","Wählen Sie ein Terminal aus"
+"Determine in which country iDEAL should be available. This setting doesn't apply to fast checkout.","Legen Sie fest, in welchem Land iDEAL verfügbar sein soll. Diese Einstellung gilt nicht für Fastcheckout."
+"Set the minimum order amount for iDEAL to be available. Leave blank if you don't want to set a minimum amount. This setting doesn't apply to fast checkout.","Legen Sie den Mindestbestellwert fest, damit iDEAL verfügbar ist. Lassen Sie das Feld leer, wenn Sie keinen Mindestwert festlegen möchten. Diese Einstellung gilt nicht für Fastcheckout."
+"Set the maximum order amount for iDEAL to be available. Leave blank if you don't want to set a maximum amount. This setting doesn't apply to fast checkout.","Legen Sie den maximalen Bestellbetrag fest, der für iDEAL verfügbar sein soll. Lassen Sie das Feld leer, wenn Sie keinen Höchstbetrag festlegen möchten. Diese Einstellung gilt nicht für Fastcheckout."
+"By default payment methods are available for all customer types. To limit this to a customer type, use one of the following options:
+
+Private, B2C: Only show this payment method when the customer didn't enter a company name.
+
+Business, BB2: Only show this payment method when the customer entered a company name.
+
+This setting doesn't apply to fast checkout.","Standardmäßig sind Zahlungsmethoden für alle Kundentypen verfügbar. Um dies auf einen Kundentyp zu beschränken, verwenden Sie eine der folgenden Optionen:
+
+Privat, B2C: Diese Zahlungsmethode nur anzeigen, wenn der Kunde keinen Firmennamen eingegeben hat.
+
+Geschäftlich, BB2: Diese Zahlungsmethode nur anzeigen, wenn der Kunde einen Firmennamen eingegeben hat.
+
+Diese Einstellung gilt nicht für Fastcheckout."
+"Wählen Sie aus, für welche Kundengruppe iDEAL verfügbar ist. Kundengruppen werden in Magento definiert (Menü: Kunden->Kundengruppen).
+
+Diese Einstellung gilt nicht für Fastcheckout."
+"Fast Checkout","Fastcheckout"
+"iDEAL Fast Checkout","iDEAL Fastcheckout"
+"Cart page","Warenkorbseite"
+"Minicart","Mini-Warenkorb"
+"Product page","Produktseite"
+"Default shipping method","Standardversandmethode"
+"Fallback shipping method","Zurückgreifen-Versandmethode"
+"Fallback","Zurückgreifen"
+"Use estimate selection","Schätzauswahl verwenden"
+"Guest checkout only","Nur als Gast zur Kasse gehen"
+"Show the fast checkout button on the cart page.
+
+This button allows users to checkout directly from the cart without the need to fill in their address.","Zeigen Sie die Schaltfläche für die fastcheckout auf der Warenkorbseite an.
+
+Mit dieser Schaltfläche können Benutzer direkt vom Warenkorb aus zur Kasse gehen, ohne ihre Adresse eingeben zu müssen."
+"Show the fast checkout button on the minicart.
+
+This button allows users to checkout directly from the minicart without the need to fill in their address.","Zeigen Sie die Schaltfläche für die fastcheckout im Mini-Warenkorb an.
+
+Mit dieser Schaltfläche können Benutzer direkt vom Mini-Warenkorb aus bezahlen, ohne ihre Adresse eingeben zu müssen."
+"Show the fast checkout button on every product page.
+
+This button allows users to checkout directly from the cart without the need to fill in their address.","Zeigen Sie auf jeder Produktseite den Button für die fastcheckout an.
+
+Mit diesem Button können Benutzer direkt vom Warenkorb aus zur Kaufabwicklung gehen, ohne ihre Adresse eingeben zu müssen."
+"Select the shipping method that should be applied first.","Wählen Sie die Versandart aus, die zuerst angewendet werden soll."
+"The default shipping method will be applied to fast checkout orders.","Für Bestellungen mit fastcheckout wird die Standardversandmethode angewendet."
+"Select the fallback shipping method, which will be applied when the default shipping method could not be applied.","Wählen Sie die Fallback-Versandmethode aus, die angewendet wird, wenn die Standardversandmethode nicht angewendet werden konnte."
+"In case the default shipping method could not by applied, this shipping method will be used.","Falls die Standardversandart nicht angewendet werden konnte, wird diese Versandart verwendet."
+"Select what should happen when both shipping methods could not be applied:
+
+Show notice and abort fast checkout:
+When this option is selected the fast checkout will be aborted in case the selected shipping method does not work for the order, the customer is redirected back to the cart page and shown a notice.
+
+Show intermediate screen to select shipping method:
+Using the intermediate screen will allow users to select their own shipping method in case the selected shipping method does not work for the order.","Wählen Sie aus, was passieren soll, wenn beide Versandmethoden nicht angewendet werden konnten:
+
+Hinweis anzeigen und Schnellkauf abbrechen:
+Wenn diese Option ausgewählt ist, wird der Schnellkauf abgebrochen, falls die ausgewählte Versandmethode für die Bestellung nicht funktioniert. Der Kunde wird zurück zur Warenkorbseite geleitet und erhält einen Hinweis.
+
+Zwischenbildschirm zur Auswahl der Versandmethode anzeigen:
+Über den Zwischenbildschirm können Benutzer ihre eigene Versandmethode auswählen, falls die ausgewählte Versandmethode für die Bestellung nicht funktioniert."
+"When the user selects a shipping method in the estimate on the cart page, this shipping method wil be used for fast checkout.","Wenn der Benutzer im Kostenvoranschlag auf der Warenkorbseite eine Versandmethode auswählt, wird diese Versandmethode für den fastcheckout verwendet."
+"When enabled, the fast checkout button will only be shown on the cart page for guest users.
+
+This setting does not effect the product page. If fast checkout is enabled for the product page, the fast checkout button will always be shown.","Wenn aktiviert, wird die Schaltfläche für den fastcheckout nur auf der Warenkorbseite für Gastbenutzer angezeigt.
+
+Diese Einstellung wirkt sich nicht auf die Produktseite aus. Wenn der schnelle Checkout für die Produktseite aktiviert ist, wird die Schaltfläche für den fastcheckout immer angezeigt.."
+"Show the fast checkout button on the cart page, only for guest customers.","Zeigen Sie die Schaltfläche fastcheckout auf der Warenkorbseite nur für Gastkunden an."
+"When updating this setting, please flush Magento's cache afterwards ","Wenn Sie diese Einstellung aktualisieren, leeren Sie bitte anschließend den Magento-Cache "
+"Continue","Weitermachen"
+"On - as Optional","Ein - als Optional"
+"On - as Required","Ein - nach Bedarf"
+"Show notice and abort fast checkout","Hinweis anzeigen und Schnellkasse abbrechen"
+"Show intermediate screen to select shipping method","Zwischenbildschirm zur Auswahl der Versandart anzeigen"

@@ -2,13 +2,14 @@
 
 namespace Paynl\Payment\Controller\Checkout;
 
-use Magento\Framework\App\Request\InvalidRequestException;
 use Magento\Framework\App\RequestInterface;
+use Magento\Framework\App\Request\InvalidRequestException;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderRepository;
 use Paynl\Payment\Controller\CsrfAwareActionInterface;
 use Paynl\Payment\Controller\PayAction;
 use Paynl\Payment\Helper\PayHelper;
+use Paynl\Payment\Model\CreateFastCheckoutOrder;
 use Paynl\Payment\Model\PayPayment;
 use Paynl\Transaction;
 
@@ -35,13 +36,21 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
     private $payPayment;
 
     /**
-     *
+     * @var CreateFastCheckoutOrder
+     */
+    private $createFastCheckoutOrder;
+
+    /**
      * @var \Paynl\Payment\Helper\PayHelper;
      */
     private $payHelper;
 
     /**
-     *
+     * @var
+     */
+    private $headers;
+
+    /**
      * @param RequestInterface $request
      * @return null
      */
@@ -65,6 +74,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
      * @param \Magento\Framework\Controller\Result\Raw $result
      * @param OrderRepository $orderRepository
      * @param PayPayment $payPayment
+     * @param CreateFastCheckoutOrder $createFastCheckoutOrder
      * @param PayHelper $payHelper
      */
     public function __construct(
@@ -73,14 +83,103 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         \Magento\Framework\Controller\Result\Raw $result,
         OrderRepository $orderRepository,
         PayPayment $payPayment,
+        CreateFastCheckoutOrder $createFastCheckoutOrder,
         PayHelper $payHelper
     ) {
         $this->result = $result;
         $this->config = $config;
         $this->orderRepository = $orderRepository;
         $this->payPayment = $payPayment;
+        $this->createFastCheckoutOrder = $createFastCheckoutOrder;
         $this->payHelper = $payHelper;
         parent::__construct($context);
+    }
+
+    /**
+     * @return array|false
+     */
+    private function getHeaders()
+    {
+        if (empty($this->headers)) {
+            $this->headers = array_change_key_case(getallheaders(), CASE_LOWER);
+        }
+        return $this->headers;
+    }
+
+    /**
+     * @return boolean
+     */
+    private function isSignExchange()
+    {
+        $headers = $this->getHeaders();
+        $signingMethod = $headers['signature-method'] ?? null;
+        return $signingMethod === 'HMAC';
+    }
+
+    /**
+     * @param object $_request
+     * @return array
+     * @throws Exception
+     * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
+     */
+    private function getPayLoad($_request)
+    {
+        $request = (object) $_request->getParams() ?? null;
+
+        $action = $request->action ?? null;
+        if (!empty($action)) {
+            # The argument "action" tells us this is not coming from TGU. Todo: check should be better
+            $action = $request->action ?? null;
+            $paymentProfile = $request->payment_profile_id ?? null;
+            $payOrderId = $request->order_id ?? null;
+            $orderId = $request->extra1 ?? null;
+            $extra3 = $request->extra3 ?? null;
+            $data = null;
+        } else {
+            if ($_request->isGet() || !$this->isSignExchange()) {
+                $data['object'] = $request->object ?? null;
+            } else {
+                $rawBody = file_get_contents('php://input');
+                $data = json_decode($rawBody, true, 512, 4194304);
+                $exchangeType = $data['type'] ?? null;
+
+                # Volgens documentatie alleen type order verwerken. https://developer.pay.nl/docs/signing
+                if ($exchangeType != 'order') {
+                    throw new Exception('Cant handle exchange type other then order');
+                }
+            }
+
+            $payOrderId = $data['object']['orderId'] ?? '';
+            $internalStateId = $data['object']['status']['code'] ?? '';
+            $internalStateName = $data['object']['status']['action'] ?? '';
+            $orderId = $data['object']['reference'] ?? '';
+            $extra3 = $data['object']['extra3'] ?? null;
+            $action = ($internalStateId == 100 || $internalStateName == 95) ? 'new_ppt' : 'pending';
+            $checkoutData = $data['object']['checkoutData'] ?? '';
+        }
+
+        # Return mapped data so it works for all type of exchanges.
+        return [
+            'action' => $action,
+            'paymentProfile' => $paymentProfile ?? null,
+            'payOrderId' => $payOrderId,
+            'orderId' => $orderId,
+            'extra3' => $extra3 ?? null,
+            'internalStateId' => $internalStateId ?? null,
+            'internalStateName' => $internalStateName ?? null,
+            'checkoutData' => $checkoutData ?? null,
+            'orgData' => $data,
+        ];
+    }
+
+    /**
+     * @param array $params
+     * @return boolean
+     * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
+     */
+    private function isFastCheckout($params)
+    {
+        return strpos($params['orderId'] ?? '', "fastcheckout") !== false && !empty($params['checkoutData'] ?? '');
     }
 
     /**
@@ -88,30 +187,51 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
      */
     public function execute()
     {
-        $params = $this->getRequest()->getParams();
-        $action = !empty($params['action']) ? strtolower($params['action']) : '';
-        $payOrderId = isset($params['order_id']) ? $params['order_id'] : null;
-        $orderEntityId = isset($params['extra3']) ? $params['extra3'] : null;
-        $paymentProfileId = isset($params['payment_profile_id']) ? $params['payment_profile_id'] : null;
+        $params = $this->getPayLoad($this->getRequest());
+        $action = strtolower($params['action'] ?? '');
+        $payOrderId = $params['payOrderId'] ?? null;
+        $orderId = $params['orderId'] ?? null;
+        $orderEntityId = $params['extra3'] ?? null;
+        $paymentProfileId = $params['paymentProfile'] ?? null;
+        $order = null;
 
         if ($action == 'pending') {
             return $this->result->setContents('TRUE| Ignore pending');
         }
 
-        if (empty($payOrderId) || empty($orderEntityId)) {
-            $this->payHelper->logCritical('Exchange: order_id or orderEntity is not set', $params);
+        if ($this->isFastCheckout($params)) {
+            try {
+                $order = $this->createFastCheckoutOrder->create($params);
+                $orderEntityId = $order->getId();
+            } catch (\Exception $e) {
+                $this->payHelper->logCritical($e->getMessage(), $params);
+                return $this->result->setContents('FALSE| Error creating fast checkout order. ' . $e->getMessage());
+            }
+        } elseif (strpos($params['extra3'] ?? '', "fastcheckout") !== false) {
+            # Disabled fastcheckout related actions.
+            return $this->result->setContents('TRUE| Ignoring fastcheckout action ' . $action);
+        }
+
+        if (empty($payOrderId)) {
+            $this->payHelper->logCritical('Exchange: order_id is not set', $params);
             return $this->result->setContents('FALSE| order_id is not set in the request');
         }
 
-        try {
-            $order = $this->orderRepository->get($orderEntityId);
-            if (empty($order)) {
-                $this->payHelper->logCritical('Cannot load order: ' . $orderEntityId);
-                throw new \Exception('Cannot load order: ' . $orderEntityId);
+        # In case of fastcheckout, there may already be an order.
+        if (empty($order)) {
+            try {
+                if (empty($orderEntityId)) {
+                    throw new \Exception('orderEntityId is not set in the request');
+                }
+                $order = $this->orderRepository->get($orderEntityId);
+                if (empty($order)) {
+                    $this->payHelper->logCritical('Cannot load order: ' . $orderEntityId);
+                    throw new \Exception('Cannot load order: ' . $orderEntityId);
+                }
+            } catch (\Exception $e) {
+                $this->payHelper->logCritical($e, $params);
+                return $this->result->setContents('FALSE| Error loading order. ' . $e->getMessage());
             }
-        } catch (\Exception $e) {
-            $this->payHelper->logCritical($e, $params);
-            return $this->result->setContents('FALSE| Error loading order. ' . $e->getMessage());
         }
 
         if ($action == 'new_ppt') {
@@ -162,7 +282,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         $payment = $order->getPayment();
         $orderEntityIdTransaction = $transaction->getExtra3();
 
-        if ($orderEntityId != $orderEntityIdTransaction) {
+        if ($orderEntityId != $orderEntityIdTransaction && !$this->isFastCheckout($params)) {
             $this->payHelper->logCritical('Transaction mismatch ' . $orderEntityId . ' / ' . $orderEntityIdTransaction, $params, $order->getStore());
             $this->removeProcessing($payOrderId, $action);
             return $this->result->setContents('FALSE|Transaction mismatch');

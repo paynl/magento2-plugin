@@ -1,0 +1,63 @@
+#paynl_fast_checkout_cart {
+    display: block;
+    width: 100%;
+}
+
+#paynl_fast_checkout_cart button,
+#paynl_fast_checkout_product button,
+#paynl_fast_checkout_fallback button,
+#top-cart-fast-checkout,
+#top-cart-btn-fastcheckout {
+    width: 100%;
+    line-height: 2.2rem;
+    padding: 14px 17px;
+    font-size: 1.8rem;
+    margin-top: -10px;
+    background: #c90066;
+    border-color: #c90066;
+    background-image: url("../images/fastCheckoutIdeal.png");
+    background-repeat: no-repeat;
+    background-size: 51px;
+    background-position: 8px center;
+}
+
+#top-cart-btn-fastcheckout {
+    margin-top: 5px;
+}
+
+#paynl_fast_checkout_cart button:hover,
+#paynl_fast_checkout_product button:hover,
+#paynl_fast_checkout_fallback button:hover,
+#top-cart-fast-checkou:hover,
+#top-cart-btn-fastcheckout:hover {
+    background: #b0025b;
+    border-color: #b0025b;
+    background-image: url("../images/fastCheckoutIdeal.png");
+    background-repeat: no-repeat;
+    background-size: 51px;
+    background-position: 8px center;
+}
+
+#paynl_fast_checkout_fallback button {
+    max-width: 100%;
+}
+
+#paynl_fast_checkout_product {
+    display: block;
+    margin-bottom: 0;
+    margin-right: 1%;
+    width: 100%;
+}
+
+@media all and (min-width: 769px), print {
+    #paynl_fast_checkout_product {
+        display: block;
+        margin-bottom: 0;
+        margin-right: 1%;
+        width: 49%;
+    }
+
+    #paynl_fast_checkout_fallback button {
+        max-width: 250px;
+    }
+}

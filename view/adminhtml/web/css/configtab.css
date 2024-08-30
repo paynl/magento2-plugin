@@ -133,3 +133,8 @@
     line-height: 1;
     speak: none;
 }
+
+#row_paynl_paymentmethods_paynl_payment_ideal_fastcheckout_fast_checkout_note td {
+    padding-top: 5px;
+    font-size: 12px;
+}
