@@ -84,6 +84,9 @@ define(
                 return true;
             },
             getCurrentShippingMethod: function () {
+                if (quote.shippingMethod() === null || quote.shippingMethod() === undefined) {
+                    return;
+                }
                 var carrier_code = typeof quote.shippingMethod().carrier_code !== 'undefined' ? quote.shippingMethod().carrier_code + '_' : '';
                 var method_code = typeof quote.shippingMethod().method_code !== 'undefined' ? quote.shippingMethod().method_code : '';
                 var currentShippingMethod = carrier_code + method_code;
@@ -258,7 +261,7 @@ define(
             afterPlaceOrder: function () {
                 window.location.replace(url.build('paynl/checkout/redirect?nocache=' + (new Date().getTime())));
             },
-            getCustomField: function (fieldname) {    
+            getCustomField: function (fieldname) {
                 var customFields = [];
                 if (quote.billingAddress.hasOwnProperty('_latestValue') && typeof quote.billingAddress._latestValue !== 'undefined' && quote.billingAddress._latestValue !== null) {
                     $.each(quote.billingAddress._latestValue.customAttributes, function (i, l) {
@@ -273,15 +276,15 @@ define(
                 var cocnumber_val = (this.cocnumber != null && this.cocnumber.length > 0) ? this.cocnumber : this.getCustomField('paynl_coc_number');
                 var vatnumber_val = (this.vatnumber != null && this.vatnumber.length > 0) ? this.vatnumber : this.getCustomField('paynl_vat_number');
 
-                var dob_format = '';  
-        
+                var dob_format = '';
+
                 if (dateofbirth_val != null) {
                     var dob = new Date(dateofbirth_val)
                     var dd = dob.getDate(), mm = dob.getMonth() + 1, yyyy = dob.getFullYear()
                     dd = (dd < 10) ? '0' + dd : dd
                     mm = (mm < 10) ? '0' + mm : mm
                     dob_format = dd + '-' + mm + '-' + yyyy
-                }           
+                }
 
                 return {
                     'method': this.item.method,
