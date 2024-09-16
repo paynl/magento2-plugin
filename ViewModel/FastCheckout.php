@@ -31,24 +31,30 @@ class FastCheckout implements ArgumentInterface
     }
 
     /**
+     * getVisibility
+     *
      * @return boolean
      */
     public function getVisibility()
     {
         $store = $this->storeManager->getStore();
-        if ($this->session->isLoggedIn() && $store->getConfig('payment/paynl_payment_ideal/fast_checkout_guest_only') == 1) {
+        if ($this->session->isLoggedIn() &&
+            $store->getConfig('payment/paynl_payment_ideal/fast_checkout_guest_only') == 1) {
             return false;
         }
         return true;
     }
 
     /**
+     * minicartEnabled
+     *
      * @return boolean
      */
     public function minicartEnabled()
     {
         $store = $this->storeManager->getStore();
-        if ($store->getConfig('payment/paynl_payment_ideal/fast_checkout_minicart_enabled') == 1 && $this->getVisibility()) {
+        if ($store->getConfig('payment/paynl_payment_ideal/fast_checkout_minicart_enabled') == 1
+            && $this->getVisibility()) {
             return true;
         }
         return false;
