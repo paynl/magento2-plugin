@@ -55,6 +55,7 @@ define(
             {type: 'paynl_payment_instore', component: defaultComponent},
             {type: 'paynl_payment_klarna', component: defaultComponent},
             {type: 'paynl_payment_klarnakp', component: defaultComponent},
+            {type: 'paynl_payment_kunstencultuurkaart', component: defaultComponent},
             {type: 'paynl_payment_maestro', component: defaultComponent},
             {type: 'paynl_payment_mistercash', component: defaultComponent},
             {type: 'paynl_payment_monizze', component: defaultComponent},
