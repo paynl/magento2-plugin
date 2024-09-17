@@ -42,6 +42,7 @@ define(
             {type: 'paynl_payment_fashioncheque', component: defaultComponent},
             {type: 'paynl_payment_fashiongiftcard', component: defaultComponent},
             {type: 'paynl_payment_festivalcadeaukaart', component: defaultComponent},
+            {type: 'paynl_payment_flyingblueplus', component: defaultComponent},
             {type: 'paynl_payment_gezondheidsbon', component: defaultComponent},
             {type: 'paynl_payment_giropay', component: defaultComponent},
             {type: 'paynl_payment_givacard', component: defaultComponent},

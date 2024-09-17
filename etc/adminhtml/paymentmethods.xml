@@ -32,6 +32,7 @@
     <include path="Paynl_Payment::paymentmethods/fashioncheque.xml" />
     <include path="Paynl_Payment::paymentmethods/fashiongiftcard.xml" />
     <include path="Paynl_Payment::paymentmethods/festivalcadeaukaart.xml" />
+    <include path="Paynl_Payment::paymentmethods/flyingblueplus.xml" />
     <include path="Paynl_Payment::paymentmethods/gezondheidsbon.xml" />
     <include path="Paynl_Payment::paymentmethods/giropay.xml" />
     <include path="Paynl_Payment::paymentmethods/givacard.xml" />

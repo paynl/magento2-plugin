@@ -88,6 +88,7 @@ class Config
         "paynl_payment_fashioncheque" => "27",
         "paynl_payment_fashiongiftcard" => "28",
         "paynl_payment_festivalcadeaukaart" => "144",
+        "paynl_payment_flyingblueplus" => "339",
         "paynl_payment_gezondheidsbon" => "30",
         "paynl_payment_giropay" => "3",
         "paynl_payment_givacard" => "61",

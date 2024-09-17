@@ -41,6 +41,7 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_fashioncheque',
         'paynl_payment_fashiongiftcard',
         'paynl_payment_festivalcadeaukaart',
+        'paynl_payment_flyingblueplus',
         'paynl_payment_gezondheidsbon',
         'paynl_payment_giropay',
         'paynl_payment_givacard',
