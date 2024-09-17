@@ -521,6 +521,18 @@ To finish your order, click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_instore>
+            <paynl_payment_kidsorteen>
+                <active>0</active>
+                <title>Kids or teen</title>
+                <payment_option_id>3597</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Kidsorteen</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_kidsorteen>
             <paynl_payment_klarna>
                 <active>0</active>
                 <title>Klarna</title>
