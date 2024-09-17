@@ -124,6 +124,7 @@ class Config
         "paynl_payment_sofortbanking_hr" => "4",
         "paynl_payment_sofortbanking_ds" => "4",
         "paynl_payment_spraypay" => "20",
+        "paynl_payment_stadspasamsterdam" => "336",
         "paynl_payment_telefonischbetalen" => "173",
         "paynl_payment_trustly" => "213",
         "paynl_payment_visamastercard" => "7",

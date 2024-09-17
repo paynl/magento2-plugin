@@ -77,6 +77,7 @@ define(
             {type: 'paynl_payment_sofortbanking_hr', component: defaultComponent},
             {type: 'paynl_payment_sofortbanking_ds', component: defaultComponent},
             {type: 'paynl_payment_spraypay', component: defaultComponent},
+            {type: 'paynl_payment_stadspasamsterdam', component: defaultComponent},
             {type: 'paynl_payment_telefonischbetalen', component: defaultComponent},
             {type: 'paynl_payment_trustly', component: defaultComponent},
             {type: 'paynl_payment_visamastercard', component: defaultComponent},
