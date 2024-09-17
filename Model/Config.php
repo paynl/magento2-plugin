@@ -103,6 +103,7 @@ class Config
         "paynl_payment_klarnakp" => "15",
         "paynl_payment_maestro" => "33",
         "paynl_payment_mistercash" => "2",
+        "paynl_payment_mobilepay" => "324",
         "paynl_payment_monizze" => "183",
         "paynl_payment_mooigiftcard" => "294",
         "paynl_payment_multibanco" => "141",

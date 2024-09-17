@@ -57,6 +57,7 @@ define(
             {type: 'paynl_payment_klarnakp', component: defaultComponent},
             {type: 'paynl_payment_maestro', component: defaultComponent},
             {type: 'paynl_payment_mistercash', component: defaultComponent},
+            {type: 'paynl_payment_mobilepay', component: defaultComponent},
             {type: 'paynl_payment_monizze', component: defaultComponent},
             {type: 'paynl_payment_mooigiftcard', component: defaultComponent},
             {type: 'paynl_payment_multibanco', component: defaultComponent},

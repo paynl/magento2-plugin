@@ -47,6 +47,7 @@
     <include path="Paynl_Payment::paymentmethods/klarnakp.xml" />
     <include path="Paynl_Payment::paymentmethods/maestro.xml" />
     <include path="Paynl_Payment::paymentmethods/mistercash.xml" />
+    <include path="Paynl_Payment::paymentmethods/mobilepay.xml" />
     <include path="Paynl_Payment::paymentmethods/monizze.xml" />
     <include path="Paynl_Payment::paymentmethods/mooigiftcard.xml" />
     <include path="Paynl_Payment::paymentmethods/multibanco.xml" />
