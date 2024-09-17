@@ -85,6 +85,7 @@ define(
             {type: 'paynl_payment_wechatpay', component: defaultComponent},
             {type: 'paynl_payment_wijncadeau', component: defaultComponent},
             {type: 'paynl_payment_winkelcheque', component: defaultComponent},
+            {type: 'paynl_payment_xafaxmynetpay', component: defaultComponent},
             {type: 'paynl_payment_yourgift', component: defaultComponent},
             {type: 'paynl_payment_yourgreengift', component: defaultComponent},
         ];
