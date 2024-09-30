@@ -63,6 +63,7 @@
     <include path="Paynl_Payment::paymentmethods/postepay.xml" />
     <include path="Paynl_Payment::paymentmethods/przelewy24.xml" />
     <include path="Paynl_Payment::paymentmethods/prontowonen.xml" />
+    <include path="Paynl_Payment::paymentmethods/rotterdamcitycard.xml" />
     <include path="Paynl_Payment::paymentmethods/shoesandsneakers.xml" />
     <include path="Paynl_Payment::paymentmethods/sodexo.xml" />
     <include path="Paynl_Payment::paymentmethods/sofortbanking.xml" />

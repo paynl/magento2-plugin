@@ -120,6 +120,7 @@ class Config
         "paynl_payment_przelewy24" => "93",
         "paynl_payment_prontowonen" => "270",
         "paynl_payment_cardrefund" => "164",
+        "paynl_payment_rotterdamcitycard" => "333",
         "paynl_payment_shoesandsneakers" => "2937",
         "paynl_payment_sodexo" => "186",
         "paynl_payment_sofortbanking" => "4",

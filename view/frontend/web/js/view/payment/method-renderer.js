@@ -73,6 +73,7 @@ define(
             {type: 'paynl_payment_postepay', component: defaultComponent},
             {type: 'paynl_payment_prontowonen', component: defaultComponent},
             {type: 'paynl_payment_przelewy24', component: defaultComponent},
+            {type: 'paynl_payment_rotterdamcitycard', component: defaultComponent},
             {type: 'paynl_payment_shoesandsneakers', component: defaultComponent},
             {type: 'paynl_payment_sodexo', component: defaultComponent},
             {type: 'paynl_payment_sofortbanking', component: defaultComponent},
