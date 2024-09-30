@@ -799,7 +799,7 @@ To finish your order, click the link below
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_cardrefund>
             <paynl_payment_rotterdamcitycard>
-                <active>1</active>
+                <active>0</active>
                 <title>Rotterdam Citycard</title>
                 <payment_option_id>3603</payment_option_id>
                 <order_status>pending_payment</order_status>
