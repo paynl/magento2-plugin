@@ -216,6 +216,9 @@
         <method name="paynl_payment_winkelcheque">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
+        <method name="paynl_payment_xafaxmynetpay">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
         <method name="paynl_payment_yourgift">
             <allow_multiple_address>0</allow_multiple_address>
         </method>

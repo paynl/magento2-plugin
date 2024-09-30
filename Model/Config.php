@@ -133,6 +133,7 @@ class Config
         "paynl_payment_wechatpay" => "23",
         "paynl_payment_wijncadeau" => "135",
         "paynl_payment_winkelcheque" => "195",
+        "paynl_payment_xafaxmynetpay" => "345",
         "paynl_payment_yourgift" => "31",
         "paynl_payment_yourgreengift" => "246",
     ];

@@ -76,6 +76,7 @@
     <include path="Paynl_Payment::paymentmethods/wechatpay.xml" />
     <include path="Paynl_Payment::paymentmethods/wijncadeau.xml" />
     <include path="Paynl_Payment::paymentmethods/winkelcheque.xml" />
+    <include path="Paynl_Payment::paymentmethods/xafaxmynetpay.xml" />
     <include path="Paynl_Payment::paymentmethods/yourgift.xml" />
     <include path="Paynl_Payment::paymentmethods/yourgreengift.xml" />
 </include>
