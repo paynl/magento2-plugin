@@ -54,6 +54,7 @@ define(
             {type: 'paynl_payment_in3business', component: defaultComponent},
             {type: 'paynl_payment_incasso', component: defaultComponent},
             {type: 'paynl_payment_instore', component: defaultComponent},
+            {type: 'paynl_payment_kidsorteen', component: defaultComponent},
             {type: 'paynl_payment_klarna', component: defaultComponent},
             {type: 'paynl_payment_klarnakp', component: defaultComponent},
             {type: 'paynl_payment_kunstencultuurkaart', component: defaultComponent},

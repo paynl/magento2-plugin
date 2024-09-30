@@ -123,6 +123,9 @@
         <method name="paynl_payment_instore">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
+        <method name="paynl_payment_kidsorteen">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
         <method name="paynl_payment_klarnakp">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
