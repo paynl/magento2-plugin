@@ -71,6 +71,7 @@
     <include path="Paynl_Payment::paymentmethods/sofortbanking_hr.xml" />
     <include path="Paynl_Payment::paymentmethods/sofortbanking_ds.xml" />
     <include path="Paynl_Payment::paymentmethods/spraypay.xml" />
+    <include path="Paynl_Payment::paymentmethods/stadspasamsterdam.xml" />
     <include path="Paynl_Payment::paymentmethods/telefonischbetalen.xml" />
     <include path="Paynl_Payment::paymentmethods/trustly.xml" />
     <include path="Paynl_Payment::paymentmethods/visamastercard.xml" />

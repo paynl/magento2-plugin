@@ -81,6 +81,7 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_sofortbanking_hr',
         'paynl_payment_sofortbanking_ds',
         'paynl_payment_spraypay',
+        'paynl_payment_stadspasamsterdam',
         'paynl_payment_telefonischbetalen',
         'paynl_payment_trustly',
         'paynl_payment_visamastercard',

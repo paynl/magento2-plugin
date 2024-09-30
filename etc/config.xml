@@ -873,6 +873,18 @@ To finish your order, click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_spraypay>
+            <paynl_payment_stadspasamsterdam>
+                <active>0</active>
+                <title>Stadpas Amsterdam</title>
+                <payment_option_id>3609</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Stadspasamsterdam</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_stadspasamsterdam>
             <paynl_payment_telefonischbetalen>
                 <active>0</active>
                 <title>Telefonisch Betalen (PFP)</title>
