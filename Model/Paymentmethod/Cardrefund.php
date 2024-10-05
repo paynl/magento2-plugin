@@ -10,6 +10,7 @@ class Cardrefund extends PaymentMethod
 {
     protected $_code = 'paynl_payment_cardrefund';
     protected $_canUseInternal = false;
+    protected $_canUseCheckout = false;
 
     /**
      * Paylink payment block paths
