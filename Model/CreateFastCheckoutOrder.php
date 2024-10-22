@@ -12,6 +12,7 @@ use Magento\Quote\Model\QuoteManagement;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\OrderFactory;
 use Magento\Store\Model\StoreManagerInterface;
+use Paynl\Payment\Helper\PayHelper;
 
 class CreateFastCheckoutOrder
 {
@@ -66,6 +67,11 @@ class CreateFastCheckoutOrder
     private $searchCriteriaBuilder;
 
     /**
+     * @var \Paynl\Payment\Helper\PayHelper;
+     */
+    private $payHelper;
+
+    /**
      * @param StoreManagerInterface $storeManager
      * @param QuoteFactory $quote
      * @param QuoteManagement $quoteManagement
@@ -75,6 +81,7 @@ class CreateFastCheckoutOrder
      * @param ShippingMethodManagementInterface $shippingMethodManagementInterface
      * @param OrderRepositoryInterface $orderRepositoryInterface
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param PayHelper $payHelper
      */
     public function __construct(
         StoreManagerInterface $storeManager,
@@ -85,7 +92,8 @@ class CreateFastCheckoutOrder
         OrderFactory $orderFactory,
         ShippingMethodManagementInterface $shippingMethodManagementInterface,
         OrderRepositoryInterface $orderRepositoryInterface,
-        SearchCriteriaBuilder $searchCriteriaBuilder
+        SearchCriteriaBuilder $searchCriteriaBuilder,
+        PayHelper $payHelper
     ) {
         $this->storeManager = $storeManager;
         $this->quote = $quote;
@@ -96,6 +104,7 @@ class CreateFastCheckoutOrder
         $this->shippingMethodManagementInterface = $shippingMethodManagementInterface;
         $this->orderRepositoryInterface = $orderRepositoryInterface;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
+        $this->payHelper = $payHelper;
     }
 
     /**
@@ -111,6 +120,7 @@ class CreateFastCheckoutOrder
         $shippingAddressData = $checkoutData['shippingAddress'] ?? null;
 
         if (empty($customerData) || empty($billingAddressData) || empty($shippingAddressData)) {
+            $this->payHelper->logCritical("Fast checkout: Missing data, cannot create order.", ['customerData' => $customerData, 'billingAddressData' => $billingAddressData, 'shippingAddressData' => $shippingAddressData]);
             throw new \Exception("Missing data, cannot create order.");
         }
 
@@ -235,6 +245,7 @@ class CreateFastCheckoutOrder
 
             $order->addStatusHistoryComment(__('PAY. - Created iDEAL Fast Checkout order'))->save();
         } catch (NoSuchEntityException $e) {
+            $this->payHelper->logDebug('Fast checkout: Quote not found', ['quoteId' => $quoteId]);
             $order = $this->getExistingOrder($quoteId);
         }
         return $order;
@@ -254,7 +265,8 @@ class CreateFastCheckoutOrder
             $order = array_shift($searchResult);
         }
         if (empty($order)) {
-            throw new \Exception("Order can't be found.");
+            $this->payHelper->logCritical('Fast checkout: Both order & quote not found', ['quoteId' => $quoteId, 'searchCriteria' => $searchCriteria, 'searchResult' => $searchResult]);
+            throw new \Exception("Order & Quote can't be found. " . $quoteId, 404);
         }
         return $order;
     }

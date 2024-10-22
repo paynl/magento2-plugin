@@ -204,7 +204,10 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
                 $order = $this->createFastCheckoutOrder->create($params);
                 $orderEntityId = $order->getId();
             } catch (\Exception $e) {
-                $this->payHelper->logCritical($e->getMessage(), $params);
+                $this->payHelper->logCritical('Fast checkout: ' . $e->getMessage(), $params);
+                if ($e->getCode() == 404) { 
+                    return $this->result->setContents('TRUE| Error creating fast checkout order. ' . $e->getMessage());
+                }
                 return $this->result->setContents('FALSE| Error creating fast checkout order. ' . $e->getMessage());
             }
         } elseif (strpos($params['extra3'] ?? '', "fastcheckout") !== false) {

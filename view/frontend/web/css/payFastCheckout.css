@@ -19,6 +19,7 @@
     background-repeat: no-repeat;
     background-size: 51px;
     background-position: 8px center;
+    color:white;
 }
 
 #top-cart-btn-fastcheckout {
@@ -36,6 +37,7 @@
     background-repeat: no-repeat;
     background-size: 51px;
     background-position: 8px center;
+    color:white;
 }
 
 #paynl_fast_checkout_fallback button {
