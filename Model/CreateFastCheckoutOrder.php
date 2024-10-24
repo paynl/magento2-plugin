@@ -272,7 +272,7 @@ class CreateFastCheckoutOrder
             $order = $this->getExistingOrder($quoteId);
         } catch (\Exception $e) {
             $this->payHelper->logDebug('Fast checkout: Exception on create', ['quoteId' => $quoteId, 'error' => $e->getMessage()]);
-            throw new \Exception("Exception on create. " . $t->getMessage());
+            throw new \Exception("Exception on create. " . $e->getMessage());
         }
         if (empty($order)) {
             $this->payHelper->logCritical('Fast checkout: Both order & quote not found', ['quoteId' => $quoteId, 'searchCriteria' => $searchCriteria, 'searchResult' => $searchResult]);
