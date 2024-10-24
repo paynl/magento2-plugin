@@ -270,8 +270,8 @@ class CreateFastCheckoutOrder
         } catch (NoSuchEntityException $e) {
             $this->payHelper->logDebug('Fast checkout: Quote not found', ['quoteId' => $quoteId, 'error' => $e->getMessage()]);
             $order = $this->getExistingOrder($quoteId);
-        } catch (\Throwable $t) {
-            $this->payHelper->logDebug('Fast checkout: Exception on create', ['quoteId' => $quoteId, 'error' => $t->getMessage()]);
+        } catch (\Exception $e) {
+            $this->payHelper->logDebug('Fast checkout: Exception on create', ['quoteId' => $quoteId, 'error' => $e->getMessage()]);
             throw new \Exception("Exception on create. " . $t->getMessage());
         }
         if (empty($order)) {
