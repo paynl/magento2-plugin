@@ -111,6 +111,7 @@ class CreateFastCheckoutOrder
      * @param array $params
      * @return Order
      * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
+     * @throws \Exception
      */
     public function create($params)
     {
@@ -133,18 +134,18 @@ class CreateFastCheckoutOrder
 
         try {
             $quote = $this->quote->create()->loadByIdWithoutStore($quoteId);
-            $this->payHelper->logDebug('Fast checkout: $quote->getId()', ['quoteId' => $quoteId, 'magentoQuoteId' => $quote->getId() ?? 'null']);
+            $this->payHelper->logDebug('Fast checkout: quote->getId()', ['quoteId' => $quoteId, 'magentoQuoteId' => $quote->getId() ?? 'null']);
 
-            if ($quote['is_active'] == false) {
+            if (empty($quote['is_active'])) {
                 $this->payHelper->logDebug('Fast checkout: Quote inactive', ['quoteId' => $quoteId]);
 
-                $exsistingOrder = $this->getExistingOrder($quoteId);
-                if (empty($exsistingOrder)) {
+                $existingOrder = $this->getExistingOrder($quoteId);
+                if (empty($existingOrder)) {
                     $this->payHelper->logDebug('Fast checkout: Reactivating quote', ['quoteId' => $quoteId]);
                     $quote->setIsActive(true);
                     $quote->save();
                 } else {
-                    return $exsistingOrder;
+                    return $existingOrder;
                 }
             }
 
