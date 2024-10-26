@@ -12,6 +12,7 @@ use Magento\Quote\Model\QuoteManagement;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\OrderFactory;
 use Magento\Store\Model\StoreManagerInterface;
+use Paynl\Payment\Helper\PayHelper;
 
 class CreateFastCheckoutOrder
 {
@@ -66,6 +67,11 @@ class CreateFastCheckoutOrder
     private $searchCriteriaBuilder;
 
     /**
+     * @var \Paynl\Payment\Helper\PayHelper;
+     */
+    private $payHelper;
+
+    /**
      * @param StoreManagerInterface $storeManager
      * @param QuoteFactory $quote
      * @param QuoteManagement $quoteManagement
@@ -75,6 +81,7 @@ class CreateFastCheckoutOrder
      * @param ShippingMethodManagementInterface $shippingMethodManagementInterface
      * @param OrderRepositoryInterface $orderRepositoryInterface
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param PayHelper $payHelper
      */
     public function __construct(
         StoreManagerInterface $storeManager,
@@ -85,7 +92,8 @@ class CreateFastCheckoutOrder
         OrderFactory $orderFactory,
         ShippingMethodManagementInterface $shippingMethodManagementInterface,
         OrderRepositoryInterface $orderRepositoryInterface,
-        SearchCriteriaBuilder $searchCriteriaBuilder
+        SearchCriteriaBuilder $searchCriteriaBuilder,
+        PayHelper $payHelper
     ) {
         $this->storeManager = $storeManager;
         $this->quote = $quote;
@@ -96,12 +104,14 @@ class CreateFastCheckoutOrder
         $this->shippingMethodManagementInterface = $shippingMethodManagementInterface;
         $this->orderRepositoryInterface = $orderRepositoryInterface;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
+        $this->payHelper = $payHelper;
     }
 
     /**
      * @param array $params
      * @return Order
      * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
+     * @throws \Exception
      */
     public function create($params)
     {
@@ -111,6 +121,7 @@ class CreateFastCheckoutOrder
         $shippingAddressData = $checkoutData['shippingAddress'] ?? null;
 
         if (empty($customerData) || empty($billingAddressData) || empty($shippingAddressData)) {
+            $this->payHelper->logCritical("Fast checkout: Missing data, cannot create order.", ['customerData' => $customerData, 'billingAddressData' => $billingAddressData, 'shippingAddressData' => $shippingAddressData]); // phpcs:ignore
             throw new \Exception("Missing data, cannot create order.");
         }
 
@@ -119,8 +130,25 @@ class CreateFastCheckoutOrder
         $orderId = explode('fastcheckout', $params['orderId']);
         $quoteId = $orderId[1] ?? '';
 
+        $this->payHelper->logDebug('Start fast checkout order create', ['quoteId' => $quoteId]);
+
         try {
             $quote = $this->quote->create()->loadByIdWithoutStore($quoteId);
+            $this->payHelper->logDebug('Fast checkout: quote->getId()', ['quoteId' => $quoteId, 'magentoQuoteId' => $quote->getId() ?? 'null']);
+
+            if (empty($quote['is_active'])) {
+                $this->payHelper->logDebug('Fast checkout: Quote inactive', ['quoteId' => $quoteId]);
+
+                $existingOrder = $this->getExistingOrder($quoteId);
+                if (empty($existingOrder)) {
+                    $this->payHelper->logDebug('Fast checkout: Reactivating quote', ['quoteId' => $quoteId]);
+                    $quote->setIsActive(true);
+                    $quote->save();
+                } else {
+                    return $existingOrder;
+                }
+            }
+
             $storeId = $quote->getStoreId();
 
             $shippingMethodQuote = $quote->getShippingAddress()->getShippingMethod();
@@ -148,7 +176,7 @@ class CreateFastCheckoutOrder
             $quote->assignCustomer($customer);
             $quote->setSendConfirmation(1);
 
-            $billingAddress = $quote->getBillingAddress()->addData(array(
+            $quote->getBillingAddress()->addData(array(
                 'customer_address_id' => '',
                 'prefix' => '',
                 'firstname' => $billingAddressData['firstName'] ?? $customerData['firstName'],
@@ -170,7 +198,7 @@ class CreateFastCheckoutOrder
                 'save_in_address_book' => 1,
             ));
 
-            $shippingAddress = $quote->getShippingAddress()->addData(array(
+            $quote->getShippingAddress()->addData(array(
                 'customer_address_id' => '',
                 'prefix' => '',
                 'firstname' => $shippingAddressData['firstName'] ?? $customerData['firstName'],
@@ -196,22 +224,26 @@ class CreateFastCheckoutOrder
             $shippingAddress->setCollectShippingRates(true)->collectShippingRates();
 
             $shippingData = $this->shippingMethodManagementInterface->getList($quote->getId());
-            $shippingMethodsAvaileble = [];
+            $shippingMethodsAvailable = [];
             foreach ($shippingData as $shipping) {
                 $code = $shipping->getCarrierCode() . '_' . $shipping->getMethodCode();
-                $shippingMethodsAvaileble[$code] = $code;
+                $shippingMethodsAvailable[$code] = $code;
             }
 
-            if (!empty($shippingMethodsAvaileble[$shippingMethodQuote])) {
+            $this->payHelper->logDebug('Fast checkout: Available shipping methods', $shippingMethodsAvailable);
+
+            if (!empty($shippingMethodsAvailable[$shippingMethodQuote])) {
                 $shippingMethod = $shippingMethodQuote;
-            } elseif (!empty($shippingMethodsAvaileble[$store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping')])) {
+            } elseif (!empty($shippingMethodsAvailable[$store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping')])) {
                 $shippingMethod = $store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping');
-            } elseif (!empty($shippingMethodsAvaileble[$store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping_backup')])) {
+            } elseif (!empty($shippingMethodsAvailable[$store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping_backup')])) {
                 $shippingMethod = $store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping_backup');
             }
 
+            $this->payHelper->logDebug('Fast checkout: Shipping options', ['quote' => $shippingMethodQuote, 'setting' => $store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping'), 'setting_backup' => $store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping_backup')]); // phpcs:ignore
+
             if (empty($shippingMethod)) {
-                throw new \Exception("No shipping method availeble");
+                throw new \Exception("No shipping method available");
             }
 
             $shippingAddress->setShippingMethod($shippingMethod);
@@ -226,23 +258,33 @@ class CreateFastCheckoutOrder
 
             $service = $this->quoteManagement->submit($quote);
             $increment_id = $service->getRealOrderId();
+            $this->payHelper->logDebug('Fast checkout: Reserved increment_id', [$increment_id]);
 
             $order = $this->orderFactory->create()->loadByIncrementId($increment_id);
             $additionalData = $order->getPayment()->getAdditionalInformation();
             $additionalData['transactionId'] = $payOrderId;
             $order->getPayment()->setAdditionalInformation($additionalData);
             $order->save();
+            $this->payHelper->logDebug('Fast checkout: Created order_id', [$order->getId()]);
 
             $order->addStatusHistoryComment(__('PAY. - Created iDEAL Fast Checkout order'))->save();
         } catch (NoSuchEntityException $e) {
+            $this->payHelper->logDebug('Fast checkout: Quote not found', ['quoteId' => $quoteId, 'error' => $e->getMessage()]);
             $order = $this->getExistingOrder($quoteId);
+        } catch (\Exception $e) {
+            $this->payHelper->logDebug('Fast checkout: Exception on create', ['quoteId' => $quoteId, 'error' => $e->getMessage()]);
+            throw new \Exception("Exception on create. " . $e->getMessage());
+        }
+        if (empty($order)) {
+            $this->payHelper->logCritical('Fast checkout: Both order & quote not found', ['quoteId' => $quoteId, 'searchCriteria' => $searchCriteria, 'searchResult' => $searchResult]);
+            throw new \Exception("Order & Quote can't be found. " . $quoteId, 404);
         }
         return $order;
     }
 
     /**
      * @param string $quoteId
-     * @return Order
+     * @return Order|boolean
      * @throws \Exception
      * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
      */
@@ -254,7 +296,7 @@ class CreateFastCheckoutOrder
             $order = array_shift($searchResult);
         }
         if (empty($order)) {
-            throw new \Exception("Order can't be found.");
+            return false;
         }
         return $order;
     }

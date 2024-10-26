@@ -160,12 +160,12 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
         $productArr = [];
 
         foreach ($products as $key => $product) {
-            if ($product->getPrice() > 0) {
+            if ($product->getPriceInclTax() > 0) {
                 $productArr[] = [
                     'id' => $product->getProductId(),
                     'quantity' => $product->getQty(),
                     'description' => $product->getName(),
-                    'price' => $product->getPrice() * 100,
+                    'price' => $product->getPriceInclTax() * 100,
                     'currecny' => $this->storeManager->getStore()->getCurrentCurrencyCode(),
                     'type' => \Paynl\Transaction::PRODUCT_TYPE_ARTICLE,
                     'vatPercentage' => ($product->getPriceInclTax() - $product->getBasePrice()) / $product->getBasePrice() * 100,

@@ -88,13 +88,12 @@ class Redirect extends PayAction
             $payment = $order->getPayment();
 
             if (empty($payment)) {
-                $this->_redirect('checkout/cart');
-                return;
+                throw new \Exception('No payment found');
             }
 
             $methodInstance = $this->paymentHelper->getMethodInstance($payment->getMethod());
             if ($methodInstance instanceof \Paynl\Payment\Model\Paymentmethod\Paymentmethod) {
-                $this->payHelper->logNotice('Start new payment for order ' . $order->getId(), array(), $order->getStore());
+                $this->payHelper->logNotice('Start new payment for order ' . $order->getId() . '. PayProfileId: ' . $methodInstance->getPaymentOptionId(), array(), $order->getStore());
                 $redirectUrl = $methodInstance->startTransaction($order);
                 $this->getResponse()->setNoCacheHeaders();
                 $this->getResponse()->setRedirect($redirectUrl);
@@ -105,8 +104,7 @@ class Redirect extends PayAction
             $this->_getCheckoutSession()->restoreQuote(); // phpcs:ignore
             $this->messageManager->addExceptionMessage($e, __('Something went wrong, please try again later'));
             $this->messageManager->addExceptionMessage($e, $e->getMessage());
-            $this->payHelper->logCritical($e, array(), $order->getStore());
-
+            $this->payHelper->logCritical($e->getMessage(), array(), $order->getStore());
             $this->_redirect('checkout/cart');
         }
     }
