@@ -88,7 +88,7 @@ class Redirect extends PayAction
             $payment = $order->getPayment();
 
             if (empty($payment)) {
-                throw new \Exception('No payment found');
+                throw new Error('No payment found');
             }
 
             $methodInstance = $this->paymentHelper->getMethodInstance($payment->getMethod());
