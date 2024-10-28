@@ -10,6 +10,7 @@ use Magento\Sales\Model\Order as OrderModel;
 use Paynl\Error\Error;
 use Paynl\Payment\Controller\PayAction;
 use Paynl\Payment\Helper\PayHelper;
+//use Magento\Checkout\Model\Session as CheckoutSession;
 
 /**
  * Redirects the user after payment
@@ -91,6 +92,18 @@ class Redirect extends PayAction
         parent::__construct($context);
     }
 
+
+
+    private function canAccessOrder($order)
+    {
+        # Check for guest users by session's last placed order
+        if (!$this->checkoutSession->getCustomerId()) {
+            $this->payHelper->logDebug('mqid: ' . $this->checkoutSession->getLastOrderId() . ' vs ' . $order->getEntityId());
+            return $this->checkoutSession->getLastOrderId() === $order->getEntityId();
+        }
+        return false;
+    }
+
     /**
      * @return void
      */
@@ -98,19 +111,32 @@ class Redirect extends PayAction
     {
         try {
             $mqid = $this->getRequest()->getParam('mqid');
-            if (!empty($mqid))
-            {
-                $quoteId = $this->maskedQuoteIdToQuoteId->execute($mqid);
-                $quote = $this->quoteRepository->get($quoteId);
-                $incrementId = $quote->getReservedOrderId();
+            $this->payHelper->logDebug('mqid: ' . $mqid);
 
-                $orderId = $this->orderModel->loadByIncrementId($incrementId)->getId();
+            if (!empty($mqid)) {
+                try {
+                    $quoteId = $this->maskedQuoteIdToQuoteId->execute($mqid);
+                    $quote = $this->quoteRepository->get($quoteId);
+                    $incrementId = $quote->getReservedOrderId();
+                    $orderId = $this->orderModel->loadByIncrementId($incrementId)->getId();
+                    $order = $this->orderRepository->get($orderId);
+                    if (!$this->canAccessOrder($order)) {
+                        $this->payHelper->logDebug('Unauthorized access to order.');
+                        $this->messageManager->addErrorMessage(__('Unauthorized access to order.'));
+                        return $this->_redirect('checkout/cart');
+                    }
+                } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
+                    $this->payHelper->logDebug('Order not found: ' . $e->getMessage());
+                    $this->messageManager->addErrorMessage(__('Order not found.'));
+                    return $this->_redirect('checkout/cart');
+                }
 
-                $order = $this->orderRepository->get($orderId);
                 $this->payHelper->logDebug('Redirect: OrderId from quote: ' . $order->getId() ?? null, array(), $order->getStore() ?? null);
 
+                # Temp, for debug purposes:
                 $orderSession = $this->checkoutSession->getLastRealOrder();
-                $this->payHelper->logDebug('Redirect: OrderId from session: ' . $orderSession->getId() ?? null, array(), $order->getStore() ?? null);
+                $qid = $this->checkoutSession->getQuoteId();
+                $this->payHelper->logDebug('Redirect: OrderId from session: ' . ($orderSession->getId() ?? null) . '. qid:' . $qid, array(), $order->getStore() ?? null);
 
                 if (empty($order)) {
                     $order = $orderSession;
