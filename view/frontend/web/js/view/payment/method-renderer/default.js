@@ -259,7 +259,7 @@ define(
                 return window.checkoutConfig.payment.pinmomentterminal[this.item.method];
             },
             afterPlaceOrder: function () {
-                window.location.replace(url.build('paynl/checkout/redirect?nocache=' + (new Date().getTime())) + '&maskedQuoteId=' + quote.getQuoteId());
+                window.location.replace(url.build('paynl/checkout/redirect?nocache=' + (new Date().getTime())) + '&mqid=' + quote.getQuoteId());
             },
             getCustomField: function (fieldname) {
                 var customFields = [];

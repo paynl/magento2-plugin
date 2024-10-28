@@ -97,13 +97,14 @@ class Redirect extends PayAction
     public function execute()
     {
         try {
-            if (!empty($this->getRequest()->getParam('maskedQuoteId'))) {
-                $quoteId = $this->maskedQuoteIdToQuoteId->execute($this->getRequest()->getParam('maskedQuoteId'));
+            $mqid = $this->getRequest()->getParam('mqid');
+            if (!empty($mqid))
+            {
+                $quoteId = $this->maskedQuoteIdToQuoteId->execute($mqid);
                 $quote = $this->quoteRepository->get($quoteId);
                 $incrementId = $quote->getReservedOrderId();
 
-                $orderInfo = $this->orderModel->loadByIncrementId($incrementId);
-                $orderId = $orderInfo->getId();
+                $orderId = $this->orderModel->loadByIncrementId($incrementId)->getId();
 
                 $order = $this->orderRepository->get($orderId);
                 $this->payHelper->logDebug('Redirect: OrderId from quote: ' . $order->getId() ?? null, array(), $order->getStore() ?? null);
