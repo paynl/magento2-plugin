@@ -5,6 +5,8 @@ namespace Paynl\Payment\Controller\Checkout;
 use Magento\Payment\Helper\Data as PaymentHelper;
 use Magento\Quote\Model\QuoteRepository;
 use Magento\Sales\Model\OrderRepository;
+use Magento\Quote\Model\MaskedQuoteIdToQuoteIdInterface;
+use Magento\Sales\Model\Order as OrderModel;
 use Paynl\Error\Error;
 use Paynl\Payment\Controller\PayAction;
 use Paynl\Payment\Helper\PayHelper;
@@ -40,6 +42,16 @@ class Redirect extends PayAction
     private $orderRepository;
 
     /**
+     * @var MaskedQuoteIdToQuoteIdInterface
+     */
+    private $maskedQuoteIdToQuoteId;
+
+    /**
+     * @var OrderModel
+     */
+    private $orderModel;
+
+    /**
      *
      * @var \Paynl\Payment\Helper\PayHelper;
      */
@@ -53,6 +65,8 @@ class Redirect extends PayAction
      * @param QuoteRepository $quoteRepository
      * @param OrderRepository $orderRepository
      * @param PayHelper $payHelper
+     * @param MaskedQuoteIdToQuoteIdInterface $maskedQuoteIdToQuoteId
+     * @param OrderModel $orderModel
      */
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
@@ -61,7 +75,9 @@ class Redirect extends PayAction
         PaymentHelper $paymentHelper,
         QuoteRepository $quoteRepository,
         OrderRepository $orderRepository,
-        PayHelper $payHelper
+        PayHelper $payHelper,
+        MaskedQuoteIdToQuoteIdInterface $maskedQuoteIdToQuoteId,
+        OrderModel $orderModel
     ) {
         $this->config          = $config; // PAY. config helper
         $this->checkoutSession = $checkoutSession;
@@ -69,6 +85,8 @@ class Redirect extends PayAction
         $this->quoteRepository = $quoteRepository;
         $this->orderRepository = $orderRepository;
         $this->payHelper = $payHelper;
+        $this->maskedQuoteIdToQuoteId = $maskedQuoteIdToQuoteId;
+        $this->orderModel = $orderModel;
 
         parent::__construct($context);
     }
@@ -79,7 +97,26 @@ class Redirect extends PayAction
     public function execute()
     {
         try {
-            $order = $this->checkoutSession->getLastRealOrder();
+            if (!empty($this->getRequest()->getParam('maskedQuoteId'))) {
+                $quoteId = $this->maskedQuoteIdToQuoteId->execute($this->getRequest()->getParam('maskedQuoteId'));
+                $quote = $this->quoteRepository->get($quoteId);
+                $incrementId = $quote->getReservedOrderId();
+
+                $orderInfo = $this->orderModel->loadByIncrementId($incrementId);
+                $orderId = $orderInfo->getId();
+
+                $order = $this->orderRepository->get($orderId);
+                $this->payHelper->logDebug('Redirect: OrderId from quote: ' . $order->getId() ?? null, array(), $order->getStore() ?? null);
+
+                $orderSession = $this->checkoutSession->getLastRealOrder();
+                $this->payHelper->logDebug('Redirect: OrderId from session: ' . $orderSession->getId() ?? null, array(), $order->getStore() ?? null);
+
+                if (empty($order)) {
+                    $order = $orderSession;
+                }
+            } else {
+                $order = $this->checkoutSession->getLastRealOrder();
+            }
 
             if (empty($order)) {
                 throw new Error('No order found in session, please try again');
