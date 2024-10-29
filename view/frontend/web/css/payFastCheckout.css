@@ -8,18 +8,18 @@
 #paynl_fast_checkout_fallback button,
 #top-cart-fast-checkout,
 #top-cart-btn-fastcheckout {
-    width: 100%;
-    line-height: 2.2rem;
-    padding: 14px 17px;
-    font-size: 1.8rem;
-    margin-top: -10px;
-    background: #c90066;
+    background-color: #c90066;
     border-color: #c90066;
     background-image: url("../images/fastCheckoutIdeal.png");
     background-repeat: no-repeat;
     background-size: 51px;
     background-position: 8px center;
     color: white;
+}
+
+#paynl_fast_checkout_cart button, #paynl_fast_checkout_product button {
+    padding: 14px 17px;
+    width: 100%;
 }
 
 #top-cart-btn-fastcheckout {
@@ -29,7 +29,7 @@
 #paynl_fast_checkout_cart button:hover,
 #paynl_fast_checkout_product button:hover,
 #paynl_fast_checkout_fallback button:hover,
-#top-cart-fast-checkou:hover,
+#top-cart-fast-checkout:hover,
 #top-cart-btn-fastcheckout:hover {
     background: #b0025b;
     border-color: #b0025b;
