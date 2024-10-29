@@ -9,21 +9,18 @@
 #top-cart-fast-checkout,
 #top-cart-btn-fastcheckout {
     width: 100%;
-    line-height: 2.2rem;
-    padding: 14px 17px;
-    font-size: 1.8rem;
     margin-top: -10px;
     background: #c90066;
     border-color: #c90066;
     background-image: url("../images/fastCheckoutIdeal.png");
     background-repeat: no-repeat;
-    background-size: 51px;
+    background-size: auto 60%;
     background-position: 8px center;
     color: white;
 }
 
 #top-cart-btn-fastcheckout {
-    margin-top: 5px;
+    margin-top: 5px; 
 }
 
 #paynl_fast_checkout_cart button:hover,
