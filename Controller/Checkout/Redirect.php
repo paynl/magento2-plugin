@@ -10,7 +10,6 @@ use Magento\Sales\Model\Order as OrderModel;
 use Paynl\Error\Error;
 use Paynl\Payment\Controller\PayAction;
 use Paynl\Payment\Helper\PayHelper;
-//use Magento\Checkout\Model\Session as CheckoutSession;
 
 /**
  * Redirects the user after payment
@@ -71,37 +70,43 @@ class Redirect extends PayAction
      */
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
-        \Paynl\Payment\Model\Config $config,
-        \Magento\Checkout\Model\Session $checkoutSession,
-        PaymentHelper $paymentHelper,
-        QuoteRepository $quoteRepository,
-        OrderRepository $orderRepository,
-        PayHelper $payHelper,
-        MaskedQuoteIdToQuoteIdInterface $maskedQuoteIdToQuoteId,
-        OrderModel $orderModel
-    ) {
-        $this->config          = $config; // PAY. config helper
+        \Paynl\Payment\Model\Config           $config,
+        \Magento\Checkout\Model\Session       $checkoutSession,
+        PaymentHelper                         $paymentHelper,
+        QuoteRepository                       $quoteRepository,
+        OrderRepository                       $orderRepository,
+        PayHelper                             $payHelper,
+        MaskedQuoteIdToQuoteIdInterface       $maskedQuoteIdToQuoteId,
+        OrderModel                            $orderModel
+    )
+    {
+        $this->config = $config;
         $this->checkoutSession = $checkoutSession;
-        $this->paymentHelper   = $paymentHelper;
+        $this->paymentHelper = $paymentHelper;
         $this->quoteRepository = $quoteRepository;
         $this->orderRepository = $orderRepository;
         $this->payHelper = $payHelper;
         $this->maskedQuoteIdToQuoteId = $maskedQuoteIdToQuoteId;
         $this->orderModel = $orderModel;
-
         parent::__construct($context);
     }
 
-
-
-    private function canAccessOrder($order)
+    /**
+     * @param $mqId
+     * @return mixed
+     * @throws \Exception
+     */
+    private function getOrder($mqId)
     {
-        # Check for guest users by session's last placed order
-        if (!$this->checkoutSession->getCustomerId()) {
-            $this->payHelper->logDebug('mqid: ' . $this->checkoutSession->getLastOrderId() . ' vs ' . $order->getEntityId());
-            return $this->checkoutSession->getLastOrderId() === $order->getEntityId();
+        $quoteId = $this->maskedQuoteIdToQuoteId->execute($mqId);
+        $quote = $this->quoteRepository->get($quoteId);
+        $incrementId = $quote->getReservedOrderId();
+        $orderId = $this->orderModel->loadByIncrementId($incrementId)->getId();
+        $order = $this->orderRepository->get($orderId);
+        if (empty($order)) {
+            throw new \Exception('Could not find order by mqId');
         }
-        return false;
+        return $order;
     }
 
     /**
@@ -110,25 +115,14 @@ class Redirect extends PayAction
     public function execute()
     {
         try {
-            $mqid = $this->getRequest()->getParam('mqid');
-            $this->payHelper->logDebug('mqid: ' . $mqid);
+            $mqId = $this->getRequest()->getParam('mqid');
+            $this->payHelper->logDebug('mqId: ' . $mqId);
 
-            if (!empty($mqid)) {
+            if (!empty($mqId)) {
                 try {
-                    $quoteId = $this->maskedQuoteIdToQuoteId->execute($mqid);
-                    $quote = $this->quoteRepository->get($quoteId);
-                    $incrementId = $quote->getReservedOrderId();
-                    $orderId = $this->orderModel->loadByIncrementId($incrementId)->getId();
-                    $order = $this->orderRepository->get($orderId);
-                    if (!$this->canAccessOrder($order)) {
-                        $this->payHelper->logDebug('Unauthorized access to order.');
-                        $this->messageManager->addErrorMessage(__('Unauthorized access to order.'));
-                        return $this->_redirect('checkout/cart');
-                    }
-                } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
-                    $this->payHelper->logDebug('Order not found: ' . $e->getMessage());
-                    $this->messageManager->addErrorMessage(__('Order not found.'));
-                    return $this->_redirect('checkout/cart');
+                    $order = $this->getOrder($mqId);
+                } catch (\Exception $e) {
+                    throw new Error('Could not retrieve order by mqId. Exception: ' . $e->getMessage());
                 }
 
                 $this->payHelper->logDebug('Redirect: OrderId from quote: ' . $order->getId() ?? null, array(), $order->getStore() ?? null);
@@ -137,10 +131,6 @@ class Redirect extends PayAction
                 $orderSession = $this->checkoutSession->getLastRealOrder();
                 $qid = $this->checkoutSession->getQuoteId();
                 $this->payHelper->logDebug('Redirect: OrderId from session: ' . ($orderSession->getId() ?? null) . '. qid:' . $qid, array(), $order->getStore() ?? null);
-
-                if (empty($order)) {
-                    $order = $orderSession;
-                }
             } else {
                 $order = $this->checkoutSession->getLastRealOrder();
             }
@@ -162,13 +152,12 @@ class Redirect extends PayAction
                 $this->getResponse()->setNoCacheHeaders();
                 $this->getResponse()->setRedirect($redirectUrl);
             } else {
-                throw new Error('PAY.: Method is not a paynl payment method');
+                throw new Error('PAY.: Method is not a Pay. payment method');
             }
         } catch (\Exception $e) {
             $this->_getCheckoutSession()->restoreQuote(); // phpcs:ignore
             $this->messageManager->addExceptionMessage($e, __('Something went wrong, please try again later'));
-            $this->messageManager->addExceptionMessage($e, $e->getMessage());
-            $this->payHelper->logCritical($e->getMessage(), array(), $order->getStore());
+            $this->payHelper->logCritical($e->getMessage());
             $this->_redirect('checkout/cart');
         }
     }
