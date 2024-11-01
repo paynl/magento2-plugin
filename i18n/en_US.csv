@@ -366,3 +366,6 @@ This setting does not effect the product page. If fast checkout is enabled for t
 "Show notice and abort fast checkout","Show notice and abort fast checkout"
 "Show intermediate screen to select shipping method","Show intermediate screen to select shipping method"
 "Thank you for your purchase, as soon as the payment is completed you will receive an email.","Thank you for your purchase, as soon as the payment is completed you will receive an email."
+"Reserve order Id","Reserve order Id"
+"When enabled, the fast checkout order id will be reserved on start and send to Pay.","When enabled, the fast checkout order id will be reserved on start and send to Pay."
+"Reserve the order id on fast checkout start.","Reserve the order id on fast checkout start."

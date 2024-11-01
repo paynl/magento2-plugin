@@ -301,3 +301,6 @@ Diese Einstellung wirkt sich nicht auf die Produktseite aus. Wenn der schnelle C
 "Show notice and abort fast checkout","Hinweis anzeigen und Schnellkasse abbrechen"
 "Show intermediate screen to select shipping method","Zwischenbildschirm zur Auswahl der Versandart anzeigen"
 "Thank you for your purchase, as soon as the payment is completed you will receive an email.","Vielen Dank für Ihren Kauf, sobald die Zahlung abgeschlossen ist, erhalten Sie eine E-Mail."
+"Reserve order Id","Reservieren Sie Bestellnummer"
+"When enabled, the fast checkout order id will be reserved on start and send to Pay.","Wenn aktiviert, wird die fastcheckout Bestellnummer beim Start reserviert und an Pay. gesendet."
+"Reserve the order id on fast checkout start.","Reservieren Sie die Bestellnummer beim Start des fastcheckout."
