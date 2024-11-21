@@ -30,14 +30,30 @@ class Languages implements ArrayInterface
     public function toArray()
     {
         return [
-            'nl' => __('Dutch'),
+            'nl' => __('Nederlands'),
             'en' => __('English'),
-            'de' => __('German'),
-            'it' => __('Italian'),
-            'fr' => __('French'),
-            'es' => __('Spanish'),
-            'dk' => __('Danish'),
-            'pl' => __('Polish')
+            'de' => __('Deutsch'),
+            'it' => __('Italiano'),
+            'fr' => __('Francais'),
+            'es' => __('Español'),
+            'dk' => __('Dansk'),
+            'pl' => __('Polski'),
+            'us' => __('American'),
+            'mx' => __('Mexicano'),
+            'hu' => __('Magyar'),
+            'no' => __('Norsk'),
+            'hr' => __('Hrvatski'),
+            'pt' => __('Português'),
+            'ro' => __('Română'),
+            'sv' => __('Svenska'),
+            'sl' => __('Slovenski'),
+            'tr' => __('Türk'),
+            'fi' => __('Suomalainen'),
+            'cz' => __('Česky'),
+            'gr' => __('Ελληνικά'),
+            'jp' => __('日本語'),
+            'browser' => __('Use browser language'),
+            'website' => __('Use website language'),
         ];
     }
 }
