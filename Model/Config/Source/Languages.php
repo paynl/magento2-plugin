@@ -53,7 +53,7 @@ class Languages implements ArrayInterface
             'gr' => __('Ελληνικά'),
             'jp' => __('日本語'),
             'browser' => __('Use browser language'),
-            'website' => __('Use website language'),
+            'website' => __('Use website language')
         ];
     }
 }
