@@ -302,6 +302,16 @@ class Config
     {
         $language = $this->store->getConfig('payment/paynl/language');
 
+        if ($language == 'browser' && isset($_SERVER["HTTP_ACCEPT_LANGUAGE"])) {
+            $language = substr($_SERVER["HTTP_ACCEPT_LANGUAGE"], 0, 2);
+        }
+        if ($language == 'website') {
+            $currentLocaleCode = $this->scopeConfig->getValue('general/locale/code', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $this->store->getId());
+            if (!empty($currentLocaleCode)) {
+                $language = explode('_', $currentLocaleCode)[0];
+            }
+        }
+
         return $language ? $language : 'nl'; //default nl
     }
 
