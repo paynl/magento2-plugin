@@ -1,9 +1,9 @@
 define(
-[
-    'jquery',
-    'uiComponent'
-],
-function ($, Component) {
+    [
+        'jquery',
+        'uiComponent'
+    ],
+    function ($, Component) {
         'use strict';
         return Component.extend({
             defaults: {
@@ -14,7 +14,11 @@ function ($, Component) {
                 return this;
             },
             isFastcheckoutEnabled: function () {
-                $('#top-cart-btn-checkout').parent().append($('#top-cart-btn-fastcheckout'));
+                if (window.fastCheckoutMinicart) {
+                    $('#top-cart-btn-checkout').parent().append($('#top-cart-btn-fastcheckout'));
+                } else {
+                    $('#top-cart-btn-fastcheckout').remove();
+                }
                 return window.fastCheckoutMinicart;
             },
             doFastcheckout: function () {
@@ -23,4 +27,3 @@ function ($, Component) {
         })
     }
 )
-          
