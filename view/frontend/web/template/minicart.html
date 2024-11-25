@@ -3,6 +3,26 @@
     type="button"
     class="action primary fastcheckout"
     data-action="fastcheckout"
-    data-bind="visible: isFastcheckoutEnabled(),attr: {title: $t('Fast Checkout')},click: doFastcheckout"
+    data-bind="visible: isFastcheckoutEnabled(),attr: {title: $t('Fast Checkout')},click: openFastcheckout"
     translate="'Fast Checkout'">
 </button>
+<div class="modal-backdrop" id="fc-modal-backdrop-minicart" data-bind="click: closeFastcheckout"></div>
+<div class="fc-modal" id="fc-modal-minicart">
+    <div class="modal-body-wrapper">
+        <div class="eye-catcher"></div>
+        <div class="modal-content">
+            <div class="modal-header roboto-slab">
+                <span translate="'Order faster'"></span> <span class="nostyle" translate="'with iDEAL fast checkout'"></span> 
+            </div>
+            <div class="modal-text">
+                <p class="modal-description" translate="'Create an iDEAL profile and save your address for your next order'"></p>
+            </div>
+            <div class="modal-actions">
+                <button class="button button-primary" type="submit" title="Fast Checkout" data-bind="click: doFastcheckout">
+                    <span class="fastcheckout-button-modal" translate="'Fast Checkout'"></span>
+                </button>
+                <button class="button button-secondary roboto-medium" data-bind="click: closeFastcheckout" translate="'Enter my own address and pay'"></button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,13 +1,48 @@
-
 <?php
 /** @var \Paynl\Payment\Block\Checkout\FastCheckout $block */
+    $viewModel = $block->getViewModel();
 ?>
+<?php if($viewModel->modalEnabled()): ?>    
+    <div id="paynl_fast_checkout_product" data-mage-init='{"Paynl_Payment/js/reloadCart": {}}'>
+        <button type="submit"
+                title="Fast Checkout"
+                class="action primary paynl-fast-checkout-btn"
+                data-mage-init='{"Paynl_Payment/js/fast-checkout-modal-open": {}}'>
+            <span><?= /* @escapeNotVerified */ __('Fast Checkout') ?></span>
+        </button>    
+    </div>
 
-<div id="paynl_fast_checkout_product" data-mage-init='{"Paynl_Payment/js/reloadCart": {}}'>
-    <button type="submit"
-            title="Fast Checkout"
-            class="action primary paynl-fast-checkout-btn tocart"
-            data-mage-init='{"Paynl_Payment/js/fast-checkout-product-view": {}}'>
-        <span><?= /* @escapeNotVerified */ __('Fast Checkout') ?></span>
-    </button>
-</div>
+    <div class="modal-backdrop" id="fc-modal-backdrop" data-mage-init='{"Paynl_Payment/js/fast-checkout-modal-close": {}}'></div>
+    <div class="fc-modal" id="fc-modal">
+        <div class="modal-body-wrapper">
+            <div class="eye-catcher">
+            </div>
+            <div class="modal-content">
+                <div class="modal-header roboto-slab">
+                    <span><?= /* @escapeNotVerified */ __('Order faster') ?></span> <?= /* @escapeNotVerified */ __('with iDEAL fast checkout') ?>
+                </div>
+                <div class="modal-text">
+                    <p class="modal-description"><?= /* @escapeNotVerified */ __('Create an iDEAL profile and save your address for your next order') ?></p>
+                </div>
+                <div class="modal-actions">
+                    <button class="button button-primary" type="submit" title="Fast Checkout" data-mage-init='{"Paynl_Payment/js/fast-checkout-product-view": {}}'>
+                        <span class="fastcheckout-button-modal"><?= /* @escapeNotVerified */ __('Fast Checkout') ?></span>
+                    </button>
+                    <button class="button button-secondary roboto-medium" data-mage-init='{"Paynl_Payment/js/fast-checkout-modal-close": {}}'><?= /* @escapeNotVerified */ __('Enter my own address and pay') ?></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<?php else: ?>
+
+    <div id="paynl_fast_checkout_product" data-mage-init='{"Paynl_Payment/js/reloadCart": {}}'>
+        <button type="submit"
+                title="Fast Checkout"
+                class="action primary paynl-fast-checkout-btn"
+                data-mage-init='{"Paynl_Payment/js/fast-checkout-product-view": {}}'>
+            <span><?= /* @escapeNotVerified */ __('Fast Checkout') ?></span>
+        </button>    
+    </div>
+
+<?php endif ?>

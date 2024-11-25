@@ -495,7 +495,8 @@ To finish your order, click the link below
                 <instructions>Veilig betalen via uw eigen bank</instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Ideal</model>
-                <group>paynl_payment</group>
+                <group>paynl_payment</group>                
+                <fast_checkout_show_modal>1</fast_checkout_show_modal>
             </paynl_payment_ideal>
             <paynl_payment_in3business>
                 <active>0</active>
