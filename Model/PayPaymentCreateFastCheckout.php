@@ -43,6 +43,8 @@ class PayPaymentCreateFastCheckout extends PayPaymentCreate
         $finishUrl = $baseUrl . 'paynl/checkout/finish/?entityid=fc';
         $exchangeUrl = $baseUrl . 'paynl/checkout/exchange/';
 
+        $this->orderId = $reservedOrderId;
+
         $fastCheckout->setAmount($amount);
         $fastCheckout->setCurrency($currency);
         $fastCheckout->setFinishURL($finishUrl);
@@ -78,7 +80,7 @@ class PayPaymentCreateFastCheckout extends PayPaymentCreate
         $parameters['paymentMethod'] = ['id' => $this->paymentMethodId];
 
         $this->_add($parameters, 'returnUrl', $this->paymentData['returnURL']);
-        $this->_add($parameters, 'description', '');
+        $this->_add($parameters, 'description', $this->getDescription());
         $this->_add($parameters, 'reference', $this->reference);
         $this->_add($parameters, 'exchangeUrl', $this->paymentData['exchangeURL']);
 

@@ -79,7 +79,7 @@ class PayPaymentCreate
     /**
      * @var float|string|null
      */
-    private $orderId;
+    protected $orderId;
 
     /**
      * @var Order
@@ -258,7 +258,7 @@ class PayPaymentCreate
     /**
      * @return float|string|null
      */
-    private function getDescription()
+    public function getDescription()
     {
         $prefix = $this->scopeConfig->getValue('payment/paynl/order_description_prefix', 'store');
         return !empty($prefix) ? $prefix . $this->orderId : $this->orderId;
