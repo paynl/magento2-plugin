@@ -105,6 +105,7 @@ class Config
         "paynl_payment_klarnakp" => "15",
         "paynl_payment_kunstencultuurkaart" => "315",
         "paynl_payment_maestro" => "33",
+        "paynl_payment_mastercard" => "8",
         "paynl_payment_mistercash" => "2",
         "paynl_payment_mobilepay" => "324",
         "paynl_payment_monizze" => "183",
@@ -132,6 +133,7 @@ class Config
         "paynl_payment_stadspasamsterdam" => "336",
         "paynl_payment_telefonischbetalen" => "173",
         "paynl_payment_trustly" => "213",
+        "paynl_payment_visa" => "228",
         "paynl_payment_visamastercard" => "7",
         "paynl_payment_vvvgiftcard" => "25",
         "paynl_payment_webshopgiftcard" => "26",
@@ -301,6 +303,16 @@ class Config
     public function getLanguage()
     {
         $language = $this->store->getConfig('payment/paynl/language');
+
+        if ($language == 'browser' && isset($_SERVER["HTTP_ACCEPT_LANGUAGE"])) {
+            $language = substr($_SERVER["HTTP_ACCEPT_LANGUAGE"], 0, 2);
+        }
+        if ($language == 'website') {
+            $currentLocaleCode = $this->scopeConfig->getValue('general/locale/code', \Magento\Store\Model\ScopeInterface::SCOPE_STORE, $this->store->getId());
+            if (!empty($currentLocaleCode)) {
+                $language = explode('_', $currentLocaleCode)[0];
+            }
+        }
 
         return $language ? $language : 'nl'; //default nl
     }

@@ -109,6 +109,8 @@ class PayPaymentCreate
 
             $finishUrl = $order->getStore()->getBaseUrl() . 'paynl/checkout/finish/?entityid=' . $order->getEntityId();
             $exchangeUrl = $order->getStore()->getBaseUrl() . 'paynl/checkout/exchange/';
+
+            $this->payConfig->setStore($order->getStore());
         }
 
         $this->setCompanyField($this->additionalData['companyfield'] ?? '');
