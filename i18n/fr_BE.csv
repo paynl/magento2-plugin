@@ -319,3 +319,6 @@ Ce paramètre n'affecte pas la page produit. Si le paiement rapide est activé p
 "Czech","Tchèque"
 "Greek","Grec"
 "Japanese","Japonais"
+"Reserve order Id","Numéro de commande de réserve"
+"When enabled, the fast checkout order id will be reserved on start and send to Pay.","Lorsqu'elle est activée, l'identifiant de commande de fastcheckout sera réservé au démarrage et envoyé à Pay."
+"Reserve the order id on fast checkout start.","Réservez l'identifiant de commande au démarrage du fastcheckout."

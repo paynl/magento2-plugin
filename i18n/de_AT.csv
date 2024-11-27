@@ -315,3 +315,6 @@ Diese Einstellung wirkt sich nicht auf die Produktseite aus. Wenn der schnelle C
 "Czech","Tschechisch"
 "Greek","Griechisch"
 "Japanese","Japanisch"
+"Reserve order Id","Reservieren Sie Bestellnummer"
+"When enabled, the fast checkout order id will be reserved on start and send to Pay.","Wenn aktiviert, wird die fastcheckout Bestellnummer beim Start reserviert und an Pay. gesendet."
+"Reserve the order id on fast checkout start.","Reservieren Sie die Bestellnummer beim Start des fastcheckout."

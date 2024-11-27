@@ -376,3 +376,6 @@ Deze instelling heeft geen effect op de productpagina. Als snel bestellen is ing
 "Czech","Tsjechisch"
 "Greek","Grieks"
 "Japanese","Japans"
+"Reserve order Id","Reserveer order Id"
+"When enabled, the fast checkout order id will be reserved on start and send to Pay.","Als deze optie is ingeschakeld, wordt de Fast Checkout order Id bij de start gereserveerd en naar Pay verzonden."
+"Reserve the order id on fast checkout start.","Reserveer de order Id bij het starten van de fast checkout."

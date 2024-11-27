@@ -244,13 +244,19 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
                 throw new \Exception('empty amount', FastCheckoutStart::FC_EMPTY_BASKET);
             }
 
+            if (!empty($store->getConfig('payment/paynl_payment_ideal/fast_checkout_reserveOrderId')) && $store->getConfig('payment/paynl_payment_ideal/fast_checkout_reserveOrderId') == 1) { // phpcs:ignore
+                $quote->reserveOrderId();
+                $quote->save();
+            }
+
             $payTransaction = (new PayPaymentCreateFastCheckout(
                 $methodInstance,
                 $fcAmount * 100,
                 $arrProducts,
                 $this->storeManager->getStore()->getBaseUrl(),
                 $this->cart->getQuote()->getId(),
-                $this->storeManager->getStore()->getCurrentCurrencyCode()
+                $this->storeManager->getStore()->getCurrentCurrencyCode(),
+                $quote->getReservedOrderId() ?? null
             ))->create();
 
             $this->getResponse()->setNoCacheHeaders();
