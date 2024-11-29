@@ -126,9 +126,7 @@ class CreateFastCheckoutOrder
         }
 
         $payOrderId = $params['payOrderId'];
-
-        $orderId = explode('fastcheckout', $params['orderId']);
-        $quoteId = $orderId[1] ?? '';
+        $quoteId = $params['orderId'];
 
         $this->payHelper->logDebug('Start fast checkout order create', ['quoteId' => $quoteId]);
 
