@@ -318,3 +318,10 @@ Ce paramètre n'affecte pas la page produit. Si le paiement rapide est activé p
 "Czech","Tchèque"
 "Greek","Grec"
 "Japanese","Japonais"
+"Use expected order-ID","Utiliser l'ID de commande attendu"
+"Magento determines the order ID that will be assigned to an upcoming order in advance. You can utilize this ID for the "order description" field in Pay.
+
+Please note that if an order is canceled, it may create a gap in your Magento order sequence.","Magento détermine à l'avance l'ID de commande qui sera attribué à une commande à venir. Vous pouvez utiliser cet ID pour le champ « Description de la commande » dans Pay.
+
+Veuillez noter que si une commande est annulée, cela peut créer un écart dans votre séquence de commandes Magento."
+"Use the expected next order ID for order description.","Utilisez l’ID de commande suivant attendu pour la description de la commande."
