@@ -368,6 +368,10 @@ Deze instelling heeft geen effect op de productpagina. Als snel bestellen is ing
 "Czech","Tsjechisch"
 "Greek","Grieks"
 "Japanese","Japans"
-"Reserve order Id","Reserveer order Id"
-"When enabled, the fast checkout order id will be reserved on start and send to Pay.","Als deze optie is ingeschakeld, wordt de Fast Checkout order Id bij de start gereserveerd en naar Pay verzonden."
-"Reserve the order id on fast checkout start.","Reserveer de order Id bij het starten van de fast checkout."
+"Use expected order-ID","Gebruik verwachte order-ID"
+"Magento determines the order ID that will be assigned to an upcoming order in advance. You can utilize this ID for the "order description" field in Pay.
+
+Please note that if an order is canceled, it may create a gap in your Magento order sequence.","Magento bepaalt vooraf de order-ID die aan een aankomende order wordt toegewezen. U kunt deze ID gebruiken voor het veld 'orderbeschrijving' in Pay.
+
+Houd er rekening mee dat als een order wordt geannuleerd, dit een gat in uw Magento-ordervolgorde kan creëren."
+"Use the expected next order ID for order description.","Gebruik de verwachte ID van de volgende bestelling voor de beschrijving van de bestelling."
