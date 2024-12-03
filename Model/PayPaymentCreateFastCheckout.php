@@ -27,11 +27,6 @@ class PayPaymentCreateFastCheckout extends PayPaymentCreate
     private $reservedOrderId = '';
 
     /**
-     * @var string
-     */
-    private $description = '';
-
-    /**
      * @param \Paynl\Payment\Model\Paymentmethod\Paymentmethod $methodInstance
      * @param string $amount Amount to start fastCheckout with
      * @param array $products Procucts to buy with fastCheckout
@@ -41,7 +36,7 @@ class PayPaymentCreateFastCheckout extends PayPaymentCreate
      * @throws \Exception
      * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
      */
-    public function __construct($methodInstance, $amount, $products, $baseUrl, $quoteId, $currency, $reservedOrderId, $description)
+    public function __construct($methodInstance, $amount, $products, $baseUrl, $quoteId, $currency, $reservedOrderId)
     {
         $fastCheckout = parent::__construct(null, $methodInstance);
 
@@ -56,7 +51,6 @@ class PayPaymentCreateFastCheckout extends PayPaymentCreate
 
         $fastCheckout->reservedOrderId = $reservedOrderId;
         $fastCheckout->reference = $quoteId;
-        $fastCheckout->description = $description . ($reservedOrderId ?? $quoteId);
     }
 
     /**
@@ -85,7 +79,7 @@ class PayPaymentCreateFastCheckout extends PayPaymentCreate
         $parameters['paymentMethod'] = ['id' => $this->paymentMethodId];
 
         $this->_add($parameters, 'returnUrl', $this->paymentData['returnURL']);
-        $this->_add($parameters, 'description', $this->description);
+        $this->_add($parameters, 'description', $this->getDescription($this->reservedOrderId));
         $this->_add($parameters, 'reference', $this->reference);
         $this->_add($parameters, 'exchangeUrl', $this->paymentData['exchangeURL']);
 

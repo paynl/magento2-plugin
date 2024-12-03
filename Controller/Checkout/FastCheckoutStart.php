@@ -256,8 +256,7 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
                 $this->storeManager->getStore()->getBaseUrl(),
                 $this->cart->getQuote()->getId(),
                 $this->storeManager->getStore()->getCurrentCurrencyCode(),
-                $quote->getReservedOrderId() ?? null,
-                $store->getConfig('payment/paynl/order_description_prefix')
+                $quote->getReservedOrderId() ?? null
             ))->create();
 
             $this->getResponse()->setNoCacheHeaders();
