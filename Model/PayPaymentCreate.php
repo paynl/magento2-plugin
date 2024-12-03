@@ -258,12 +258,17 @@ class PayPaymentCreate
     }
 
     /**
+     * @param string|null $orderId
      * @return float|string|null
      */
-    public function getDescription()
+    public function getDescription($orderId = null)
     {
+        $orderId = !empty($this->orderId) ? $this->orderId : $orderId;
+        if (empty($orderId)) {
+            return '';
+        }
         $prefix = $this->scopeConfig->getValue('payment/paynl/order_description_prefix', 'store');
-        return !empty($prefix) ? $prefix . $this->orderId : $this->orderId;
+        return !empty($prefix) ? $prefix . $orderId : $orderId;
     }
 
     /**

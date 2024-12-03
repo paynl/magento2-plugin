@@ -33,6 +33,7 @@ class PayPaymentCreateFastCheckout extends PayPaymentCreate
      * @param string $baseUrl
      * @param string $quoteId
      * @param string $currency
+     * @param string $reservedOrderId
      * @throws \Exception
      * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
      */
@@ -43,15 +44,14 @@ class PayPaymentCreateFastCheckout extends PayPaymentCreate
         $finishUrl = $baseUrl . 'paynl/checkout/finish/?entityid=fc';
         $exchangeUrl = $baseUrl . 'paynl/checkout/exchange/';
 
-        $this->orderId = $reservedOrderId;
-
         $fastCheckout->setAmount($amount);
         $fastCheckout->setCurrency($currency);
         $fastCheckout->setFinishURL($finishUrl);
         $fastCheckout->setExchangeURL($exchangeUrl);
         $fastCheckout->setProducts($products);
-        $fastCheckout->reference = 'fastcheckout' . $quoteId;
+
         $fastCheckout->reservedOrderId = $reservedOrderId;
+        $fastCheckout->reference = $quoteId;
     }
 
     /**
@@ -80,7 +80,7 @@ class PayPaymentCreateFastCheckout extends PayPaymentCreate
         $parameters['paymentMethod'] = ['id' => $this->paymentMethodId];
 
         $this->_add($parameters, 'returnUrl', $this->paymentData['returnURL']);
-        $this->_add($parameters, 'description', $this->getDescription());
+        $this->_add($parameters, 'description', $this->getDescription($this->reservedOrderId));
         $this->_add($parameters, 'reference', $this->reference);
         $this->_add($parameters, 'exchangeUrl', $this->paymentData['exchangeURL']);
 
