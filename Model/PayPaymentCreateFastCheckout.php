@@ -33,6 +33,7 @@ class PayPaymentCreateFastCheckout extends PayPaymentCreate
      * @param string $baseUrl
      * @param string $quoteId
      * @param string $currency
+     * @param string $reservedOrderId
      * @throws \Exception
      * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
      */
