@@ -301,6 +301,9 @@ Diese Einstellung wirkt sich nicht auf die Produktseite aus. Wenn der schnelle C
 "Show notice and abort fast checkout","Hinweis anzeigen und Schnellkasse abbrechen"
 "Show intermediate screen to select shipping method","Zwischenbildschirm zur Auswahl der Versandart anzeigen"
 "Thank you for your purchase, as soon as the payment is completed you will receive an email.","Vielen Dank für Ihren Kauf, sobald die Zahlung abgeschlossen ist, erhalten Sie eine E-Mail."
+"Reserve order Id","Reservieren Sie Bestellnummer"
+"When enabled, the fast checkout order id will be reserved on start and send to Pay.","Wenn aktiviert, wird die fastcheckout Bestellnummer beim Start reserviert und an Pay. gesendet."
+"Reserve the order id on fast checkout start.","Reservieren Sie die Bestellnummer beim Start des fastcheckout."
 "Use browser language","Browsersprache verwenden"
 "Use website language","Verwenden Sie die Website-Sprache"
 "American","Amerikanisch"
@@ -324,3 +327,10 @@ Diese Einstellung wirkt sich nicht auf die Produktseite aus. Wenn der schnelle C
 "with iDEAL fast checkout","mit iDEAL Schnellabfertigung"
 "Create an iDEAL profile and save your address for your next order","Erstellen Sie ein iDEAL-Profil und speichern Sie Ihre Adresse für Ihre nächste Bestellung"
 "Enter my own address and pay","Eigene Adresse eingeben und bezahlen"
+"Use expected order-ID","Erwartete Bestell-ID verwenden"
+"Magento determines the order ID that will be assigned to an upcoming order in advance. You can utilize this ID for the "order description" field in Pay.
+
+Please note that if an order is canceled, it may create a gap in your Magento order sequence.","Magento ermittelt im Voraus die Bestellnummer, die einer anstehenden Bestellung zugewiesen wird. Sie können diese Nummer für das Feld „Bestellbeschreibung“ in Pay verwenden.
+
+Bitte beachten Sie, dass bei einer Stornierung einer Bestellung eine Lücke in Ihrer Magento-Bestellreihenfolge entstehen kann."
+"Use the expected next order ID for order description.","Verwenden Sie die voraussichtlich nächste Bestell-ID zur Bestellbeschreibung."

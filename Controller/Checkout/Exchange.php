@@ -156,6 +156,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             $extra3 = $data['object']['extra3'] ?? null;
             $action = ($internalStateId == 100 || $internalStateName == 95) ? 'new_ppt' : 'pending';
             $checkoutData = $data['object']['checkoutData'] ?? '';
+            $type = $data['object']['type'] ?? '';
         }
 
         # Return mapped data so it works for all type of exchanges.
@@ -169,6 +170,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             'internalStateName' => $internalStateName ?? null,
             'checkoutData' => $checkoutData ?? null,
             'orgData' => $data,
+            'type' => $type ?? null,
         ];
     }
 
@@ -179,7 +181,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
      */
     private function isFastCheckout($params)
     {
-        return strpos($params['orderId'] ?? '', "fastcheckout") !== false && !empty($params['checkoutData'] ?? '');
+        return $params['type'] == "payment_based_checkout" && !empty($params['checkoutData'] ?? '');
     }
 
     /**

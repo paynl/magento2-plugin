@@ -22,16 +22,22 @@ class PayPaymentCreateFastCheckout extends PayPaymentCreate
     private $reference = '';
 
     /**
+     * @var string
+     */
+    private $reservedOrderId = '';
+
+    /**
      * @param \Paynl\Payment\Model\Paymentmethod\Paymentmethod $methodInstance
      * @param string $amount Amount to start fastCheckout with
      * @param array $products Procucts to buy with fastCheckout
      * @param string $baseUrl
      * @param string $quoteId
      * @param string $currency
+     * @param string $reservedOrderId
      * @throws \Exception
      * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
      */
-    public function __construct($methodInstance, $amount, $products, $baseUrl, $quoteId, $currency)
+    public function __construct($methodInstance, $amount, $products, $baseUrl, $quoteId, $currency, $reservedOrderId)
     {
         $fastCheckout = parent::__construct(null, $methodInstance);
 
@@ -43,7 +49,9 @@ class PayPaymentCreateFastCheckout extends PayPaymentCreate
         $fastCheckout->setFinishURL($finishUrl);
         $fastCheckout->setExchangeURL($exchangeUrl);
         $fastCheckout->setProducts($products);
-        $fastCheckout->reference = 'fastcheckout' . $quoteId;
+
+        $fastCheckout->reservedOrderId = $reservedOrderId;
+        $fastCheckout->reference = $quoteId;
     }
 
     /**
@@ -72,7 +80,7 @@ class PayPaymentCreateFastCheckout extends PayPaymentCreate
         $parameters['paymentMethod'] = ['id' => $this->paymentMethodId];
 
         $this->_add($parameters, 'returnUrl', $this->paymentData['returnURL']);
-        $this->_add($parameters, 'description', '');
+        $this->_add($parameters, 'description', $this->getDescription($this->reservedOrderId));
         $this->_add($parameters, 'reference', $this->reference);
         $this->_add($parameters, 'exchangeUrl', $this->paymentData['exchangeURL']);
 
@@ -96,7 +104,7 @@ class PayPaymentCreateFastCheckout extends PayPaymentCreate
         $this->_add($stats, 'info', '');
         $this->_add($stats, 'tool', '');
         $this->_add($stats, 'object', $this->methodInstance->getVersion() . ' | fc');
-        $this->_add($stats, 'extra1', '');
+        $this->_add($stats, 'extra1', $this->reservedOrderId);
         $this->_add($stats, 'extra2', '');
         $this->_add($stats, 'extra3', $this->reference);
         $this->_add($parameters, 'stats', $stats);

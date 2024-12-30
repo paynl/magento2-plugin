@@ -245,6 +245,15 @@ Using the intermediate screen will allow users to select their own shipping meth
 
 This setting does not effect the product page. If fast checkout is enabled for the product page, the fast checkout button will always be shown.</tooltip>
                 <comment>Show the fast checkout button on the cart page, only for guest customers.</comment>
+            </field>            
+            <field id="fast_checkout_reserveOrderId" translate="label" type="select" sortOrder="184" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Use expected order-ID</label>
+                <frontend_model>Paynl\Payment\Block\Adminhtml\Render\Checkbox</frontend_model>
+                <config_path>payment/paynl_payment_ideal/fast_checkout_reserveOrderId</config_path>
+                <tooltip>Magento determines the order ID that will be assigned to an upcoming order in advance. You can utilize this ID for the "order description" field in Pay.
+
+Please note that if an order is canceled, it may create a gap in your Magento order sequence.</tooltip>
+                <comment>Use the expected next order ID for order description.</comment>
             </field>
             <field id="fast_checkout_show_modal" translate="label" type="select" sortOrder="186" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Show modal</label>
