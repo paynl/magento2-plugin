@@ -11,6 +11,10 @@ class Checkbox extends Field
     protected $configPath;
     protected $_template = 'Paynl_Payment::system/config/checkbox.phtml';
 
+    private $defaultTrue = [
+        'fast_checkout_show_modal'
+    ];
+
     /**
      * @param Context $context
      */
@@ -46,6 +50,20 @@ class Checkbox extends Field
         } else {
             $data = '';
         }
-        return $data == 1;
+
+        if ($this->isDefaultTrue($this->configPath)) {
+            return $data != 0;
+        } else {
+            return $data == 1;
+        }
+    }
+
+    function isDefaultTrue($configPath)
+    {
+        foreach ($this->defaultTrue as $default) {
+            if (stripos($configPath, $default) !== false)
+                return true;
+        }
+        return false;
     }
 }
