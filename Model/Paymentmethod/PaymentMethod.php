@@ -436,6 +436,11 @@ abstract class PaymentMethod extends AbstractMethod
      */
     public function refund(InfoInterface $payment, $amount)
     {
+        if ($amount == null || $amount == 0) {
+            $message = 'Pay. could not process this refund (Refund amount is 0.00).';
+            throw new \Magento\Framework\Exception\LocalizedException(__($message));
+        }
+        
         $order = $payment->getOrder();
         $this->paynlConfig->setStore($order->getStore());
         $this->paynlConfig->configureSDK();
