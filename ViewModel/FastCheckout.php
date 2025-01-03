@@ -59,4 +59,16 @@ class FastCheckout implements ArgumentInterface
         }
         return false;
     }
+
+    /**
+     * @return boolean
+     */
+    public function modalEnabled()
+    {
+        $store = $this->storeManager->getStore();
+        if ($store->getConfig('payment/paynl_payment_ideal/fast_checkout_show_modal') == 0) {
+            return false;
+        }
+        return true;
+    }
 }

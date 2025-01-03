@@ -320,6 +320,13 @@ Diese Einstellung wirkt sich nicht auf die Produktseite aus. Wenn der schnelle C
 "Czech","Tschechisch"
 "Greek","Griechisch"
 "Japanese","Japanisch"
+"Show modal","Modal anzeigen"
+"When enabled, a modal explaining on how fast checkout works will show before going through with fast checkout.","Wenn diese Option aktiviert ist, wird vor der Schnellabfertigung ein Modal angezeigt, das erklärt, wie die Schnellabfertigung funktioniert."
+"Open modal before fast checkout","Modal vor Schnellabfertigung öffnen"
+"Order faster","Schneller bestellen"
+"with iDEAL fast checkout","mit iDEAL Schnellabfertigung"
+"Create an iDEAL profile and save your address for your next order","Erstellen Sie ein iDEAL-Profil und speichern Sie Ihre Adresse für Ihre nächste Bestellung"
+"Enter my own address and pay","Eigene Adresse eingeben und bezahlen"
 "Use expected order-ID","Erwartete Bestell-ID verwenden"
 "Magento determines the order ID that will be assigned to an upcoming order in advance. You can utilize this ID for the "order description" field in Pay.
 

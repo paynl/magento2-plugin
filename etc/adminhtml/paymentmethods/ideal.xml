@@ -255,6 +255,14 @@ This setting does not effect the product page. If fast checkout is enabled for t
 Please note that if an order is canceled, it may create a gap in your Magento order sequence.</tooltip>
                 <comment>Use the expected next order ID for order description.</comment>
             </field>
+            <field id="fast_checkout_show_modal" translate="label" type="select" sortOrder="186" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Show modal</label>
+                <frontend_model>Paynl\Payment\Block\Adminhtml\Render\Checkbox</frontend_model>
+                <config_path>payment/paynl_payment_ideal/fast_checkout_show_modal</config_path>
+                <tooltip>When enabled, a modal explaining on how fast checkout works will show before going through with fast checkout.</tooltip>
+                <comment>Open modal before fast checkout</comment>
+                <default>1</default>
+            </field>
         </group>
         <group id="advanced" translate="label" sortOrder="200" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Advanced</label>

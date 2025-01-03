@@ -3,7 +3,7 @@
     width: 100%;
 }
 
-#paynl_fast_checkout_cart button,
+#paynl_fast_checkout_cart>button,
 #paynl_fast_checkout_product button,
 #paynl_fast_checkout_fallback button,
 #top-cart-fast-checkout,
@@ -59,4 +59,243 @@
     #paynl_fast_checkout_fallback button {
         max-width: 250px;
     }
+}
+
+.modal-trigger-button-wrapper {
+    width: 250px;
+}
+
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.2s ease;
+    z-index: 990;
+}
+
+.modal-backdrop.visible {
+    visibility: visible;
+    opacity: 1;
+}
+
+.fc-modal {
+    width: 100%;
+    max-width: 700px;
+    padding: 30px;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.2s ease, transform 0.2s ease;
+    z-index: 1000;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+.fc-modal.visible {
+    display: block;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    transition: all 0.2s ease, transform 0.2s ease;
+    visibility: visible;
+}
+
+.fc-modal .modal-header {
+    font-size: 28px;
+    font-weight: bold;
+    margin: 0;
+    color: #000;
+    line-height: 1.2;
+}
+
+.fc-modal .modal-header span {
+    color: #CC0066;
+}
+
+.fc-modal .modal-header span.nostyle {
+    color: #000;
+}
+
+.fc-modal .modal-body-wrapper {
+    display: flex;
+    gap: 50px;
+    align-items: flex-start;
+}
+
+.fc-modal .eye-catcher {
+    width: 250px;
+    height: 250px;
+    align-self: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image: url(../images/ideal-visual.webp);
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+}
+
+.fc-modal .eye-catcher img {
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+}
+
+.fc-modal .modal-content {
+    flex: 1;
+}
+
+.fc-modal .modal-text {
+    padding: 0px 0px 10px 0px;
+}
+
+.fc-modal .modal-description {
+    font-size: 16px;
+    margin-top: 10px !important;
+    color: black;
+    opacity: 0.5;
+}
+
+.fc-modal .modal-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.fc-modal .button {
+    padding: 12px 20px;
+    font-size: 14px;
+    border-radius: 60px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 50px;
+    transition: all 0.2s;
+}
+
+.fc-modal .button-primary {
+    background-color: #CC0066;
+    color: #fff;
+    border: none;
+}
+
+.fc-modal .button:hover {
+    transform: scale(1.02);
+}
+
+.fc-modal .ideal-order-image {
+    width: 160px;
+    max-width: 100%;
+    height: auto;
+}
+
+.fc-modal .button-secondary {
+    background-color: #fff;
+    color: #333;
+    border: 1px solid #666;
+}
+
+.fc-modal .trigger-button {
+    background-color: #007BFF;
+    color: #fff;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 1;
+}
+
+/* Responsive Styles */
+@media screen and (max-width: 768px) {
+    .fc-modal {
+        padding: 24px;
+        max-height: 90vh;
+        overflow-y: auto;
+        width: calc(100% - 32px);
+    }
+
+    .fc-modal .modal-body-wrapper {
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    .fc-modal .eye-catcher {
+        width: 200px;
+        height: 200px;
+        margin: 0 auto;
+    }
+
+    .fc-modal .modal-content {
+        width: 100%;
+    }
+
+    .fc-modal .modal-header {
+        font-size: 24px;
+        text-align: center;
+    }
+
+    .fc-modal .modal-description {
+        text-align: center;
+    }
+
+    .fc-modal .button {
+        height: auto;
+        min-height: 50px;
+        padding: 12px;
+        white-space: normal;
+        text-align: center;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .fc-modal {
+        padding: 20px;
+        width: calc(100% - 24px);
+    }
+
+    .fc-modal .eye-catcher {
+        width: 150px;
+        height: 150px;
+    }
+
+    .fc-modal .modal-header {
+        font-size: 20px;
+    }
+
+    .fc-modal .modal-description {
+        font-size: 14px;
+    }
+
+    .fc-modal .ideal-order-image {
+        width: 140px;
+    }
+
+    .fc-modal .button {
+        font-size: 13px;
+    }
+}
+
+.fastcheckout-button-modal {
+    width: 100%;
+    padding: 14px 17px;
+    font-size: 1.8rem;
+    background-image: url("../images/fastCheckoutIdeal.png");
+    background-repeat: no-repeat;
+    background-size: 51px;
+    background-position: 8px center;
 }

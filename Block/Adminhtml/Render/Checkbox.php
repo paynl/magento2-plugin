@@ -10,13 +10,13 @@ class Checkbox extends Field
 {
     protected $configPath;
     protected $_template = 'Paynl_Payment::system/config/checkbox.phtml';
+    private bool $checked = false;
 
     /**
      * @param Context $context
      */
-    public function __construct(
-        Context $context
-    ) {
+    public function __construct(Context $context)
+    {
         parent::__construct($context);
     }
 
@@ -31,21 +31,24 @@ class Checkbox extends Field
         $this->configPath = $element->getData('field_config')['config_path'];
         $this->setNamePrefix($element->getName())
             ->setHtmlId($element->getHtmlId());
+
+        $currentValue = $element->getData('value');
+        if (is_null($currentValue)) {
+            # No value is currently saved, getting default...
+            $element->setValue($element->getData('field_config')['default'] ?? null);
+        }
+
+        $this->checked = $element->getEscapedValue() == 1;
+
         return $this->_toHtml();
     }
 
     /**
-     *
      * @return boolean
      */
     public function getIsChecked()
     {
-        $data = $this->getConfigData();
-        if (isset($data[$this->configPath])) {
-            $data = $data[$this->configPath];
-        } else {
-            $data = '';
-        }
-        return $data == 1;
+        return $this->checked;
     }
+
 }
