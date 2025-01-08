@@ -46,7 +46,7 @@ class Multiselect extends Field
                 <input type="hidden" id="' . $element->getHtmlId() . '" name="' . $element->getName() . '" value="' . $element->getValue() . '" />        
                 <span class="ms_options">';
 
-        foreach ($element->getValues() as $key => $value) {
+        foreach ($element->getValues() as $value) {
             if (!empty($value) && !empty($value['value'])) {
                 if (isset($value['is_region_visible']) && $value['is_region_visible'] === false) {
                     continue;
@@ -55,7 +55,7 @@ class Multiselect extends Field
                     $label = $value['label'];
                     $multiValues = $value['value'];
                     $html .= '<optgroup label="' . $label . '">';
-                    foreach ($multiValues as $key => $multiValue) {
+                    foreach ($multiValues as $multiValue) {
                         $html .= '<option class="' . ((in_array($multiValue['value'], explode(',', $element->getValue() ?? ''))) ? 'selected' : '') . '" value="' . $multiValue['value'] . '">' . $multiValue['label'] . '</option>';
                     }
                     $html .= '</optgroup>';
