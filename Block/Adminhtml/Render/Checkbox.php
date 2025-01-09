@@ -32,12 +32,6 @@ class Checkbox extends Field
         $this->setNamePrefix($element->getName())
             ->setHtmlId($element->getHtmlId());
 
-        $currentValue = $element->getData('value');
-        if (is_null($currentValue)) {
-            # No value is currently saved, getting default...
-            $element->setValue($element->getData('field_config')['default'] ?? null);
-        }
-
         $this->checked = $element->getEscapedValue() == 1;
 
         return $this->_toHtml();
