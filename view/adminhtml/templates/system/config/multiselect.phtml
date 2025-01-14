@@ -24,3 +24,13 @@
         } ?>
     </span>
 </span>
+
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "Paynl_Payment/js/multiselect" : {
+                "element" : "<?= $element->getHtmlId() ?>"
+            }
+        }
+    }
+</script>
