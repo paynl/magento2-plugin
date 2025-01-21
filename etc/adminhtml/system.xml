@@ -228,7 +228,15 @@ On - via Sherpa - Capture automatically via Sherpa.</tooltip>
                     </comment>
                     <config_path>payment/paynl/testipaddress</config_path>
                 </field>
-                <field id="use_additional_validation" translate="label" type="select" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="customer_ip" translate="label" type="select" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Configure customer Ip</label>
+                    <comment>
+                        <![CDATA[Choose how customer IP is determined.]]>
+                    </comment>
+                    <source_model>Paynl\Payment\Model\Config\Source\CustomerIp</source_model>
+                    <config_path>payment/paynl/customer_ip</config_path>
+                </field>
+                <field id="use_additional_validation" translate="label" type="select" sortOrder="102" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enable additional validation</label>
                     <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
                     <comment><![CDATA[Enable this to also apply the validation of other activated (third party) modules during the payment process.]]></comment>

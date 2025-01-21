@@ -261,7 +261,6 @@ Please note that if an order is canceled, it may create a gap in your Magento or
                 <config_path>payment/paynl_payment_ideal/fast_checkout_show_modal</config_path>
                 <tooltip>When enabled, a modal explaining on how fast checkout works will show before going through with fast checkout.</tooltip>
                 <comment>Open modal before fast checkout</comment>
-                <default>1</default>
             </field>
         </group>
         <group id="advanced" translate="label" sortOrder="200" showInDefault="1" showInWebsite="1" showInStore="1">
