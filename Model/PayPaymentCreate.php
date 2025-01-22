@@ -318,7 +318,7 @@ class PayPaymentCreate
     }
 
     /**
-     * @return float|string|null
+     * @return mixed|string
      */
     private function getIpAddress()
     {
@@ -346,7 +346,7 @@ class PayPaymentCreate
                 }
                 $arrIp = explode(',', $the_ip);
 
-                $ipAddress =  filter_var(trim(trim($arrIp[0]), '[]'), FILTER_VALIDATE_IP);
+                $ipAddress = filter_var(trim(trim($arrIp[0]), '[]'), FILTER_VALIDATE_IP);
                 break;
             default:
                 $ipAddress = \Paynl\Helper::getIp();
