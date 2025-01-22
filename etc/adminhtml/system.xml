@@ -233,6 +233,7 @@ On - via Sherpa - Capture automatically via Sherpa.</tooltip>
                     <comment>
                         <![CDATA[Choose how customer IP is determined.]]>
                     </comment>
+                    <tooltip>We send the IP of the customer with the transaction. Select here how this IP address is determined</tooltip>
                     <source_model>Paynl\Payment\Model\Config\Source\CustomerIp</source_model>
                     <config_path>payment/paynl/customer_ip</config_path>
                 </field>

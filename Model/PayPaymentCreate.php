@@ -327,7 +327,7 @@ class PayPaymentCreate
                 $ipAddress = \Paynl\Helper::getIp();
                 break;
             case 'remoteaddress':
-                $this->order->getRemoteIp();
+                $ipAddress = $this->order->getRemoteIp();
                 break;
             case 'httpforwarded':
                 // Use $_SERVER or get the headers if we can
@@ -348,7 +348,10 @@ class PayPaymentCreate
 
                 $ipAddress =  filter_var(trim(trim($arrIp[0]), '[]'), FILTER_VALIDATE_IP);
                 break;
+            default:
+                $ipAddress = \Paynl\Helper::getIp();
         }
+
         # The ip address field in magento is too short, if the ip is invalid or ip is localhost get the ip myself
         if (!filter_var($ipAddress, FILTER_VALIDATE_IP) || $ipAddress == '127.0.0.1') {
             $ipAddress = \Paynl\Helper::getIp();
