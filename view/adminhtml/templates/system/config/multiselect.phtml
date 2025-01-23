@@ -1,0 +1,36 @@
+<?php $element = $this->getData('element'); ?>
+
+<span class="multiselectPay">
+    <input type="hidden" id="<?= $element->getHtmlId() ?>" name="<?= $element->getName() ?>" value="<?= $element->getValue() ?>" />
+    <span class="ms_options">
+        <?php foreach ($element->getValues() as $value) {
+            if (!empty($value) && !empty($value['value'])) {
+                if (isset($value['is_region_visible']) && $value['is_region_visible'] === false) {
+                    continue;
+                }
+                if (is_array($value['value'])) {
+                    $label = $value['label'];
+                    $multiValues = $value['value'];
+                    $option = '<optgroup label="' . $label . '">';
+                    foreach ($multiValues as $multiValue) {
+                        $option .= '<option class="' . ((in_array($multiValue['value'], explode(',', $element->getValue() ?? ''))) ? 'selected' : '') . '" value="' . $multiValue['value'] . '">' . $multiValue['label'] . '</option>';
+                    }
+                    $option .= '</optgroup>';
+                } else {
+                    $option = '<option class="' . ((in_array($value['value'], explode(',', $element->getValue() ?? ''))) ? 'selected' : '') . '" value="' . $value['value'] . '">' . $value['label'] . '</option>';
+                }
+                echo $option;
+            }
+        } ?>
+    </span>
+</span>
+
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "Paynl_Payment/js/multiselect" : {
+                "element" : "<?= $element->getHtmlId() ?>"
+            }
+        }
+    }
+</script>

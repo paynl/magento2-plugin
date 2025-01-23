@@ -61,6 +61,7 @@
             <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
             <can_be_empty>1</can_be_empty>
             <config_path>payment/paynl_payment_ideal/specificcountry</config_path>
+            <frontend_model>Paynl\Payment\Block\Adminhtml\Render\Multiselect</frontend_model>
             <depends>
                 <field id="allowspecific">1</field>
                 <field id="active">1</field>
@@ -124,7 +125,7 @@
                 <field id="active">1</field>
             </depends>
             <config_path>payment/paynl_payment_ideal/disallowedshipping</config_path>
-            <comment><![CDATA[Hold CTRL button to select/deselect multiple]]></comment>
+            <frontend_model>Paynl\Payment\Block\Adminhtml\Render\Multiselect</frontend_model>
         </field>
         <field id="showforcompany" translate="label" type="select" sortOrder="150" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Customer Type</label>
@@ -260,8 +261,7 @@ Please note that if an order is canceled, it may create a gap in your Magento or
                 <frontend_model>Paynl\Payment\Block\Adminhtml\Render\Checkbox</frontend_model>
                 <config_path>payment/paynl_payment_ideal/fast_checkout_show_modal</config_path>
                 <tooltip>When enabled, a modal explaining on how fast checkout works will show before going through with fast checkout.</tooltip>
-                <comment>Open modal before fast checkout</comment>
-                <default>1</default>
+                <comment>Open modal before fast checkout</comment>                
             </field>
         </group>
         <group id="advanced" translate="label" sortOrder="200" showInDefault="1" showInWebsite="1" showInStore="1">
