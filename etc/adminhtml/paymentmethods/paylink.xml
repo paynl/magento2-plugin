@@ -6,7 +6,6 @@
         <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1"
                showInStore="1">
             <label>Enabled</label>
-            <comment><![CDATA[Paylink is only available for orders created via the backend and won't appear in the checkout]]></comment>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>payment/paynl_payment_paylink/active</config_path>
         </field>
@@ -17,6 +16,45 @@
             <depends>
                 <field id="active">1</field>
             </depends>
+        </field>
+        <field id="checkout_active" translate="label" type="select" sortOrder="23" showInDefault="1" showInWebsite="1"
+               showInStore="1">
+            <label>Show in checkout</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>payment/paynl_payment_paylink/checkout_active</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+            <tooltip><![CDATA[Paylink is normally only available for orders created via the backend and won't appear in the checkout. When this is enabled a 'Pay by invoice' will be shown to the customer and a paylink will be sent via email when an order is made.]]></tooltip>
+        </field>
+        <field id="checkout_title" translate="label" type="text" sortOrder="24" showInDefault="1" showInWebsite="1"
+               showInStore="1">
+            <label>Title in checkout</label>
+            <config_path>payment/paynl_payment_paylink/checkout_title</config_path>
+            <depends>
+                <field id="active">1</field>
+                <field id="checkout_active">1</field>
+            </depends>
+        </field>
+        <field id="checkout_valid_days" translate="label" type="select" sortOrder="25" showInDefault="1" showInWebsite="1"
+               showInStore="1">
+            <label>Days invoice would be valid for</label>
+            <config_path>payment/paynl_payment_paylink/checkout_valid_days</config_path>
+            <source_model>Paynl\Payment\Model\Config\Source\InvoiceValidDays</source_model>
+            <depends>
+                <field id="active">1</field>
+                <field id="checkout_active">1</field>
+            </depends>
+        </field>
+        <field id="showforgroup" translate="label" type="select" sortOrder="26" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Customer Group</label>
+            <source_model>Paynl\Payment\Model\Config\Source\UserGroups</source_model>
+            <depends>
+                <field id="active">1</field>
+                <field id="checkout_active">1</field>
+            </depends>
+            <config_path>payment/paynl_payment_paylink/showforgroup</config_path>
+            <comment><![CDATA[Show payment method only to specific customer groups.]]></comment>
         </field>
         <field id="order_status" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1"
                showInStore="1">

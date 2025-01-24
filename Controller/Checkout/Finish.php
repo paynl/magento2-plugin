@@ -96,13 +96,13 @@ class Finish extends PayAction
      * @param boolean $pickupMode
      * @return void
      */
-    private function checkSession(Order $order, string $orderId, Session $session, $pickupMode = null)
+    private function checkSession(Order $order, string $orderId, Session $session, $pickupMode = null, $invoice = null)
     {
         if ($session->getLastOrderId() != $order->getId()) {
             $additionalInformation = $order->getPayment()->getAdditionalInformation();
             $transactionId = (isset($additionalInformation['transactionId'])) ? $additionalInformation['transactionId'] : null;
 
-            if ($orderId == $transactionId || !empty($pickupMode)) {
+            if ($orderId == $transactionId || !empty($pickupMode || !empty($invoice))) {
                 $this->checkoutSession->setLastQuoteId($order->getQuoteId())
                     ->setLastSuccessQuoteId($order->getQuoteId())
                     ->setLastOrderId($order->getId())
@@ -168,6 +168,7 @@ class Finish extends PayAction
         $magOrderId = empty($params['entityid']) ? null : $params['entityid'];
         $orderIds = empty($params['order_ids']) ? null : $params['order_ids'];
         $pickupMode = !empty($params['pickup']);
+        $invoice = !empty($params['$invoice']);
         $bSuccess = $orderStatusId === Config::ORDERSTATUS_PAID;
         $bPending = in_array($orderStatusId, Config::ORDERSTATUS_PENDING);
         $bDenied = $orderStatusId === Config::ORDERSTATUS_DENIED;
@@ -187,7 +188,7 @@ class Finish extends PayAction
             $order = $this->orderRepository->get($magOrderId);
             $this->checkEmpty($order, 'order', 1013);
 
-            if ($pickupMode) {
+            if ($pickupMode || $invoice) {
                 $this->deactivateCart($order, '', true);
                 $resultRedirect->setPath(Config::FINISH_PICKUP, ['_query' => ['utm_nooverride' => '1']]);
                 return $resultRedirect;
@@ -314,12 +315,12 @@ class Finish extends PayAction
      * @param boolean $pickupMode
      * @return void
      */
-    private function deactivateCart(Order $order, string $payOrderId, $pickupMode = null)
+    private function deactivateCart(Order $order, string $payOrderId, $pickupMode = null, $invoice = null)
     {
         # Make the cart inactive
         $session = $this->checkoutSession;
 
-        $this->checkSession($order, $payOrderId, $session, $pickupMode);
+        $this->checkSession($order, $payOrderId, $session, $pickupMode, $invoice);
 
         $quote = $session->getQuote();
         $quote->setIsActive(false);

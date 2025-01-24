@@ -18,6 +18,9 @@
             <paynl_payment_paylink>
                 <active>0</active>
                 <title>Pay. paylink</title>
+                <checkout_active>0</checkout_active>
+                <checkout_title>Pay by invoice (via Pay.)</checkout_title>
+                <checkout_valid_days>7</checkout_valid_days>
                 <payment_option_id>961</payment_option_id>
                 <order_status>pending</order_status>
                 <order_status_authorized>processing</order_status_authorized>

@@ -116,6 +116,7 @@ class Config
         "paynl_payment_onlinebankbetaling" => "258",
         "paynl_payment_parfumcadeaukaart" => "210",
         "paynl_payment_payconiq" => "138",
+        "paynl_payment_paylink" => "10",
         "paynl_payment_paypal" => "21",
         "paynl_payment_paysafecard" => "24",
         "paynl_payment_podiumcadeaukaart" => "29",

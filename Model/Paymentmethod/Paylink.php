@@ -26,9 +26,6 @@ class Paylink extends PaymentMethod
      */
     protected $_formBlockType = \Paynl\Payment\Block\Form\Paylink::class;
 
-    // this is an admin only method
-    protected $_canUseCheckout = false;
-
     /**
      * @param string $paymentAction
      * @param object $stateObject
@@ -191,8 +188,30 @@ class Paylink extends PaymentMethod
      */
     public function assignData(\Magento\Framework\DataObject $data)
     {
-        $this->getInfoInstance()->setAdditionalInformation('valid_days', $data->getData('additional_data')['valid_days']);
+        $additionalData = $data->getData('additional_data');
+
+        if (isset($additionalData['valid_days'])) {
+            $this->getInfoInstance()->setAdditionalInformation('valid_days', $additionalData['valid_days']);
+        } else {
+            $this->getInfoInstance()->setAdditionalInformation('valid_days', $this->getConfigData('checkout_valid_days'));
+        }
 
         return parent::assignData($data);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTitle()
+    {
+        if ($this->_appState->getAreaCode() === \Magento\Framework\App\Area::AREA_ADMINHTML) {
+            return parent::getTitle();
+        }
+
+        $checkoutTitle = $this->getConfigData('checkout_title');
+        if (!empty($checkoutTitle)) {
+            return $checkoutTitle;
+        }
+        return parent::getTitle();
     }
 }
