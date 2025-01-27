@@ -169,6 +169,10 @@ class Paylink extends PaymentMethod
         }
     }
 
+    /**
+     * @param Order $order
+     * @return string|void
+     */
     public function startTransaction(Order $order)
     {
         if ($this->_appState->getAreaCode() === \Magento\Framework\App\Area::AREA_FRONTEND) {
