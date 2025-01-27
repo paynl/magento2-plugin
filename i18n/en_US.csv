@@ -396,3 +396,7 @@ Please note that if an order is canceled, it may create a gap in your Magento or
 
 Please note that if an order is canceled, it may create a gap in your Magento order sequence."
 "Use the expected next order ID for order description.","Use the expected next order ID for order description."
+"Days invoice paylink would be valid for", "Days invoice paylink would be valid for"
+"Title in checkout", "Title in checkout"
+"Show in checkout", "Show in checkout"
+"Paylink is normally only available for orders created via the backend and won't appear in the checkout. When this is enabled a 'Pay by invoice' will be shown to the customer and a paylink will be sent via email when an order is made.", "Paylink is normally only available for orders created via the backend and won't appear in the checkout. When this is enabled a 'Pay by invoice' will be shown to the customer and a paylink will be sent via email when an order is made."

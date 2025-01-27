@@ -38,7 +38,7 @@
         </field>
         <field id="checkout_valid_days" translate="label" type="select" sortOrder="25" showInDefault="1" showInWebsite="1"
                showInStore="1">
-            <label>Days invoice would be valid for</label>
+            <label>Days invoice paylink would be valid for</label>
             <config_path>payment/paynl_payment_paylink/checkout_valid_days</config_path>
             <source_model>Paynl\Payment\Model\Config\Source\InvoiceValidDays</source_model>
             <depends>
