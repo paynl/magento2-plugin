@@ -296,7 +296,7 @@ abstract class PaymentMethod extends AbstractMethod
     }
 
     /**
-     * @return bool
+     * @return boolean
      */
     public function getCheckoutActive()
     {

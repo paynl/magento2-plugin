@@ -300,7 +300,7 @@ class ConfigProvider implements ConfigProviderInterface
     }
 
     /**
-     * @param $code
+     * @param string $code
      * @return mixed
      */
     protected function getCheckoutActive($code)

@@ -94,6 +94,7 @@ class Finish extends PayAction
      * @param string $orderId
      * @param Session $session
      * @param boolean $pickupMode
+     * @param boolean $invoice
      * @return void
      */
     private function checkSession(Order $order, string $orderId, Session $session, $pickupMode = null, $invoice = null)
@@ -168,7 +169,7 @@ class Finish extends PayAction
         $magOrderId = empty($params['entityid']) ? null : $params['entityid'];
         $orderIds = empty($params['order_ids']) ? null : $params['order_ids'];
         $pickupMode = !empty($params['pickup']);
-        $invoice = !empty($params['$invoice']);
+        $invoice = !empty($params['invoice']);
         $bSuccess = $orderStatusId === Config::ORDERSTATUS_PAID;
         $bPending = in_array($orderStatusId, Config::ORDERSTATUS_PENDING);
         $bDenied = $orderStatusId === Config::ORDERSTATUS_DENIED;
@@ -190,7 +191,8 @@ class Finish extends PayAction
 
             if ($pickupMode || $invoice) {
                 $this->deactivateCart($order, '', true);
-                $resultRedirect->setPath(Config::FINISH_PICKUP, ['_query' => ['utm_nooverride' => '1']]);
+
+                $resultRedirect->setPath($pickupMode ? Config::FINISH_PICKUP : Config::FINISH_INVOICE, ['_query' => ['utm_nooverride' => '1']]);
                 return $resultRedirect;
             }
 
@@ -313,6 +315,7 @@ class Finish extends PayAction
      * @param Order $order
      * @param string $payOrderId
      * @param boolean $pickupMode
+     * @param boolean $invoice
      * @return void
      */
     private function deactivateCart(Order $order, string $payOrderId, $pickupMode = null, $invoice = null)

@@ -65,7 +65,8 @@ class Paylink extends PaymentMethod
 
             $send_paylink_email = $this->_scopeConfig->getValue('payment/paynl_payment_paylink/send_paylink_email', 'store', $storeId);
 
-            if ($send_paylink_email == 0) {
+            // Make sure the paylink is still send when the order is created from the checkout as invoice even though the email is disabled.
+            if ($send_paylink_email == 0 && $this->_appState->getAreaCode() === \Magento\Framework\App\Area::AREA_ADMINHTML) {
                 $this->addPaylinkComment($order, $url, $status);
             } else {
                 try {
@@ -165,6 +166,14 @@ class Paylink extends PaymentMethod
             }
 
             parent::initialize($paymentAction, $stateObject);
+        }
+    }
+
+    public function startTransaction(Order $order)
+    {
+        if ($this->_appState->getAreaCode() === \Magento\Framework\App\Area::AREA_FRONTEND) {
+            $redirectUrl = $order->getStore()->getBaseUrl() . 'paynl/checkout/finish/?entityid=' . $order->getEntityId() . '&invoice=1';
+            return $redirectUrl;
         }
     }
 
