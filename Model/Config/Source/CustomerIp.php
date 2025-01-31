@@ -31,6 +31,7 @@ class CustomerIp implements ArrayInterface
     {
         return [
             'default' => __('Default (Pay. SDK)'),
+            'orderremoteaddress' => __('Magento Order IP'),
             'httpforwarded' => __('HTTP forwarded'),
             'remoteaddress' => __('Remote address')
         ];

@@ -323,8 +323,11 @@ class PayPaymentCreate
     private function getIpAddress()
     {
         switch ($this->payConfig->getCustomerIp()) {
-            case 'remoteaddress':
+            case 'orderremoteaddress':
                 $ipAddress = $this->order->getRemoteIp();
+                break;
+            case 'remoteaddress':
+                $ipAddress = $_SERVER['REMOTE_ADDR'] ?? '';
                 break;
             case 'httpforwarded':
                 $headers = function_exists('getallheaders') ? getallheaders() : $_SERVER;
