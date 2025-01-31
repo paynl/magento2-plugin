@@ -436,6 +436,11 @@ abstract class PaymentMethod extends AbstractMethod
      */
     public function refund(InfoInterface $payment, $amount)
     {
+        if ($amount == null || $amount == 0) {
+            $this->messageManager->addError('Pay. did not process this refund due to an invalid amount.');
+            return $this;
+        }
+
         $order = $payment->getOrder();
         $this->paynlConfig->setStore($order->getStore());
         $this->paynlConfig->configureSDK();

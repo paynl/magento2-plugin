@@ -6,24 +6,22 @@ use Magento\Config\Block\System\Config\Form\Field;
 use Magento\Backend\Block\Template\Context;
 use Magento\Framework\Data\Form\Element\AbstractElement;
 
-class Checkbox extends Field
+class Multiselect extends Field
 {
     protected $configPath;
-    protected $_template = 'Paynl_Payment::system/config/checkbox.phtml';
-    private bool $checked = false;
+    protected $_template = 'Paynl_Payment::system/config/multiselect.phtml';
 
     /**
      * @param Context $context
      */
-    public function __construct(Context $context)
-    {
+    public function __construct(
+        Context $context
+    ) {
         parent::__construct($context);
     }
 
     /**
-     *
      * @param AbstractElement $element
-     *
      * @return string
      */
     protected function _getElementHtml(AbstractElement $element) // phpcs:ignore
@@ -32,17 +30,8 @@ class Checkbox extends Field
         $this->setNamePrefix($element->getName())
             ->setHtmlId($element->getHtmlId());
 
-        $this->checked = $element->getEscapedValue() == 1;
+        $this->setData('element', $element);
 
         return $this->_toHtml();
     }
-
-    /**
-     * @return boolean
-     */
-    public function getIsChecked()
-    {
-        return $this->checked;
-    }
-
 }

@@ -3,5 +3,6 @@
     <head>
         <css src="Paynl_Payment::css/configtab.css" />
         <link src="Paynl_Payment::js/configtab.js"/>
+        <css src="Paynl_Payment::css/multiselect.css" />
     </head>
 </page>
