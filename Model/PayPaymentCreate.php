@@ -318,44 +318,35 @@ class PayPaymentCreate
     }
 
     /**
-     * @return mixed|string
+     * @return float|string|null
      */
     private function getIpAddress()
     {
         switch ($this->payConfig->getCustomerIp()) {
-            case 'default':
-                $ipAddress = \Paynl\Helper::getIp();
-                break;
             case 'remoteaddress':
                 $ipAddress = $this->order->getRemoteIp();
                 break;
             case 'httpforwarded':
-                // Use $_SERVER or get the headers if we can
-                $headers = $_SERVER;
-                if (function_exists('apache_request_headers')) {
-                    $headers = apache_request_headers();
+                $headers = function_exists('getallheaders') ? getallheaders() : $_SERVER;
+                $remoteIp = $_SERVER['REMOTE_ADDR'] ?? '';
+
+                if (!empty($headers['X-Forwarded-For'])) {
+                    $remoteIp = explode(',', $headers['X-Forwarded-For'])[0];
+                } elseif (!empty($headers['HTTP_X_FORWARDED_FOR'])) {
+                    $remoteIp = explode(',', $headers['HTTP_X_FORWARDED_FOR'])[0];
                 }
 
-                // Get the forwarded IP if it exists
-                $the_ip = $_SERVER['REMOTE_ADDR'];
-
-                if (array_key_exists('X-Forwarded-For', $headers)) {
-                    $the_ip = $headers['X-Forwarded-For'];
-                } elseif (array_key_exists('HTTP_X_FORWARDED_FOR', $headers)) {
-                    $the_ip = $headers['HTTP_X_FORWARDED_FOR'];
-                }
-                $arrIp = explode(',', $the_ip);
-
-                $ipAddress = filter_var(trim(trim($arrIp[0]), '[]'), FILTER_VALIDATE_IP);
+                $ipAddress = trim($remoteIp, '[]');
                 break;
             default:
                 $ipAddress = \Paynl\Helper::getIp();
         }
 
-        # The ip address field in magento is too short, if the ip is invalid or ip is localhost get the ip myself
+        # If the Magento IP field is too short, invalid, or localhost, then retrieve the IP manually
         if (!filter_var($ipAddress, FILTER_VALIDATE_IP) || $ipAddress == '127.0.0.1') {
             $ipAddress = \Paynl\Helper::getIp();
         }
+
         return $ipAddress;
     }
 

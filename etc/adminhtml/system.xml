@@ -33,8 +33,8 @@
                         <![CDATA[Your API token, you can find your tokens <a target='_blank' href='https://my.pay.nl/company/tokens'>here</a>.]]>
                     </comment>
                     <frontend_model>Paynl\Payment\Block\Adminhtml\Render\Obscured</frontend_model>
-                    <config_path>payment/paynl/apitoken_encrypted</config_path>    
-                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>                
+                    <config_path>payment/paynl/apitoken_encrypted</config_path>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
                 </field>
                 <field id="serviceid" translate="label, comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Sales location</label>
@@ -135,7 +135,7 @@ On - via Sherpa - Capture automatically via Sherpa.</tooltip>
                     </depends>
                     <config_path>payment/paynl/show_custom_field_vat</config_path>
                     <tooltip>When Enabled, this will add an extra field to the checkout for the customer to enter in their VAT number.</tooltip>
-                </field>    
+                </field>
             </group>
             <group id="paynl_layout_settings" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Pay. - Layout Settings</label>
@@ -229,11 +229,11 @@ On - via Sherpa - Capture automatically via Sherpa.</tooltip>
                     <config_path>payment/paynl/testipaddress</config_path>
                 </field>
                 <field id="customer_ip" translate="label" type="select" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Configure customer Ip</label>
+                    <label>Customer IP</label>
                     <comment>
                         <![CDATA[Choose how customer IP is determined.]]>
                     </comment>
-                    <tooltip>We send the IP of the customer with the transaction. Select here how this IP address is determined</tooltip>
+                    <tooltip>When initiating a transaction with Pay, the customer's IP address is included. Select how this IP address should be determined. This setting might be handy   </tooltip>
                     <source_model>Paynl\Payment\Model\Config\Source\CustomerIp</source_model>
                     <config_path>payment/paynl/customer_ip</config_path>
                 </field>
