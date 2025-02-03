@@ -28,12 +28,8 @@
 #paynl_fast_checkout_fallback button:hover,
 #top-cart-fast-checkou:hover,
 #top-cart-btn-fastcheckout:hover {
-    background: #b0025b;
+    background-color: #b0025b;
     border-color: #b0025b;
-    background-image: url("../images/fastCheckoutIdeal.png");
-    background-repeat: no-repeat;
-    background-size: 51px;
-    background-position: 8px center;
     color: white;
 }
 
