@@ -6,7 +6,6 @@
 #paynl_fast_checkout_cart>button,
 #paynl_fast_checkout_product button,
 #paynl_fast_checkout_fallback button,
-#top-cart-fast-checkout,
 #top-cart-btn-fastcheckout {
     width: 100%;
     margin-top: -10px;
@@ -26,7 +25,6 @@
 #paynl_fast_checkout_cart button:hover,
 #paynl_fast_checkout_product button:hover,
 #paynl_fast_checkout_fallback button:hover,
-#top-cart-fast-checkou:hover,
 #top-cart-btn-fastcheckout:hover {
     background-color: #b0025b;
     border-color: #b0025b;
