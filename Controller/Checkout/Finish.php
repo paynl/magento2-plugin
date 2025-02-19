@@ -189,9 +189,15 @@ class Finish extends PayAction
             $order = $this->orderRepository->get($magOrderId);
             $this->checkEmpty($order, 'order', 1013);
 
-            if ($pickupMode) $this->deactivateCart($order, '', true);
+            if ($pickupMode) {
+                $this->deactivateCart($order, '', true);
+            }
+
             if ($pickupMode || $invoice) {
-                $resultRedirect->setPath($pickupMode ? Config::FINISH_PICKUP : Config::FINISH_INVOICE, ['_query' => ['utm_nooverride' => '1']]);
+                $resultRedirect->setPath(
+                    $pickupMode ? Config::FINISH_PICKUP : Config::FINISH_INVOICE,
+                    ['_query' => ['utm_nooverride' => '1']]
+                );
                 return $resultRedirect;
             }
 
@@ -314,7 +320,6 @@ class Finish extends PayAction
      * @param Order $order
      * @param string $payOrderId
      * @param boolean $pickupMode
-     * @param boolean $invoice
      * @return void
      */
     private function deactivateCart(Order $order, string $payOrderId, $pickupMode = null)
