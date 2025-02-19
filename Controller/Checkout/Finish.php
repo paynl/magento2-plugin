@@ -189,9 +189,8 @@ class Finish extends PayAction
             $order = $this->orderRepository->get($magOrderId);
             $this->checkEmpty($order, 'order', 1013);
 
+            if ($pickupMode) $this->deactivateCart($order, '', true);
             if ($pickupMode || $invoice) {
-                $this->deactivateCart($order, '', true);
-
                 $resultRedirect->setPath($pickupMode ? Config::FINISH_PICKUP : Config::FINISH_INVOICE, ['_query' => ['utm_nooverride' => '1']]);
                 return $resultRedirect;
             }
@@ -318,12 +317,12 @@ class Finish extends PayAction
      * @param boolean $invoice
      * @return void
      */
-    private function deactivateCart(Order $order, string $payOrderId, $pickupMode = null, $invoice = null)
+    private function deactivateCart(Order $order, string $payOrderId, $pickupMode = null)
     {
         # Make the cart inactive
         $session = $this->checkoutSession;
 
-        $this->checkSession($order, $payOrderId, $session, $pickupMode, $invoice);
+        $this->checkSession($order, $payOrderId, $session, $pickupMode);
 
         $quote = $session->getQuote();
         $quote->setIsActive(false);
