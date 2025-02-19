@@ -500,7 +500,7 @@ To finish your order, click the link below
             </paynl_payment_ideal>
             <paynl_payment_in3business>
                 <active>0</active>
-                <title>In3 Business</title>
+                <title>Mondu (Zakelijk): Betalen in 30 dagen</title>
                 <payment_option_id>3192</payment_option_id>
                 <order_status>pending_payment</order_status>
                 <order_status_authorized>processing</order_status_authorized>
