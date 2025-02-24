@@ -37,14 +37,6 @@ class Ideal extends PaymentMethod
     }
 
     /**
-     * @return integer
-     */
-    public function showPaymentOptions()
-    {
-        return $this->_scopeConfig->getValue('payment/' . $this->_code . '/bank_selection', 'store');
-    }
-
-    /**
      * @return array
      */
     public function getPaymentOptions()
