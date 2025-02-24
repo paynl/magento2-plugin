@@ -43,6 +43,9 @@ define(
             },
             doFastcheckout: function () {
                 window.location.href = '/paynl/checkout/fastcheckoutstart';
+            },
+            gotoCheckout: function () {
+                window.location.href = window.checkout.checkoutUrl;
             }
         })
     }
