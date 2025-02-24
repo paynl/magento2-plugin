@@ -74,15 +74,6 @@
             </depends>
             <config_path>payment/paynl_payment_ideal/instructions</config_path>
         </field>
-        <field id="bank_selection" translate="label" type="select" sortOrder="65" showInDefault="1" showInWebsite="1"
-               showInStore="1">
-            <label>Show bank selection</label>
-            <source_model>Paynl\Payment\Model\Config\Source\ShowPaymentOptions</source_model>
-            <depends>
-                <field id="active">1</field>
-            </depends>
-            <config_path>payment/paynl_payment_ideal/bank_selection</config_path>
-        </field>
         <field id="min_order_total" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1"
                showInStore="1">
             <label>Minimum order total</label>
