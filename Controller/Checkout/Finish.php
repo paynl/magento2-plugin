@@ -27,6 +27,11 @@ class Finish extends PayAction
     private $config;
 
     /**
+     * @var
+     */
+    protected $productRepository;
+
+    /**
      * @var Session
      */
     private $checkoutSession;
@@ -67,6 +72,7 @@ class Finish extends PayAction
      * @param PayHelper $payHelper
      * @param ManagerInterface $eventManager
      * @param QuoteFactory $quoteFactory
+     * @param \Magento\Catalog\Api\ProductRepositoryInterface $productRepository
      */
     public function __construct(
         Context $context,
@@ -76,7 +82,8 @@ class Finish extends PayAction
         QuoteRepository $quoteRepository,
         PayHelper $payHelper,
         ManagerInterface $eventManager,
-        QuoteFactory $quoteFactory
+        QuoteFactory $quoteFactory,
+        \Magento\Catalog\Api\ProductRepositoryInterface $productRepository
     ) {
         $this->config = $config;
         $this->checkoutSession = $checkoutSession;
@@ -85,6 +92,7 @@ class Finish extends PayAction
         $this->payHelper = $payHelper;
         $this->eventManager = $eventManager;
         $this->quoteFactory = $quoteFactory;
+        $this->productRepository = $productRepository;
         parent::__construct($context);
     }
 
@@ -98,11 +106,13 @@ class Finish extends PayAction
      */
     private function checkSession(Order $order, string $orderId, Session $session, $pickupMode = null)
     {
-        if ($session->getLastOrderId() != $order->getId()) {
+        if ($session->getLastOrderId() != $order->getId())
+        {
             $additionalInformation = $order->getPayment()->getAdditionalInformation();
             $transactionId = (isset($additionalInformation['transactionId'])) ? $additionalInformation['transactionId'] : null;
 
-            if ($orderId == $transactionId || !empty($pickupMode)) {
+            if ($orderId == $transactionId || !empty($pickupMode))
+            {
                 $this->checkoutSession->setLastQuoteId($order->getQuoteId())
                     ->setLastSuccessQuoteId($order->getQuoteId())
                     ->setLastOrderId($order->getId())
@@ -245,7 +255,9 @@ class Finish extends PayAction
                     return;
                 }
                 $this->deactivateCart($order, $payOrderId);
-            } elseif ($bPending) {
+            } elseif ($bPending)
+            {
+
                 $successUrl = Config::FINISH_STANDARD;
                 if ($this->config->getPendingPage()) {
                     $successUrl = Config::PENDING_PAY;
@@ -255,10 +267,12 @@ class Finish extends PayAction
                 $this->payHelper->logDebug('Finish succes', [$successUrl, $payOrderId]);
                 $resultRedirect->setPath($successUrl, ['_query' => ['utm_nooverride' => '1']]);
                 $this->deactivateCart($order, $payOrderId);
-            } else {
+            }
+            else
+            {
                 $cancelMessage = $bDenied ? __('Payment denied') : __('Payment cancelled');
                 $this->messageManager->addNoticeMessage($cancelMessage);
-                $this->reactivateCart($order);
+                $this->initiateNewQuote($order);
                 if ($multiShipFinish) {
                     $session = $this->checkoutSession;
                     $sessionId = $session->getLastQuoteId();
@@ -272,7 +286,8 @@ class Finish extends PayAction
                 $this->payHelper->logDebug('Finish cancel/denied. Message: ' . $cancelMessage, [$multiShipFinish, $payOrderId, $cancelUrl]);
                 $resultRedirect->setPath($cancelUrl);
             }
-        } catch (\Exception $e) {
+        } catch (\Exception $e)
+        {
             $this->payHelper->logCritical($e->getCode() . ': ' . $e->getMessage(), $params);
 
             if ($e->getCode() == 101) {
@@ -306,6 +321,75 @@ class Finish extends PayAction
             return false;
         }
         return $status;
+    }
+
+    /**
+     * @param Order $cancelledOrder
+     * @return void
+     */
+    private function initiateNewQuote(Order $cancelledOrder)
+    {
+        # Make the cart active
+        $quote = $this->quoteFactory->create()->load($cancelledOrder->getQuoteId());
+        $orderItems = $quote->getAllItems();
+
+        $newQuote = $this->quoteFactory->create();
+        $newQuote->setStoreId($cancelledOrder->getStoreId());
+
+        $this->payHelper->logDebug('initiateNewQuote', [$newQuote->getId()]);
+        $this->payHelper->logDebug('getCustomerFirstname', [$cancelledOrder->getCustomerFirstname()]);
+
+        # Stel klantgegevens in (als het geen gast betreft)
+        if ($cancelledOrder->getCustomerId()) {
+            $newQuote->setCustomerId($cancelledOrder->getCustomerId());
+        } else {
+            // Voor gast-orders kopiëren we de gegevens uit de order
+            $newQuote->setCustomerEmail($cancelledOrder->getCustomerEmail());
+            $newQuote->setCustomerFirstname($cancelledOrder->getCustomerFirstname());
+            $newQuote->setCustomerLastname($cancelledOrder->getCustomerLastname());
+            $newQuote->setCustomerIsGuest(true);
+            $newQuote->setCustomerTelephone($cancelledOrder->getCustomerTelephone());
+            $newQuote->setCustomerGroupId(\Magento\Customer\Model\Group::NOT_LOGGED_IN_ID);
+
+            $newQuote->setCustomerLastname($order->getCustomerLastname());
+            $newQuote->setCustomerPrefix($order->getCustomerPrefix());
+            $newQuote->setCustomerSuffix($order->getCustomerSuffix());
+            $newQuote->setCustomerDob($order->getCustomerDob());
+            $newQuote->setCustomerTaxvat($order->getCustomerTaxvat());
+            $newQuote->setCustomerGender($order->getCustomerGender());
+            #$newQuote->setData('custom_field', $order->getData('custom_field'));
+
+            # Set billingaddress
+            $billingAddress = $cancelledOrder->getBillingAddress();
+            if ($billingAddress) {
+                $newBillingAddress = $newQuote->getBillingAddress();
+                $newBillingAddress->addData($billingAddress->getData());
+            }
+
+            # Set shippingaddress
+            $shippingAddress = $cancelledOrder->getShippingAddress();
+            if ($shippingAddress) {
+                $newShippingAddress = $newQuote->getShippingAddress();
+                $newShippingAddress->addData($shippingAddress->getData());
+            }
+        }
+
+        foreach ($orderItems as $item) {
+            try {
+                // Haal het product op om zeker te zijn dat alle data up-to-date is
+                $product = $this->productRepository->getById($item->getProductId());
+                $newQuote->addProduct($product, (int)$item->getQtyOrdered());
+            } catch (\Exception $e) {
+                // Log eventueel de fout, zodat je weet welke producten niet toegevoegd konden worden
+                $this->payHelper->logDebug('Error adding product to new quote: ' . $e->getMessage(), [$item->getProductId()]);
+                // Je kunt hier eventueel kiezen om door te gaan met de volgende producten
+            }
+        }
+
+        $newQuote->setIsActive(true);
+
+        $this->quoteRepository->save( $newQuote);
+        $this->checkoutSession->replaceQuote($newQuote);
     }
 
     /**
