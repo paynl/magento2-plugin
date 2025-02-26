@@ -183,6 +183,16 @@ On - via Sherpa - Capture automatically via Sherpa.</tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <config_path>payment/paynl/never_cancel</config_path>
                 </field>
+                <field id="cancel_behaviour" translate="label,comment" type="select" sortOrder="65" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Cancel behaviour</label>
+                    <tooltip>Renew quote-id - Renew quote-id tekst.
+Maintain quote-id - Maintain quote-id tekst</tooltip>
+                    <comment>
+                        <![CDATA[Determain what happens with the quote-id when an order is cancelled.]]>
+                    </comment>
+                    <source_model>Paynl\Payment\Model\Config\Source\CancelBehaviour</source_model>
+                    <config_path>payment/paynl/cancel_behaviour</config_path>
+                </field>
                 <field id="always_base_currency" translate="label,tooltip" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Always use base currency</label>
                     <tooltip>When the store currency deviates from the base currency setting in Magento, this setting will ensure the payment starts in the base currency instead of the store currency. Example: Store currency is in Dollar, Base currency is Euro. Pay. will start payments in Euro. Example: Store currency is in Dollar, Base currency is Euro. Pay. will start payments in Euro.</tooltip>

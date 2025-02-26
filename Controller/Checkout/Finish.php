@@ -272,7 +272,7 @@ class Finish extends PayAction
             {
                 $cancelMessage = $bDenied ? __('Payment denied') : __('Payment cancelled');
                 $this->messageManager->addNoticeMessage($cancelMessage);
-                $this->initiateNewQuote($order);
+                $this->config->cancelBehaviour() == 1 ? $this->reactivateCart($order) : $this->initiateNewQuote($order);
                 if ($multiShipFinish) {
                     $session = $this->checkoutSession;
                     $sessionId = $session->getLastQuoteId();
@@ -350,13 +350,12 @@ class Finish extends PayAction
             $newQuote->setCustomerIsGuest(true);
             $newQuote->setCustomerTelephone($cancelledOrder->getCustomerTelephone());
             $newQuote->setCustomerGroupId(\Magento\Customer\Model\Group::NOT_LOGGED_IN_ID);
-
-            $newQuote->setCustomerLastname($order->getCustomerLastname());
-            $newQuote->setCustomerPrefix($order->getCustomerPrefix());
-            $newQuote->setCustomerSuffix($order->getCustomerSuffix());
-            $newQuote->setCustomerDob($order->getCustomerDob());
-            $newQuote->setCustomerTaxvat($order->getCustomerTaxvat());
-            $newQuote->setCustomerGender($order->getCustomerGender());
+;
+            $newQuote->setCustomerPrefix($cancelledOrder->getCustomerPrefix());
+            $newQuote->setCustomerSuffix($cancelledOrder->getCustomerSuffix());
+            $newQuote->setCustomerDob($cancelledOrder->getCustomerDob());
+            $newQuote->setCustomerTaxvat($cancelledOrder->getCustomerTaxvat());
+            $newQuote->setCustomerGender($cancelledOrder->getCustomerGender());
             #$newQuote->setData('custom_field', $order->getData('custom_field'));
 
             # Set billingaddress

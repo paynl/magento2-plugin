@@ -390,3 +390,8 @@ Please note that if an order is canceled, it may create a gap in your Magento or
 
 Houd er rekening mee dat als een order wordt geannuleerd, dit een gat in uw Magento-ordervolgorde kan creëren."
 "Use the expected next order ID for order description.","Gebruik de verwachte ID van de volgende bestelling voor de beschrijving van de bestelling."
+"Renew quote-id (default)","Vernieuw quote-id (default)"
+"Maintain quote-id","Behoud quote-id"
+"Renew quote-id - Renew quote-id tekst.
+Maintain quote-id - Maintain quote-id tekst","Renew quote-id - Renew quote-id tekst.
+Maintain quote-id - Maintain quote-id tekst"

@@ -275,6 +275,14 @@ class Config
     /**
      * @return boolean
      */
+    public function cancelBehaviour()
+    {
+        return $this->store->getConfig('payment/paynl/cancel_behaviour') == 1;
+    }
+
+    /**
+     * @return boolean
+     */
     public function isAlwaysBaseCurrency()
     {
         return $this->store->getConfig('payment/paynl/always_base_currency') == 1;
