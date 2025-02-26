@@ -390,3 +390,7 @@ Please note that if an order is canceled, it may create a gap in your Magento or
 
 Houd er rekening mee dat als een order wordt geannuleerd, dit een gat in uw Magento-ordervolgorde kan creëren."
 "Use the expected next order ID for order description.","Gebruik de verwachte ID van de volgende bestelling voor de beschrijving van de bestelling."
+"Capture paid amount","Betaald bedrag vastleggen"
+"In some implementations, when a payment is authorized, it may be desirable to indicate the 'Total paid' field in the order as fully paid. This setting takes care of this automatically.","In sommige implementaties, wanneer een betaling geautoriseerd is, kan het wenselijk zijn om het 'Total paid' veld in de order als volledig betaald aan te geven. Met deze instelling wordt dit automatisch geregeld."
+"Do nothing (default)","Niets doen (standaard)"
+"Set paid amount with order amount for captured payments","Betaald bedrag instellen met orderbedrag voor vastgelegde betalingen"

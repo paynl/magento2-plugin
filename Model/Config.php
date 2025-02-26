@@ -281,6 +281,14 @@ class Config
     }
 
     /**
+     * @return boolean
+     */
+    public function capturePaidAmount()
+    {
+        return $this->store->getConfig('payment/paynl/capture_paid_amount') == 1;
+    }
+
+    /**
      * @param string $paymentMethod
      * @return boolean
      */

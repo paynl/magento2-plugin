@@ -396,3 +396,7 @@ Please note that if an order is canceled, it may create a gap in your Magento or
 
 Please note that if an order is canceled, it may create a gap in your Magento order sequence."
 "Use the expected next order ID for order description.","Use the expected next order ID for order description."
+"Capture paid amount","Capture paid amount"
+"In some implementations, when a payment is authorized, it may be desirable to indicate the 'Total paid' field in the order as fully paid. This setting takes care of this automatically.","In some implementations, when a payment is authorized, it may be desirable to indicate the 'Total paid' field in the order as fully paid. This setting takes care of this automatically."
+"Do nothing (default)","Do nothing (default)"
+"Set paid amount with order amount for captured payments","Set paid amount with order amount for captured payments"

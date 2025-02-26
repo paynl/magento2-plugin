@@ -333,7 +333,7 @@ class PayPayment
                 $returnResult = $this->processB2BPayment($transaction, $order, $payment);
             } else {
                 if ($transaction->isAuthorized()) {
-                    $payment->registerAuthorizationNotification($order->getBaseGrandTotal());
+                    $this->config->capturePaidAmount() === false ? $payment->registerAuthorizationNotification($order->getBaseGrandTotal()) : $order->setTotalPaid($order->getGrandTotal());
                 } else {
                     $payment->registerCaptureNotification($order->getBaseGrandTotal(), $this->config->isSkipFraudDetection());
                 }
