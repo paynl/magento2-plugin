@@ -334,3 +334,8 @@ Please note that if an order is canceled, it may create a gap in your Magento or
 
 Bitte beachten Sie, dass bei einer Stornierung einer Bestellung eine Lücke in Ihrer Magento-Bestellreihenfolge entstehen kann."
 "Use the expected next order ID for order description.","Verwenden Sie die voraussichtlich nächste Bestell-ID zur Bestellbeschreibung."
+"Renew quote-id (default)","Erneuern quote-id (default)"
+"Maintain quote-id","Pflegen quote-id"
+"Renew quote-id - Renew quote-id tekst.
+Maintain quote-id - Maintain quote-id tekst","Renew quote-id - Renew quote-id tekst.
+Maintain quote-id - Maintain quote-id tekst"
