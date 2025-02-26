@@ -399,5 +399,13 @@ Please note that if an order is canceled, it may create a gap in your Magento or
 "Renew quote-id (default)","Renew quote-id (default)"
 "Maintain quote-id","Maintain quote-id"
 "Renew quote-id - Renew quote-id tekst.
-Maintain quote-id - Maintain quote-id tekst","Renew quote-id - Renew quote-id tekst.
-Maintain quote-id - Maintain quote-id tekst"
+"Renew quote-id
+A new quote ID will be created for the cart after a canceled payment.
+
+Maintain quote-id
+The existing quote ID will be reused to start a new order.","Renew quote-id
+A new quote ID will be created for the cart after a canceled payment.
+
+Maintain quote-id
+The existing quote ID will be reused to start a new order."
+"Cancel behaviour", "Cancel behaviour"

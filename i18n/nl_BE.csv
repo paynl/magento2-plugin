@@ -392,6 +392,13 @@ Houd er rekening mee dat als een order wordt geannuleerd, dit een gat in uw Mage
 "Use the expected next order ID for order description.","Gebruik de verwachte ID van de volgende bestelling voor de beschrijving van de bestelling."
 "Renew quote-id (default)","Vernieuw quote-id (default)"
 "Maintain quote-id","Behoud quote-id"
-"Renew quote-id - Renew quote-id tekst.
-Maintain quote-id - Maintain quote-id tekst","Renew quote-id - Renew quote-id tekst.
-Maintain quote-id - Maintain quote-id tekst"
+"Renew quote-id
+A new quote ID will be created for the cart after a canceled payment.
+
+Maintain quote-id
+The existing quote ID will be reused to start a new order.","Vernieuw offerte-id
+Er wordt een nieuwe offerte-ID voor de winkelwagen aangemaakt na een geannuleerde betaling.
+
+Onderhoud offerte-id
+De bestaande offerte-ID wordt hergebruikt om een ​​nieuwe bestelling te starten."
+"Cancel behaviour", "Annuleer gedrag"
