@@ -106,13 +106,11 @@ class Finish extends PayAction
      */
     private function checkSession(Order $order, string $orderId, Session $session, $pickupMode = null)
     {
-        if ($session->getLastOrderId() != $order->getId())
-        {
+        if ($session->getLastOrderId() != $order->getId()) {
             $additionalInformation = $order->getPayment()->getAdditionalInformation();
             $transactionId = (isset($additionalInformation['transactionId'])) ? $additionalInformation['transactionId'] : null;
 
-            if ($orderId == $transactionId || !empty($pickupMode))
-            {
+            if ($orderId == $transactionId || !empty($pickupMode)) {
                 $this->checkoutSession->setLastQuoteId($order->getQuoteId())
                     ->setLastSuccessQuoteId($order->getQuoteId())
                     ->setLastOrderId($order->getId())
@@ -330,7 +328,7 @@ class Finish extends PayAction
      */
     private function initiateNewQuote(Order $cancelledOrder)
     {
-        # Make the cart active
+        # Retrieve the quote
         $quote = $this->quoteFactory->create()->load($cancelledOrder->getQuoteId());
         $orderItems = $quote->getAllItems();
 
@@ -338,13 +336,12 @@ class Finish extends PayAction
         $newQuote->setStoreId($cancelledOrder->getStoreId());
 
         $this->payHelper->logDebug('initiateNewQuote', [$newQuote->getId()]);
-        $this->payHelper->logDebug('getCustomerFirstname', [$cancelledOrder->getCustomerFirstname()]);
 
-        # Stel klantgegevens in (als het geen gast betreft)
+        # Update the new quote with customerdata
         if ($cancelledOrder->getCustomerId()) {
             $newQuote->setCustomerId($cancelledOrder->getCustomerId());
         } else {
-            // Voor gast-orders kopiëren we de gegevens uit de order
+            # Guest-customers
             $newQuote->setCustomerEmail($cancelledOrder->getCustomerEmail());
             $newQuote->setCustomerFirstname($cancelledOrder->getCustomerFirstname());
             $newQuote->setCustomerLastname($cancelledOrder->getCustomerLastname());
@@ -357,16 +354,13 @@ class Finish extends PayAction
             $newQuote->setCustomerDob($cancelledOrder->getCustomerDob());
             $newQuote->setCustomerTaxvat($cancelledOrder->getCustomerTaxvat());
             $newQuote->setCustomerGender($cancelledOrder->getCustomerGender());
-            #$newQuote->setData('custom_field', $order->getData('custom_field'));
 
-            # Set billingaddress
             $billingAddress = $cancelledOrder->getBillingAddress();
             if ($billingAddress) {
                 $newBillingAddress = $newQuote->getBillingAddress();
                 $newBillingAddress->addData($billingAddress->getData());
             }
 
-            # Set shippingaddress
             $shippingAddress = $cancelledOrder->getShippingAddress();
             if ($shippingAddress) {
                 $newShippingAddress = $newQuote->getShippingAddress();
@@ -374,13 +368,14 @@ class Finish extends PayAction
             }
         }
 
+        # Add products to the new quote
         if (is_array($orderItems)) {
             foreach ($orderItems as $item) {
                 try {
                     $product = $this->productRepository->getById($item->getProductId());
                     $newQuote->addProduct($product, (int)$item->getQty());
                 } catch (\Exception $e) {
-                    $this->payHelper->logDebug('Error adding product to new quote: ' . $e->getMessage(), [$item->getProductId()]);
+                    $this->payHelper->logDebug('PAY.: Error adding product to new quote: ' . $e->getMessage(), [$item->getProductId()]);
                 }
             }
         }
