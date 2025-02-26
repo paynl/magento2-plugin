@@ -272,7 +272,9 @@ class Finish extends PayAction
             {
                 $cancelMessage = $bDenied ? __('Payment denied') : __('Payment cancelled');
                 $this->messageManager->addNoticeMessage($cancelMessage);
-                $this->config->cancelBehaviour() == 1 ? $this->reactivateCart($order) : $this->initiateNewQuote($order);
+
+                $this->config->maintainQuoteOnCancel() ? $this->reactivateCart($order) : $this->initiateNewQuote($order);
+
                 if ($multiShipFinish) {
                     $session = $this->checkoutSession;
                     $sessionId = $session->getLastQuoteId();
@@ -286,8 +288,7 @@ class Finish extends PayAction
                 $this->payHelper->logDebug('Finish cancel/denied. Message: ' . $cancelMessage, [$multiShipFinish, $payOrderId, $cancelUrl]);
                 $resultRedirect->setPath($cancelUrl);
             }
-        } catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             $this->payHelper->logCritical($e->getCode() . ': ' . $e->getMessage(), $params);
 
             if ($e->getCode() == 101) {
@@ -295,7 +296,7 @@ class Finish extends PayAction
             } else {
                 $this->messageManager->addNoticeMessage(__('Unfortunately something went wrong'));
             }
-            $this->reactivateCart($order);
+            $this->config->maintainQuoteOnCancel() ? $this->reactivateCart($order) : $this->initiateNewQuote($order);
             $resultRedirect->setPath('checkout/cart');
         }
 
@@ -350,7 +351,7 @@ class Finish extends PayAction
             $newQuote->setCustomerIsGuest(true);
             $newQuote->setCustomerTelephone($cancelledOrder->getCustomerTelephone());
             $newQuote->setCustomerGroupId(\Magento\Customer\Model\Group::NOT_LOGGED_IN_ID);
-;
+
             $newQuote->setCustomerPrefix($cancelledOrder->getCustomerPrefix());
             $newQuote->setCustomerSuffix($cancelledOrder->getCustomerSuffix());
             $newQuote->setCustomerDob($cancelledOrder->getCustomerDob());
@@ -373,15 +374,14 @@ class Finish extends PayAction
             }
         }
 
-        foreach ($orderItems as $item) {
-            try {
-                // Haal het product op om zeker te zijn dat alle data up-to-date is
-                $product = $this->productRepository->getById($item->getProductId());
-                $newQuote->addProduct($product, (int)$item->getQtyOrdered());
-            } catch (\Exception $e) {
-                // Log eventueel de fout, zodat je weet welke producten niet toegevoegd konden worden
-                $this->payHelper->logDebug('Error adding product to new quote: ' . $e->getMessage(), [$item->getProductId()]);
-                // Je kunt hier eventueel kiezen om door te gaan met de volgende producten
+        if (is_array($orderItems)) {
+            foreach ($orderItems as $item) {
+                try {
+                    $product = $this->productRepository->getById($item->getProductId());
+                    $newQuote->addProduct($product, (int)$item->getQty());
+                } catch (\Exception $e) {
+                    $this->payHelper->logDebug('Error adding product to new quote: ' . $e->getMessage(), [$item->getProductId()]);
+                }
             }
         }
 

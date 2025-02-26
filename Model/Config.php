@@ -275,7 +275,7 @@ class Config
     /**
      * @return boolean
      */
-    public function cancelBehaviour()
+    public function maintainQuoteOnCancel()
     {
         return $this->store->getConfig('payment/paynl/cancel_behaviour') == 1;
     }
