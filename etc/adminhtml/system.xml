@@ -185,8 +185,11 @@ On - via Sherpa - Capture automatically via Sherpa.</tooltip>
                 </field>
                 <field id="cancel_behaviour" translate="label,comment" type="select" sortOrder="65" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Cancel behaviour</label>
-                    <tooltip>Renew quote-id - Renew quote-id tekst.
-Maintain quote-id - Maintain quote-id tekst</tooltip>
+                    <tooltip>Renew quote-id
+A new quote ID will be created for the cart after a canceled payment.
+
+Maintain quote-id
+The existing quote ID will be reused to start a new order.</tooltip>
                     <comment>
                         <![CDATA[Determain what happens with the quote-id when an order is cancelled.]]>
                     </comment>
