@@ -334,6 +334,13 @@ Veuillez noter que si une commande est annulée, cela peut créer un écart dans
 "Use the expected next order ID for order description.","Utilisez l’ID de commande suivant attendu pour la description de la commande."
 "Renew quote-id (default)","Renouveler quote-id (default)"
 "Maintain quote-id","Maintenir quote-id"
-"Renew quote-id - Renew quote-id tekst.
-Maintain quote-id - Maintain quote-id tekst","Renew quote-id - Renew quote-id tekst.
-Maintain quote-id - Maintain quote-id tekst"
+"Renew quote-id
+A new quote ID will be created for the cart after a canceled payment.
+
+Maintain quote-id
+The existing quote ID will be reused to start a new order.","Renouveler l'identifiant de devis
+Un nouvel identifiant de devis sera créé pour le panier après un paiement annulé.
+
+Maintenir l'identifiant de devis
+L'identifiant de devis existant sera réutilisé pour démarrer une nouvelle commande."
+"Cancel behaviour", "Annuler le comportement"

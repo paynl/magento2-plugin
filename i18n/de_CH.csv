@@ -336,6 +336,13 @@ Bitte beachten Sie, dass bei einer Stornierung einer Bestellung eine Lücke in I
 "Use the expected next order ID for order description.","Verwenden Sie die voraussichtlich nächste Bestell-ID zur Bestellbeschreibung."
 "Renew quote-id (default)","Erneuern quote-id (default)"
 "Maintain quote-id","Pflegen quote-id"
-"Renew quote-id - Renew quote-id tekst.
-Maintain quote-id - Maintain quote-id tekst","Renew quote-id - Renew quote-id tekst.
-Maintain quote-id - Maintain quote-id tekst"
+"Renew quote-id
+A new quote ID will be created for the cart after a canceled payment.
+
+Maintain quote-id
+The existing quote ID will be reused to start a new order.","Angebots-ID erneuern
+Nach einer stornierten Zahlung wird eine neue Angebots-ID für den Warenkorb erstellt.
+
+Angebots-ID beibehalten
+Die bestehende Angebots-ID wird wiederverwendet, um eine neue Bestellung zu starten."
+"Cancel behaviour", "Verhalten abbrechen"
