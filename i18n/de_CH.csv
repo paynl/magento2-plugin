@@ -334,8 +334,7 @@ Please note that if an order is canceled, it may create a gap in your Magento or
 
 Bitte beachten Sie, dass bei einer Stornierung einer Bestellung eine Lücke in Ihrer Magento-Bestellreihenfolge entstehen kann."
 "Use the expected next order ID for order description.","Verwenden Sie die voraussichtlich nächste Bestell-ID zur Bestellbeschreibung."
-"Renew quote-id (default)","Erneuern quote-id (default)"
-"Maintain quote-id","Pflegen quote-id"
+"Cancel behaviour","Verhalten abbrechen"
 "Renew quote-id
 A new quote ID will be created for the cart after a canceled payment.
 
@@ -345,4 +344,6 @@ Nach einer stornierten Zahlung wird eine neue Angebots-ID für den Warenkorb ers
 
 Angebots-ID beibehalten
 Die bestehende Angebots-ID wird wiederverwendet, um eine neue Bestellung zu starten."
-"Cancel behaviour", "Verhalten abbrechen"
+"Determine what happens with the quote-id when an order is cancelled.","Bestimmen Sie, was mit der Angebots-ID passiert, wenn eine Bestellung storniert wird."
+"Renew quote-id (default)","Angebots-ID erneuern (Standard)"
+"Maintain quote-id","Angebots-ID pflegen"

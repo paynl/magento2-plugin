@@ -332,8 +332,7 @@ Please note that if an order is canceled, it may create a gap in your Magento or
 
 Veuillez noter que si une commande est annulée, cela peut créer un écart dans votre séquence de commandes Magento."
 "Use the expected next order ID for order description.","Utilisez l’ID de commande suivant attendu pour la description de la commande."
-"Renew quote-id (default)","Renouveler quote-id (default)"
-"Maintain quote-id","Maintenir quote-id"
+"Cancel behaviour","Annuler le comportement"
 "Renew quote-id
 A new quote ID will be created for the cart after a canceled payment.
 
@@ -343,4 +342,6 @@ Un nouvel identifiant de devis sera créé pour le panier après un paiement ann
 
 Maintenir l'identifiant de devis
 L'identifiant de devis existant sera réutilisé pour démarrer une nouvelle commande."
-"Cancel behaviour", "Annuler le comportement"
+"Determine what happens with the quote-id when an order is cancelled.","Déterminez ce qui se passe avec l'ID de devis lorsqu'une commande est annulée."
+"Renew quote-id (default)","Renouveler le devis-id (par défaut)"
+"Maintain quote-id","Maintenir l'identifiant de citation"

@@ -191,7 +191,7 @@ A new quote ID will be created for the cart after a canceled payment.
 Maintain quote-id
 The existing quote ID will be reused to start a new order.</tooltip>
                     <comment>
-                        <![CDATA[Determain what happens with the quote-id when an order is cancelled.]]>
+                        <![CDATA[Determine what happens with the quote-id when an order is cancelled.]]>
                     </comment>
                     <source_model>Paynl\Payment\Model\Config\Source\CancelBehaviour</source_model>
                     <config_path>payment/paynl/cancel_behaviour</config_path>

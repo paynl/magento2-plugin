@@ -390,8 +390,7 @@ Please note that if an order is canceled, it may create a gap in your Magento or
 
 Houd er rekening mee dat als een order wordt geannuleerd, dit een gat in uw Magento-ordervolgorde kan creëren."
 "Use the expected next order ID for order description.","Gebruik de verwachte ID van de volgende bestelling voor de beschrijving van de bestelling."
-"Renew quote-id (default)","Vernieuw quote-id (default)"
-"Maintain quote-id","Behoud quote-id"
+"Cancel behaviour","Annuleer gedrag"
 "Renew quote-id
 A new quote ID will be created for the cart after a canceled payment.
 
@@ -400,5 +399,7 @@ The existing quote ID will be reused to start a new order.","Vernieuw offerte-id
 Er wordt een nieuwe offerte-ID voor de winkelwagen aangemaakt na een geannuleerde betaling.
 
 Onderhoud offerte-id
-De bestaande offerte-ID wordt hergebruikt om een ​​nieuwe bestelling te starten."
-"Cancel behaviour", "Annuleer gedrag"
+De bestaande offerte-ID wordt hergebruikt om een nieuwe bestelling te starten."
+"Determine what happens with the quote-id when an order is cancelled.","Bepaal wat er met de quote-id gebeurt wanneer een bestelling wordt geannuleerd."
+"Renew quote-id (default)","Vernieuw quote-id (standaard)"
+"Maintain quote-id","Quote-id behouden"
