@@ -60,8 +60,7 @@ class FastCheckoutProduct extends \Magento\Checkout\Controller\Cart\Add
             $storeManager,
             $formKeyValidator,
             $cart,
-            $productRepository,
-            $quantityProcessor
+            $productRepository
         );
     }
 
