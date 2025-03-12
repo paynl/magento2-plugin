@@ -334,6 +334,7 @@ class PayPayment
             } else {
                 if ($transaction->isAuthorized()) {
                     if ($this->config->setTotalPaid()) {
+                        $this->payHelper->logDebug('Set total-paid according to setting');
                         $order->setTotalPaid($order->getGrandTotal());
                     }
                     $payment->registerAuthorizationNotification($order->getBaseGrandTotal());
