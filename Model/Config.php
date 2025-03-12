@@ -291,6 +291,14 @@ class Config
     }
 
     /**
+     * @return boolean
+     */
+    public function setTotalPaid()
+    {
+        return $this->store->getConfig('payment/paynl/authorised_paid_amount') == 1;
+    }
+
+    /**
      * @param string $paymentMethod
      * @return boolean
      */

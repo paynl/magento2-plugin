@@ -333,6 +333,10 @@ Please note that if an order is canceled, it may create a gap in your Magento or
 
 Veuillez noter que si une commande est annulée, cela peut créer un écart dans votre séquence de commandes Magento."
 "Use the expected next order ID for order description.","Utilisez l’ID de commande suivant attendu pour la description de la commande."
+"Authorised paid amount","Capturer le montant payé"
+"In some implementations, when a payment is authorized, it may be desirable to indicate the 'Total paid' field in the order as fully paid. This setting takes care of this automatically.","Dans certaines implémentations, lorsqu'un paiement est autorisé, il peut être souhaitable d'indiquer le champ « Total payé » de la commande comme étant entièrement payé. Ce paramètre s'en charge automatiquement."
+"Do nothing (default)","Ne rien faire (par défaut)"
+"Set paid amount with order amount for captured payments","Définissez le montant payé avec le montant de la commande pour les paiements capturés"
 "Cancel behaviour","Annuler le comportement"
 "Renew quote-id
 A new quote ID will be created for the cart after a canceled payment.

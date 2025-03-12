@@ -171,7 +171,7 @@ On - via Sherpa - Capture automatically via Sherpa.</tooltip>
                     <comment>
                         <![CDATA[Set to `on` to accept chargebacks initiated from Pay.]]>
                     </comment>
-                    <tooltip>When this settings is enabled, chargebacks initiated by customers will refund the order in Magento.</tooltip>
+                    <tooltip>When this setting is enabled, chargebacks initiated by customers will refund the order in Magento.</tooltip>
                     <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
                     <config_path>payment/paynl/allow_chargeback_from_pay</config_path>
                 </field>
@@ -182,6 +182,12 @@ On - via Sherpa - Capture automatically via Sherpa.</tooltip>
                     </comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <config_path>payment/paynl/never_cancel</config_path>
+                </field>
+                <field id="authorised_paid_amount" translate="label,tooltip" type="select" sortOrder="66" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Authorised paid amount</label>
+                    <tooltip>In some implementations, when a payment is authorized, it may be desirable to indicate the 'Total paid' field in the order as fully paid. This setting takes care of this automatically.</tooltip>
+                    <source_model>Paynl\Payment\Model\Config\Source\AuthorisedPaidAmount</source_model>
+                    <config_path>payment/paynl/authorised_paid_amount</config_path>
                 </field>
                 <field id="cancel_behaviour" translate="label,comment,tooltip" type="select" sortOrder="65" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Cancel behaviour</label>
@@ -194,7 +200,6 @@ The existing quote ID will be reused to start a new order.</tooltip>
                         <![CDATA[Determine what happens with the quote-id when an order is cancelled.]]>
                     </comment>
                     <source_model>Paynl\Payment\Model\Config\Source\CancelBehaviour</source_model>
-                    <config_path>payment/paynl/cancel_behaviour</config_path>
                 </field>
                 <field id="always_base_currency" translate="label,tooltip" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Always use base currency</label>
