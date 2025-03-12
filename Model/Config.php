@@ -293,9 +293,9 @@ class Config
     /**
      * @return boolean
      */
-    public function capturePaidAmount()
+    public function setTotalPaid()
     {
-        return $this->store->getConfig('payment/paynl/capture_paid_amount') == 1;
+        return $this->store->getConfig('payment/paynl/authorised_paid_amount') == 1;
     }
 
     /**

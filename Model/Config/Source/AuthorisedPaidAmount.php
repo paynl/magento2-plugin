@@ -4,7 +4,7 @@ namespace Paynl\Payment\Model\Config\Source;
 
 use Magento\Framework\Option\ArrayInterface;
 
-class CapturePaidAmount implements ArrayInterface
+class AuthorisedPaidAmount implements ArrayInterface
 {
   /**
    * Options getter
@@ -27,7 +27,7 @@ class CapturePaidAmount implements ArrayInterface
    *
    * @return array
    */
-    public function toArray()
+    public function toArray(): array
     {
         return [
         '0' => __('Do nothing (default)'),
