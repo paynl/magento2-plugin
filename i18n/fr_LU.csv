@@ -336,3 +336,20 @@ Veuillez noter que si une commande est annulée, cela peut créer un écart dans
 "In some implementations, when a payment is authorized, it may be desirable to indicate the 'Total paid' field in the order as fully paid. This setting takes care of this automatically.","Dans certaines implémentations, lorsqu'un paiement est autorisé, il peut être souhaitable d'indiquer le champ « Total payé » de la commande comme étant entièrement payé. Ce paramètre s'en charge automatiquement."
 "Do nothing (default)","Ne rien faire (par défaut)"
 "Set paid amount with order amount for captured payments","Définissez le montant payé avec le montant de la commande pour les paiements capturés"
+"Cancel behaviour","Annuler le comportement"
+"Renew quote-id
+A new quote ID will be created for the cart after a canceled payment.
+
+Maintain quote-id
+The existing quote ID will be reused to start a new order.","Renouveler l'identifiant de devis
+Un nouvel identifiant de devis sera créé pour le panier après un paiement annulé.
+
+Maintenir l'identifiant de devis
+L'identifiant de devis existant sera réutilisé pour démarrer une nouvelle commande."
+"Determine what happens with the quote-id when an order is cancelled.","Déterminez ce qui se passe avec l'ID de devis lorsqu'une commande est annulée."
+"Renew quote-id (default)","Renouveler le devis-id (par défaut)"
+"Maintain quote-id","Maintenir l'identifiant de citation"
+"Days invoice paylink would be valid for", "Le lien de paiement de la facture en jours serait valable"
+"Title in checkout", "Titre à la caisse"
+"Show in checkout", "Afficher lors du paiement"
+"Paylink is normally only available for orders created via the backend and won't appear in the checkout. When this is enabled a 'Pay by invoice' will be shown to the customer and a paylink will be sent via email when an order is made.", "Le lien de paiement n'est normalement disponible que pour les commandes créées via le backend et n'apparaît pas lors du paiement. Lorsque cette option est activée, une option «Paiement par facture» s'affiche pour le client et un lien de paiement est envoyé par e-mail lors de la passation d'une commande."

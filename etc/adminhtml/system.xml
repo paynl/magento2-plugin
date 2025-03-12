@@ -189,6 +189,18 @@ On - via Sherpa - Capture automatically via Sherpa.</tooltip>
                     <source_model>Paynl\Payment\Model\Config\Source\CapturePaidAmount</source_model>
                     <config_path>payment/paynl/capture_paid_amount</config_path>
                 </field>
+                <field id="cancel_behaviour" translate="label,comment,tooltip" type="select" sortOrder="65" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Cancel behaviour</label>
+                    <tooltip>Renew quote-id
+A new quote ID will be created for the cart after a canceled payment.
+
+Maintain quote-id
+The existing quote ID will be reused to start a new order.</tooltip>
+                    <comment>
+                        <![CDATA[Determine what happens with the quote-id when an order is cancelled.]]>
+                    </comment>
+                    <source_model>Paynl\Payment\Model\Config\Source\CancelBehaviour</source_model>
+                </field>
                 <field id="always_base_currency" translate="label,tooltip" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Always use base currency</label>
                     <tooltip>When the store currency deviates from the base currency setting in Magento, this setting will ensure the payment starts in the base currency instead of the store currency. Example: Store currency is in Dollar, Base currency is Euro. Pay. will start payments in Euro. Example: Store currency is in Dollar, Base currency is Euro. Pay. will start payments in Euro.</tooltip>

@@ -70,6 +70,7 @@ define(
             {type: 'paynl_payment_onlinebankbetaling', component: defaultComponent},
             {type: 'paynl_payment_parfumcadeaukaart', component: defaultComponent},
             {type: 'paynl_payment_payconiq', component: defaultComponent},
+            {type: 'paynl_payment_paylink', component: defaultComponent},
             {type: 'paynl_payment_paypal', component: defaultComponent},
             {type: 'paynl_payment_paysafecard', component: defaultComponent},
             {type: 'paynl_payment_podiumcadeaukaart', component: defaultComponent},

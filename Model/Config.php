@@ -19,6 +19,7 @@ class Config
     public const CANCEL_PAY = 'paynl/order/cancel';
     public const FINISH_STANDARD = 'checkout/onepage/success';
     public const FINISH_PICKUP = 'paynl/order/pickup';
+    public const FINISH_INVOICE = 'paynl/order/invoice';
     public const ORDERSTATUS_PAID = 100;
     public const ORDERSTATUS_PENDING = array(20, 25, 40, 50, 90);
     public const ORDERSTATUS_DENIED = -63;
@@ -116,6 +117,7 @@ class Config
         "paynl_payment_onlinebankbetaling" => "258",
         "paynl_payment_parfumcadeaukaart" => "210",
         "paynl_payment_payconiq" => "138",
+        "paynl_payment_paylink" => "invoice",
         "paynl_payment_paypal" => "21",
         "paynl_payment_paysafecard" => "24",
         "paynl_payment_podiumcadeaukaart" => "29",
@@ -270,6 +272,14 @@ class Config
     public function isNeverCancel()
     {
         return $this->store->getConfig('payment/paynl/never_cancel') == 1;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function maintainQuoteOnCancel()
+    {
+        return $this->store->getConfig('payment/paynl/cancel_behaviour') == 1;
     }
 
     /**

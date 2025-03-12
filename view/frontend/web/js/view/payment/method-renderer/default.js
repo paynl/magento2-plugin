@@ -28,7 +28,7 @@ define(
             billink_agree: null,
             companyfield: null,
             pinmoment: null,
-            initialize: function () {
+             initialize: function () {
                 this._super();
 
                 if (this.paymentOption == null) {
@@ -75,6 +75,9 @@ define(
                 if (!this.currentIpIsValid()) {
                     return false;
                 }
+                if (!this.getCheckoutActive() && this.item.method == 'paynl_payment_paylink') {
+                    return false;
+                }
                 if (!this.currentAgentIsValid()) {
                     return false;
                 }
@@ -100,6 +103,9 @@ define(
             },
             getDisallowedShipping: function () {
                 return window.checkoutConfig.payment.disallowedshipping[this.item.method];
+            },
+            getCheckoutActive: function () {
+                return window.checkoutConfig.payment.checkout_active[this.item.method];
             },
             getCompany: function () {
                 if (quote.billingAddress.hasOwnProperty('_latestValue') && typeof quote.billingAddress._latestValue !== 'undefined' && quote.billingAddress._latestValue !== null) {

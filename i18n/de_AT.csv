@@ -333,3 +333,20 @@ Bitte beachten Sie, dass bei einer Stornierung einer Bestellung eine Lücke in I
 "In some implementations, when a payment is authorized, it may be desirable to indicate the 'Total paid' field in the order as fully paid. This setting takes care of this automatically.","In einigen Implementierungen kann es wünschenswert sein, bei autorisierter Zahlung im Feld „Gesamtbetrag“ der Bestellung anzugeben, dass der Betrag vollständig bezahlt ist. Mit dieser Einstellung wird dies automatisch erledigt."
 "Do nothing (default)","Nichts tun (Standard)"
 "Set paid amount with order amount for captured payments","Legen Sie den gezahlten Betrag mit dem Bestellbetrag für erfasste Zahlungen fest"
+"Cancel behaviour","Verhalten abbrechen"
+"Renew quote-id
+A new quote ID will be created for the cart after a canceled payment.
+
+Maintain quote-id
+The existing quote ID will be reused to start a new order.","Angebots-ID erneuern
+Nach einer stornierten Zahlung wird eine neue Angebots-ID für den Warenkorb erstellt.
+
+Angebots-ID beibehalten
+Die bestehende Angebots-ID wird wiederverwendet, um eine neue Bestellung zu starten."
+"Determine what happens with the quote-id when an order is cancelled.","Bestimmen Sie, was mit der Angebots-ID passiert, wenn eine Bestellung storniert wird."
+"Renew quote-id (default)","Angebots-ID erneuern (Standard)"
+"Maintain quote-id","Angebots-ID pflegen"
+"Days invoice paylink would be valid for", "Tage, für die der Paylink der Rechnung gültig wäre"
+"Title in checkout", "Titel beim Checkout"
+"Show in checkout", "Im Checkout anzeigen"
+"Paylink is normally only available for orders created via the backend and won't appear in the checkout. When this is enabled a 'Pay by invoice' will be shown to the customer and a paylink will be sent via email when an order is made.", "Paylink ist normalerweise nur für Bestellungen verfügbar, die über das Backend erstellt wurden, und erscheint nicht an der Kasse. Wenn dies aktiviert ist, wird dem Kunden bei der Bestellung eine „Zahlung per Rechnung“ angezeigt und ein Paylink per E-Mail gesendet."

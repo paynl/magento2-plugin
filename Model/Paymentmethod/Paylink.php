@@ -26,9 +26,6 @@ class Paylink extends PaymentMethod
      */
     protected $_formBlockType = \Paynl\Payment\Block\Form\Paylink::class;
 
-    // this is an admin only method
-    protected $_canUseCheckout = false;
-
     /**
      * @param string $paymentAction
      * @param object $stateObject
@@ -68,7 +65,8 @@ class Paylink extends PaymentMethod
 
             $send_paylink_email = $this->_scopeConfig->getValue('payment/paynl_payment_paylink/send_paylink_email', 'store', $storeId);
 
-            if ($send_paylink_email == 0) {
+            // Make sure the paylink is still send when the order is created from the checkout as invoice even though the email is disabled.
+            if ($send_paylink_email == 0 && $this->_appState->getAreaCode() === \Magento\Framework\App\Area::AREA_ADMINHTML) {
                 $this->addPaylinkComment($order, $url, $status);
             } else {
                 try {
@@ -172,6 +170,18 @@ class Paylink extends PaymentMethod
     }
 
     /**
+     * @param Order $order
+     * @return string|void
+     */
+    public function startTransaction(Order $order)
+    {
+        if ($this->_appState->getAreaCode() === \Magento\Framework\App\Area::AREA_FRONTEND) {
+            $redirectUrl = $order->getStore()->getBaseUrl() . 'paynl/checkout/finish/?entityid=' . $order->getEntityId() . '&invoice=1';
+            return $redirectUrl;
+        }
+    }
+
+    /**
      * @param string $order
      * @param string $url
      * @param string $status
@@ -191,8 +201,30 @@ class Paylink extends PaymentMethod
      */
     public function assignData(\Magento\Framework\DataObject $data)
     {
-        $this->getInfoInstance()->setAdditionalInformation('valid_days', $data->getData('additional_data')['valid_days']);
+        $additionalData = $data->getData('additional_data');
+
+        if (isset($additionalData['valid_days'])) {
+            $this->getInfoInstance()->setAdditionalInformation('valid_days', $additionalData['valid_days']);
+        } else {
+            $this->getInfoInstance()->setAdditionalInformation('valid_days', $this->getConfigData('checkout_valid_days'));
+        }
 
         return parent::assignData($data);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTitle()
+    {
+        if ($this->_appState->getAreaCode() === \Magento\Framework\App\Area::AREA_ADMINHTML) {
+            return parent::getTitle();
+        }
+
+        $checkoutTitle = $this->getConfigData('checkout_title');
+        if (!empty($checkoutTitle)) {
+            return $checkoutTitle;
+        }
+        return parent::getTitle();
     }
 }
