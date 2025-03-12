@@ -27,6 +27,11 @@ class Finish extends PayAction
     private $config;
 
     /**
+     * @var
+     */
+    protected $productRepository;
+
+    /**
      * @var Session
      */
     private $checkoutSession;
@@ -67,6 +72,7 @@ class Finish extends PayAction
      * @param PayHelper $payHelper
      * @param ManagerInterface $eventManager
      * @param QuoteFactory $quoteFactory
+     * @param \Magento\Catalog\Api\ProductRepositoryInterface $productRepository
      */
     public function __construct(
         Context $context,
@@ -76,7 +82,8 @@ class Finish extends PayAction
         QuoteRepository $quoteRepository,
         PayHelper $payHelper,
         ManagerInterface $eventManager,
-        QuoteFactory $quoteFactory
+        QuoteFactory $quoteFactory,
+        \Magento\Catalog\Api\ProductRepositoryInterface $productRepository
     ) {
         $this->config = $config;
         $this->checkoutSession = $checkoutSession;
@@ -85,6 +92,7 @@ class Finish extends PayAction
         $this->payHelper = $payHelper;
         $this->eventManager = $eventManager;
         $this->quoteFactory = $quoteFactory;
+        $this->productRepository = $productRepository;
         parent::__construct($context);
     }
 
@@ -250,6 +258,7 @@ class Finish extends PayAction
                 }
                 $this->deactivateCart($order, $payOrderId);
             } elseif ($bPending) {
+
                 $successUrl = Config::FINISH_STANDARD;
                 if ($this->config->getPendingPage()) {
                     $successUrl = Config::PENDING_PAY;
@@ -262,7 +271,9 @@ class Finish extends PayAction
             } else {
                 $cancelMessage = $bDenied ? __('Payment denied') : __('Payment cancelled');
                 $this->messageManager->addNoticeMessage($cancelMessage);
-                $this->reactivateCart($order);
+
+                $this->config->maintainQuoteOnCancel() ? $this->reactivateCart($order) : $this->initiateNewQuote($order);
+
                 if ($multiShipFinish) {
                     $session = $this->checkoutSession;
                     $sessionId = $session->getLastQuoteId();
@@ -284,7 +295,7 @@ class Finish extends PayAction
             } else {
                 $this->messageManager->addNoticeMessage(__('Unfortunately something went wrong'));
             }
-            $this->reactivateCart($order);
+            $this->config->maintainQuoteOnCancel() ? $this->reactivateCart($order) : $this->initiateNewQuote($order);
             $resultRedirect->setPath('checkout/cart');
         }
 
@@ -310,6 +321,70 @@ class Finish extends PayAction
             return false;
         }
         return $status;
+    }
+
+    /**
+     * @param Order $cancelledOrder
+     * @return void
+     */
+    private function initiateNewQuote(Order $cancelledOrder)
+    {
+        # Retrieve the quote
+        $quote = $this->quoteFactory->create()->load($cancelledOrder->getQuoteId());
+        $orderItems = $quote->getAllItems();
+
+        $newQuote = $this->quoteFactory->create();
+        $newQuote->setStoreId($cancelledOrder->getStoreId());
+
+        $this->payHelper->logDebug('initiateNewQuote', [$newQuote->getId()]);
+
+        # Update the new quote with customerdata
+        if ($cancelledOrder->getCustomerId()) {
+            $newQuote->setCustomerId($cancelledOrder->getCustomerId());
+        } else {
+            # Guest-customers
+            $newQuote->setCustomerEmail($cancelledOrder->getCustomerEmail());
+            $newQuote->setCustomerFirstname($cancelledOrder->getCustomerFirstname());
+            $newQuote->setCustomerLastname($cancelledOrder->getCustomerLastname());
+            $newQuote->setCustomerIsGuest(true);
+            $newQuote->setCustomerTelephone($cancelledOrder->getCustomerTelephone());
+            $newQuote->setCustomerGroupId(\Magento\Customer\Model\Group::NOT_LOGGED_IN_ID);
+
+            $newQuote->setCustomerPrefix($cancelledOrder->getCustomerPrefix());
+            $newQuote->setCustomerSuffix($cancelledOrder->getCustomerSuffix());
+            $newQuote->setCustomerDob($cancelledOrder->getCustomerDob());
+            $newQuote->setCustomerTaxvat($cancelledOrder->getCustomerTaxvat());
+            $newQuote->setCustomerGender($cancelledOrder->getCustomerGender());
+
+            $billingAddress = $cancelledOrder->getBillingAddress();
+            if ($billingAddress) {
+                $newBillingAddress = $newQuote->getBillingAddress();
+                $newBillingAddress->addData($billingAddress->getData());
+            }
+
+            $shippingAddress = $cancelledOrder->getShippingAddress();
+            if ($shippingAddress) {
+                $newShippingAddress = $newQuote->getShippingAddress();
+                $newShippingAddress->addData($shippingAddress->getData());
+            }
+        }
+
+        # Add products to the new quote
+        if (is_array($orderItems)) {
+            foreach ($orderItems as $item) {
+                try {
+                    $product = $this->productRepository->getById($item->getProductId());
+                    $newQuote->addProduct($product, (int)$item->getQty());
+                } catch (\Exception $e) {
+                    $this->payHelper->logDebug('PAY.: Error adding product to new quote: ' . $e->getMessage(), [$item->getProductId()]);
+                }
+            }
+        }
+
+        $newQuote->setIsActive(true);
+
+        $this->quoteRepository->save( $newQuote);
+        $this->checkoutSession->replaceQuote($newQuote);
     }
 
     /**
