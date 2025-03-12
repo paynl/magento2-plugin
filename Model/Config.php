@@ -634,4 +634,12 @@ class Config
         $paymentMethodList = $this->paymentHelper->getPaymentMethods();
         return $paymentMethodList[$paymentCode] ?? [];
     }
+
+    /**
+     * @return string
+     */
+    public function getCustomerIp()
+    {
+        return $this->store->getConfig('payment/paynl/customer_ip');
+    }
 }

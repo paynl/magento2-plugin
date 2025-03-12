@@ -322,12 +322,34 @@ class PayPaymentCreate
      */
     private function getIpAddress()
     {
-        $ipAddress = $this->order->getRemoteIp();
+        switch ($this->payConfig->getCustomerIp()) {
+            case 'orderremoteaddress':
+                $ipAddress = $this->order->getRemoteIp();
+                break;
+            case 'remoteaddress':
+                $ipAddress = $_SERVER['REMOTE_ADDR'] ?? '';
+                break;
+            case 'httpforwarded':
+                $headers = function_exists('getallheaders') ? getallheaders() : $_SERVER;
+                $remoteIp = $_SERVER['REMOTE_ADDR'] ?? '';
 
-        # The ip address field in magento is too short, if the ip is invalid or ip is localhost get the ip myself
+                if (!empty($headers['X-Forwarded-For'])) {
+                    $remoteIp = explode(',', $headers['X-Forwarded-For'])[0];
+                } elseif (!empty($headers['HTTP_X_FORWARDED_FOR'])) {
+                    $remoteIp = explode(',', $headers['HTTP_X_FORWARDED_FOR'])[0];
+                }
+
+                $ipAddress = trim($remoteIp, '[]');
+                break;
+            default:
+                $ipAddress = \Paynl\Helper::getIp();
+        }
+
+        # If the Magento IP field is too short, invalid, or localhost, then retrieve the IP manually
         if (!filter_var($ipAddress, FILTER_VALIDATE_IP) || $ipAddress == '127.0.0.1') {
             $ipAddress = \Paynl\Helper::getIp();
         }
+
         return $ipAddress;
     }
 

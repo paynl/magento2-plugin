@@ -1,23 +1,20 @@
 <?php
 
-/**
- * Copyright © 2020 PAY. All rights reserved.
- */
-
 namespace Paynl\Payment\Model\Config\Source;
 
 use Magento\Framework\Option\ArrayInterface;
 
-class ShowPaymentOptions implements ArrayInterface
+class CustomerIp implements ArrayInterface
 {
-  /**
-   * Options getter
-   *
-   * @return array
-   */
+    /**
+     * Options getter
+     *
+     * @return array
+     */
     public function toOptionArray()
     {
         $arrOptions = $this->toArray();
+
         $arrResult = [];
         foreach ($arrOptions as $value => $label) {
             $arrResult[] = ['value' => $value, 'label' => $label];
@@ -25,17 +22,18 @@ class ShowPaymentOptions implements ArrayInterface
         return $arrResult;
     }
 
-  /**
-   * Get options in "key-value" format
-   *
-   * @return array
-   */
+    /**
+     * Get options in "key-value" format
+     *
+     * @return array
+     */
     public function toArray()
     {
         return [
-        0 => __('Off'),
-        1 => __('Dropdown'),
-        2 => __('List with logos')
+            'default' => __('Default (Pay. SDK)'),
+            'orderremoteaddress' => __('Magento Order IP'),
+            'httpforwarded' => __('HTTP forwarded'),
+            'remoteaddress' => __('Remote address')
         ];
     }
 }

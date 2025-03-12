@@ -6,7 +6,6 @@
 #paynl_fast_checkout_cart>button,
 #paynl_fast_checkout_product button,
 #paynl_fast_checkout_fallback button,
-#top-cart-fast-checkout,
 #top-cart-btn-fastcheckout {
     width: 100%;
     margin-top: -10px;
@@ -26,14 +25,9 @@
 #paynl_fast_checkout_cart button:hover,
 #paynl_fast_checkout_product button:hover,
 #paynl_fast_checkout_fallback button:hover,
-#top-cart-fast-checkou:hover,
 #top-cart-btn-fastcheckout:hover {
-    background: #b0025b;
+    background-color: #b0025b;
     border-color: #b0025b;
-    background-image: url("../images/fastCheckoutIdeal.png");
-    background-repeat: no-repeat;
-    background-size: 51px;
-    background-position: 8px center;
     color: white;
 }
 
@@ -203,10 +197,11 @@
     height: auto;
 }
 
-.fc-modal .button-secondary {
-    background-color: #fff;
-    color: #333;
-    border: 1px solid #666;
+.fc-modal .button-secondary,
+.fc-modal .button-secondary:hover {
+    background-color: #fff !important;
+    color: #333 !important;
+    border: 1px solid #666 !important;
 }
 
 .fc-modal .trigger-button {
