@@ -345,3 +345,7 @@ Die bestehende Angebots-ID wird wiederverwendet, um eine neue Bestellung zu star
 "Determine what happens with the quote-id when an order is cancelled.","Bestimmen Sie, was mit der Angebots-ID passiert, wenn eine Bestellung storniert wird."
 "Renew quote-id (default)","Angebots-ID erneuern (Standard)"
 "Maintain quote-id","Angebots-ID pflegen"
+"Days invoice paylink would be valid for", "Tage, für die der Paylink der Rechnung gültig wäre"
+"Title in checkout", "Titel beim Checkout"
+"Show in checkout", "Im Checkout anzeigen"
+"Paylink is normally only available for orders created via the backend and won't appear in the checkout. When this is enabled a 'Pay by invoice' will be shown to the customer and a paylink will be sent via email when an order is made.", "Paylink ist normalerweise nur für Bestellungen verfügbar, die über das Backend erstellt wurden, und erscheint nicht an der Kasse. Wenn dies aktiviert ist, wird dem Kunden bei der Bestellung eine „Zahlung per Rechnung“ angezeigt und ein Paylink per E-Mail gesendet."

@@ -296,6 +296,14 @@ abstract class PaymentMethod extends AbstractMethod
     }
 
     /**
+     * @return boolean
+     */
+    public function getCheckoutActive()
+    {
+        return $this->_scopeConfig->getValue('payment/' . $this->_code . '/checkout_active', 'store') == 1;
+    }
+
+    /**
      * @return integer
      */
     public function getCompany()

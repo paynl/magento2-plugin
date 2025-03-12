@@ -403,3 +403,7 @@ De bestaande winkelwagen-ID wordt hergebruikt om een nieuwe bestelling te starte
 "Determine what happens with the quote-id when an order is cancelled.","Bepaal wat er met de quote-id gebeurt wanneer een bestelling wordt geannuleerd."
 "Renew quote-id (default)","Vernieuw quote-id (standaard)"
 "Maintain quote-id","Quote-id behouden"
+"Days invoice paylink would be valid for", "Dagen dat de betaallink voor de factuur geldig zou zijn"
+"Title in checkout", "Titel in de checkout"
+"Show in checkout", "Toon in de checkout"
+"Paylink is normally only available for orders created via the backend and won't appear in the checkout. When this is enabled a 'Pay by invoice' will be shown to the customer and a paylink will be sent via email when an order is made.", "Paylink is normaal gesproken alleen beschikbaar voor bestellingen die via de backend zijn gemaakt en verschijnt niet in de checkout. Wanneer dit is ingeschakeld, wordt er 'Betalen via factuur' aan de klant getoond en wordt er een paylink via e-mail verzonden wanneer er een bestelling wordt geplaatst."
