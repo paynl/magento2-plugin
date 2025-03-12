@@ -396,3 +396,18 @@ Please note that if an order is canceled, it may create a gap in your Magento or
 
 Please note that if an order is canceled, it may create a gap in your Magento order sequence."
 "Use the expected next order ID for order description.","Use the expected next order ID for order description."
+"Renew quote-id (default)","Renew quote-id (default)"
+"Maintain quote-id","Maintain quote-id"
+"Cancel behaviour","Cancel behaviour"
+"Renew quote-id
+A new quote ID will be created for the cart after a canceled payment.
+
+Maintain quote-id
+The existing quote ID will be reused to start a new order.","Renew quote-id
+A new quote ID will be created for the cart after a canceled payment.
+
+Maintain quote-id
+The existing quote ID will be reused to start a new order."
+"Determine what happens with the quote-id when an order is cancelled.","Determine what happens with the quote-id when an order is cancelled."
+"Renew quote-id (default)","Renew quote-id (default)"
+"Maintain quote-id","Maintain quote-id"
