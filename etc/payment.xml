@@ -108,6 +108,12 @@
         <method name="paynl_payment_googlepay">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
+        <method name="paynl_payment_horseandgifts">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_huisdierencadeaukaart">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
         <method name="paynl_payment_huisentuincadeau">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
@@ -148,6 +154,9 @@
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_multibanco">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_nationaletuinbon">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_nexi">

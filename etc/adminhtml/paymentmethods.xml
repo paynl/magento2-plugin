@@ -39,6 +39,7 @@
     <include path="Paynl_Payment::paymentmethods/good4fun.xml" />
     <include path="Paynl_Payment::paymentmethods/googlepay.xml" />
     <include path="Paynl_Payment::paymentmethods/horsesandgifts.xml" />
+    <include path="Paynl_Payment::paymentmethods/huisdierencadeaukaart.xml" />
     <include path="Paynl_Payment::paymentmethods/huisentuincadeau.xml" />
     <include path="Paynl_Payment::paymentmethods/ideal.xml" />
     <include path="Paynl_Payment::paymentmethods/in3business.xml" />
@@ -55,6 +56,7 @@
     <include path="Paynl_Payment::paymentmethods/monizze.xml" />
     <include path="Paynl_Payment::paymentmethods/mooigiftcard.xml" />
     <include path="Paynl_Payment::paymentmethods/multibanco.xml" />
+    <include path="Paynl_Payment::paymentmethods/nationaletuinbon.xml" />
     <include path="Paynl_Payment::paymentmethods/nexi.xml" />
     <include path="Paynl_Payment::paymentmethods/overboeking.xml" />
     <include path="Paynl_Payment::paymentmethods/onlinebankbetaling.xml"/>
