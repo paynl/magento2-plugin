@@ -63,7 +63,7 @@ class ShipmentSaveAfter implements ObserverInterface
         $order = $observer->getEvent()->getShipment()->getOrder();
         $payment = $order->getPayment();
         $methodInstance = $payment->getMethodInstance();
-        if ($methodInstance instanceof \Paynl\Payment\Model\Paymentmethod\Paymentmethod) {
+        if ($methodInstance instanceof \Paynl\Payment\Model\Paymentmethod\PaymentMethod) {
             $this->config->setStore($order->getStore());
 
             if ($this->config->autoCaptureEnabled()) {

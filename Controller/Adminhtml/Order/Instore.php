@@ -89,7 +89,7 @@ class Instore extends \Magento\Backend\App\Action implements CsrfAwareActionInte
             $payment->setAdditionalInformation('returnUrl', $returnUrl);
 
             $methodInstance = $this->paymentHelper->getMethodInstance($payment->getMethod());
-            if ($methodInstance instanceof \Paynl\Payment\Model\Paymentmethod\Paymentmethod) {
+            if ($methodInstance instanceof \Paynl\Payment\Model\Paymentmethod\PaymentMethod) {
                 $redirectUrl = $methodInstance->startTransaction($order, true);
             }
         } catch (\Exception $e) {
