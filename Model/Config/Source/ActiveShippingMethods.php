@@ -49,26 +49,29 @@ class ActiveShippingMethods implements ArrayInterface
 
     /**
      * Get options in "key-value" format
-     *
      * @return array
      */
-    public function getShippingMethods()
+    public function getShippingMethods(): array
     {
         $methods = [];
         $activeCarriers = $this->shipconfig->getActiveCarriers();
+
         foreach ($activeCarriers as $carrierCode => $carrierModel) {
-            $code = '';
+            $allowedMethods = $carrierModel->getAllowedMethods();
+            if (!$allowedMethods) {
+                continue;
+            }
 
-            if ($carrierMethods = $carrierModel->getAllowedMethods()) {
-                foreach ($carrierMethods as $methodCode => $method) {
-                    $code = $carrierCode . '_' . $methodCode;
-                }
-                $carrierTitle = $this->scopeConfig->getValue('carriers/' . $carrierCode . '/title');
-                $carrierName = $this->scopeConfig->getValue('carriers/' . $carrierCode . '/name');
+            $carrierTitle = $this->scopeConfig->getValue('carriers/' . $carrierCode . '/title');
+            $carrierName = $this->scopeConfig->getValue('carriers/' . $carrierCode . '/name');
 
-                if ($code != 'instore_pickup' && $code != 'instore_instore') {
-                    $methods[$code] = '[' . $carrierTitle . '] ' . $carrierName;
+            foreach ($allowedMethods as $methodCode => $method) {
+                $code = $carrierCode . '_' . $methodCode;
+                # Skip instore pickup methods
+                if (in_array($code, ['instore_pickup', 'instore_instore'])) {
+                    continue;
                 }
+                $methods[$code] = '[' . $carrierTitle . '] ' . $carrierName;
             }
         }
 
