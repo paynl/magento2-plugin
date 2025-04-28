@@ -476,6 +476,18 @@ To finish your order, click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_horsesandgifts>
+            <paynl_payment_huisdierencadeaukaart>
+                <active>0</active>
+                <title>Huisdieren Cadeaukaart</title>
+                <payment_option_id>4158</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Huisdierencadeaukaart</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_huisdierencadeaukaart>
             <paynl_payment_huisentuincadeau>
                 <active>0</active>
                 <title>Huis en Tuin Cadeau</title>
@@ -669,6 +681,18 @@ To finish your order, click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_multibanco>
+            <paynl_payment_nationaletuinbon>
+                <active>0</active>
+                <title>Nationale Tuinbon</title>
+                <payment_option_id>4152</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Nationaletuinbon</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_nationaletuinbon>
             <paynl_payment_nexi>
                 <active>0</active>
                 <title>Nexi</title>
