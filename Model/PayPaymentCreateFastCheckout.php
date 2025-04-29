@@ -27,7 +27,7 @@ class PayPaymentCreateFastCheckout extends PayPaymentCreate
     private $reservedOrderId = '';
 
     /**
-     * @param \Paynl\Payment\Model\Paymentmethod\Paymentmethod $methodInstance
+     * @param \Paynl\Payment\Model\Paymentmethod\PaymentMethod $methodInstance
      * @param string $amount Amount to start fastCheckout with
      * @param array $products Procucts to buy with fastCheckout
      * @param string $baseUrl

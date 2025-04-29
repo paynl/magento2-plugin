@@ -64,7 +64,7 @@ class InvoiceSaveCommitAfter implements ObserverInterface
         $order = $invoice->getOrder();
         $payment = $order->getPayment();
         $methodInstance = $payment->getMethodInstance();
-        if ($methodInstance instanceof \Paynl\Payment\Model\Paymentmethod\Paymentmethod) {
+        if ($methodInstance instanceof \Paynl\Payment\Model\Paymentmethod\PaymentMethod) {
             $postdata = $this->_request->getPost();
             if (!empty($postdata['invoice']['capture_case']) && $postdata['invoice']['capture_case'] == "online" && $order->getState() == Order::STATE_PROCESSING) {
                 $this->config->setStore($order->getStore());

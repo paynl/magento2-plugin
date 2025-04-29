@@ -92,7 +92,7 @@ class Redirect extends PayAction
             }
 
             $methodInstance = $this->paymentHelper->getMethodInstance($payment->getMethod());
-            if ($methodInstance instanceof \Paynl\Payment\Model\Paymentmethod\Paymentmethod) {
+            if ($methodInstance instanceof \Paynl\Payment\Model\Paymentmethod\PaymentMethod) {
                 $this->payHelper->logNotice('Start new payment for order ' . $order->getId() . '. PayProfileId: ' . $methodInstance->getPaymentOptionId(), array(), $order->getStore());
                 $redirectUrl = $methodInstance->startTransaction($order);
                 $this->getResponse()->setNoCacheHeaders();
