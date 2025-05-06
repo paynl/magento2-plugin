@@ -175,6 +175,18 @@ To finish your order, click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_bataviacadeaukaart>
+            <paynl_payment_bbqcadeaukaart>
+                <active>0</active>
+                <title>Bataviastad Cadeaukaart</title>
+                <payment_option_id>4233</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Bbqcadeaukaart</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_bbqcadeaukaart>
             <paynl_payment_beautycadeau>
                 <active>0</active>
                 <title>Beauty cadeau</title>
@@ -187,6 +199,18 @@ To finish your order, click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_beautycadeau>
+            <paynl_payment_beautyenmorecadeaukaart>
+                <active>0</active>
+                <title>Beauty &amp; More cadeaukaart</title>
+                <payment_option_id>4173</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Beautyenmorecadeaukaart</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_beautyenmorecadeaukaart>
             <paynl_payment_billink>
                 <active>0</active>
                 <title>Achteraf betalen via Billink</title>
@@ -200,6 +224,19 @@ To finish your order, click the link below
                 <send_new_order_email>after_payment</send_new_order_email>
                 <turn_off_invoices_b2b>No</turn_off_invoices_b2b>
             </paynl_payment_billink>
+            <paynl_payment_bizum>
+                <active>0</active>
+                <title>Bizum</title>
+                <payment_option_id>3843</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Bizum</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+                <turn_off_invoices_b2b>No</turn_off_invoices_b2b>
+            </paynl_payment_bizum>
             <paynl_payment_bioscoopbon>
                 <active>0</active>
                 <title>Bioscoopbon</title>
@@ -248,6 +285,18 @@ To finish your order, click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_boekenbon>
+            <paynl_payment_brite>
+                <active>0</active>
+                <title>Brite</title>
+                <payment_option_id>4287</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Brite</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_brite>
             <paynl_payment_capayable_gespreid>
                 <active>0</active>
                 <title>iDEAL in3</title>
@@ -621,6 +670,18 @@ To finish your order, click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_mastercard>
+            <paynl_payment_mbway>
+                <active>0</active>
+                <title>MB WAY</title>
+                <payment_option_id>3846</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Mbway</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_mbway>
             <paynl_payment_mistercash>
                 <active>0</active>
                 <title>Bancontact</title>
@@ -850,6 +911,42 @@ To finish your order, click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_rotterdamcitycard>
+            <paynl_payment_rvrpas>
+                <active>0</active>
+                <title>RVR-PAS</title>
+                <payment_option_id>4275</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Rvrpas</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_rvrpas>
+            <paynl_payment_satispay>
+                <active>0</active>
+                <title>Satispay</title>
+                <payment_option_id>4146</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Satispay</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_satispay>
+            <paynl_payment_saunaenwellnesscadeaukaart>
+                <active>0</active>
+                <title>Sauna &amp; Wellness cadeaukaart</title>
+                <payment_option_id>4269</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Saunaenwellnesscadeaukaart</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_saunaenwellnesscadeaukaart>
             <paynl_payment_shoesandsneakers>
                 <active>0</active>
                 <title>Shoes &amp; Sneakers Cadeau</title>
@@ -961,6 +1058,30 @@ To finish your order, click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_trustly>
+            <paynl_payment_upas>
+                <active>0</active>
+                <title>U-Pas</title>
+                <payment_option_id>4283</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Upas</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_upas>
+            <paynl_payment_vipps>
+                <active>0</active>
+                <title>Vipps</title>
+                <payment_option_id>3834</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Vipps</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_vipps>
             <paynl_payment_visa>
                 <active>0</active>
                 <title>Visa</title>
@@ -1021,6 +1142,18 @@ To finish your order, click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_wechatpay>
+            <paynl_payment_wero>
+                <active>0</active>
+                <title>WERO</title>
+                <payment_option_id>3762</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Wero</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_wero>
             <paynl_payment_wijncadeau>
                 <active>0</active>
                 <title>Wijncadeau</title>
