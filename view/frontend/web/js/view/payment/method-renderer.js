@@ -103,6 +103,7 @@ define(
             {type: 'paynl_payment_visamastercard', component: defaultComponent},
             {type: 'paynl_payment_vvvgiftcard', component: defaultComponent},
             {type: 'paynl_payment_webshopgiftcard', component: defaultComponent},
+            {type: 'paynl_payment_wechatpay', component: defaultComponent},
             {type: 'paynl_payment_wero', component: defaultComponent},
             {type: 'paynl_payment_wijncadeau', component: defaultComponent},
             {type: 'paynl_payment_winkelcheque', component: defaultComponent},
