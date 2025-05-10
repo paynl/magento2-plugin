@@ -132,7 +132,11 @@ class CreateFastCheckoutOrder
 
         try {
             $quote = $this->quote->create()->loadByIdWithoutStore($quoteId);
-            $this->payHelper->logDebug('Fast checkout: quote->getId()', ['quoteId' => $quoteId, 'magentoQuoteId' => $quote->getId() ?? 'null']);
+
+            if ($quote->getPayment()->getAdditionalInformation('payOrderId') != $payOrderId) {
+                throw new \Exception("Payment ID mismatch");
+            }
+            $this->payHelper->logDebug('Fastcheckout: Payment match ', ['quoteId' => $quoteId, '$payOrderId' => $payOrderId, 'magentoQuoteId' => $quote->getId() ?? 'null']);
 
             if (empty($quote['is_active'])) {
                 $this->payHelper->logDebug('Fast checkout: Quote inactive', ['quoteId' => $quoteId]);
