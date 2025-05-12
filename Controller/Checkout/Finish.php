@@ -197,11 +197,8 @@ class Finish extends PayAction
             $this->checkEmpty($order, 'order', 1013);
 
             if ($pickupMode || $invoice) {
-                $this->deactivateCart($order, '', true);
-                $resultRedirect->setPath(
-                    $pickupMode ? Config::FINISH_PICKUP : Config::FINISH_INVOICE,
-                    ['_query' => ['utm_nooverride' => '1']]
-                );
+                $this->unloadCart();
+                $resultRedirect->setPath($pickupMode ? Config::FINISH_PICKUP : Config::FINISH_INVOICE, ['_query' => ['utm_nooverride' => '1']]);
                 return $resultRedirect;
             }
 
@@ -388,6 +385,20 @@ class Finish extends PayAction
     }
 
     /**
+     * @return void
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    private function unloadCart()
+    {
+        $quote = $this->checkoutSession->getQuote();
+        if ($quote && $quote->getId()) {
+            $quote->setIsActive(false);
+            $this->quoteRepository->save($quote);
+        }
+    }
+
+    /**
      * @param Order $order
      * @param string $payOrderId
      * @param boolean $emptyOrder
@@ -399,10 +410,7 @@ class Finish extends PayAction
         $session = $this->checkoutSession;
 
         $this->checkSession($order, $payOrderId, $session, $emptyOrder);
-
-        $quote = $session->getQuote();
-        $quote->setIsActive(false);
-        $this->quoteRepository->save($quote);
+        $this->unloadCart();
     }
 
     /**
