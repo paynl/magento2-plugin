@@ -44,7 +44,7 @@ class OrderCancelAfter implements ObserverInterface
         $order = $observer->getEvent()->getOrder();
         $payment = $order->getPayment();
         $methodInstance = $payment->getMethodInstance();
-        if ($methodInstance instanceof \Paynl\Payment\Model\Paymentmethod\Paymentmethod) {
+        if ($methodInstance instanceof \Paynl\Payment\Model\Paymentmethod\PaymentMethod) {
             $this->config->setStore($order->getStore());
             if ($this->config->autoVoidEnabled()) {
                 if ($order->getState() == Order::STATE_CANCELED && !$order->hasInvoices()) {
