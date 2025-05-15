@@ -329,25 +329,18 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
      * @param $transactionId
      * @param $tokencode
      * @param $apitoken
-     * @return false|PayOrder
+     * @return PayOrder
      * @throws \Exception
      */
     public function getTguStatus($transactionId, $tokencode, $apitoken)
     {
-        try {
-            $response = $this->sendRequest('https://connect.pay.nl/v1/orders/' . $transactionId . '/status',
-                null,
-                $tokencode,
-                $apitoken,
-                'GET');
+        $response = $this->sendRequest('https://connect.pay.nl/v1/orders/' . $transactionId . '/status',
+            null,
+            $tokencode,
+            $apitoken,
+            'GET');
 
-            return new PayOrder($response);
-
-        } catch (Exception $e) {
-            PPMFWC_Helper_Data::ppmfwc_payLogger('Notice: get tgu status failed: ' . $e->getMessage());
-        }
-
-        return false;
+        return new PayOrder($response);
     }
 
     /**
@@ -374,7 +367,6 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
         } elseif ($method === 'PUT') {
             $this->httpClient->put($requestUrl, $payload ?? '');
         } elseif ($method === 'GET') {
-          #  echo $requestUrl;
             $this->httpClient->get($requestUrl);
         } else {
             throw new \InvalidArgumentException('Unsupported method: ' . $method);
