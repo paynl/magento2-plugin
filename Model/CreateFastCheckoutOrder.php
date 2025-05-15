@@ -130,8 +130,7 @@ class CreateFastCheckoutOrder
         try {
             $quote = $this->quote->create()->loadByIdWithoutStore($quoteId);
 
-            if (!$quote->getIsActive())
-            {
+            if (!$quote->getIsActive()) {
                 $this->payHelper->logDebug('Fast checkout: Quote inactive', ['quoteId' => $quoteId]);
 
                 $existingOrder = $this->getExistingOrder($quoteId);
