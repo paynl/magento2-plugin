@@ -259,7 +259,9 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
                 $quote->getReservedOrderId() ?? null
             ))->create();
 
-            $quote->getPayment()->setAdditionalInformation('payOrderId', $payTransaction->getTransactionId())->save();
+            $quote->getPayment()->setAdditionalInformation('payOrderId', $payTransaction->getTransactionId());
+            $quote->getPayment()->setAdditionalInformation('fastcheckout', true);
+            $quote->getPayment()->setAdditionalInformation('transactionId', $payTransaction->getTransactionId())->save();
 
             $this->getResponse()->setNoCacheHeaders();
             $this->getResponse()->setRedirect($payTransaction->getRedirectUrl());

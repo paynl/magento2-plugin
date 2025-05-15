@@ -67,7 +67,7 @@ class CreateFastCheckoutOrder
     private $searchCriteriaBuilder;
 
     /**
-     * @var \Paynl\Payment\Helper\PayHelper;
+     * @var \Paynl\Payment\Helper\PayHelper
      */
     private $payHelper;
 
@@ -108,14 +108,14 @@ class CreateFastCheckoutOrder
     }
 
     /**
-     * @param array $params
-     * @return Order
-     * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
+     * @param array $checkoutData
+     * @param $quoteId
+     * @param $payOrderId
+     * @return bool|\Magento\Sales\Model\Order|Order
      * @throws \Exception
      */
-    public function create($params)
+    public function create(array $checkoutData, $quoteId, $payOrderId)
     {
-        $checkoutData = $params['checkoutData'];
         $customerData = $checkoutData['customer'] ?? null;
         $billingAddressData = $checkoutData['billingAddress'] ?? null;
         $shippingAddressData = $checkoutData['shippingAddress'] ?? null;
@@ -125,20 +125,13 @@ class CreateFastCheckoutOrder
             throw new \Exception("Missing data, cannot create order.");
         }
 
-        $payOrderId = $params['payOrderId'];
-        $quoteId = $params['orderId'];
-
         $this->payHelper->logDebug('Start fast checkout order create', ['quoteId' => $quoteId]);
 
         try {
             $quote = $this->quote->create()->loadByIdWithoutStore($quoteId);
 
-            if ($quote->getPayment()->getAdditionalInformation('payOrderId') != $payOrderId) {
-                throw new \Exception("Payment ID mismatch");
-            }
-            $this->payHelper->logDebug('Fastcheckout: Payment match ', ['quoteId' => $quoteId, '$payOrderId' => $payOrderId, 'magentoQuoteId' => $quote->getId() ?? 'null']);
-
-            if (empty($quote['is_active'])) {
+            if (!$quote->getIsActive())
+            {
                 $this->payHelper->logDebug('Fast checkout: Quote inactive', ['quoteId' => $quoteId]);
 
                 $existingOrder = $this->getExistingOrder($quoteId);
@@ -264,12 +257,14 @@ class CreateFastCheckoutOrder
 
             $order = $this->orderFactory->create()->loadByIncrementId($increment_id);
             $additionalData = $order->getPayment()->getAdditionalInformation();
-            $additionalData['transactionId'] = $payOrderId;
+//            $additionalData['transactionId'] = $payOrderId;
+            $additionalData['orderid'] = $increment_id;
             $order->getPayment()->setAdditionalInformation($additionalData);
             $order->save();
             $this->payHelper->logDebug('Fast checkout: Created order_id', [$order->getId()]);
 
             $order->addStatusHistoryComment(__('PAY. - Created iDEAL Fast Checkout order'))->save();
+
         } catch (NoSuchEntityException $e) {
             $this->payHelper->logDebug('Fast checkout: Quote not found', ['quoteId' => $quoteId, 'error' => $e->getMessage()]);
             $order = $this->getExistingOrder($quoteId);
@@ -277,8 +272,9 @@ class CreateFastCheckoutOrder
             $this->payHelper->logDebug('Fast checkout: Exception on create', ['quoteId' => $quoteId, 'error' => $e->getMessage()]);
             throw new \Exception("Exception on create. " . $e->getMessage());
         }
+
         if (empty($order)) {
-            $this->payHelper->logCritical('Fast checkout: Both order & quote not found', ['quoteId' => $quoteId, 'searchCriteria' => $searchCriteria, 'searchResult' => $searchResult]);
+            $this->payHelper->logCritical('Fast checkout: Both order & quote not found', ['quoteId' => $quoteId]);
             throw new \Exception("Order & Quote can't be found. " . $quoteId, 404);
         }
         return $order;
