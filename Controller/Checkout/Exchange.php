@@ -260,7 +260,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
                 }
             } catch (\Exception $e) {
                 $this->payHelper->logCritical($e, $params);
-                return $this->result->setContents('TRUE| Error loading order. ' . $e->getMessage());
+                return $this->result->setContents('FALSE| Error loading order. ' . $e->getMessage());
             }
         }
 
