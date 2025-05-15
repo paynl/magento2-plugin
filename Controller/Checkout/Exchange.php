@@ -150,6 +150,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             $payOrderId = $request->order_id ?? null;
             $orderId = $request->extra1 ?? null;
             $extra3 = $request->extra3 ?? null;
+            $extra2 = $request->extra2 ?? null;
             $data = null;
         } else {
             if ($_request->isGet() || !$this->isSignExchange()) {
@@ -170,6 +171,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             $internalStateName = $data['object']['status']['action'] ?? '';
             $orderId = $data['object']['reference'] ?? '';
             $extra3 = $data['object']['extra3'] ?? null;
+            $extra2 = $data['object']['extra2'] ?? null;
             $action = ($internalStateId == 100 || $internalStateName == 95) ? 'new_ppt' : 'pending';
             $checkoutData = $data['object']['checkoutData'] ?? '';
             $type = $data['object']['type'] ?? '';
@@ -182,6 +184,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             'payOrderId' => $payOrderId,
             'orderId' => $orderId,
             'extra3' => $extra3 ?? null,
+            'extra2' => $extra2 ?? null,
             'internalStateId' => $internalStateId ?? null,
             'internalStateName' => $internalStateName ?? null,
             'checkoutData' => $checkoutData ?? null,
@@ -218,7 +221,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             return $this->result->setContents('TRUE| Ignore pending');
         }
 
-        if (strpos($params['extra3'] ?? '', 'fastcheckout') !== false) {
+        if (strpos($params['extra2'] ?? '', 'fastcheckout') !== false) {
             # Disabled fastcheckout related actions.
             return $this->result->setContents('TRUE| Ignoring fastcheckout action ' . $action);
         }
@@ -228,50 +231,32 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             return $this->result->setContents('FALSE| order_id is not set in the request');
         }
 
-
         if ($bIsFastCheckout) {
             # We need the $store to retrieve credentials later on,
             # and with fastcheckout we do this by quote, since there's no order yet.
             $quote = $this->quoteRepository->get($quoteId);
             $store = $this->storeManager->getStore($quote->getStoreId());
         } else {
-
-
-            $this->payHelper->logDebug('geen fast-checkoutvezoek, order ophalen gaat');
-
-
             try {
-
                 if (empty($orderEntityId)) {
                     throw new \Exception('orderEntityId is not set in the request');
                 }
                 try {
                     $order = $this->orderRepository->get($orderEntityId);
-                } catch (\Exception $e) {
+                } catch (\Exception $e) { }
 
-                }
-
-                if (empty($order))
-                {
-                    $this->payHelper->logDebug('order is leeg, nu proberen via FC quote');
-
+                if (empty($order)) {
                     $quote = $this->quoteRepository->get($orderEntityId);
-                    if ($quote->getPayment()->getAdditionalInformation('fastcheckout'))
-                    {
-                        $this->payHelper->logDebug('quoate is van FC, ophalen order...');
-
+                    if ($quote->getPayment()->getAdditionalInformation('fastcheckout')) {
+                        $this->payHelper->logDebug('loading order from quote');
                         $order = $this->createFastCheckoutOrder->getExistingOrder($orderEntityId);
                     }
-
-                    if(empty($order))
-                    {
+                    if (empty($order)) {
                         $this->payHelper->logCritical('Cannot load order: ' . $orderEntityId);
                         throw new \Exception('Cannot load order: ' . $orderEntityId);
-                    } else
-                    {
+                    } else {
                         $this->payHelper->logDebug('order gevonden');
                     }
-
                 }
             } catch (\Exception $e) {
                 $this->payHelper->logCritical($e, $params);
@@ -329,7 +314,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
                 # Default flow
                 $this->payHelper->logDebug('default flow');
                 $this->config->configureSDK(true);
-                var_dump($payOrderId);
+
                 $transaction = Transaction::get($payOrderId);
             }
         } catch (\Exception $e) {
