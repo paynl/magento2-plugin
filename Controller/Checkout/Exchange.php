@@ -2,8 +2,6 @@
 
 namespace Paynl\Payment\Controller\Checkout;
 
-include('/src/public/apilog_functions.php');
-
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\Request\InvalidRequestException;
 use Magento\Sales\Model\Order;
@@ -17,13 +15,17 @@ use Paynl\Transaction;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
-
 class Exchange extends PayAction implements CsrfAwareActionInterface
 {
-
+    /**
+     * @var CartRepositoryInterface
+     */
     private $quoteRepository;
-    private $storeManager;
 
+    /**
+     * @var StoreManagerInterface
+     */
+    private $storeManager;
 
     /**
      * @var \Paynl\Payment\Model\Config
