@@ -209,7 +209,6 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
      */
     public function execute()
     {
-        $xxx = logExchangeRequest('-');
         try {
             $params = $this->getPayLoad($this->getRequest());
         } catch (\Exception $e) {
