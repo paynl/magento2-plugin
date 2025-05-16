@@ -256,7 +256,6 @@ class CreateFastCheckoutOrder
 
             $order = $this->orderFactory->create()->loadByIncrementId($increment_id);
             $additionalData = $order->getPayment()->getAdditionalInformation();
-//            $additionalData['transactionId'] = $payOrderId;
             $additionalData['orderid'] = $increment_id;
             $order->getPayment()->setAdditionalInformation($additionalData);
             $order->save();

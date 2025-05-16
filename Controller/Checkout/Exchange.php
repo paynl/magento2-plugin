@@ -201,7 +201,6 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
     private function isFastCheckout(array $requestArguments)
     {
         return ($requestArguments['type'] ?? '') == 'payment_based_checkout' && !empty($requestArguments['checkoutData'] ?? '');
-
     }
 
     /**
