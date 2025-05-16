@@ -197,15 +197,17 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
      * @param array $requestArguments
      * @return bool
      * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
-     */1
+     */
     private function isFastCheckout(array $requestArguments)
     {
         return ($requestArguments['type'] ?? '') == 'payment_based_checkout' && !empty($requestArguments['checkoutData'] ?? '');
+
     }
 
     /**
-     * @return \Mreturn $this->result->setContents('FALSE| order_id is not set in the request');agento\Framework\App\ResponseInterface|\Magento\Framework\Controller\Result\Raw|\Magento\Framework\Controller\ResultInterface
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * Summary of execute
+     * @throws \Exception
+     * @return \Magento\Framework\Controller\Result\Raw
      */
     public function execute()
     {
