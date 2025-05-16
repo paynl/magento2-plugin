@@ -162,7 +162,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
 
                 # Volgens documentatie alleen type order verwerken. https://developer.pay.nl/docs/signing
                 if ($exchangeType != 'order') {
-                    throw new Exception('Cant handle exchange type other then order');
+                    throw new \Exception('Cant handle exchange type other then order');
                 }
             }
 
