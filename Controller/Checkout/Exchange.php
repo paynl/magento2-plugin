@@ -98,7 +98,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         CreateFastCheckoutOrder $createFastCheckoutOrder,
         PayHelper $payHelper,
         CartRepositoryInterface $quoteRepository,
-        StoreManagerInterface   $storeManager
+        StoreManagerInterface $storeManager
     ) {
         $this->result = $result;
         $this->config = $config;
@@ -135,7 +135,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
     /**
      * @param object $_request
      * @return array
-     * @throws Exception
+     * @throws \Exception
      * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
      */
     private function getPayLoad($_request)
@@ -197,18 +197,24 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
      * @param array $requestArguments
      * @return bool
      * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
-    */
+     */1
     private function isFastCheckout(array $requestArguments)
     {
         return ($requestArguments['type'] ?? '') == 'payment_based_checkout' && !empty($requestArguments['checkoutData'] ?? '');
     }
 
     /**
-     * @return \Magento\Framework\Controller\Result\Raw
+     * @return \Mreturn $this->result->setContents('FALSE| order_id is not set in the request');agento\Framework\App\ResponseInterface|\Magento\Framework\Controller\Result\Raw|\Magento\Framework\Controller\ResultInterface
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function execute()
     {
-        $params = $this->getPayLoad($this->getRequest());
+        $xxx = logExchangeRequest('-');
+        try {
+            $params = $this->getPayLoad($this->getRequest());
+        } catch (\Exception $e) {
+            return $this->result->setContents('TRUE| Incorrect payload. ' . $e->getMessage());
+        }
         $action = strtolower($params['action'] ?? '');
         $payOrderId = $params['payOrderId'] ?? null;
         $quoteId = $params['orderId'] ?? null;
@@ -243,7 +249,8 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
                 }
                 try {
                     $order = $this->orderRepository->get($orderEntityId);
-                } catch (\Exception $e) { }
+                } catch (\Exception $e) {
+                }
 
                 if (empty($order)) {
                     $quote = $this->quoteRepository->get($orderEntityId);
@@ -291,7 +298,9 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
                         try {
                             $this->payHelper->logDebug('Fast-checkout processpaid order');
                             $result = $this->payPayment->processPaidOrder($transaction, $order, $paymentProfileId);
-                            if (!$result) { throw new \Exception('Cannot process order'); }
+                            if (!$result) {
+                                throw new \Exception('Cannot process order');
+                            }
                             $message = 'TRUE| ' . (($transaction->isPaid()) ? "PAID" : "AUTHORIZED");
                         } catch (\Exception $e) {
                             $message = 'FALSE| ' . $e->getMessage();
@@ -309,8 +318,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
                     }
                     return $this->result->setContents('FALSE| Error creating fast checkout order. ' . $e->getMessage());
                 }
-            }
-            else {
+            } else {
                 # Default flow
                 $this->payHelper->logDebug('default flow');
                 $this->config->configureSDK(true);
