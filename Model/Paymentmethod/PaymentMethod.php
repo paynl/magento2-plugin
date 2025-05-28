@@ -456,7 +456,7 @@ abstract class PaymentMethod extends AbstractMethod
         if ($currencyCode !== $baseCurrencyCode) {
             $creditmemo = $payment->getCreditmemo();
             if ($creditmemo) {
-                $amount = $creditmemo->getSubtotal();
+                $amount = $creditmemo->getGrandTotal();
             }
         }
 
