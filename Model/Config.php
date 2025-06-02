@@ -660,4 +660,12 @@ class Config
     {
         return $this->store->getConfig('payment/paynl/customer_ip');
     }
+
+    /**
+     * @return boolean
+     */
+    public function restoreQuote()
+    {
+        return $this->store->getConfig('payment/paynl/recover_quote_on_redirect') == 1;
+    }
 }

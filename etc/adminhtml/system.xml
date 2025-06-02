@@ -183,6 +183,14 @@ On - via Sherpa - Capture automatically via Sherpa.</tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <config_path>payment/paynl/never_cancel</config_path>
                 </field>
+                <field id="recover_quote_on_redirect" translate="label,comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Recover quote on back button</label>
+                    <comment>
+                        <![CDATA[When enabled, the quote will be recovered when the customer returns to the cart using the browser's back button.]]>
+                    </comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <config_path>payment/paynl/recover_quote_on_redirect</config_path>
+                </field>
                 <field id="authorised_paid_amount" translate="label,tooltip" type="select" sortOrder="66" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Authorised paid amount</label>
                     <tooltip>In some implementations, when a payment is authorized, it may be desirable to indicate the 'Total paid' field in the order as fully paid. This setting takes care of this automatically.</tooltip>
