@@ -450,6 +450,16 @@ abstract class PaymentMethod extends AbstractMethod
         }
 
         $order = $payment->getOrder();
+        $currencyCode = $order->getOrderCurrencyCode();
+        $baseCurrencyCode = $order->getBaseCurrencyCode();
+
+        if ($currencyCode !== $baseCurrencyCode) {
+            $creditmemo = $payment->getCreditmemo();
+            if ($creditmemo) {
+                $amount = $creditmemo->getGrandTotal();
+            }
+        }
+
         $this->paynlConfig->setStore($order->getStore());
         $this->paynlConfig->configureSDK();
 
@@ -457,7 +467,7 @@ abstract class PaymentMethod extends AbstractMethod
         $transactionId = str_replace('-capture', '', $transactionId);
 
         try {
-            Transaction::refund($transactionId, $amount);
+            Transaction::refund($transactionId, $amount, null, null, null, $currencyCode);
         } catch (\Exception $e) {
             $docsLink = 'https://docs.pay.nl/plugins#magento2-errordefinitions';
 
