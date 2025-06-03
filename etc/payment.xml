@@ -39,7 +39,16 @@
         <method name="paynl_payment_bataviacadeaukaart">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
+        <method name="paynl_payment_bbqcadeaukaart">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_beautyenmorecadeaukaart">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
         <method name="paynl_payment_billink">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_bizum">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_bioscoopbon">
@@ -52,6 +61,9 @@
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_boekenbon">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_brite">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_biller">
@@ -144,6 +156,9 @@
         <method name="paynl_payment_mastercard">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
+        <method name="paynl_payment_mbway">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
         <method name="paynl_payment_mistercash">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
@@ -198,6 +213,15 @@
         <method name="paynl_payment_rotterdamcitycard">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
+        <method name="paynl_payment_rvrpas">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_satispay">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_saunaenwellnesscadeaukaart">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
         <method name="paynl_payment_cardrefund">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
@@ -228,6 +252,12 @@
         <method name="paynl_payment_trustly">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
+        <method name="paynl_payment_upas">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_vipps">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
         <method name="paynl_payment_visa">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
@@ -241,6 +271,9 @@
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_wechatpay">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_wero">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_wijncadeau">
