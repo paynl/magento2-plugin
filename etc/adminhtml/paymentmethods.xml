@@ -84,8 +84,10 @@
     <include path="Paynl_Payment::paymentmethods/sofortbanking_ds.xml" />
     <include path="Paynl_Payment::paymentmethods/spraypay.xml" />
     <include path="Paynl_Payment::paymentmethods/stadspasamsterdam.xml" />
+    <include path="Paynl_Payment::paymentmethods/swish.xml" />
     <include path="Paynl_Payment::paymentmethods/telefonischbetalen.xml" />
     <include path="Paynl_Payment::paymentmethods/trustly.xml" />
+    <include path="Paynl_Payment::paymentmethods/twint.xml" />
     <include path="Paynl_Payment::paymentmethods/upas.xml" />
     <include path="Paynl_Payment::paymentmethods/vipps.xml" />
     <include path="Paynl_Payment::paymentmethods/visa.xml" />

@@ -246,10 +246,16 @@
         <method name="paynl_payment_stadspasamsterdam">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
+        <method name="paynl_payment_swish">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
         <method name="paynl_payment_telefonischbetalen">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_trustly">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_twint">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_upas">
