@@ -229,7 +229,7 @@ class PayPayment
 
             $order->addStatusHistoryComment(__('PAY. - Refund initiated from Pay.'))->save();
         } catch (\Exception $e) {
-            throw new \Exception('Could not refund');
+            throw new \Exception('Could not refund'.$e->getMessage());
         }
         return true;
     }
@@ -256,7 +256,7 @@ class PayPayment
     }
 
     /**
-     * @param PayTransaction $transaction
+     * @param $transaction
      * @param Order $order
      * @param integer $paymentProfileId
      * @return boolean
@@ -264,7 +264,7 @@ class PayPayment
      * @throws \Magento\Framework\Exception\InputException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function processPaidOrder(PayTransaction $transaction, Order $order, $paymentProfileId = null)
+    public function processPaidOrder($transaction, Order $order, $paymentProfileId = null)
     {
         $returnResult = false;
         $multiShippingOrder = false;

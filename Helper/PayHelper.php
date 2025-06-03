@@ -10,11 +10,14 @@ use Magento\Framework\Stdlib\Cookie\CookieMetadataFactory;
 use Magento\Store\Model\Store;
 use Paynl\Payment\Logging\Logger;
 use Paynl\Payment\Model\Config\Source\LogOptions;
+use Magento\Framework\HTTP\ClientInterface;
+use Paynl\Payment\Model\PayOrder;
 
 class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
 {
     public const PAY_LOG_PREFIX = 'PAY.: ';
 
+    private $httpClient;
     private $store;
     private $resource;
     private $remoteAddress;
@@ -39,7 +42,8 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
         Store $store,
         Logger $logger,
         CookieManagerInterface $cookieManager,
-        CookieMetadataFactory $cookieMetadataFactory
+        CookieMetadataFactory $cookieMetadataFactory,
+        ClientInterface $httpClient
     ) {
         $this->remoteAddress = $remoteAddress;
         $this->httpHeader = $httpHeader;
@@ -48,6 +52,7 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
         $this->logger = $logger;
         $this->cookieManager = $cookieManager;
         $this->cookieMetadataFactory = $cookieMetadataFactory;
+        $this->httpClient = $httpClient;
     }
 
     /**
@@ -318,5 +323,63 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
             }
         }
         return null;
+    }
+
+    /**
+     * @param $transactionId
+     * @param $tokencode
+     * @param $apitoken
+     * @return PayOrder
+     * @throws \Exception
+     */
+    public function getTguStatus($transactionId, $tokencode, $apitoken)
+    {
+        $response = $this->sendRequest('https://connect.pay.nl/v1/orders/' . $transactionId . '/status',
+            null,
+            $tokencode,
+            $apitoken,
+            'GET');
+
+        return new PayOrder($response);
+    }
+
+    /**
+     * @param $requestUrl
+     * @param $payload
+     * @param $tokenCode
+     * @param $apiToken
+     * @param $method
+     * @return mixed
+     * @throws \Exception
+     */
+    public function sendRequest($requestUrl, $payload, $tokenCode, $apiToken, $method = 'POST')
+    {
+        $authorization = base64_encode($tokenCode . ':' . $apiToken);
+
+        $this->httpClient->setHeaders([
+            'Accept' => 'application/json',
+            'Authorization' => 'Basic ' . $authorization,
+            'Content-Type' => 'application/json',
+        ]);
+
+        if ($method === 'POST') {
+            $this->httpClient->post($requestUrl, $payload ?? '');
+        } elseif ($method === 'PUT') {
+            $this->httpClient->put($requestUrl, $payload ?? '');
+        } elseif ($method === 'GET') {
+            $this->httpClient->get($requestUrl);
+        } else {
+            throw new \InvalidArgumentException('Unsupported method: ' . $method);
+        }
+
+        $body = $this->httpClient->getBody();
+        $data = json_decode($body, true); // decode as array
+
+        if (!empty($data['violations'])) {
+            $field = $data['violations'][0]['propertyPath'] ?? ($data['violations'][0]['code'] ?? '');
+            throw new \Exception($field . ': ' . ($data['violations'][0]['message'] ?? ''));
+        }
+
+        return $data;
     }
 }
