@@ -105,7 +105,7 @@ class PayPaymentCreateFastCheckout extends PayPaymentCreate
         $this->_add($stats, 'tool', '');
         $this->_add($stats, 'object', $this->methodInstance->getVersion() . ' | fc');
         $this->_add($stats, 'extra1', $this->reservedOrderId);
-        $this->_add($stats, 'extra2', '');
+        $this->_add($stats, 'extra2', 'fastcheckout');
         $this->_add($stats, 'extra3', $this->reference);
         $this->_add($parameters, 'stats', $stats);
 
