@@ -58,6 +58,7 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_in3business',
         'paynl_payment_incasso',
         'paynl_payment_instore',
+        'paynl_payment_invoice',
         'paynl_payment_kidsorteen',
         'paynl_payment_klarna',
         'paynl_payment_klarnakp',
@@ -76,7 +77,6 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_onlinebankbetaling',
         'paynl_payment_parfumcadeaukaart',
         'paynl_payment_payconiq',
-        'paynl_payment_paylink',
         'paynl_payment_paypal',
         'paynl_payment_paysafecard',
         'paynl_payment_podiumcadeaukaart',
@@ -171,7 +171,6 @@ class ConfigProvider implements ConfigProviderInterface
                 $config['payment']['pinmomentterminal'][$code] = $this->getPinLocationTerminal($code);
                 $config['payment']['showforcompany'][$code] = $this->getCompany($code);
                 $config['payment']['showforgroup'][$code] = $this->getCustomerGroup($code);
-                $config['payment']['checkout_active'][$code] = $this->getCheckoutActive($code);
 
                 $config['payment']['disallowedshipping'][$code] = $this->getDisallowedShippingMethods($code);
                 $config['payment']['currentipisvalid'][$code]    = $this->methods[$code]->isCurrentIpValid();
@@ -312,15 +311,6 @@ class ConfigProvider implements ConfigProviderInterface
     protected function getCustomerGroup($code)
     {
         return $this->methods[$code]->getCustomerGroup();
-    }
-
-    /**
-     * @param string $code
-     * @return mixed
-     */
-    protected function getCheckoutActive($code)
-    {
-        return $this->methods[$code]->getCheckoutActive();
     }
 
     /**

@@ -1,19 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
-    <group id="paynl_payment_paylink" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
-        <label>Paylink</label>
+    <group id="paynl_payment_invoice" sortOrder="930" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Invoice</label>
         <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1"
                showInStore="1">
             <label>Enabled</label>
-            <comment><![CDATA[Paylink is only available for orders created via the backend and won't appear in the checkout]]></comment>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-            <config_path>payment/paynl_payment_paylink/active</config_path>
+            <config_path>payment/paynl_payment_invoice/active</config_path>
         </field>
         <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1"
                showInStore="1">
             <label>Title</label>
-            <config_path>payment/paynl_payment_paylink/title</config_path>
+            <config_path>payment/paynl_payment_invoice/title</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+        <field id="invoice_valid_days" translate="label" type="select" sortOrder="25" showInDefault="1" showInWebsite="1"
+               showInStore="1">
+            <label>Days invoice would be valid for</label>
+            <config_path>payment/paynl_payment_invoice/invoice_valid_days</config_path>
+            <source_model>Paynl\Payment\Model\Config\Source\InvoiceValidDays</source_model>
             <depends>
                 <field id="active">1</field>
             </depends>
@@ -25,7 +33,7 @@
             <depends>
                 <field id="active">1</field>
             </depends>
-            <config_path>payment/paynl_payment_paylink/order_status</config_path>
+            <config_path>payment/paynl_payment_invoice/order_status</config_path>
         </field>
         <field id="order_status_authorized" translate="label" type="select" sortOrder="32" showInDefault="1" showInWebsite="1"
                showInStore="1">
@@ -34,7 +42,7 @@
             <depends>
                 <field id="active">1</field>
             </depends>
-            <config_path>payment/paynl_payment_paylink/order_status_authorized</config_path>
+            <config_path>payment/paynl_payment_invoice/order_status_authorized</config_path>
         </field>
         <field id="order_status_processing" translate="label" type="select" sortOrder="35" showInDefault="1" showInWebsite="1"
                showInStore="1">
@@ -43,23 +51,32 @@
             <depends>
                 <field id="active">1</field>
             </depends>
-            <config_path>payment/paynl_payment_paylink/order_status_processing</config_path>
+            <config_path>payment/paynl_payment_invoice/order_status_processing</config_path>
         </field>
         <field id="allowspecific" translate="label" type="allowspecific" sortOrder="40" showInDefault="1"
                showInWebsite="1" showInStore="1">
             <label>Accepted billing country</label>
             <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
-            <config_path>payment/paynl_payment_paylink/allowspecific</config_path>
+            <config_path>payment/paynl_payment_invoice/allowspecific</config_path>
             <depends>
                 <field id="active">1</field>
             </depends>
+        </field>
+        <field id="showforgroup" translate="label" type="select" sortOrder="45" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Customer Group</label>
+            <source_model>Paynl\Payment\Model\Config\Source\UserGroups</source_model>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+            <config_path>payment/paynl_payment_invoice/showforgroup</config_path>
+            <comment><![CDATA[Show payment method only to specific customer groups.]]></comment>
         </field>
         <field id="specificcountry" translate="label" type="multiselect" sortOrder="50" showInDefault="1"
                showInWebsite="1" showInStore="1">
             <label>Select accepted countries</label>
             <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
             <can_be_empty>1</can_be_empty>
-            <config_path>payment/paynl_payment_paylink/specificcountry</config_path>
+            <config_path>payment/paynl_payment_invoice/specificcountry</config_path>
             <frontend_model>Paynl\Payment\Block\Adminhtml\Render\Multiselect</frontend_model>
             <depends>
                 <field id="allowspecific">1</field>
@@ -71,12 +88,12 @@
             <depends>
                 <field id="active">1</field>
             </depends>
-            <config_path>payment/paynl_payment_paylink/instructions</config_path>
+            <config_path>payment/paynl_payment_invoice/instructions</config_path>
         </field>
         <field id="min_order_total" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1"
                showInStore="1">
             <label>Minimum order total</label>
-            <config_path>payment/paynl_payment_paylink/min_order_total</config_path>
+            <config_path>payment/paynl_payment_invoice/min_order_total</config_path>
             <depends>
                 <field id="active">1</field>
             </depends>
@@ -84,7 +101,7 @@
         <field id="max_order_total" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1"
                showInStore="1">
             <label>Maximum order total</label>
-            <config_path>payment/paynl_payment_paylink/max_order_total</config_path>
+            <config_path>payment/paynl_payment_invoice/max_order_total</config_path>
             <depends>
                 <field id="active">1</field>
             </depends>
@@ -93,7 +110,7 @@
                showInStore="1">
             <label>Sort order</label>
             <frontend_class>validate-number</frontend_class>
-            <config_path>payment/paynl_payment_paylink/sort_order</config_path>
+            <config_path>payment/paynl_payment_invoice/sort_order</config_path>
             <depends>
                 <field id="active">1</field>
             </depends>
@@ -103,57 +120,56 @@
                showInStore="1">
             <label>Send order confirmation email</label>
             <source_model>Paynl\Payment\Model\Config\Source\SendNewOrderEmail</source_model>
-            <config_path>payment/paynl_payment_paylink/send_new_order_email</config_path>
+            <config_path>payment/paynl_payment_invoice/send_new_order_email</config_path>
             <depends>
                 <field id="active">1</field>
             </depends>
         </field>
-        <field id="send_paylink_email" translate="label" type="select" sortOrder="140" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Send a Paylink email</label>
+        <field id="send_invoice_email" translate="label" type="select" sortOrder="140" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Send an invoice email</label>
             <source_model>Paynl\Payment\Model\Config\Source\ShowPaylinkOptions</source_model>
             <depends>
                 <field id="active">1</field>
             </depends>
-            <config_path>payment/paynl_payment_paylink/send_paylink_email</config_path>
-            <comment><![CDATA[Send an email containing the paylink.]]></comment>
-        </field>   
+            <config_path>payment/paynl_payment_invoice/send_invoice_email</config_path>
+            <comment><![CDATA[Send an email containing the invoice.]]></comment>
+        </field>
         <field id="show_order_in_mail" translate="label" type="select" sortOrder="150" showInDefault="1" showInWebsite="1" showInStore="1">
-            <label>Show order in Paylink email</label>
+            <label>Show order in invoice email</label>
             <source_model>Paynl\Payment\Model\Config\Source\ShowPaylinkOptions</source_model>
             <depends>
                 <field id="active">1</field>
             </depends>
-            <config_path>payment/paynl_payment_paylink/show_order_in_mail</config_path>
-            <comment><![CDATA[Show order at the bottom of the email when sending an email containing the paylink.]]></comment>
-        </field>       
-        <field id="paylink_subject" translate="label" type="text" sortOrder="160" showInDefault="1"
+            <config_path>payment/paynl_payment_invoice/show_order_in_mail</config_path>
+            <comment><![CDATA[Show order at the bottom of the email when sending an email containing the invoice.]]></comment>
+        </field>
+        <field id="invoice_subject" translate="label" type="text" sortOrder="160" showInDefault="1"
                showInWebsite="1"
                showInStore="1">
             <label>Email subject</label>
-            <config_path>payment/paynl_payment_paylink/paylink_subject</config_path>
+            <config_path>payment/paynl_payment_invoice/invoice_subject</config_path>
             <depends>
                 <field id="active">1</field>
             </depends>
         </field>
-        <field id="paylink_body" translate="label" type="textarea" sortOrder="170" showInDefault="1"
+        <field id="invoice_body" translate="label" type="textarea" sortOrder="170" showInDefault="1"
                showInWebsite="1"
                showInStore="1">
-            <label>Email Body</label>        
-            <config_path>payment/paynl_payment_paylink/paylink_body</config_path>
+            <label>Email Body</label>
+            <config_path>payment/paynl_payment_invoice/invoice_body</config_path>
             <depends>
                 <field id="active">1</field>
             </depends>
-            <comment>In order to insert variables into the email use the following text in the subject/body: ((customer_name)), ((paylink)), ((order_id)), ((store_name)), ((support_email))</comment>
-        </field> 
+            <comment>In order to insert variables into the email use the following text in the subject/body: ((customer_name)), ((invoice)), ((order_id)), ((store_name)), ((support_email))</comment>
+        </field>
         <field id="custom_success_page" translate="label" type="text" sortOrder="110" showInDefault="1"
                showInWebsite="1"
                showInStore="1">
             <label>Custom success page</label>
-            <config_path>payment/paynl_payment_paylink/custom_success_page</config_path>
+            <config_path>payment/paynl_payment_invoice/custom_success_page</config_path>
             <depends>
                 <field id="active">1</field>
             </depends>
         </field>
     </group>
 </include>
-                

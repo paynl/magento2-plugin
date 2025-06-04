@@ -7,9 +7,9 @@ use Magento\Sales\Model\Order;
 use Paynl\Payment\Helper\PayHelper;
 use Paynl\Payment\Model\PayPaymentCreate;
 
-class Paylink extends PaymentMethod
+class Invoice extends PaymentMethod
 {
-    protected $_code = 'paynl_payment_paylink';
+    protected $_code = 'paynl_payment_invoice';
 
     /**
      * @return integer
@@ -25,9 +25,6 @@ class Paylink extends PaymentMethod
      * @var string
      */
     protected $_formBlockType = \Paynl\Payment\Block\Form\Paylink::class;
-
-    // this is an admin only method
-    protected $_canUseCheckout = false;
 
     /**
      * @param string $paymentAction
@@ -66,18 +63,18 @@ class Paylink extends PaymentMethod
                 $url = substr_replace($url, strtoupper($lang), $pos, strlen('NL'));
             }
 
-            $send_paylink_email = $this->_scopeConfig->getValue('payment/paynl_payment_paylink/send_paylink_email', 'store', $storeId);
+            $send_invoice_email = $this->_scopeConfig->getValue('payment/paynl_payment_invoice/send_invoice_email', 'store', $storeId);
 
-            if ($send_paylink_email == 0) {
-                $this->addPaylinkComment($order, $url, $status);
+            if ($send_invoice_email == 0) {
+                $this->addPayInvoiceComment($order, $url, $status);
             } else {
                 try {
                     $customerEmail = [$order->getCustomerEmail()];
 
                     if (empty($customerEmail)) {
-                        # Can't send email without customer email so add paylink as a comment instead.
+                        # Can't send email without customer email so add invoice link as a comment instead.
                         $order->addStatusHistoryComment(__('Pay.: customer e-mail is empty, cannot send e-mail'), $status)->save();
-                        $this->addPaylinkComment($order, $url, $status);
+                        $this->addPayInvoiceComment($order, $url, $status);
                         return false;
                     }
 
@@ -95,23 +92,23 @@ class Paylink extends PaymentMethod
                         $storeId
                     );
 
-                    $show_order_in_mail = $this->_scopeConfig->getValue('payment/paynl_payment_paylink/show_order_in_mail', 'store', $storeId);
+                    $show_order_in_mail = $this->_scopeConfig->getValue('payment/paynl_payment_invoice/show_order_in_mail', 'store', $storeId);
                     if ($show_order_in_mail) {
                         $show_order_in_mail = 1;
                     } else {
                         $show_order_in_mail = 0;
                     }
 
-                    $subject = $this->_scopeConfig->getValue('payment/paynl_payment_paylink/paylink_subject', 'store', $storeId);
-                    $subject = str_replace('((paylink))', '<a href="' . $url . '">' . __('PAY. paylink') . '</a>', $subject);
+                    $subject = $this->_scopeConfig->getValue('payment/paynl_payment_invoice/invoice_subject', 'store', $storeId);
+                    $subject = str_replace('((invoice))', '<a href="' . $url . '">' . __('PAY. invoice') . '</a>', $subject);
                     $subject = str_replace('((customer_name))', $order->getCustomerName(), $subject);
                     $subject = str_replace('((store_name))', $order->getStore()->getName(), $subject);
                     $subject = str_replace('((support_email))', '<a href="mailto:' . $supportEmail . '">' . $supportEmail . '</a>', $subject);
                     $subject = str_replace('((order_id))', $order->getIncrementId(), $subject);
 
-                    $body = $this->_scopeConfig->getValue('payment/paynl_payment_paylink/paylink_body', 'store', $storeId);
+                    $body = $this->_scopeConfig->getValue('payment/paynl_payment_invoice/invoice_body', 'store', $storeId);
                     $body = nl2br($body);
-                    $body = str_replace('((paylink))', '<a href="' . $url . '">' . __('PAY. paylink') . '</a>', $body);
+                    $body = str_replace('((invoice))', '<a href="' . $url . '">' . __('PAY. invoice') . '</a>', $body);
                     $body = str_replace('((customer_name))', $order->getCustomerName(), $body);
                     $body = str_replace('((store_name))', $order->getStore()->getName(), $body);
                     $body = str_replace('((support_email))', '<a href="mailto:' . $supportEmail . '">' . $supportEmail . '</a>', $body);
@@ -141,7 +138,7 @@ class Paylink extends PaymentMethod
                     ];
 
                     $this->payHelper->logDebug(
-                        'Sending Paylink E-mail with the following user data: ',
+                        'Sending invoice E-mail with the following user data: ',
                         array("sender" => $sender, "customer_email" => $customerEmail, "support_email" => $supportEmail)
                     );
                     $template = 'paylink_email_template';
@@ -158,16 +155,28 @@ class Paylink extends PaymentMethod
                         ->getTransport();
                     $transport->sendMessage();
 
-                    $paylinktext = __('A Pay. paylink has been sent to');
-                    $order->addStatusHistoryComment($paylinktext . ' ' . $order->getCustomerEmail() . '.', $status)->save();
+                    $invoicetext = __('A Pay. invoice has been sent to');
+                    $order->addStatusHistoryComment($invoicetext . ' ' . $order->getCustomerEmail() . '.', $status)->save();
                 } catch (\Exception $e) {
-                    $this->payHelper->logDebug('Paylink exception: ' . $e->getMessage());
+                    $this->payHelper->logDebug('Invoice exception: ' . $e->getMessage());
                     $order->addStatusHistoryComment(__('PAY.: Unable to send E-mail'), $status)->save();
-                    $this->addPaylinkComment($order, $url, $status);
+                    $this->addPayInvoiceComment($order, $url, $status);
                 }
             }
 
             parent::initialize($paymentAction, $stateObject);
+        }
+    }
+
+    /**
+     * @param Order $order
+     * @return string|void
+     */
+    public function startTransaction(Order $order)
+    {
+        if ($this->_appState->getAreaCode() === \Magento\Framework\App\Area::AREA_FRONTEND) {
+            $redirectUrl = $order->getStore()->getBaseUrl() . 'paynl/checkout/finish/?entityid=' . $order->getEntityId() . '&invoice=1';
+            return $redirectUrl;
         }
     }
 
@@ -177,11 +186,11 @@ class Paylink extends PaymentMethod
      * @param string $status
      * @return void
      */
-    public function addPaylinkComment($order, $url, $status)
+    public function addPayInvoiceComment($order, $url, $status)
     {
         $paylinktext = __('PAY.: Here is your ');
         $postText = __('Open or copy the link to share.');
-        $order->addStatusHistoryComment($paylinktext . '<A href="' . $url . '">PAY. Link</a>. ' . $postText, $status)->save();
+        $order->addStatusHistoryComment($paylinktext . '<A href="' . $url . '">PAY. Invoice</a>. ' . $postText, $status)->save();
     }
 
     /**
@@ -192,6 +201,12 @@ class Paylink extends PaymentMethod
     public function assignData(\Magento\Framework\DataObject $data)
     {
         $additionalData = $data->getData('additional_data');
+
+        if (isset($additionalData['valid_days'])) {
+            $this->getInfoInstance()->setAdditionalInformation('valid_days', $additionalData['valid_days']);
+        } else {
+            $this->getInfoInstance()->setAdditionalInformation('valid_days', $this->getConfigData('checkout_valid_days'));
+        }
 
         return parent::assignData($data);
     }
