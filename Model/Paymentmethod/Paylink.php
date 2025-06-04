@@ -191,7 +191,7 @@ class Paylink extends PaymentMethod
      */
     public function assignData(\Magento\Framework\DataObject $data)
     {
-        $additionalData = $data->getData('additional_data');
+        $this->getInfoInstance()->setAdditionalInformation('valid_days', $data->getData('additional_data')['valid_days']);
 
         return parent::assignData($data);
     }

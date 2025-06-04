@@ -200,13 +200,7 @@ class Invoice extends PaymentMethod
      */
     public function assignData(\Magento\Framework\DataObject $data)
     {
-        $additionalData = $data->getData('additional_data');
-
-        if (isset($additionalData['valid_days'])) {
-            $this->getInfoInstance()->setAdditionalInformation('valid_days', $additionalData['valid_days']);
-        } else {
-            $this->getInfoInstance()->setAdditionalInformation('valid_days', $this->getConfigData('checkout_valid_days'));
-        }
+        $this->getInfoInstance()->setAdditionalInformation('valid_days', $this->getConfigData('invoice_valid_days'));
 
         return parent::assignData($data);
     }
