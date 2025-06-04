@@ -1034,6 +1034,18 @@ To finish your order, click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_stadspasamsterdam>
+            <paynl_payment_swish>
+                <active>0</active>
+                <title>Swish</title>
+                <payment_option_id>3837</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Swish</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_swish>
             <paynl_payment_telefonischbetalen>
                 <active>0</active>
                 <title>Telefonisch Betalen (PFP)</title>
@@ -1058,6 +1070,18 @@ To finish your order, click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_trustly>
+            <paynl_payment_twint>
+                <active>0</active>
+                <title>Twint</title>
+                <payment_option_id>3840</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Twint</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_twint>
             <paynl_payment_upas>
                 <active>0</active>
                 <title>U-Pas</title>
