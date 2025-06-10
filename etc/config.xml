@@ -18,9 +18,6 @@
             <paynl_payment_paylink>
                 <active>0</active>
                 <title>Pay. paylink</title>
-                <checkout_active>0</checkout_active>
-                <checkout_title>Pay by invoice (via Pay.)</checkout_title>
-                <checkout_valid_days>7</checkout_valid_days>
                 <payment_option_id>961</payment_option_id>
                 <order_status>pending</order_status>
                 <order_status_authorized>processing</order_status_authorized>
@@ -598,6 +595,31 @@ To finish your order, click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_instore>
+            <paynl_payment_invoice>
+                <active>0</active>
+                <title>Invoice</title>
+                <payment_option_id>961</payment_option_id>
+                <order_status>pending</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Invoice</model>
+                <group>paynl_payment</group>
+                <paymentInfoKeys>valid_days</paymentInfoKeys>
+                <send_new_order_email>before_payment</send_new_order_email>
+                <invoice_valid_days>7</invoice_valid_days>
+                <send_invoice_email>1</send_invoice_email>
+                <invoice_subject>Invoice order #((order_id))#</invoice_subject>
+                <invoice_body>((customer_name)),
+Thank you for your order from ((store_name)).
+
+If you have questions about your order, you can email us at ((support_email))
+
+To finish your order, click the link below
+((invoice))
+                </invoice_body>
+
+            </paynl_payment_invoice>
             <paynl_payment_kidsorteen>
                 <active>0</active>
                 <title>Kids or teen</title>

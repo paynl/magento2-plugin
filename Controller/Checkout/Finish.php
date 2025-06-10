@@ -231,7 +231,7 @@ class Finish extends PayAction
             if ($bSuccess || $bVerify || $bConfirm) {
                 $successUrl = $this->config->getSuccessPage($payment->getMethod());
                 if (empty($successUrl)) {
-                    $successUrl = ($payment->getMethod() == 'paynl_payment_paylink' || $this->config->sendEcommerceAnalytics()) ? Config::FINISH_PAY : Config::FINISH_STANDARD;
+                    $successUrl = (in_array($payment->getMethod(), ['paynl_payment_paylink', 'paynl_payment_invoice']) || $this->config->sendEcommerceAnalytics()) ? Config::FINISH_PAY : Config::FINISH_STANDARD;
                 }
                 if ($bConfirm) {
                     $successUrl = Config::CONFIRM_PAY;
@@ -280,7 +280,7 @@ class Finish extends PayAction
                         $session->replaceQuote($quote);
                     }
                 }
-                $cancelUrl = $payment->getMethod() == 'paynl_payment_paylink' ? Config::CANCEL_PAY : $this->config->getCancelURL();
+                $cancelUrl = in_array($payment->getMethod(), ['paynl_payment_paylink', 'paynl_payment_invoice']) ? Config::CANCEL_PAY : $this->config->getCancelURL();
                 $this->payHelper->logDebug('Finish cancel/denied. Message: ' . $cancelMessage, [$multiShipFinish, $payOrderId, $cancelUrl]);
                 $resultRedirect->setPath($cancelUrl);
             }
