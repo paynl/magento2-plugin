@@ -7,7 +7,7 @@
 
 /** @var $block Paynl\Payment\Block\Form\Paylink */
 
-$code = $block->getMethodCode(); // nog niet escapen hier, pas in de HTML zelf
+$code = $block->getMethodCode();
 $terminals = $block->getTerminals();
 $defaultTerminal = $block->getDefaultTerminal();
 $hidePaymentOptions = $block->hidePaymentOptions();
