@@ -4,31 +4,39 @@
  * See COPYING.txt for license details.
  */
 
-// @codingStandardsIgnoreFile
-/**
- * @var $block Paynl\Payment\Block\Form\Paylink
- */
-$code = $block->escapeHtml($block->getMethodCode());
+/** @var $block Paynl\Payment\Block\Form\Paylink */
+
+$code = $block->getMethodCode();
 ?>
-<?php $methodCode = $block->escapeHtml($block->getMethodCode()); ?>
-<fieldset class="admin__fieldset payment-method" id="payment_form_<?= /* @noEscape */$code ?>"
+
+<fieldset class="admin__fieldset payment-method"
+          id="payment_form_<?= $block->escapeHtmlAttr($code) ?>"
           style="display:none;">
     <div class="admin__field">
-        <strong><?= /* @noEscape */__('Notice') ?></strong>
+        <strong><?= $block->escapeHtml(__('Notice')) ?></strong>
         <p>
-            <?= /* @noEscape */__("An e-mail containing a Pay. paylink will be sent to the customer") ?>
+            <?= $block->escapeHtml(__('An e-mail containing a Pay. paylink will be sent to the customer')) ?>
         </p>
     </div>
 
     <div class="admin__field">
-        <label for="<?= /* @noEscape */$code ?>_valid_days" class="admin__field-label"><?= __( 'Valid for' ) ?>:</label>
+        <label for="<?= $block->escapeHtmlAttr($code) ?>_valid_days"
+               class="admin__field-label">
+            <?= $block->escapeHtml(__('Valid for')) ?>:
+        </label>
 
         <div class="admin__field-control">
-            <select class="admin__control-select" id="<?= /* @noEscape */$code ?>_valid_days" name="payment[valid_days]">
-				<?php for ($i = 1; $i <= 21; $i++) : ?>
-                    <option value="<?= $i ?>" <?= ($i == 7) ? 'selected' : '' ?>><?= $i ?></option>
-				<?php endfor; ?>
-            </select> <?= /* @noEscape */__( 'days' ) ?>
+            <select class="admin__control-select"
+                    id="<?= $block->escapeHtmlAttr($code) ?>_valid_days"
+                    name="payment[valid_days]">
+                <?php for ($i = 1; $i <= 21; $i++) : ?>
+                    <option value="<?= $block->escapeHtmlAttr($i) ?>"
+                        <?= ($i == 7) ? 'selected' : '' ?>>
+                        <?= $block->escapeHtml($i) ?>
+                    </option>
+                <?php endfor; ?>
+            </select>
+            <?= $block->escapeHtml(__('days')) ?>
         </div>
     </div>
 </fieldset>

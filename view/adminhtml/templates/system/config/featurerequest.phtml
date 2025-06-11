@@ -6,37 +6,62 @@
 ?>
 
 <span>
-    <?=$block->escapeHtml(__('If you have a feature request or other ideas, let us know!'));?> <br/>
-    <?=$block->escapeHtml(__('Your submission will be reviewed by our development team.'));?><br/>
-    <?=$block->escapeHtml(__('If needed, we will contact you for further information via the e-mail address provided.'));?><br/><br/>
-    <?=str_replace('support@pay.nl', '<a href="mailto:support@pay.nl">support@pay.nl</a>', $block->escapeHtml(__('Please note: this form is not for Support requests, please contact support@pay.nl for this.')));?>
+    <?= $block->escapeHtml(__('If you have a feature request or other ideas, let us know!')) ?><br/>
+    <?= $block->escapeHtml(__('Your submission will be reviewed by our development team.')) ?><br/>
+    <?= $block->escapeHtml(__('If needed, we will contact you for further information via the e-mail address provided.')) ?><br/><br/>
+    <?php
+    $noteText = __('Please note: this form is not for Support requests, please contact support@pay.nl for this.');
+    $noteTextEscaped = $block->escapeHtml($noteText);
+    echo str_replace(
+        'support@pay.nl',
+        '<a href="mailto:support@pay.nl">support@pay.nl</a>',
+        $noteTextEscaped
+    );
+    ?>
 </span>
+
 <br/><br/><br/>
+
 <form>
-<span><b><?=$block->escapeHtml(__('Email'));?></b><span id="pay_feature_email_error_2" class="pay_feature_error"><?=$block->escapeHtml(__('Please fill in a valid email.'))?></span></span>
-<input type="text" name="pay_feature_email" id="pay_feature_email"/>
-<br/><br/>
-<span><b><?=$block->escapeHtml(__('Message'));?>*</b><span id="pay_feature_message_error" class="pay_feature_error"><?=$block->escapeHtml(__('Please fill in your message.'))?></span></span>
-<textarea id="pay_feature_message" name="pay_feature_message" placeholder="<?=$block->escapeHtml(__('Leave your suggestions here...'))?>"></textarea>
+    <span>
+        <b><?= $block->escapeHtml(__('Email')) ?></b>
+        <span id="pay_feature_email_error_2" class="pay_feature_error">
+            <?= $block->escapeHtml(__('Please fill in a valid email.')) ?>
+        </span>
+    </span>
+    <input type="text" name="pay_feature_email" id="pay_feature_email"/>
+    <br/><br/>
+    <span>
+        <b><?= $block->escapeHtml(__('Message')) ?>*</b>
+        <span id="pay_feature_message_error" class="pay_feature_error">
+            <?= $block->escapeHtml(__('Please fill in your message.')) ?>
+        </span>
+    </span>
+    <textarea id="pay_feature_message" name="pay_feature_message"
+              placeholder="<?= $block->escapeHtmlAttr(__('Leave your suggestions here...')) ?>"></textarea>
 </form>
+
 <div id="FR_Notices">
-<span id="ajaxurl"><?=$block->getAjaxUrl()?></span>
-<span id="FR_magentoversion"><?=$block->getMagentoVersion()?></span>
-<span id="FR_payversion"><?=$block->getVersion()?></span>
-<span id="FR_Notices_Success_title"><?=$block->escapeHtml(__('Success'));?></span>
-<span id="FR_Notices_Success_body"><?=$block->escapeHtml(__('Sent! Thank you for your contribution.'));?></span>
-<span id="FR_Notices_Fail_title"><?=$block->escapeHtml(__('Error'));?></span>
-<span id="FR_Notices_Fail_body"><?=$block->escapeHtml(__('Email could not be sent, please try again later.'));?></span>
+    <span id="ajaxurl"><?= $block->escapeUrl($block->getAjaxUrl()) ?></span>
+    <span id="FR_magentoversion"><?= $block->escapeHtml($block->getMagentoVersion()) ?></span>
+    <span id="FR_payversion"><?= $block->escapeHtml($block->getVersion()) ?></span>
+    <span id="FR_Notices_Success_title"><?= $block->escapeHtml(__('Success')) ?></span>
+    <span id="FR_Notices_Success_body"><?= $block->escapeHtml(__('Sent! Thank you for your contribution.')) ?></span>
+    <span id="FR_Notices_Fail_title"><?= $block->escapeHtml(__('Error')) ?></span>
+    <span id="FR_Notices_Fail_body"><?= $block->escapeHtml(__('Email could not be sent, please try again later.')) ?></span>
 </div>
+
 <br/><br/>
 
-<?=$block->getButtonHtml()?>
+<?= $block->getButtonHtml() ?>
 
-<link rel="stylesheet" type="text/css" href="<?=$block->getViewFileUrl('Paynl_Payment::css/featurerequest.css')?>">
+<link rel="stylesheet" type="text/css"
+      href="<?= $block->escapeUrl($block->getViewFileUrl('Paynl_Payment::css/featurerequest.css')) ?>">
+
 <script type="text/x-magento-init">
     {
         "*": {
-            "Paynl_Payment/js/featurerequest" : {}
+            "Paynl_Payment/js/featurerequest": {}
         }
     }
 </script>

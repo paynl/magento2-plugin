@@ -1,4 +1,7 @@
 <?php /** @var $block \Paynl\Payment\Block\Page\Finish */ ?>
 <div class="checkout-pending">
-    <h2 style="margin-bottom: 40px; margin-top: 0;"><?= __('Your payment is pending.') ?></h2>
+    <h2 style="margin-bottom: 40px; margin-top: 0;">
+        <?= $block->escapeHtml(__('Your payment is pending.')) ?>
+    </h2>
 </div>
+
