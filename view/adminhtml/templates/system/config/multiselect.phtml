@@ -25,8 +25,9 @@
                     $selected = in_array($value['value'], explode(',', $element->getValue() ?? '')) ? 'selected' : '';
                     $option = '<option class="' . $block->escapeHtmlAttr($selected) . '" value="' . $block->escapeHtmlAttr($value['value']) . '">' . $block->escapeHtml($value['label']) . '</option>';
                 endif;
-
-                echo $option;
+                ?>
+                <?= /* @noEscape */ $option ?>
+            <?php
             endif;
         endforeach; ?>
     </span>

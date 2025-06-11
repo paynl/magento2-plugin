@@ -11,7 +11,7 @@
         <?php if ($block->getCanViewOrder()): ?>
             <p>
                 <?= $block->escapeHtml(__('Your order number is:')) ?>
-                <?= sprintf(
+                <?= /* @noEscape */ sprintf(
                     '<a href="%s" class="order-number"><strong>%s</strong></a>',
                     $block->escapeUrl($block->getViewOrderUrl()),
                     $block->escapeHtml($block->getOrderId())
@@ -19,7 +19,7 @@
             </p>
         <?php else: ?>
             <p>
-                <?= sprintf(
+                <?= /* @noEscape */ sprintf(
                     $block->escapeHtml(__('Your order # is: <span>%1</span>.')),
                     $block->escapeHtml($block->getOrderId())
                 ) ?>
@@ -30,7 +30,7 @@
         </p>
     <?php endif; ?>
 
-    <?= $block->getAdditionalInfoHtml() ?>
+    <?= /* @noEscape */ $block->getAdditionalInfoHtml() ?>
 
     <div class="actions-toolbar">
         <div class="primary">
