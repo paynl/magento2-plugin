@@ -208,6 +208,7 @@ The existing quote ID will be reused to start a new order.</tooltip>
                         <![CDATA[Determine what happens with the quote-id when an order is cancelled.]]>
                     </comment>
                     <source_model>Paynl\Payment\Model\Config\Source\CancelBehaviour</source_model>
+                    <config_path>payment/paynl/cancel_behaviour</config_path>
                 </field>
                 <field id="always_base_currency" translate="label,tooltip" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Always use base currency</label>
