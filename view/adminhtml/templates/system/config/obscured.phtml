@@ -1,4 +1,6 @@
 <span class="obscuredField">
-    <input type="text" name="<?php echo $this->getNamePrefix() ?>" value="<?php echo $this->getDecryptedValue(); ?>" />
+    <input type="text"
+           name="<?= $block->escapeHtmlAttr($this->getNamePrefix()) ?>"
+           value="<?= $block->escapeHtmlAttr($this->getDecryptedValue()) ?>" />
     <span class="obscuredDisplay"></span>
 </span>

@@ -4,21 +4,16 @@
  * See COPYING.txt for license details.
  */
 
-// @codingStandardsIgnoreFile
-
+/** @var $block \Paynl\Payment\Block\Page\Finish */
 ?>
-<?php
-/** @var $block \Paynl\Payment\Block\Page\Finish */ ?>
 <div class="checkout-success">
-
     <div class="actions-toolbar">
+        <?= $block->escapeHtml(__('Unfortunately your payment has been cancelled or denied by the payment method you selected.')) ?><br><br>
 
-        <?= __('Unfortunately your payment has been cancelled or denied by the payment method you selected.') ?><br><br>
+        <?= $block->escapeHtml(__('Please select another payment method, or check your provided information in case the payment was denied.')) ?><br><br>
 
-        <?= __('Please select another payment method, or check your provided information in case the payment was denied.') ?><br><br>
-
-        <a class="action primary continue" href="/checkout#payment"><span><?= /* @escapeNotVerified */
-                __('Continue to checkout') ?></span></a>
-
+        <a class="action primary continue" href="<?= $block->escapeUrl('/checkout#payment') ?>">
+            <span><?= $block->escapeHtml(__('Continue to checkout')) ?></span>
+        </a>
     </div>
 </div>
