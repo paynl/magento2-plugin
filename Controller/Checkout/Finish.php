@@ -129,7 +129,7 @@ class Finish extends PayAction
      * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
      * @return void
      */
-    private function checkEmpty($field, string $name, int $errorCode, string $desc = null)
+    private function checkEmpty($field, string $name, int $errorCode, ?string $desc = null)
     {
         if (empty($field)) {
             $desc = empty($desc) ? $name . ' is empty' : $desc;
