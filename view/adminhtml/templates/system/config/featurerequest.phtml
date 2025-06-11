@@ -10,14 +10,16 @@
     <?= $block->escapeHtml(__('Your submission will be reviewed by our development team.')) ?><br/>
     <?= $block->escapeHtml(__('If needed, we will contact you for further information via the e-mail address provided.')) ?><br/><br/>
     <?php
-    $noteText = __('Please note: this form is not for Support requests, please contact support@pay.nl for this.');
-    $noteTextEscaped = $block->escapeHtml($noteText);
-    echo str_replace(
+    $noteText = $block->escapeHtml(__('Please note: this form is not for Support requests, please contact support@pay.nl for this.'));
+    $noteTextWithLink = str_replace(
         'support@pay.nl',
         '<a href="mailto:support@pay.nl">support@pay.nl</a>',
-        $noteTextEscaped
+        $noteText
     );
     ?>
+    <?= /* @noEscape */
+    $noteTextWithLink ?>
+
 </span>
 
 <br/><br/><br/>
