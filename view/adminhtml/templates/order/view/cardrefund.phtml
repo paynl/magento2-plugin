@@ -4,7 +4,6 @@
  * See COPYING.txt for license details.
  */
 
-// @codingStandardsIgnoreFile
 /**
  * @var $block Paynl\Payment\Block\Form\Paylink
  */
@@ -14,50 +13,64 @@ $defaultTerminal = $block->getDefaultTerminal();
 $order = $block->getOrder();
 $orderAmount = round($order->getGrandTotal(), 2);
 $orderCurrency = $order->getOrderCurrencyCode();
-
 ?>
-<link rel="stylesheet" type="text/css" href="<?= $block->getViewFileUrl('Paynl_Payment::css/cardrefundform.css') ?>">
+
+<link rel="stylesheet" type="text/css"
+      href="<?= $block->escapeUrl($block->getViewFileUrl('Paynl_Payment::css/cardrefundform.css')) ?>">
 
 <div id="paynl_cardrefund">
-    <form id="cardrefund_form" action="<?php
-    echo $block->getSubmitUrl() ?>" method="get">
+    <form id="cardrefund_form"
+          action="<?= $block->escapeUrl($block->getSubmitUrl()) ?>"
+          method="get">
+
         <div id="refund_header">
-            <a id="cardrefund_back_button" href="<?php
-            echo $block->getReturnUrl() ?>">Back</a>
-            <button id="cardrefund_submit"><?php
-                echo __("Start Refund By Cart") ?></button>
+            <a id="cardrefund_back_button"
+               href="<?= $block->escapeUrl($block->getReturnUrl()) ?>">
+                <?= $block->escapeHtml(__('Back')) ?>
+            </a>
+            <button id="cardrefund_submit">
+                <?= $block->escapeHtml(__('Start Refund By Cart')) ?>
+            </button>
         </div>
-        <input type="hidden" name="order_id" value="<?php
-        echo $block->getOrderId() ?>"/>
-        <input type="hidden" name="return_url" value="<?php
-        echo $block->getReturnUrl() ?>"/>
-        <input type="hidden" name="currency" id="currency" value="<?php
-        echo $orderCurrency ?>"/>
+
+        <input type="hidden" name="order_id"
+               value="<?= $block->escapeHtmlAttr($block->getOrderId()) ?>"/>
+        <input type="hidden" name="return_url"
+               value="<?= $block->escapeUrl($block->getReturnUrl()) ?>"/>
+        <input type="hidden" name="currency" id="currency"
+               value="<?= $block->escapeHtmlAttr($orderCurrency) ?>"/>
+
         <div class="form-group">
-            <label class="col-md" for="refund_amount"><?php
-                echo __("Amount") ?></label>
+            <label class="col-md" for="refund_amount">
+                <?= $block->escapeHtml(__('Amount')) ?>
+            </label>
             <div class="col-md">
-                <input id="refund_amount" name="refund_amount" type="number" min="0" max="<?php
-                echo $orderAmount; ?>" step="0.01" value="<?php
-                echo $orderAmount; ?>">
+                <input id="refund_amount" name="refund_amount" type="number"
+                       min="0"
+                       max="<?= $block->escapeHtmlAttr($orderAmount) ?>"
+                       step="0.01"
+                       value="<?= $block->escapeHtmlAttr($orderAmount) ?>">
             </div>
-            <div class="col-md"><?php
-                echo $orderCurrency; ?></div>
+            <div class="col-md">
+                <?= $block->escapeHtml($orderCurrency) ?>
+            </div>
         </div>
+
         <div class="form-group">
-            <label class="col-md" for="paynl_terminal"><?php
-                echo __("Terminal") ?></label>
+            <label class="col-md" for="paynl_terminal">
+                <?= $block->escapeHtml(__('Terminal')) ?>
+            </label>
             <div class="col-md">
                 <select id="paynl_terminal" name="paynl_terminal">
-                    <?php
-                    foreach ($terminals as $key => $terminal): ?>
-                        <option value="<?= $key ?>" <?= ($key == $defaultTerminal) ? 'selected' : '' ?>><?= $terminal ?></option>
-                    <?php
-                    endforeach; ?>
+                    <?php foreach ($terminals as $key => $terminal): ?>
+                        <option value="<?= $block->escapeHtmlAttr($key) ?>"
+                            <?= ($key == $defaultTerminal) ? 'selected' : '' ?>>
+                            <?= $block->escapeHtml($terminal) ?>
+                        </option>
+                    <?php endforeach; ?>
                 </select>
             </div>
         </div>
 
     </form>
-
 </div>
