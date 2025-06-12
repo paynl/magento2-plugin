@@ -112,27 +112,18 @@ On - via Sherpa - Capture automatically via Sherpa.</tooltip>
                 <field id="show_custom_field_dob" translate="label" type="select" sortOrder="108" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Show custom date of birth field</label>
                     <source_model>Paynl\Payment\Model\Config\Source\ShowCustomFields</source_model>
-                    <depends>
-                        <field id="active">1</field>
-                    </depends>
                     <config_path>payment/paynl/show_custom_field_dob</config_path>
                     <tooltip>When Enabled, this will add an datepicker field to the checkout for the customer to enter in their date of birth.</tooltip>
                 </field>
                 <field id="show_custom_field_kvk" translate="label" type="select" sortOrder="109" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Show custom COC field</label>
                     <source_model>Paynl\Payment\Model\Config\Source\ShowCustomFields</source_model>
-                    <depends>
-                        <field id="active">1</field>
-                    </depends>
                     <config_path>payment/paynl/show_custom_field_kvk</config_path>
                     <tooltip>When Enabled, this will add an extra field to the checkout for the customer to enter in their COC number.</tooltip>
                 </field>
                 <field id="show_custom_field_vat" translate="label" type="select" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Show custom VAT field</label>
                     <source_model>Paynl\Payment\Model\Config\Source\ShowCustomFields</source_model>
-                    <depends>
-                        <field id="active">1</field>
-                    </depends>
                     <config_path>payment/paynl/show_custom_field_vat</config_path>
                     <tooltip>When Enabled, this will add an extra field to the checkout for the customer to enter in their VAT number.</tooltip>
                 </field>
