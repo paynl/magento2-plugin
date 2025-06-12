@@ -45,7 +45,7 @@ Online Bankbetaling| | Good4Fun | | |
 # Requirements
 
     PHP 7.2 or higher
-    PHP tested up to 8.3
+    PHP tested up to 8.4
     Magento minimum version: 2.3
     Magento maximum version: Tested up to 2.4.8
 
