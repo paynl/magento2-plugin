@@ -390,6 +390,11 @@ Please note that if an order is canceled, it may create a gap in your Magento or
 
 Houd er rekening mee dat als een order wordt geannuleerd, dit een gat in uw Magento-ordervolgorde kan creëren."
 "Use the expected next order ID for order description.","Gebruik de verwachte ID van de volgende bestelling voor de beschrijving van de bestelling."
+
+"Expire time","Vervaltijd"
+"Enter your transaction expire time in minutes.","Vervaltijd in minuten voordat een transactie en dus de bestelling automatisch worden geannuleerd. Dit geldt voor alle betaalmethoden."
+"Automatically cancel transactions and orders sooner than the default 4-hour expiry by setting your own time in minutes.","Deze optie kan handig zijn als je de voorraad sneller wilt terugdraaien dan onze standaard vervaltijd (die over het algemeen 4 uur bedraagt). Transacties worden automatisch geannuleerd na het aantal minuten dat hier is ingesteld, gevolgd door een annulering van de bestelling."
+
 "Authorised paid amount","Betaald bedrag vastleggen"
 "In some implementations, when a payment is authorized, it may be desirable to indicate the 'Total paid' field in the order as fully paid. This setting takes care of this automatically.","In sommige implementaties, wanneer een betaling geautoriseerd is, kan het wenselijk zijn om het 'Total paid' veld in de order als volledig betaald aan te geven. Met deze instelling wordt dit automatisch geregeld."
 "Do nothing (default)","Niets doen (standaard)"
@@ -411,3 +416,10 @@ De bestaande winkelwagen-ID wordt hergebruikt om een nieuwe bestelling te starte
 "Title in checkout", "Titel in de checkout"
 "Show in checkout", "Toon in de checkout"
 "Paylink is normally only available for orders created via the backend and won't appear in the checkout. When this is enabled a 'Pay by invoice' will be shown to the customer and a paylink will be sent via email when an order is made.", "Paylink is normaal gesproken alleen beschikbaar voor bestellingen die via de backend zijn gemaakt en verschijnt niet in de checkout. Wanneer dit is ingeschakeld, wordt er 'Betalen via factuur' aan de klant getoond en wordt er een paylink via e-mail verzonden wanneer er een bestelling wordt geplaatst."
+"By default, Magento clears the shopping cart as soon as a payment is initiated. When this option is enabled, the cart remains available and will be restored if the customer returns to the store.
+
+Note: This is not standard Magento behavior and may result in multiple orders being placed using the same quote ID. Enable this setting only if this is acceptable in your specific use case.", "Standaard leegt Magento het winkelmandje zodra een betaling wordt gestart. Wanneer je deze optie inschakelt, blijft het winkelmandje behouden en is het opnieuw beschikbaar als de klant terugkeert naar de shop.
+
+                                                                                                                                                                                                 Let op: dit is geen standaard Magento-gedrag en kan ertoe leiden dat meerdere orders op hetzelfde quote ID worden geplaatst. Gebruik deze instelling dus alleen als dit in jouw situatie geen probleem vormt."
+"Cart preservation","Winkelmand"
+"When enabled, the cart will be recovered when a customer returns to the cart using the browser's back button.","Wanneer ingeschakeld, wordt het winkelmandje hersteld als een klant via de terugknop in de browser terugkeert naar de winkelwagen."

@@ -3,7 +3,13 @@
     $viewModel = $block->getViewModel();
 ?>
 
-<script>
-    window.fastCheckoutMinicart = <?= $viewModel->minicartEnabled() ? 'true' : 'false' ?>;
-    window.fastCheckoutModalEnabled = <?= $viewModel->modalEnabled() ? 'true' : 'false' ?>;
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "Paynl_Payment/js/fast-checkout": {
+                "minicartEnabled": <?= $viewModel->minicartEnabled() ? 'true' : 'false' ?>,
+                "modalEnabled": <?= $viewModel->modalEnabled() ? 'true' : 'false' ?>
+            }
+        }
+    }
 </script>

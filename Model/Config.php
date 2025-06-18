@@ -6,6 +6,8 @@ use Magento\Framework\App\ProductMetadataInterface;
 use Magento\Payment\Helper\Data;
 use Magento\Store\Model\Store;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use PayNL\Sdk\Config\Config as PayConfig;
+use Magento\Framework\App\Config\Storage\WriterInterface;
 
 /**
  * Get / Set configuration for the PAY api and Magento settings.
@@ -21,12 +23,12 @@ class Config
     public const FINISH_PICKUP = 'paynl/order/pickup';
     public const FINISH_INVOICE = 'paynl/order/invoice';
     public const ORDERSTATUS_PAID = 100;
+    public const ORDERSTATUS_AUTH = 95;
     public const ORDERSTATUS_PENDING = array(20, 25, 40, 50, 90);
-    public const ORDERSTATUS_DENIED = -63;
+    public const ORDERSTATUS_DENIED = array(-63, -64);
     public const ORDERSTATUS_CANCELED = -90;
     public const ORDERSTATUS_VERIFY = 85;
     public const ORDERSTATUS_CONFIRM = 98;
-
 
     /** @var  Store */
     private $store;
@@ -58,6 +60,11 @@ class Config
      */
     protected $scopeConfig;
 
+    /**
+     * @var WriterInterface
+     */
+    protected WriterInterface $configWriter;
+
     /** @array  Brands */
     public $brands = [
         "paynl_payment_afterpay" => "14",
@@ -71,7 +78,7 @@ class Config
         "paynl_payment_bataviacadeaukaart" => "255",
         "paynl_payment_bbqcadeaukaart" => "96",
         "paynl_payment_beautycadeau" => "288",
-        "paynl_payment_beautyenmorecadeaukaart" => "393",
+        "paynl_payment_beautyandmorecadeaukaart" => "393",
         "paynl_payment_biercheque" => "204",
         "paynl_payment_biller" => "252",
         "paynl_payment_billink" => "16",
@@ -81,6 +88,7 @@ class Config
         "paynl_payment_bloemencadeaukaart" => "192",
         "paynl_payment_boekenbon" => "219",
         "paynl_payment_brite" => "405",
+        "paynl_payment_cadeaubonnen" => "cadeaubonnen",
         "paynl_payment_capayable_gespreid" => "19",
         "paynl_payment_cartebleue" => "11",
         "paynl_payment_cashly" => "43",
@@ -177,7 +185,8 @@ class Config
         \Paynl\Payment\Helper\PayHelper $helper,
         ProductMetadataInterface $productMetadata,
         Data $paymentHelper,
-        ScopeConfigInterface $scopeConfig
+        ScopeConfigInterface $scopeConfig,
+        WriterInterface $configWriter
     ) {
         $this->store = $store;
         $this->resources = $resources;
@@ -185,6 +194,7 @@ class Config
         $this->productMetadata = $productMetadata;
         $this->paymentHelper = $paymentHelper;
         $this->scopeConfig = $scopeConfig;
+        $this->configWriter = $configWriter;
     }
 
     /**
@@ -468,33 +478,68 @@ class Config
         return $this->store->getConfig('payment/' . $methodCode . '/custom_success_page');
     }
 
+    protected static $_config = null;
+
     /**
-     * Configures the sdk with the API token and serviceId
-     * @param boolean $useGateway
-     * @return boolean TRUE when config loaded, FALSE when the apitoken or serviceId are empty
+     * @return PayConfig|false
      */
-    public function configureSDK($useGateway = false)
+    public function getPayConfig(): PayConfig|false
     {
-        $apiToken = $this->getApiToken();
-        $serviceId = $this->getServiceId();
-        $tokencode = $this->getTokencode();
-        $gateway = $this->getFailoverGateway();
+        if (is_null(self::$_config)) {
 
-        if (!empty($tokencode)) {
-            \Paynl\Config::setTokenCode($tokencode);
-        }
-
-        if (!empty($apiToken) && !empty($serviceId)) {
-            if ($useGateway && !empty($gateway) && substr(trim($gateway), 0, 4) === "http") {
-                \Paynl\Config::setApiBase(trim($gateway));
+            $tokenCode = $this->getTokencode();
+            $apiToken = $this->getApiToken();
+            if (empty($apiToken) || empty($tokenCode)) {
+                return false;
             }
-            \Paynl\Config::setApiToken($apiToken);
-            \Paynl\Config::setServiceId($serviceId);
 
-            return true;
+            $config = new PayConfig();
+            $config->setUsername($tokenCode);
+            $config->setPassword($apiToken);
+            $config->setCaching($this->getSdkCaching());
+
+            if (empty($config->getUsername()) || empty($config->getPassword())) {
+                return false;
+            }
+
+            $config->setCore($this->getMultiCore());
+            self::$_config = $config;
         }
 
-        return false;
+        return self::$_config;
+    }
+
+    /**
+     * @param mixed $cores
+     * @param $scope
+     * @param $scopeId
+     * @return void
+     */
+    public function saveCoresToConfig(mixed $cores, $scope)
+    {
+        $this->configWriter->save('payment/paynl/cores', json_encode($cores), $scope);
+    }
+
+    /**
+     * @param mixed $terminals
+     * @param $scope
+     * @param $scopeId
+     * @return void
+     */
+    public function saveTerminalsToConfig(mixed $terminals, $scope, $scopeId)
+    {
+        $this->configWriter->save('payment/paynl/terminals', json_encode($terminals), $scope, $scopeId);
+    }
+
+    /**
+     * @return bool
+     */
+    public function getSdkCaching(): bool
+    {
+        if (!empty($this->scope)) {
+            return (bool) $this->store->getConfig('payment/paynl/sdk_caching', $this->scope, $this->scopeId);
+        }
+        return (bool) $this->store->getConfig('payment/paynl/sdk_caching');
     }
 
     /**
@@ -531,15 +576,13 @@ class Config
     }
 
     /**
-     * @return string|null
+     * @return mixed|string|null
      */
-    public function getFailoverGateway()
+    public function getMultiCore()
     {
-        if (!empty($this->scope)) {
-            $gateway = $this->scopeConfig->getValue('payment/paynl/failover_gateway_select', $this->scope, $this->scopeId);
-        } else {
-            $gateway = $this->store->getConfig('payment/paynl/failover_gateway_select');
-        }
+        $gateway = !empty($this->scope)
+            ? $this->scopeConfig->getValue('payment/paynl/multicore', $this->scope, $this->scopeId)
+            : $this->store->getConfig('payment/paynl/multicore');
 
         if ($gateway == 'custom') {
             if (!empty($this->scope)) {
@@ -547,6 +590,11 @@ class Config
             }
             return trim((string)$this->store->getConfig('payment/paynl/failover_gateway'));
         }
+
+        if (empty(trim((string)$gateway))) {
+            return 'https://connect.pay.nl';
+        }
+
         return $gateway;
     }
 
@@ -617,6 +665,15 @@ class Config
     /**
      * @return string
      */
+    public function getPaymentRedirectMode()
+    {
+        $rMode = $this->store->getConfig('payment/paynl/payment_redirect_mode');
+        return $rMode ?? 'get';
+    }
+
+    /**
+     * @return string
+     */
     public function registerPartialPayments()
     {
         return $this->store->getConfig('payment/paynl/register_partial_payments');
@@ -674,6 +731,15 @@ class Config
         return $this->store->getConfig('payment/paynl/customer_ip');
     }
 
+
+    /**
+     * @return int
+     */
+    public function getExpireTime()
+    {
+        return (int)$this->store->getConfig('payment/paynl/expire_time');
+    }
+
     /**
      * @return boolean
      */
@@ -681,4 +747,5 @@ class Config
     {
         return $this->store->getConfig('payment/paynl/recover_quote_on_redirect') == 1;
     }
+
 }

@@ -11,21 +11,21 @@ use Paynl\Payment\Controller\PayAction;
 use Paynl\Payment\Helper\PayHelper;
 use Paynl\Payment\Model\CreateFastCheckoutOrder;
 use Paynl\Payment\Model\PayPayment;
-use Paynl\Transaction;
-use Magento\Quote\Api\CartRepositoryInterface;
-use Magento\Store\Model\StoreManagerInterface;
+use PayNL\Sdk\Model\Pay\PayOrder;
+use PayNL\Sdk\Util\ExchangeResponse;
+use PayNL\Sdk\Util\Exchange as PayExchange;
+use PayNL\Sdk\Model\Method;
+use Throwable;
+use Exception;
+use Paynl\Payment\Model\PayProcessingRepository;
 
 class Exchange extends PayAction implements CsrfAwareActionInterface
 {
-    /**
-     * @var CartRepositoryInterface
-     */
-    private $quoteRepository;
 
     /**
-     * @var StoreManagerInterface
+     * @var PayProcessingRepository
      */
-    private $storeManager;
+    private $payProcessingRepository;
 
     /**
      * @var \Paynl\Payment\Model\Config
@@ -53,14 +53,9 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
     private $createFastCheckoutOrder;
 
     /**
-     * @var \Paynl\Payment\Helper\PayHelper;
+     * @var \Paynl\Payment\Helper\PayHelper
      */
     private $payHelper;
-
-    /**
-     * @var
-     */
-    private $headers;
 
     /**
      * @param RequestInterface $request
@@ -88,6 +83,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
      * @param PayPayment $payPayment
      * @param CreateFastCheckoutOrder $createFastCheckoutOrder
      * @param PayHelper $payHelper
+     * @param PayProcessingRepository $payProcessingRepository
      */
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
@@ -97,8 +93,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         PayPayment $payPayment,
         CreateFastCheckoutOrder $createFastCheckoutOrder,
         PayHelper $payHelper,
-        CartRepositoryInterface $quoteRepository,
-        StoreManagerInterface $storeManager
+        PayProcessingRepository $payProcessingRepository
     ) {
         $this->result = $result;
         $this->config = $config;
@@ -106,371 +101,338 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         $this->payPayment = $payPayment;
         $this->createFastCheckoutOrder = $createFastCheckoutOrder;
         $this->payHelper = $payHelper;
-        $this->quoteRepository = $quoteRepository;
-        $this->storeManager = $storeManager;
+        $this->payProcessingRepository = $payProcessingRepository;
         parent::__construct($context);
     }
 
     /**
-     * @return array|false
+     * @param string $reference
+     * @return \Magento\Sales\Api\Data\OrderInterface|null
      */
-    private function getHeaders()
+    private function getOrder(string $reference)
     {
-        if (empty($this->headers)) {
-            $this->headers = array_change_key_case(getallheaders(), CASE_LOWER);
+        try {
+            $order = $this->orderRepository->get($reference);
+        } catch (\Exception $e) {
+            $order = null;
         }
-        return $this->headers;
+        return $order;
     }
 
     /**
-     * @return boolean
-     */
-    private function isSignExchange()
-    {
-        $headers = $this->getHeaders();
-        $signingMethod = $headers['signature-method'] ?? null;
-        return $signingMethod === 'HMAC';
-    }
-
-    /**
-     * @param object $_request
-     * @return array
-     * @throws \Exception
-     * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
-     */
-    private function getPayLoad($_request)
-    {
-        $request = (object) $_request->getParams() ?? null;
-
-        $action = $request->action ?? null;
-        if (!empty($action)) {
-            # The argument "action" tells us this is not TGU.
-            $action = $request->action ?? null;
-            $paymentProfile = $request->payment_profile_id ?? null;
-            $payOrderId = $request->order_id ?? null;
-            $orderId = $request->extra1 ?? null;
-            $extra3 = $request->extra3 ?? null;
-            $extra2 = $request->extra2 ?? null;
-            $data = null;
-        } else {
-            if ($_request->isGet() || !$this->isSignExchange()) {
-                $data['object'] = $request->object ?? null;
-            } else {
-                $rawBody = file_get_contents('php://input');
-                $data = json_decode($rawBody, true, 512, 4194304);
-                $exchangeType = $data['type'] ?? null;
-
-                # Volgens documentatie alleen type order verwerken. https://developer.pay.nl/docs/signing
-                if ($exchangeType != 'order') {
-                    throw new \Exception('Cant handle exchange type other then order');
-                }
-            }
-
-            $payOrderId = $data['object']['orderId'] ?? '';
-            $internalStateId = $data['object']['status']['code'] ?? '';
-            $internalStateName = $data['object']['status']['action'] ?? '';
-            $orderId = $data['object']['reference'] ?? '';
-            $extra3 = $data['object']['extra3'] ?? null;
-            $extra2 = $data['object']['extra2'] ?? null;
-            $action = ($internalStateId == 100 || $internalStateName == 95) ? 'new_ppt' : 'pending';
-            $checkoutData = $data['object']['checkoutData'] ?? '';
-            $type = $data['object']['type'] ?? '';
-        }
-
-        # Return mapped data so it works for all type of exchanges.
-        return [
-            'action' => $action,
-            'paymentProfile' => $paymentProfile ?? null,
-            'payOrderId' => $payOrderId,
-            'orderId' => $orderId,
-            'extra3' => $extra3 ?? null,
-            'extra2' => $extra2 ?? null,
-            'internalStateId' => $internalStateId ?? null,
-            'internalStateName' => $internalStateName ?? null,
-            'checkoutData' => $checkoutData ?? null,
-            'orgData' => $data,
-            'type' => $type ?? null,
-        ];
-    }
-
-    /**
-     * @param array $requestArguments
-     * @return bool
-     * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
-     */
-    private function isFastCheckout(array $requestArguments)
-    {
-        return ($requestArguments['type'] ?? '') == 'payment_based_checkout' && !empty($requestArguments['checkoutData'] ?? '');
-    }
-
-    /**
-     * Summary of execute
-     * @throws \Exception
-     * @return \Magento\Framework\Controller\Result\Raw
+     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\Result\Raw|\Magento\Framework\Controller\ResultInterface
      */
     public function execute()
     {
+        $exchange = new PayExchange($this->getRequest()->getParams());
+        $exchange->setGmsReferenceKey('extra3');
+
         try {
-            $params = $this->getPayLoad($this->getRequest());
-        } catch (\Exception $e) {
-            return $this->result->setContents('TRUE| Incorrect payload. ' . $e->getMessage());
-        }
-        $action = strtolower($params['action'] ?? '');
-        $payOrderId = $params['payOrderId'] ?? null;
-        $quoteId = $params['orderId'] ?? null;
-        $orderEntityId = $params['extra3'] ?? null;
-        $paymentProfileId = $params['paymentProfile'] ?? null;
-        $order = null;
-        $bIsFastCheckout = $this->isFastCheckout($params);
+            $payOrderId = $exchange->getPayOrderId();
+            $action = $exchange->getAction();
+            $reference = $exchange->getReference();
 
-        if ($action == 'pending') {
-            return $this->result->setContents('TRUE| Ignore pending');
-        }
+            if ($action == 'pending') {
+                return $this->result->setContents($exchange->setResponse(true, 'Ignoring pending'));
+            }
 
-        if (strpos($params['extra2'] ?? '', 'fastcheckout') !== false) {
-            # Disabled fastcheckout related actions.
-            return $this->result->setContents('TRUE| Ignoring fastcheckout action ' . $action);
-        }
-
-        if (empty($payOrderId)) {
-            $this->payHelper->logCritical('Exchange: order_id is not set', $params);
-            return $this->result->setContents('FALSE| order_id is not set in the request');
-        }
-
-        if ($bIsFastCheckout) {
-            # We need the $store to retrieve credentials later on,
-            # and with fastcheckout we do this by quote, since there's no order yet.
-            $quote = $this->quoteRepository->get($quoteId);
-            $store = $this->storeManager->getStore($quote->getStoreId());
-        } else {
-            try {
-                if (empty($orderEntityId)) {
-                    throw new \Exception('orderEntityId is not set in the request');
+            if ($exchange->eventPaid(true)) {
+                if ($this->payProcessingRepository->existsEntry($payOrderId, 'processing')) {
+                    return $this->result->setContents($exchange->setResponse(false, 'Order already processing'));
                 }
-                try {
-                    $order = $this->orderRepository->get($orderEntityId);
-                } catch (\Exception $e) {
+                $this->payProcessingRepository->createEntry($payOrderId, 'processing');
+            }
+
+            # We need to load the order to get the credentials matching the store/storeview
+            $order = $this->getOrder($reference);
+
+            # Retrieve credentials
+            if (!empty($order)) { $this->config->setStore($order->getStore()); }
+
+            # Now process this exchange request...
+            $payOrder = $exchange->process($this->config->getPayConfig());
+
+            if ($payOrder->isPending()) {
+                $eResponse = new ExchangeResponse(true, 'Ignoring pending state');
+
+            } elseif ($payOrder->isRefunded() && $exchange->eventRefund()) {
+                $eResponse = $this->processRefund($order);
+
+            } elseif ($payOrder->isChargeBack() && $exchange->eventChargeBack()) {
+                $eResponse = $this->processChargeback($order);
+
+            } elseif ($payOrder->isPaid() || $payOrder->isAuthorized())
+            {
+                # Create order on fastcheckout
+                if ($exchange->isFastCheckout() && $exchange->eventPaid() && empty($order)) {
+                    $order = $this->createFastCheckoutOrder->create($exchange->getPayLoad());
                 }
 
-                if (empty($order)) {
-                    $quote = $this->quoteRepository->get($orderEntityId);
-                    if ($quote->getPayment()->getAdditionalInformation('fastcheckout')) {
-                        $this->payHelper->logDebug('loading order from quote');
-                        $order = $this->createFastCheckoutOrder->getExistingOrder($orderEntityId);
-                    }
-                    if (empty($order)) {
-                        $this->payHelper->logCritical('Cannot load order: ' . $orderEntityId);
-                        throw new \Exception('Cannot load order: ' . $orderEntityId);
+                # If exchange is triggered by internal capturing, ignore processing to avoid deadlock and finish capture event.
+                if ($this->payProcessingRepository->existsEntry($payOrderId, 'queue_capture')) {
+                    $this->payProcessingRepository->deleteEntry($payOrderId, 'queue_capture')->deleteEntry($payOrderId, 'processing');
+                    $eResponse = new ExchangeResponse(true, 'capture processed');
+
+                # Retourpin - doesnt need to be -processPaid-, only set the order to refunded
+                } elseif (Method::RETOURPIN == $payOrder->getPaymentMethod() && $exchange->eventPaid(true)) {
+                    $eResponse = $this->processRetourPin($reference);
+
+                } else {
+                    $eResponse = $this->processPaid($payOrder, $order);
+                }
+
+            } elseif ($payOrder->isVoided()) {
+                $eResponse = $this->processVoid($order, $payOrder);
+
+            } elseif ($payOrder->isCancelled()) {
+                $eResponse = $this->processCancel($order, $payOrder);
+
+            } elseif ($payOrder->isBeingVerified()) {
+                $eResponse = new ExchangeResponse(true, 'Ignoring verified');
+
+            } else {
+                $eResponse = new ExchangeResponse(true, 'No action defined for payment state ' . $payOrder->getStatusCode());
+            }
+
+        } catch (Throwable $exception) {
+            $eResponse = new ExchangeResponse(true, 'Exception message: ' . $exception->getMessage());
+        }
+
+        try {
+            $this->removeProcessing($payOrderId ?? '', $exchange->eventPaid());
+        } catch (Throwable $exception) {
+        }
+
+        return $this->result->setContents($exchange->setExchangeResponse($eResponse, true));
+    }
+
+    /**
+     * @param PayOrder $payOrder
+     * @param Order $order
+     * @return ExchangeResponse
+     */
+    private function processPaid(PayOrder $payOrder, Order $order): ExchangeResponse
+    {
+        $result = false;
+        try {
+            if ($order->getState() === Order::STATE_CLOSED && $order->getPayment()->getAmountRefunded() > 0) {
+                $result = true;
+                throw new Exception('Cant process. Order is already fully refunded');
+            }
+
+            if ($order->getTotalDue() <= 0) {
+                $result = true;
+                throw new Exception('Already processed order ' . $order->getId());
+            }
+
+            if ($order->getState() === Order::STATE_PROCESSING) {
+                if ($order->canInvoice()) {
+                    if ($payOrder->isAuthorized()) {
+                        # If here, then there's no need to continue, state is processing,
+                        throw new Exception('Already state_processing order authorsed order ' . $order->getId());
                     } else {
-                        $this->payHelper->logDebug('order gevonden');
-                    }
-                }
-            } catch (\Exception $e) {
-                $this->payHelper->logCritical($e, $params);
-                return $this->result->setContents('FALSE| Error loading order. ' . $e->getMessage());
-            }
-        }
-
-        if ($action == 'new_ppt') {
-            if ($this->payHelper->checkProcessing($payOrderId)) {
-                return $this->result->setContents('FALSE| Order already processing.');
-            }
-        }
-
-        $this->config->setStore(empty($store) ? $order->getStore() : $store);
-
-        try {
-            if ($bIsFastCheckout) {
-                if ($quote->getPayment()->getAdditionalInformation('payOrderId') != $payOrderId) {
-                    throw new \Exception("Payment ID mismatch");
-                }
-
-                # Retrieve status and customerdata through TGU
-                $transaction = $this->payHelper->getTguStatus($payOrderId, $this->config->getTokencode(), $this->config->getApiToken());
-
-                try {
-                    # Create the fast checkout order:
-                    $order = $this->createFastCheckoutOrder->create($transaction->getCheckoutData(), $quoteId, $payOrderId);
-                    $orderEntityId = $order->getId();
-
-                    # Directly processing the payment
-                    if ($transaction->isPaid() || $transaction->isAuthorized()) {
-                        try {
-                            $this->payHelper->logDebug('Fast-checkout processpaid order');
-                            $result = $this->payPayment->processPaidOrder($transaction, $order, $paymentProfileId);
-                            if (!$result) {
-                                throw new \Exception('Cannot process order');
+                        $alreadyProcessed = false;
+                        foreach ($order->getInvoiceCollection() as $invoice) {
+                            if ($invoice->getTransactionId() === $payOrder->getOrderId()) {
+                                $alreadyProcessed = true;
+                                break;
                             }
-                            $message = 'TRUE| ' . (($transaction->isPaid()) ? "PAID" : "AUTHORIZED");
-                        } catch (\Exception $e) {
-                            $message = 'FALSE| ' . $e->getMessage();
                         }
-                        return $this->result->setContents($message);
-                    } else {
-                        $this->payHelper->logDebug('Fast-checkout exchange: TRUE|ignoring fc ' . $action);
-                        return $this->result->setContents('TRUE|ignoring fc ' . $action);
+                        if ($alreadyProcessed) {
+                            return new ExchangeResponse(true, 'Already captured. ' . $order->getId());
+                        }
                     }
-
-                } catch (\Exception $e) {
-                    $this->payHelper->logCritical('Fast checkout: ' . $e->getMessage(), $params);
-                    if ($e->getCode() == 404) {
-                        return $this->result->setContents('TRUE| Error creating fast checkout order. ' . $e->getMessage());
-                    }
-                    return $this->result->setContents('FALSE| Error creating fast checkout order. ' . $e->getMessage());
+                } else {
+                    return new ExchangeResponse(true, 'Already captured');
                 }
-            } else {
-                # Default flow
-                $this->payHelper->logDebug('default flow');
-                $this->config->configureSDK(true);
-
-                $transaction = Transaction::get($payOrderId);
             }
+
+            $result = $this->payPayment->processPaidOrder($payOrder, $order, $payOrder->getPaymentMethod());
+            if (!$result) {
+                throw new Exception('Could not process order');
+            }
+
+            $message =  $payOrder->isPaid() ? "PAID" : "AUTHORIZED";
+        } catch (Exception $e) {
+            $message = $e->getMessage();
+            $this->payHelper->logDebug('Exception processPaid: ' . $message);
+        }
+        return new ExchangeResponse($result ?? false, $message);
+    }
+
+    /**
+     * @param Order $order
+     * @return ExchangeResponse
+     */
+    private function processChargeback($order): ExchangeResponse
+    {
+        $result = true;
+        $message = 'Chargeback success';
+
+        try {
+            $response = $this->payPayment->chargebackOrder($order);
+            if ($response !== true) {
+                throw new Exception('Could not process chargeback');
+            }
+        } catch (Exception $e) {
+            $result = false;
+            $message = $e->getMessage();
+        }
+
+        return new ExchangeResponse($result, $message);
+    }
+
+    /**
+     * @param $reference
+     * @return ExchangeResponse
+     */
+    private function processRetourPin($reference): ExchangeResponse
+    {
+        $message = 'Refund by card success';
+        $response = false;
+
+        try {
+            $response = $this->payPayment->cardRefundOrder($reference);
         } catch (\Exception $e) {
-            $this->payHelper->logCritical($e, $params);
-            $this->removeProcessing($payOrderId, $action);
-            return $this->result->setContents('FALSE| Error fetching transaction. ' . $e->getMessage());
+            $message = $e->getMessage();
         }
 
-        if ($transaction->isPending()) {
-            if ($action == 'new_ppt') {
-                $this->removeProcessing($payOrderId, $action);
-                return $this->result->setContents("FALSE| Payment is pending");
-            }
-            return $this->result->setContents("TRUE| Ignoring pending");
-        }
+        return new ExchangeResponse($response === true, $message);
+    }
 
-        if (method_exists($transaction, 'isPartialPayment') && !$bIsFastCheckout) {
-            if ($transaction->isPartialPayment()) {
-                if ($this->config->registerPartialPayments()) {
-                    try {
-                        $result = $this->payPayment->processPartiallyPaidOrder($order, $payOrderId);
-                        if (!$result) {
-                            throw new \Exception('Cannot process partial payment');
-                        }
-                        $message = 'TRUE| Partial payment processed';
-                    } catch (\Exception $e) {
-                        $message = 'FALSE| ' . $e->getMessage();
-                    }
-                    $this->removeProcessing($payOrderId, $action);
-                    return $this->result->setContents($message);
-                }
-                $this->removeProcessing($payOrderId, $action);
-                return $this->result->setContents("TRUE| Partial payment");
-            }
-        }
+    /**
+     * @param $order
+     * @return ExchangeResponse
+     */
+    private function processRefund($order): ExchangeResponse
+    {
+        $result = true;
+        $message = 'Refund success';
 
-        $payment = $order->getPayment();
-        $orderEntityIdTransaction = $transaction->getExtra3();
-
-        if ($orderEntityId != $orderEntityIdTransaction && !$this->isFastCheckout($params)) {
-            $this->payHelper->logCritical('Transaction mismatch ' . $orderEntityId . ' / ' . $orderEntityIdTransaction, $params, $order->getStore());
-            $this->removeProcessing($payOrderId, $action);
-            return $this->result->setContents('FALSE|Transaction mismatch');
-        }
-
-        if ($transaction->isRefunded(false) && substr($action, 0, 6) == 'refund') {
-            if ($this->config->refundFromPay()) {
-                if ($order->getTotalDue() == 0) {
-                    if ($order->getBaseTotalRefunded() == $order->getBaseGrandTotal()) {
-                        return $this->result->setContents('TRUE|Already fully refunded');
-                    }
-                    try {
-                        $response = $this->payPayment->refundOrder($order->getEntityId());
-                    } catch (\Exception $e) {
-                        $response = $e->getMessage();
-                    }
-                    return $this->result->setContents($response === true ? 'TRUE|Refund success' : 'FALSE|' . $response);
-                } else {
-                    return $this->result->setContents('TRUE|Ignoring refund, not fully paid');
-                }
+        if ($this->config->refundFromPay()) {
+            if ($order->getBaseTotalRefunded() == $order->getBaseGrandTotal()) {
+                $message = 'Already refunded';
             } else {
-                return $this->result->setContents('TRUE|Ignoring refund, disabled in pluginsettings');
-            }
-        }
-
-        if ($transaction->isChargeBack() && substr($action, 0, 10) == 'chargeback') {
-            try {
-                $response = $this->payPayment->chargebackOrder($orderEntityId);
-            } catch (\Exception $e) {
-                $response = $e->getMessage();
-            }
-            return $this->result->setContents($response === true ? 'TRUE|Chargeback success' : 'FALSE|' . $response);
-        }
-
-        if ($paymentProfileId == '2351' && $action == 'new_ppt') {
-            try {
-                $response = $this->payPayment->cardRefundOrder($orderEntityId);
-            } catch (\Exception $e) {
-                $response = $e->getMessage();
-            }
-            return $this->result->setContents($response === true ? 'TRUE|Refund by card success' : 'TRUE|' . $response);
-        }
-
-        if ($order->getTotalDue() <= 0) {
-            $this->payHelper->logDebug($action . '. Ignoring - already paid: ' . $orderEntityId);
-            if (!$this->config->registerPartialPayments()) {
-                $this->removeProcessing($payOrderId, $action);
-                return $this->result->setContents('TRUE| Ignoring: order has already been paid');
-            }
-        }
-
-        if ($action == 'capture') {
-            if (!empty($payment) && $payment->getAdditionalInformation('manual_capture')) {
-                $this->payHelper->logDebug('Already captured.');
-                return $this->result->setContents('TRUE| Already captured.');
-            }
-            if ($this->config->ignoreManualCapture()) {
-                return $this->result->setContents('TRUE| Capture ignored');
-            }
-        }
-
-        if ($transaction->isPaid() || $transaction->isAuthorized()) {
-            try {
-                $result = $this->payPayment->processPaidOrder($transaction, $order, $paymentProfileId);
-                if (!$result) {
-                    throw new \Exception('Cannot process order');
+                try {
+                    $response = $this->payPayment->refundOrder($order->getId());
+                } catch (\Exception $e) {
+                    $message = $e->getMessage();
+                    $result = false;
                 }
-
-                $message = 'TRUE| ' . (($transaction->isPaid()) ? "PAID" : "AUTHORIZED");
-            } catch (\Exception $e) {
-                $message = 'FALSE| ' . $e->getMessage();
             }
-        } elseif ($transaction->isCanceled()) {
-            if ($order->getState() == Order::STATE_PROCESSING) {
-                $message = "TRUE| Ignoring cancel, order is `processing`";
-            } elseif ($order->isCanceled()) {
-                $message = "TRUE| Already canceled";
-            } else {
-                if ($this->config->isNeverCancel()) {
-                    $message = "TRUE| Not Canceled because option `never-cancel-order` is enabled";
+        } else {
+            $message = 'Ignoring: Refund processing initiated by Pay disabled via plugin settings.';
+        }
+        return new ExchangeResponse($result, $message);
+    }
+
+    /**
+     * @param Order|null $order
+     * @param PayOrder $payOrder
+     * @return ExchangeResponse
+     */
+    private function processVoid(?Order $order, PayOrder $payOrder): ExchangeResponse
+    {
+        $result = ['result' => false];
+        $message = '';
+
+        foreach ($this->payProcessingRepository->getEntriesByType('queue_void') as $payOrderId) {
+            try {
+                $queuedOrder = $this->orderRepository->get($payOrderId);
+                if ($queuedOrder->canInvoice()) {
+                    $result = $this->cancelOrder($queuedOrder);
+                    $message .= 'Voided order `' . $payOrderId . '` | ';
                 } else {
-                    try {
-                        $result = $this->payPayment->cancelOrder($order);
-                        if (empty($result)) {
-                            throw new \Exception('Cannot cancel order');
-                        }
-                        $message = 'TRUE| CANCELED';
-                    } catch (\Exception $e) {
-                        $message = 'FALSE| ' . $e->getMessage();
-                    }
+                    $result = ['result' => true];
+                    $message .= 'Already voided order `' . $payOrderId . '` | ';
                 }
+            } catch (Exception $e) {
+                $message .= $e->getMessage() . ' | ';
+                $queuedOrder = null;
+            }
+
+            $this->payProcessingRepository->deleteEntry($payOrderId, 'queue_void');
+        }
+
+        if (strlen($message) > 0 && substr($message, -2, 2) === '| ') {
+            $message = substr($message, 0, -2);
+        }
+
+        if ($order !== null && $order->canInvoice()) {
+            // Order is authorized but not captured — queue to avoid deadlock
+            $this->payProcessingRepository->createEntry($order->getId(), 'queue_void');
+            return new ExchangeResponse(false, 'Void queued for ' . $order->getId() . ' ' . $message);
+        }
+
+        return new ExchangeResponse(true, empty($message) ? 'Void processed' : $message);
+    }
+
+
+    /**
+     * @param Order|null $order
+     * @param PayOrder $payOrder
+     * @return ExchangeResponse
+     */
+    private function processCancel(?Order $order, PayOrder $payOrder): ExchangeResponse
+    {
+        if ($order === null) {
+            return new ExchangeResponse(true, 'Cancel skipped. Order is null');
+        }
+
+        $result = ['result' => false];
+
+        if ($order->getState() === Order::STATE_PROCESSING) {
+            $message = 'Cancel ignored. Order is `processing`';
+        } elseif ($order->getState() === Order::STATE_CLOSED && $order->getPayment()->getAmountRefunded() > 0) {
+            $message = 'Cancel ignored. Order is refunded';
+        } else {
+            if ($this->config->isNeverCancel()) {
+                $message = "Not Canceled because option `never-cancel-order` is enabled";
+            } else {
+                $result = $this->cancelOrder($order);
+                $message = $result['message'];
             }
         }
 
-        $this->removeProcessing($payOrderId, $action);
+        return new ExchangeResponse($result['result'] ?? true, $message);
+    }
 
-        return $this->result->setContents($message);
+
+    /**
+     * @param $order
+     * @return array
+     */
+    private function cancelOrder($order)
+    {
+        $result = true;
+        try {
+            if ($order->iscanceled()) {
+                throw new Exception('Order already cancelled');
+            }
+
+            $order->setData('is_manual_cancel', true)->save();
+            $result = $this->payPayment->cancelOrder($order);
+
+            if (empty($result)) {
+                throw new Exception('Cannot cancel order');
+            }
+            $message = 'CANCELED';
+        } catch (Exception $e) {
+            $message = $e->getMessage();
+        }
+        return compact('result', 'message');
     }
 
     /**
      * @param string $payOrderId
-     * @param string $action
+     * @param bool $eventPaid
      * @return void
      */
-    private function removeProcessing(string $payOrderId, string $action)
+    private function removeProcessing(string $payOrderId, bool $eventPaid)
     {
-        if ($action == 'new_ppt') {
-            $this->payHelper->removeProcessing($payOrderId);
+        if ($eventPaid) {
+            $this->payProcessingRepository->deleteEntry($payOrderId, 'processing');
         }
     }
+
 }

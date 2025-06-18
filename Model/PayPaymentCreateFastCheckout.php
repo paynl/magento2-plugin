@@ -3,6 +3,9 @@
 namespace Paynl\Payment\Model;
 
 use Paynl\Payment\Model\PayPaymentCreate;
+use PayNL\Sdk\Model\Pay\PayOrder;
+use PayNL\Sdk\Model\Product as PayProduct;
+use PayNL\Sdk\Model\Products;
 
 class PayPaymentCreateFastCheckout extends PayPaymentCreate
 {
@@ -27,7 +30,7 @@ class PayPaymentCreateFastCheckout extends PayPaymentCreate
     private $reservedOrderId = '';
 
     /**
-     * @param \Paynl\Payment\Model\Paymentmethod\Paymentmethod $methodInstance
+     * @param \Paynl\Payment\Model\Paymentmethod\PaymentMethod $methodInstance
      * @param string $amount Amount to start fastCheckout with
      * @param array $products Procucts to buy with fastCheckout
      * @param string $baseUrl
@@ -44,7 +47,7 @@ class PayPaymentCreateFastCheckout extends PayPaymentCreate
         $finishUrl = $baseUrl . 'paynl/checkout/finish/?entityid=fc';
         $exchangeUrl = $baseUrl . 'paynl/checkout/exchange/';
 
-        $fastCheckout->setAmount($amount);
+        $fastCheckout->setAmount($amount/100);
         $fastCheckout->setCurrency($currency);
         $fastCheckout->setFinishURL($finishUrl);
         $fastCheckout->setExchangeURL($exchangeUrl);
@@ -65,51 +68,47 @@ class PayPaymentCreateFastCheckout extends PayPaymentCreate
     }
 
     /**
-     * @return array
+     * @return void
+     * @throws \Exception
      */
     public function getData()
     {
-        $parameters = [
-            'serviceId' => $this->payConfig->getServiceId(),
-            'amount' => [
-                'value' => $this->paymentData['amount'],
-                'currency' => $this->paymentData['currency'],
-            ],
-        ];
-
-        $parameters['paymentMethod'] = ['id' => $this->paymentMethodId];
-
-        $this->_add($parameters, 'returnUrl', $this->paymentData['returnURL']);
-        $this->_add($parameters, 'description', $this->getDescription($this->reservedOrderId));
-        $this->_add($parameters, 'reference', $this->reference);
-        $this->_add($parameters, 'exchangeUrl', $this->paymentData['exchangeURL']);
-
-        $parameters['integration']['test'] = $this->testMode;
-
-        $optimize['flow'] = 'fastCheckout';
-        $optimize['shippingAddress'] = true;
-        $optimize['billingAddress'] = true;
-        $optimize['contactDetails'] = true;
-
-        $this->_add($parameters, 'optimize', $optimize);
-
-        $orderParameters = [];
-        $invoiceAddress = [];
         $productData = $this->getProductData();
 
-        $this->_add($orderParameters, 'products', $this->getProductData());
-        $this->_add($parameters, 'order', $orderParameters);
+        $this->request->setAmount($this->paymentData['amount'])
+            ->setReturnurl($this->paymentData['returnURL'])
+            ->setPaymentMethodId($this->paymentMethodId)
+            ->setReference($this->reference)
+            ->setExchangeUrl($this->paymentData['exchangeURL'])
+            ->setCurrency($this->paymentData['currency'])
+            ->setDescription($this->getDescription())
+            ->setTransferData($this->methodInstance->getTransferData());
 
-        $stats = [];
-        $this->_add($stats, 'info', '');
-        $this->_add($stats, 'tool', '');
-        $this->_add($stats, 'object', $this->methodInstance->getVersion() . ' | fc');
-        $this->_add($stats, 'extra1', $this->reservedOrderId);
-        $this->_add($stats, 'extra2', 'fastcheckout');
-        $this->_add($stats, 'extra3', $this->reference);
-        $this->_add($parameters, 'stats', $stats);
+        $this->request->setExpire($this->paymentData['expire'] ?? '');
+        $this->request->setStats($this->getStats());
 
-        return $parameters;
+        $order = new \PayNL\Sdk\Model\Order();
+        $order->setCountryCode($this->payConfig->getLanguage());
+
+        if (!empty($productData)) {
+            $order->setProducts($productData);
+        }
+
+        $this->request->setOrder($order);
+        $this->request->setTestmode($this->testMode);
+    }
+
+    /**
+     * @return \PayNL\Sdk\Model\Stats|void
+     */
+    private function getStats()
+    {
+        $stats = (new \PayNL\Sdk\Model\Stats())
+            ->setObject($this->methodInstance->getVersion() . ' | fc')
+            ->setExtra1((string)$this->reservedOrderId)
+            ->setExtra3($this->reference);
+
+        return $stats;
     }
 
     /**
@@ -132,99 +131,37 @@ class PayPaymentCreateFastCheckout extends PayPaymentCreate
     private function getProductData()
     {
         $arrProducts = [];
-
+        $collectionOfProducts = new Products();
         foreach ($this->products as $i => $arrProduct) {
-            $product = [];
-            $product['id'] = $arrProduct['id'] ?? 'p' . $i;
-            $product['description'] = $arrProduct['description'] ?? '';
-            $product['type'] = $arrProduct['type'] ?? '';
-            $product['price'] = [
-                'value' => $arrProduct['price'],
-                'currency' => $arrProduct['currecny'],
-            ];
-            $product['quantity'] = $arrProduct['quantity'] ?? 0;
-            $product['vatPercentage'] = $arrProduct['vatPercentage'] ?? '';
-            $arrProducts[] = $product;
+            $collectionOfProducts->addProduct(
+                new PayProduct(
+                    $arrProduct['id'] ?? 'p' . $i,
+                    $arrProduct['description'] ?? '',
+                    ($arrProduct['price'] / 100),
+                    $arrProduct['currecny'],
+                    $arrProduct['type'] ?? '',
+                    $arrProduct['quantity'] ?? 0,
+                    null,
+                    ($arrProduct['vatPercentage'] / 100) ?? ''
+                )
+            );
+
         }
 
-        return $arrProducts;
+        return $collectionOfProducts;
     }
 
     /**
-     * @return \Paynl\Result\Transaction\Start
-     * @throws \Paynl\Error\Api
-     * @throws \Paynl\Error\Error
-     * @throws \Paynl\Error\Required\ApiToken
-     * @throws \Paynl\Error\Required\ServiceId
-     */
-    public function create(): OrderCreateResponse
-    {
-        $payload = $this->getData();
-
-        $payload = json_encode($payload);
-        $url = 'https://connect.payments.nl/v1/orders';
-
-        $rawResponse = (array) $this->sendCurlRequest($url, $payload, $this->payConfig->getTokencode(), $this->payConfig->getApiToken());
-
-        $redirectURL = $rawResponse['links']->redirect ?? '';
-
-        $transaction = new OrderCreateResponse();
-        $transaction->setTransactionId($rawResponse['orderId'] ?? '');
-        $transaction->setRedirectUrl($redirectURL);
-        $transaction->setPaymentReference($rawResponse['reference'] ?? '');
-        $transaction->setLinks($rawResponse['links'] ?? '');
-
-        return $transaction;
-    }
-
-    /**
-     * @param string $requestUrl
-     * @param string $payload
-     * @param string $tokenCode
-     * @param string $apiToken
-     * @param string $method
-     * @return array
+     * @return PayOrder
      * @throws \Exception
-     * @phpcs:disable Squiz.Commenting.FunctionComment.TypeHintMissing
      */
-    public function sendCurlRequest($requestUrl, $payload, $tokenCode, $apiToken, $method = 'POST')
+    public function create(): PayOrder
     {
-        $authorization = base64_encode($tokenCode . ':' . $apiToken);
-
-        $curl = curl_init();
-        curl_setopt_array(
-            $curl,
-            [
-                CURLOPT_URL => $requestUrl,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => "",
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 30,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => $method,
-                CURLOPT_POSTFIELDS => $payload,
-                CURLOPT_HTTPHEADER => [
-                    "accept: application/json",
-                    "authorization: Basic " . $authorization,
-                    "content-type: application/json",
-                ],
-            ]
-        );
-
-        $rawResponse = curl_exec($curl);
-        $response = json_decode($rawResponse);
-
-        $error = curl_error($curl);
-        $http_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-        curl_close($curl);
-
-        if ($error) {
-            throw new \Exception($error);
-        } elseif (!empty($response->violations)) {
-            $field = $response->violations[0]->propertyPath ?? ($response->violations[0]->code ?? '');
-            throw new \Exception($field . ': ' . ($response->violations[0]->message ?? ''));
-        }
-
-        return (array) $response;
+        $config = $this->payConfig->getPayConfig();
+        $this->getData();
+        $this->request->setServiceId($serviceId = $this->payConfig->getServiceId());
+        $this->request->enableFastCheckout();
+        return $this->request->setConfig($config)->start();
     }
+
 }

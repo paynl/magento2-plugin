@@ -51,7 +51,7 @@ class ActiveShippingMethods implements ArrayInterface
      * Get options in "key-value" format
      * @return array
      */
-    public function getShippingMethods(): array
+    public function getShippingMethods()
     {
         $methods = [];
         $activeCarriers = $this->shipconfig->getActiveCarriers();
@@ -77,4 +77,5 @@ class ActiveShippingMethods implements ArrayInterface
 
         return $methods;
     }
+
 }

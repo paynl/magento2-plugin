@@ -5,9 +5,11 @@ namespace Paynl\Payment\Controller\Checkout;
 use Magento\Payment\Helper\Data as PaymentHelper;
 use Magento\Quote\Model\QuoteRepository;
 use Magento\Sales\Model\OrderRepository;
-use Paynl\Error\Error;
+use Magento\Quote\Model\MaskedQuoteIdToQuoteIdInterface;
+use Magento\Sales\Model\Order as OrderModel;
 use Paynl\Payment\Controller\PayAction;
 use Paynl\Payment\Helper\PayHelper;
+use Exception;
 
 /**
  * Redirects the user after payment
@@ -40,10 +42,19 @@ class Redirect extends PayAction
     private $orderRepository;
 
     /**
-     *
      * @var \Paynl\Payment\Helper\PayHelper;
      */
     private $payHelper;
+
+    /**
+     * @var MaskedQuoteIdToQuoteIdInterface
+     */
+    private $maskedQuoteIdToQuoteId;
+
+    /**
+     * @var OrderModel
+     */
+    private $orderModel;
 
     /**
      * @param \Magento\Framework\App\Action\Context $context
@@ -53,6 +64,8 @@ class Redirect extends PayAction
      * @param QuoteRepository $quoteRepository
      * @param OrderRepository $orderRepository
      * @param PayHelper $payHelper
+     * @param MaskedQuoteIdToQuoteIdInterface $maskedQuoteIdToQuoteId
+     * @param OrderModel $orderModel
      */
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
@@ -61,7 +74,9 @@ class Redirect extends PayAction
         PaymentHelper $paymentHelper,
         QuoteRepository $quoteRepository,
         OrderRepository $orderRepository,
-        PayHelper $payHelper
+        PayHelper $payHelper,
+        MaskedQuoteIdToQuoteIdInterface $maskedQuoteIdToQuoteId,
+        OrderModel $orderModel
     ) {
         $this->config          = $config; // PAY. config helper
         $this->checkoutSession = $checkoutSession;
@@ -69,8 +84,39 @@ class Redirect extends PayAction
         $this->quoteRepository = $quoteRepository;
         $this->orderRepository = $orderRepository;
         $this->payHelper = $payHelper;
+        $this->maskedQuoteIdToQuoteId = $maskedQuoteIdToQuoteId;
+        $this->orderModel = $orderModel;
 
         parent::__construct($context);
+    }
+
+    /**
+     * @param $mqId
+     * @return \Magento\Sales\Api\Data\OrderInterface
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    private function getOrder($mqId)
+    {
+        try {
+            $quoteId = $this->maskedQuoteIdToQuoteId->execute($mqId);
+        } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
+            # Id is not masked when user is logged in
+            if (ctype_digit($mqId)) {
+                $quoteId = (int)$mqId;
+            } else {
+                throw new \Exception('Invalid quote reference: ' . $mqId);
+            }
+        }
+
+        $quote = $this->quoteRepository->get($quoteId);
+        $incrementId = $quote->getReservedOrderId();
+        $orderId = $this->orderModel->loadByIncrementId($incrementId)->getId();
+        $order = $this->orderRepository->get($orderId);
+        if (empty($order)) {
+            throw new \Exception('Could not find order by mqId');
+        }
+        return $order;
     }
 
     /**
@@ -78,36 +124,49 @@ class Redirect extends PayAction
      */
     public function execute()
     {
+        $rMode = $this->config->getPaymentRedirectMode();
+
         try {
-            $order = $this->checkoutSession->getLastRealOrder();
+            if ($rMode == 'get') {
+                $mqId = $this->getRequest()->getParam('mqid');
+                $this->payHelper->logDebug(__METHOD__. ': Starting payment with mqId: ' . $mqId);
+                try {
+                    $order = $this->getOrder($mqId);
+                } catch (Exception $e) {
+                    throw new Exception('Could not retrieve order by mqId. Exception: ' . $e->getMessage());
+                }
+                $this->payHelper->logDebug(__METHOD__.': OrderId from quote: ' . $order->getId() ?? null, array(), $order->getStore() ?? null);
+            } else {
+                $order = $this->checkoutSession->getLastRealOrder();
+            }
 
             if (empty($order)) {
-                throw new Error('No order found in session, please try again');
+                throw new Exception('No order found in session, please try again');
             }
 
             $payment = $order->getPayment();
-
             if (empty($payment)) {
-                throw new Error('No payment found');
+                throw new Exception('No payment found');
             }
 
             $methodInstance = $this->paymentHelper->getMethodInstance($payment->getMethod());
-            if ($methodInstance instanceof \Paynl\Payment\Model\Paymentmethod\Paymentmethod) {
+            if ($methodInstance instanceof \Paynl\Payment\Model\Paymentmethod\PaymentMethod) {
                 $this->payHelper->logNotice('Start new payment for order ' . $order->getId() . '. PayProfileId: ' . $methodInstance->getPaymentOptionId(), array(), $order->getStore());
                 if ($this->config->restoreQuote()) {
-                    $this->_getCheckoutSession()->restoreQuote();
+                    $this->_getCheckoutSession()->restoreQuote(); // phpcs:ignore
                 }
                 $redirectUrl = $methodInstance->startTransaction($order);
                 $this->getResponse()->setNoCacheHeaders();
                 $this->getResponse()->setRedirect($redirectUrl);
+
             } else {
-                throw new Error('PAY.: Method is not a paynl payment method');
+                throw new Exception('PAY.: Method is not a paynl payment method');
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->_getCheckoutSession()->restoreQuote(); // phpcs:ignore
             $this->messageManager->addExceptionMessage($e, __('Something went wrong, please try again later'));
             $this->messageManager->addExceptionMessage($e, $e->getMessage());
-            $this->payHelper->logCritical($e->getMessage(), array(), $order->getStore());
+            $this->payHelper->logCritical($e->getMessage());
             $this->_redirect('checkout/cart');
         }
     }

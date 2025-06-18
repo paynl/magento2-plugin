@@ -14,7 +14,7 @@
     <include path="Paynl_Payment::paymentmethods/bataviacadeaukaart.xml" />
     <include path="Paynl_Payment::paymentmethods/bbqcadeaukaart.xml" />
     <include path="Paynl_Payment::paymentmethods/beautycadeau.xml" />
-    <include path="Paynl_Payment::paymentmethods/beautyenmorecadeaukaart.xml" />
+    <include path="Paynl_Payment::paymentmethods/beautyandmorecadeaukaart.xml" />
     <include path="Paynl_Payment::paymentmethods/biercheque.xml" />
     <include path="Paynl_Payment::paymentmethods/biller.xml" />
     <include path="Paynl_Payment::paymentmethods/billink.xml" />
@@ -24,6 +24,7 @@
     <include path="Paynl_Payment::paymentmethods/bloemencadeaukaart.xml" />
     <include path="Paynl_Payment::paymentmethods/boekenbon.xml" />
     <include path="Paynl_Payment::paymentmethods/brite.xml" />
+    <include path="Paynl_Payment::paymentmethods/cadeaubonnen.xml" />
     <include path="Paynl_Payment::paymentmethods/capayable_gespreid.xml" />
     <include path="Paynl_Payment::paymentmethods/cartebleue.xml" />
     <include path="Paynl_Payment::paymentmethods/cashly.xml" />

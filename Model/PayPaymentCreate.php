@@ -8,6 +8,13 @@ use Magento\Sales\Model\Order;
 use Paynl\Payment\Helper\PayHelper;
 use Paynl\Payment\Model\Paymentmethod\PaymentMethod;
 use Magento\Store\Model\StoreManagerInterface;
+use PayNL\Sdk\Model\Pay\PayOrder;
+use PayNL\Sdk\Model\Product;
+use PayNL\Sdk\Model\Request\OrderCreateRequest;
+use PayNL\Sdk\Exception\PayException;
+use PayNL\Sdk\Config\Config;
+use PayNL\Sdk\Model\Products;
+use PayNL\Sdk\Model\Product as PayProduct;
 
 class PayPaymentCreate
 {
@@ -87,6 +94,11 @@ class PayPaymentCreate
     private $order;
 
     /**
+     * @var OrderCreateRequest
+     */
+    protected OrderCreateRequest $request;
+
+    /**
      * @param null|Order $order
      * @param PaymentMethod $methodInstance
      * @throws \Exception
@@ -94,6 +106,8 @@ class PayPaymentCreate
      */
     public function __construct($order, PaymentMethod $methodInstance)
     {
+        $this->request = new OrderCreateRequest();
+
         $this->methodInstance = $methodInstance;
         $this->payConfig = $methodInstance->paynlConfig;
         $this->testMode = $this->payConfig->isTestMode();
@@ -104,6 +118,7 @@ class PayPaymentCreate
             $this->order = $order;
             $this->orderId = $order->getIncrementId();
             $this->additionalData = $order->getPayment()->getAdditionalInformation();
+ 
             $this->setAmount($this->payConfig->isAlwaysBaseCurrency() ? $order->getBaseGrandTotal() : $order->getGrandTotal());
             $this->setCurrency($this->payConfig->isAlwaysBaseCurrency() ? $order->getBaseCurrencyCode() : $order->getOrderCurrencyCode());
 
@@ -116,8 +131,19 @@ class PayPaymentCreate
         $this->setCompanyField($this->additionalData['companyfield'] ?? '');
         $this->setCocNumber($this->additionalData['cocnumber'] ?? '');
         $this->setVatNumber($this->additionalData['vatnumber'] ?? '');
+
+        if ($this->methodInstance->getPaymentOptionId() == 1927) {
+            $this->request->setTerminal($this->additionalData['payment_option'] ?? '');
+        }
+
+        $validDays = $this->additionalData['valid_days'] ?? null;
+        if (!empty($validDays)) {
+            $this->setExpireData((int) $validDays, 'days');
+        } elseif ($this->payConfig->getExpireTime() > 0) {
+            $this->setExpireData($this->payConfig->getExpireTime(), 'minutes');
+        }
+
         $this->setIssuer($this->additionalData['payment_option'] ?? '');
-        $this->setExpireData((int)($this->additionalData['valid_days'] ?? ''));
         $this->setFinishURL($this->additionalData['returnUrl'] ?? $finishUrl);
         $this->setExchangeURL($this->additionalData['exchangeUrl'] ?? $exchangeUrl);
         $this->setPaymentMethod($this->methodInstance->getPaymentOptionId());
@@ -126,16 +152,135 @@ class PayPaymentCreate
     }
 
     /**
-     * @return \Paynl\Result\Transaction\Start
-     * @throws \Paynl\Error\Api
-     * @throws \Paynl\Error\Error
-     * @throws \Paynl\Error\Required\ApiToken
-     * @throws \Paynl\Error\Required\ServiceId
+     * @return void
      */
-    public function create()
+    private function getStats()
     {
-        $this->payConfig->configureSDK(true);
-        return \Paynl\Transaction::start($this->getData());
+        $stats = (new \PayNL\Sdk\Model\Stats())
+            ->setObject($this->methodInstance->getVersion())
+            ->setExtra1($this->orderId)
+            ->setExtra2($this->order->getQuoteId())
+            ->setExtra3($this->order->getEntityId());
+
+        return $stats;
+    }
+
+    /**
+     * @return void
+     * @throws \Exception
+     */
+    public function getData()
+    {
+        $shippingAddress = $this->getShippingAddress();
+        $invoiceAddress = $this->getInvoiceAddress();
+        $productData = $this->getProductData();
+
+        $this->request->setAmount($this->paymentData['amount'])
+            ->setReturnurl($this->paymentData['returnURL'])
+            ->setPaymentMethodId($this->paymentMethodId)
+            ->setReference($this->order->getEntityId())
+            ->setExchangeUrl($this->paymentData['exchangeURL'])
+            ->setCurrency($this->paymentData['currency'])
+            ->setDescription($this->getDescription())
+            ->setTransferData($this->methodInstance->getTransferData());
+
+        $this->request->setExpire($this->paymentData['expire'] ?? '');
+        $this->request->setStats($this->getStats());
+
+        $order = new \PayNL\Sdk\Model\Order();
+        $order->setCountryCode($this->payConfig->getLanguage());
+
+        if (!empty($shippingAddress))   {
+            $order->setShippingAddress($shippingAddress);
+        }
+        if (!empty($invoiceAddress)) {
+            $order->setInvoiceAddress($invoiceAddress);
+        }
+
+        $customer = $this->getCustomer();
+        if (!empty($customer)) {
+            $this->request->setCustomer($customer);
+        }
+
+        if (!empty($productData)) {
+            $order->setProducts($productData);
+        }
+
+        $this->request->setOrder($order);
+        $this->request->setTestmode($this->testMode);
+    }
+
+    /**
+     * @return \PayNL\Sdk\Model\Customer
+     */
+    private function getCustomer()
+    {
+        $arrBillingAddress = $this->order->getBillingAddress();
+
+        $customer = new \PayNL\Sdk\Model\Customer();
+        $customer->setFirstName(mb_substr($arrBillingAddress['firstname'] ?? '', 0, 32));
+        $customer->setLastName(mb_substr($arrBillingAddress['lastname'] ?? '', 0, 64));
+
+        $customer->setIpAddress($this->getIpAddress());
+
+        if (isset($this->additionalData['dob']) && !empty($this->additionalData['dob'])) {
+            $customer->setBirthDate(mb_substr($this->additionalData['dob'], 0, 32));
+        }
+
+        if (isset($this->additionalData['gender'])) {
+            $customer->setGender(mb_substr($this->additionalData['gender'], 0, 1));
+        }
+
+        $customer->setPhone(payHelper::validatePhoneNumber($arrBillingAddress['telephone']));
+        $customer->setEmail(mb_substr($arrBillingAddress['email'] ?? '', 0, 100));
+        $customer->setLanguage($this->payConfig->getLanguage());
+
+        return $customer;
+    }
+
+    /**
+     * @return \PayNL\Sdk\Model\Company
+     */
+    private function getCompany()
+    {
+        $arrBillingAddress = $this->order->getBillingAddress();
+
+        $compName = !empty($arrBillingAddress['company']) ? $arrBillingAddress['company'] : ($this->companyField ?? null);
+        $vat = !empty($arrBillingAddress['vat_id']) ? $arrBillingAddress['vat_id'] : ($this->vatNumber ?? null);
+
+        $company = new \PayNL\Sdk\Model\Company();
+
+        if (!empty($compName)) {
+            $company->setName(mb_substr($compName, 0, 128));
+        }
+
+        if (!empty($this->cocNumber)) {
+            $company->setCoc(mb_substr($this->cocNumber, 0, 64));
+        }
+
+        if (!empty($vat)) {
+            $company->setVat(mb_substr($vat, 0, 32));
+        }
+
+        if (!empty($arrBillingAddress['country_id'])) {
+            $company->setCountryCode(mb_substr($arrBillingAddress['country_id'], 0, 2));
+        }
+        return $company;
+    }
+
+    /**
+     * @return PayOrder
+     * @throws PayException
+     */
+    public function create(): PayOrder
+    {
+        $config = $this->payConfig->getPayConfig();
+
+        $this->getData();
+
+        $this->request->setServiceId($serviceId = $this->payConfig->getServiceId());
+
+        return $this->request->setConfig($config)->start();
     }
 
     /**
@@ -225,15 +370,17 @@ class PayPaymentCreate
     }
 
     /**
-     * @param integer $valid_days
+     * @param int $value
+     * @param string $time
      * @return $this
-     * @throws \Exception
      */
-    public function setExpireData(int $valid_days)
+    public function setExpireData(int $value, string $time): self
     {
-        if (!empty($valid_days) && is_numeric($valid_days)) {
-            $this->paymentData['expireDate'] = new \DateTime('+' . $valid_days . ' days');
+        if ($value > 0) {
+            $offsetTime = $time === 'days' ? $value * 86400 : $value * 60;
+            $this->paymentData['expire'] = date('c', time() + $offsetTime);
         }
+
         return $this;
     }
 
@@ -274,7 +421,7 @@ class PayPaymentCreate
     /**
      * @return array
      */
-    public function getData()
+    public function get3Dataoud()
     {
         $shippingAddress = $this->getShippingAddress();
         $endUserData = $this->getEnduserData();
@@ -298,18 +445,10 @@ class PayPaymentCreate
             'object' => $this->methodInstance->getVersion(),
         ];
 
-        if (!empty($shippingAddress)) {
-            $data['address'] = $shippingAddress;
-        }
-        if (!empty($invoiceAddress)) {
-            $data['invoiceAddress'] = $invoiceAddress;
-        }
-        if (!empty($endUserData)) {
-            $data['enduser'] = $endUserData;
-        }
-        if (!empty($productData)) {
-            $data['products'] = $productData;
-        }
+        if (!empty($shippingAddress))   { $data['address'] = $shippingAddress;       }
+        if (!empty($invoiceAddress))    { $data['invoiceAddress'] = $invoiceAddress; }
+        if (!empty($endUserData))       { $data['enduser'] = $endUserData;           }
+        if (!empty($productData))       { $data['products'] = $productData;          }
 
         $data['testmode'] = $this->testMode;
         $data['ipaddress'] = $this->getIpAddress();
@@ -342,12 +481,12 @@ class PayPaymentCreate
                 $ipAddress = trim($remoteIp, '[]');
                 break;
             default:
-                $ipAddress = \Paynl\Helper::getIp();
+                $ipAddress = paynl_get_ip();
         }
 
         # If the Magento IP field is too short, invalid, or localhost, then retrieve the IP manually
         if (!filter_var($ipAddress, FILTER_VALIDATE_IP) || $ipAddress == '127.0.0.1') {
-            $ipAddress = \Paynl\Helper::getIp();
+            $ipAddress = paynl_get_ip();
         }
 
         return $ipAddress;
@@ -362,9 +501,49 @@ class PayPaymentCreate
     }
 
     /**
-     * @return array
+     * @return \PayNL\Sdk\Model\Address
      */
     private function getShippingAddress()
+    {
+        $shippingAddress = null;
+        $orderShippingAddress = $this->order->getShippingAddress();
+        $deliveryAddress = null;
+
+        if (!empty($orderShippingAddress)) {
+            $arrShippingAddress = $orderShippingAddress->toArray();
+
+            # Set invoice address as shipping adres in case of pickup
+            if ($this->useBillingAddressInstorePickup() && class_exists(InStorePickup::class)) {
+                if ($this->order->getShippingMethod() === InStorePickup::DELIVERY_METHOD) {
+                    $arrBillingAddress = $this->order->getBillingAddress();
+                    if (!empty($arrBillingAddress)) {
+                        $arrShippingAddress = $arrBillingAddress->toArray();
+                    }
+                }
+            }
+
+            $shippingAddress = [
+                'initials' => mb_substr($arrShippingAddress['firstname'] ?? '', 0, 32),
+                'lastName' => mb_substr($arrShippingAddress['lastname'] ?? '', 0, 64),
+            ];
+
+            $arrAddress2 = paynl_split_address($arrShippingAddress['street']);
+
+            $devAddress = new \PayNL\Sdk\Model\Address();
+            $devAddress->setStreetName(mb_substr($arrAddress2['street'] ?? '', 0, 128));
+            $devAddress->setStreetNumber(mb_substr($arrAddress2['number'] ?? '', 0, 10));
+            $devAddress->setZipCode(mb_substr($arrShippingAddress['postcode'] ?? '', 0, 24));
+            $devAddress->setCity(mb_substr($arrShippingAddress['city'] ?? '', 0, 40));
+            $devAddress->setCountryCode($arrShippingAddress['country_id']);
+        }
+        return $devAddress;
+    }
+
+
+    /**
+     * @return array
+     */
+    private function getShippingAddressOld()
     {
         $shippingAddress = null;
         $orderShippingAddress = $this->order->getShippingAddress();
@@ -385,7 +564,7 @@ class PayPaymentCreate
                 'initials' => mb_substr($arrShippingAddress['firstname'] ?? '', 0, 32),
                 'lastName' => mb_substr($arrShippingAddress['lastname'] ?? '', 0, 64),
             ];
-            $arrAddress2 = \Paynl\Helper::splitAddress($arrShippingAddress['street']);
+            $arrAddress2 = paynl_split_address($arrShippingAddress['street']);
             $shippingAddress['streetName'] = mb_substr($arrAddress2[0] ?? '', 0, 128);
             $shippingAddress['houseNumber'] = mb_substr($arrAddress2[1] ?? '', 0, 10);
             $shippingAddress['zipCode'] = mb_substr($arrShippingAddress['postcode'] ?? '', 0, 24);
@@ -412,6 +591,7 @@ class PayPaymentCreate
                 'phoneNumber' => payHelper::validatePhoneNumber($arrBillingAddress['telephone']),
                 'emailAddress' => mb_substr($arrBillingAddress['email'] ?? '', 0, 100),
             ];
+
             if (isset($this->additionalData['dob']) && !empty($this->additionalData['dob'])) {
                 $enduser['dob'] = mb_substr($this->additionalData['dob'], 0, 32);
             }
@@ -419,6 +599,7 @@ class PayPaymentCreate
                 $enduser['gender'] = mb_substr($this->additionalData['gender'], 0, 1);
             }
             $enduser['gender'] = payHelper::genderConversion((empty($enduser['gender'])) ? $this->order->getCustomerGender($this->order) : $enduser['gender']);
+
             if (!empty($arrBillingAddress['company'])) {
                 $enduser['company']['name'] = mb_substr($arrBillingAddress['company'], 0, 128);
             } elseif (!empty($this->companyField)) {
@@ -441,43 +622,39 @@ class PayPaymentCreate
     }
 
     /**
-     * @return array
+     * @return \PayNL\Sdk\Model\Address|null
      */
     private function getInvoiceAddress()
     {
         $arrBillingAddress = $this->order->getBillingAddress();
-        $invoiceAddress = null;
+        $invAddress = null;
 
         if ($arrBillingAddress) {
             $arrBillingAddress = $arrBillingAddress->toArray();
-
-            $invoiceAddress = [
-                'initials' => mb_substr($arrBillingAddress['firstname'] ?? '', 0, 32),
-                'lastName' => mb_substr($arrBillingAddress['lastname'] ?? '', 0, 64),
-            ];
-            $arrAddress = \Paynl\Helper::splitAddress($arrBillingAddress['street']);
-            $invoiceAddress['streetName'] = mb_substr($arrAddress[0] ?? '', 0, 128);
-            $invoiceAddress['houseNumber'] = mb_substr($arrAddress[1] ?? '', 0, 10);
-            $invoiceAddress['zipCode'] = mb_substr($arrBillingAddress['postcode'] ?? '', 0, 24);
-            $invoiceAddress['city'] = mb_substr($arrBillingAddress['city'] ?? '', 0, 40);
-            $invoiceAddress['country'] = $arrBillingAddress['country_id'];
+            $invAddress = new \PayNL\Sdk\Model\Address();
+            $paynlSplitAddress = paynl_split_address($arrBillingAddress['street']);
+            $invAddress->setStreetName(mb_substr($paynlSplitAddress['street'] ?? '', 0, 128));
+            $invAddress->setStreetNumber(mb_substr($paynlSplitAddress['number'] ?? '', 0, 10));
+            $invAddress->setZipCode(mb_substr($arrBillingAddress['postcode'] ?? '', 0, 24));
+            $invAddress->setCity(mb_substr($arrBillingAddress['city'] ?? '', 0, 40));
+            $invAddress->setCountryCode($arrBillingAddress['country_id']);
         }
 
-        return $invoiceAddress;
+        return $invAddress;
     }
 
     /**
-     * @return array
+     * @return Products
      */
-    private function getProductData()
+    private function getProductData(): Products
     {
-        $arrProducts = [];
+        $collectionProducts = new Products();
         $arrWeeeTax = [];
 
         foreach ($this->order->getAllVisibleItems() as $item) {
             $arrItem = $item->toArray();
+
             if ($arrItem['price_incl_tax'] != null) {
-                // taxamount is not valid, because on discount it returns the taxamount after discount
                 $taxAmount = $arrItem['price_incl_tax'] - $arrItem['price'];
                 $price = $arrItem['price_incl_tax'];
 
@@ -486,40 +663,26 @@ class PayPaymentCreate
                     $price = $arrItem['base_price_incl_tax'];
                 }
 
-                $productId = $arrItem['product_id'];
-                if ($this->payConfig->useSkuId()) {
-                    $productId = $arrItem['sku'];
-                }
+                $productId = $this->payConfig->useSkuId() ? $arrItem['sku'] : $arrItem['product_id'];
+                $rate = paynl_calc_vat_percentage($price, $taxAmount);
 
-                $product = [
-                    'id' => $productId,
-                    'name' => $arrItem['name'],
-                    'price' => $price,
-                    'qty' => $arrItem['qty_ordered'],
-                    'tax' => $taxAmount,
-                    'type' => \Paynl\Transaction::PRODUCT_TYPE_ARTICLE,
-                ];
+                $productIdFinal = $productId;
+                $productName = $arrItem['name'] ?? 'Unknown';
+                $qtyOrdered = $arrItem['qty_ordered'] ?? 0;
 
-                # Product id's must be unique. Combinations of a "Configurable products" share the same product id.
-                # Each combination of a "configurable product" can be represented by a "simple product".
-                # The first and only child of the "configurable product" is the "simple product", or combination, chosen by the customer.
-                # Grab it and replace the product id to guarantee product id uniqueness.
-                if (isset($arrItem['product_type']) && $arrItem['product_type'] === Configurable::TYPE_CODE) {
+                if (($arrItem['product_type'] ?? null) === Configurable::TYPE_CODE) {
                     $children = $item->getChildrenItems();
-                    $child = array_shift($children);
-
-                    if (!empty($child) && $child instanceof \Magento\Sales\Model\Order\Item && method_exists($child, 'getProductId')) {
-                        $productIdChild = $child->getProductId();
-                        if ($this->payConfig->useSkuId() && method_exists($child, 'getSku')) {
-                            $productIdChild = $child->getSku();
+                    if (!empty($children)) {
+                        $child = reset($children);
+                        if ($child instanceof \Magento\Sales\Model\Order\Item) {
+                            $productIdFinal = $this->payConfig->useSkuId() ? $child->getSku() : $child->getProductId();
                         }
-                        $product['id'] = $productIdChild;
                     }
                 }
 
-                $arrProducts[] = $product;
+                $trimmedProductId = mb_substr((string)$productIdFinal, 0, 25);
+                $collectionProducts->addProduct(new PayProduct($trimmedProductId, $productName, $price, null, PayProduct::TYPE_ARTICLE, $qtyOrdered, null, $rate));
 
-                # Check for Weee-tax
                 if (!empty($arrItem['weee_tax_applied'])) {
                     $weeeArr = json_decode($arrItem['weee_tax_applied']);
                     if (is_array($weeeArr)) {
@@ -537,15 +700,16 @@ class PayPaymentCreate
                                 if (isset($arrWeeeTax[$weeeTitle])) {
                                     $arrWeeeTax[$weeeTitle]['price'] += $weeePrice;
                                     $arrWeeeTax[$weeeTitle]['tax'] += $weeeTaxAmount;
+                                    $arrWeeeTax[$weeeTitle]['qty'] += 1;
                                 } else {
-                                    $arrWeeeTax[$weeeTitle] = array(
-                                        'id' => 'weee',
+                                    $arrWeeeTax[$weeeTitle] = [
+                                        'id' => 'weee-' . substr(md5($weeeTitle), 0, 6),
                                         'name' => $weeeTitle,
                                         'price' => $weeePrice,
                                         'tax' => $weeeTaxAmount,
                                         'qty' => 1,
-                                        'type' => \Paynl\Transaction::PRODUCT_TYPE_HANDLING,
-                                    );
+                                        'type' => Product::TYPE_HANDLING,
+                                    ];
                                 }
                             }
                         }
@@ -555,77 +719,43 @@ class PayPaymentCreate
         }
 
         # Shipping
-        $shippingCost = $this->order->getShippingInclTax();
-        $shippingTax = $this->order->getShippingTaxAmount();
-
-        if ($this->payConfig->isAlwaysBaseCurrency()) {
-            $shippingCost = $this->order->getBaseShippingInclTax();
-            $shippingTax = $this->order->getBaseShippingTaxAmount();
-        }
-
-        $shippingDescription = $this->order->getShippingDescription();
+        $shippingCost = $this->payConfig->isAlwaysBaseCurrency() ? $this->order->getBaseShippingInclTax() : $this->order->getShippingInclTax();
+        $shippingTax = $this->payConfig->isAlwaysBaseCurrency() ? $this->order->getBaseShippingTaxAmount() : $this->order->getShippingTaxAmount();
 
         if ($shippingCost != 0) {
-            $arrProducts[] = [
-                'id' => 'shipping',
-                'name' => empty($shippingDescription) ? 'Shipping' : $shippingDescription,
-                'price' => $shippingCost,
-                'qty' => 1,
-                'tax' => $shippingTax,
-                'type' => \Paynl\Transaction::PRODUCT_TYPE_SHIPPING,
-            ];
+            $rate = paynl_calc_vat_percentage($shippingCost, $shippingTax);
+            $collectionProducts->addProduct(new PayProduct('shipping', $this->order->getShippingDescription() ?: 'Shipping', $shippingCost, null, Product::TYPE_SHIPPING, 1, null, $rate));
         }
 
-        // Gift Wrapping
-        $gwCost = $this->order->getGwPriceInclTax();
-        $gwTax = $this->order->getGwTaxAmount();
-
-        if ($this->payConfig->isAlwaysBaseCurrency()) {
-            $gwCost = $this->order->getGwBasePriceInclTax();
-            $gwTax = $this->order->getGwBaseTaxAmount();
-        }
+        # Gift Wrapping
+        $gwCost = $this->payConfig->isAlwaysBaseCurrency() ? $this->order->getGwBasePriceInclTax() : $this->order->getGwPriceInclTax();
+        $gwTax = $this->payConfig->isAlwaysBaseCurrency() ? $this->order->getGwBaseTaxAmount() : $this->order->getGwTaxAmount();
 
         if ($gwCost != 0) {
-            $arrProducts[] = [
-                'id' => $this->order->getGwId(),
-                'name' => 'Gift Wrapping',
-                'price' => $gwCost,
-                'qty' => 1,
-                'tax' => $gwTax,
-                'type' => \Paynl\Transaction::PRODUCT_TYPE_HANDLING,
-            ];
+            $rate = paynl_calc_vat_percentage($gwCost, $gwTax);
+            $collectionProducts->addProduct(new PayProduct($this->order->getGwId() ?: 'giftwrap', 'Gift Wrapping', $gwCost, null, Product::TYPE_HANDLING, 1, null, $rate));
         }
 
-        // kortingen
-        $discount = $this->order->getDiscountAmount();
-        $discountTax = $this->order->getDiscountTaxCompensationAmount() * -1;
-
-        if ($this->payConfig->isAlwaysBaseCurrency()) {
-            $discount = $this->order->getBaseDiscountAmount();
-            $discountTax = $this->order->getBaseDiscountTaxCompensationAmount() * -1;
-        }
+        # Discounts
+        $discount = $this->payConfig->isAlwaysBaseCurrency() ? $this->order->getBaseDiscountAmount() : $this->order->getDiscountAmount();
+        $discountTax = $this->payConfig->isAlwaysBaseCurrency() ? $this->order->getBaseDiscountTaxCompensationAmount() * -1 : $this->order->getDiscountTaxCompensationAmount() * -1;
 
         if ($this->payConfig->isSendDiscountTax() == 0) {
             $discountTax = 0;
         }
 
-        $discountDescription = __('Discount');
-
         if ($discount != 0) {
-            $arrProducts[] = [
-                'id' => 'discount',
-                'name' => $discountDescription,
-                'price' => $discount,
-                'qty' => 1,
-                'tax' => $discountTax,
-                'type' => \Paynl\Transaction::PRODUCT_TYPE_DISCOUNT,
-            ];
+            $rate = paynl_calc_vat_percentage(abs($discount), abs($discountTax));
+            $collectionProducts->addProduct(new PayProduct('discount', 'Discount', $discount, null, Product::TYPE_DISCOUNT, 1, null, $rate));
         }
 
-        if (!empty($arrWeeeTax)) {
-            $arrProducts = array_merge($arrProducts, $arrWeeeTax);
+        # WEEE-tax producten
+        foreach ($arrWeeeTax as $item) {
+            $rate = paynl_calc_vat_percentage($item['price'], $item['tax']);
+            $collectionProducts->addProduct(new PayProduct($item['id'], $item['name'], $item['price'], null, $item['type'], $item['qty'], null, $rate));
         }
 
-        return $arrProducts;
+        return $collectionProducts;
     }
+
 }
