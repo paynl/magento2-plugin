@@ -78,6 +78,7 @@
     <include path="Paynl_Payment::paymentmethods/rvrpas.xml" />
     <include path="Paynl_Payment::paymentmethods/satispay.xml" />
     <include path="Paynl_Payment::paymentmethods/saunaenwellnesscadeaukaart.xml" />
+    <include path="Paynl_Payment::paymentmethods/scholierenpas.xml" />
     <include path="Paynl_Payment::paymentmethods/shoesandsneakers.xml" />
     <include path="Paynl_Payment::paymentmethods/sodexo.xml" />
     <include path="Paynl_Payment::paymentmethods/sofortbanking.xml" />
@@ -99,6 +100,7 @@
     <include path="Paynl_Payment::paymentmethods/wero.xml" />
     <include path="Paynl_Payment::paymentmethods/wijncadeau.xml" />
     <include path="Paynl_Payment::paymentmethods/winkelcheque.xml" />
+    <include path="Paynl_Payment::paymentmethods/wisselcadeaukaart.xml" />
     <include path="Paynl_Payment::paymentmethods/xafaxmynetpay.xml" />
     <include path="Paynl_Payment::paymentmethods/yourgift.xml" />
     <include path="Paynl_Payment::paymentmethods/yourgreengift.xml" />

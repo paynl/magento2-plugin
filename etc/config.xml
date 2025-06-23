@@ -969,6 +969,18 @@ To finish your order, click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_saunaenwellnesscadeaukaart>
+            <paynl_payment_scholierenpas>
+                <active>0</active>
+                <title>Scholieren pas</title>
+                <payment_option_id>4434</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Scholierenpas</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_scholierenpas>
             <paynl_payment_shoesandsneakers>
                 <active>0</active>
                 <title>Shoes &amp; Sneakers Cadeau</title>
@@ -1224,6 +1236,18 @@ To finish your order, click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_winkelcheque>
+            <paynl_payment_wisselcadeaukaart>
+                <active>0</active>
+                <title>Wissel cadeaukaart</title>
+                <payment_option_id>3735</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Wisselcadeaukaart</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_wisselcadeaukaart>
             <paynl_payment_xafaxmynetpay>
                 <active>0</active>
                 <title>Xafax Mynetpay</title>
