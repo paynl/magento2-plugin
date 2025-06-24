@@ -98,7 +98,7 @@ class Instore extends \Magento\Payment\Block\Form
 
             if (is_array($terminals)) {
                 foreach ($terminals as $terminal) {
-                    array_push($terminalsArr, [
+                    array_push($terminalArr, [
                             'name' => $terminal['name'],
                             'visibleName' => $terminal['name'],
                             'id' => $terminal['code'],
