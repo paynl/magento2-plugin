@@ -89,6 +89,7 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_rvrpas',
         'paynl_payment_satispay',
         'paynl_payment_saunaenwellnesscadeaukaart',
+        'paynl_payment_scholierenpas',
         'paynl_payment_shoesandsneakers',
         'paynl_payment_sodexo',
         'paynl_payment_sofortbanking',
@@ -110,6 +111,7 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_wero',
         'paynl_payment_wijncadeau',
         'paynl_payment_winkelcheque',
+        'paynl_payment_wisselcadeaukaart',
         'paynl_payment_xafaxmynetpay',
         'paynl_payment_yourgift',
         'paynl_payment_yourgreengift'
