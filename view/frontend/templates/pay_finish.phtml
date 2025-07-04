@@ -20,9 +20,10 @@
         <?php else: ?>
             <p>
                 <?= /* @noEscape */ sprintf(
-                    $block->escapeHtml(__('Your order # is: <span>%1</span>.')),
+                    __('Your order # is: <span>%s</span>.'),
                     $block->escapeHtml($block->getOrderId())
                 ) ?>
+
             </p>
         <?php endif; ?>
         <p>
