@@ -343,6 +343,14 @@ class Config
     }
 
     /**
+     * @return boolean
+     */
+    public function invoiceCreation()
+    {
+        return $this->store->getConfig('payment/paynl/invoice_creation') == 1;
+    }
+
+    /**
      * @return string
      */
     public function getLanguage()

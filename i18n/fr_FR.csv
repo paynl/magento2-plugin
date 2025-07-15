@@ -366,3 +366,7 @@ Note: This is not standard Magento behavior and may result in multiple orders be
 Remarque : Ce comportement n’est pas standard dans Magento et peut entraîner la création de plusieurs commandes avec le même identifiant de devis. Activez cette option uniquement si cela ne pose pas de problème dans votre cas d’utilisation."
 "Cart preservation","Conservation du panier"
 "When enabled, the cart will be recovered when a customer returns to the cart using the browser's back button.","Lorsque cette option est activée, le panier sera restauré si le client revient en arrière via le bouton du navigateur."
+"Invoice creation","Rechnungserstellung"
+"Determine when in the order process the invoice is sent.","Déterminez à quel moment du processus de commande la facture est envoyée."
+"Create invoice upon payment (default)","Créer une facture lors du paiement (par défaut)"
+"Create invoice upon shipment","Créer une facture lors de l'expédition"

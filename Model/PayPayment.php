@@ -288,9 +288,10 @@ class PayPayment
             $this->initializePayment($order, $payOrder, $paymentProfileId, $paymentMethod);
             $this->validateAmount($order, $transactionPaid, $multiShippingOrder);
             $this->processCustomerNotification($order);
-
-            if ($this->config->ignoreB2BInvoice($paymentMethod) && !empty($order->getBillingAddress()->getCompany())) {
-                $returnResult = $this->processB2BPayment($payOrder, $order, $order->getPayment());
+            if (($this->config->ignoreB2BInvoice($paymentMethod) && !empty($order->getBillingAddress()->getCompany()))
+                || !$this->config->invoiceCreation()
+            ) {
+                $returnResult = $this->processB2BPayment($payOrder, $order, $order->getPayment(), $newStatus);
             } else {
                 $this->processPayment($payOrder, $order);
                 $order->setStatus(!empty($newStatus) ? $newStatus : Order::STATE_PROCESSING);
@@ -471,6 +472,10 @@ class PayPayment
         $order->setTotalPaid($order->getGrandTotal());
         $order->setBaseTotalPaid($order->getBaseGrandTotal());
         $order->setStatus(!empty($newStatus) ? $newStatus : Order::STATE_PROCESSING);
+
+        $originSetting = $this->config->invoiceCreation() ? 'B2B' : 'Invoice creation';
+        $order->addStatusHistoryComment(__('Pay. - ' . $originSetting . ' setting: Skipped creating invoice'));
+
         $order->addStatusHistoryComment(__('Pay. - B2B Setting: Skipped creating invoice'));
         $this->orderRepository->save($order);
 
