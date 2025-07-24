@@ -625,7 +625,13 @@ class PayPaymentCreate
         if (!empty($arrWeeeTax)) {
             $arrProducts = array_merge($arrProducts, $arrWeeeTax);
         }
-
+        
+        foreach ($arrProducts as &$product) {
+            if (!empty($product['name'])) {
+                $product['name'] = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $product['name']);
+            }
+        }
+        
         return $arrProducts;
     }
 }
