@@ -118,7 +118,7 @@ class PayPaymentCreate
             $this->order = $order;
             $this->orderId = $order->getIncrementId();
             $this->additionalData = $order->getPayment()->getAdditionalInformation();
- 
+
             $this->setAmount($this->payConfig->isAlwaysBaseCurrency() ? $order->getBaseGrandTotal() : $order->getGrandTotal());
             $this->setCurrency($this->payConfig->isAlwaysBaseCurrency() ? $order->getBaseCurrencyCode() : $order->getOrderCurrencyCode());
 
