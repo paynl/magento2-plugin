@@ -4,34 +4,14 @@ namespace Paynl\Payment\Model\Config\Source;
 
 use Magento\Framework\Option\ArrayInterface;
 
-class InvoiceCreation implements ArrayInterface
+class InvoiceCreation extends PayOption
 {
-    /**
-     * Options getter
-     *
-     * @return array
-     */
-    public function toOptionArray()
+    public function __construct($options = array())
     {
-        $arrOptions = $this->toArray();
-
-        $arrResult = [];
-        foreach ($arrOptions as $value => $label) {
-            $arrResult[] = ['value' => $value, 'label' => $label];
-        }
-        return $arrResult;
-    }
-
-    /**
-     * Get options in "key-value" format
-     *
-     * @return array
-     */
-    public function toArray()
-    {
-        return [
+        parent::__construct([
             '1' => __('Create invoice upon payment (default)'),
             '0' => __('Create invoice upon shipment'),
-        ];
+        ]);
     }
+
 }
