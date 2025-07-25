@@ -478,8 +478,9 @@ class PayPayment
         $order->setBaseTotalPaid($order->getBaseGrandTotal());
         $order->setStatus(!empty($newStatus) ? $newStatus : Order::STATE_PROCESSING);
 
-        $originSetting = $this->config->shouldInvoiceAfterPayment() ? 'Invoice creation' : 'B2B';
-        $order->addStatusHistoryComment(__('Pay. - ' . $originSetting . ' setting: Skipped creating invoice'));
+        if (!$this->config->shouldInvoiceAfterPayment()) {
+            $order->addStatusHistoryComment(__('Pay. - Invoice skipped (B2B setting)'));
+        }
 
         $this->orderRepository->save($order);
 
