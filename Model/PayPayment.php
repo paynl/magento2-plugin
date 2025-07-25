@@ -288,17 +288,22 @@ class PayPayment
             $this->initializePayment($order, $payOrder, $paymentProfileId, $paymentMethod);
             $this->validateAmount($order, $transactionPaid, $multiShippingOrder);
             $this->processCustomerNotification($order);
-            if (($this->config->ignoreB2BInvoice($paymentMethod) && !empty($order->getBillingAddress()->getCompany()))
-                || !$this->config->invoiceCreation()
-            ) {
-                $returnResult = $this->processB2BPayment($payOrder, $order, $order->getPayment(), $newStatus);
-            } else {
+
+            $isB2B = !empty($order->getBillingAddress()->getCompany());
+            $ignoreB2B = $this->config->ignoreB2BInvoice($paymentMethod);
+
+            if ($this->config->shouldInvoiceAfterPayment() && !($ignoreB2B && $isB2B)) {
+                # Normal flow, creating invoice after payment.
                 $this->processPayment($payOrder, $order);
                 $order->setStatus(!empty($newStatus) ? $newStatus : Order::STATE_PROCESSING);
                 $this->orderRepository->save($order);
                 $this->sendInvoiceIfNeeded($order);
                 $returnResult = true;
+            } else {
+                # Creating no invoice, because of invoicesetting or b2b setting.
+                $returnResult = $this->processB2BPayment($payOrder, $order, $order->getPayment(), $newStatus);
             }
+
         }
 
         return $returnResult;
@@ -473,10 +478,9 @@ class PayPayment
         $order->setBaseTotalPaid($order->getBaseGrandTotal());
         $order->setStatus(!empty($newStatus) ? $newStatus : Order::STATE_PROCESSING);
 
-        $originSetting = $this->config->invoiceCreation() ? 'B2B' : 'Invoice creation';
+        $originSetting = $this->config->shouldInvoiceAfterPayment() ? 'Invoice creation' : 'B2B';
         $order->addStatusHistoryComment(__('Pay. - ' . $originSetting . ' setting: Skipped creating invoice'));
 
-        $order->addStatusHistoryComment(__('Pay. - B2B Setting: Skipped creating invoice'));
         $this->orderRepository->save($order);
 
         return true;

@@ -137,7 +137,7 @@ class ShipmentSaveAfter implements ObserverInterface
         if ($methodInstance instanceof \Paynl\Payment\Model\Paymentmethod\PaymentMethod) {
             $this->config->setStore($order->getStore());
 
-            if (!$this->config->invoiceCreation()) {
+            if (!$this->config->shouldInvoiceAfterPayment()) {
                 $this->payHelper->logDebug('Invoice creation on shipping', [], $order->getStore());
                 try {
                     if (!$order->hasInvoices()) {

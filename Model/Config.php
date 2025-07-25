@@ -345,7 +345,7 @@ class Config
     /**
      * @return boolean
      */
-    public function invoiceCreation()
+    public function shouldInvoiceAfterPayment()
     {
         return $this->store->getConfig('payment/paynl/invoice_creation') == 1;
     }

@@ -9,8 +9,8 @@ class InvoiceCreation extends PayOption
     public function __construct($options = array())
     {
         parent::__construct([
-            '1' => __('Create invoice upon payment (default)'),
-            '0' => __('Create invoice upon shipment'),
+            '0' => __('Create invoice upon payment (default)'),
+            '1' => __('Create invoice upon shipment'),
         ]);
     }
 
