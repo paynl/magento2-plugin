@@ -13,6 +13,7 @@ use Magento\Framework\UrlInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use PayNL\Sdk\Model\Request\OrderStatusRequest;
 use Magento\Framework\HTTP\Client\Curl;
+use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
 
 class ShipmentSaveAfter implements ObserverInterface
 {
@@ -52,12 +53,19 @@ class ShipmentSaveAfter implements ObserverInterface
     private $deploymentConfig;
 
     /**
+     * @var InvoiceSender
+     */
+    private $invoiceSender;
+
+    /**
      * @param Config $config
      * @param PayPayment $payPayment
      * @param PayHelper $payHelper
      * @param UrlInterface $urlBuilder
      * @param ScopeConfigInterface $scopeConfig
      * @param DeploymentConfig $deploymentConfig
+     * @param Curl $httpClient
+     * @param InvoiceSender $invoiceSender
      */
     public function __construct(
         Config               $config,
@@ -66,7 +74,8 @@ class ShipmentSaveAfter implements ObserverInterface
         UrlInterface         $urlBuilder,
         ScopeConfigInterface $scopeConfig,
         DeploymentConfig     $deploymentConfig,
-        Curl                 $httpClient
+        Curl                 $httpClient,
+        InvoiceSender        $invoiceSender
     )
     {
         $this->config = $config;
@@ -76,6 +85,7 @@ class ShipmentSaveAfter implements ObserverInterface
         $this->scopeConfig = $scopeConfig;
         $this->deploymentConfig = $deploymentConfig;
         $this->httpClient = $httpClient;
+        $this->invoiceSender = $invoiceSender;
     }
 
     /**
@@ -126,6 +136,35 @@ class ShipmentSaveAfter implements ObserverInterface
         $methodInstance = $payment->getMethodInstance();
         if ($methodInstance instanceof \Paynl\Payment\Model\Paymentmethod\PaymentMethod) {
             $this->config->setStore($order->getStore());
+
+            if (!$this->config->shouldInvoiceAfterPayment()) {
+                $this->payHelper->logDebug('Invoice creation on shipping', [], $order->getStore());
+                try {
+                    if (!$order->hasInvoices()) {
+                        $invoice = $order->prepareInvoice();
+                        $invoice->register();
+                        $invoice->setEmailSent(false);
+                        $invoice->getOrder()->setIsInProcess(true);
+                        $invoice->save();
+                        $order->addRelatedObject($invoice);
+                    }
+
+                    if ($order->hasInvoices()) {
+                        $invoices = $order->getInvoiceCollection();
+                        foreach ($invoices as $invoice) {
+                            if (!$invoice->getEmailSent()) {
+                                $this->invoiceSender->send($invoice);
+                                $order->addStatusHistoryComment(
+                                    __('Pay. - Invoice #%1 has been sent to the customer.', $invoice->getIncrementId())
+                                )->setIsCustomerNotified(true);
+                                $order->save();
+                            }
+                        }
+                    }
+                } catch (\Exception $e) {
+                    $this->payHelper->logError('Error sending invoice after shipment: ' . $e->getMessage(), [], $order->getStore());
+                }
+            }
 
             if ($this->config->autoCaptureEnabled()) {
                 $invoiceCheck = $this->config->sherpaEnabled() ? true : !$order->hasInvoices();

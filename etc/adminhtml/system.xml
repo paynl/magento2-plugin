@@ -207,6 +207,14 @@ The existing quote ID will be reused to start a new order.</tooltip>
                     <source_model>Paynl\Payment\Model\Config\Source\ProductDataID</source_model>
                     <config_path>payment/paynl/use_sku_id</config_path>
                 </field>
+                <field id="invoice_creation" translate="label,comment" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Invoice creation</label>
+                    <comment>
+                        <![CDATA[Determine when in the order process the invoice is sent.]]>
+                    </comment>
+                    <source_model>Paynl\Payment\Model\Config\Source\InvoiceCreation</source_model>
+                    <config_path>payment/paynl/invoice_creation</config_path>
+                </field>
                 <field id="skip_fraud_detection" translate="label,comment" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Skip fraud detection</label>
                     <comment>

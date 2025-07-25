@@ -343,6 +343,14 @@ class Config
     }
 
     /**
+     * @return boolean
+     */
+    public function shouldInvoiceAfterPayment()
+    {
+        return $this->store->getConfig('payment/paynl/invoice_creation') == 0;
+    }
+
+    /**
      * @return string
      */
     public function getLanguage()

@@ -423,3 +423,7 @@ Note: This is not standard Magento behavior and may result in multiple orders be
                                                                                                                                                                                                  Let op: dit is geen standaard Magento-gedrag en kan ertoe leiden dat meerdere orders op hetzelfde quote ID worden geplaatst. Gebruik deze instelling dus alleen als dit in jouw situatie geen probleem vormt."
 "Cart preservation","Winkelmand"
 "When enabled, the cart will be recovered when a customer returns to the cart using the browser's back button.","Wanneer ingeschakeld, wordt het winkelmandje hersteld als een klant via de terugknop in de browser terugkeert naar de winkelwagen."
+"Invoice creation","Rechnungserstellung"
+"Determine when in the order process the invoice is sent.","Bepaal wanneer in het bestelproces de factuur wordt verzonden."
+"Create invoice upon payment (default)","Factuur aanmaken bij betaling (standaard)"
+"Create invoice upon shipment","Factuur aanmaken bij verzending"

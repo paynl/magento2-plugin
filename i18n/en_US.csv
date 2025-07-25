@@ -429,3 +429,7 @@ The existing quote ID will be reused to start a new order."
 "By default, Magento clears the shopping cart as soon as a payment is initiated. When this option is enabled, the cart remains available and will be restored if the customer returns to the store.
 
 Note: This is not standard Magento behavior and may result in multiple orders being placed using the same quote ID. Enable this setting only if this is acceptable in your specific use case.", "tekst"
+"Invoice creation","Invoice creation"
+"Determine when in the order process the invoice is sent.","Determine when in the order process the invoice is sent."
+"Create invoice upon payment (default)","Create invoice upon payment (default)"
+"Create invoice upon shipment","Create invoice upon shipment"

@@ -289,15 +289,21 @@ class PayPayment
             $this->validateAmount($order, $transactionPaid, $multiShippingOrder);
             $this->processCustomerNotification($order);
 
-            if ($this->config->ignoreB2BInvoice($paymentMethod) && !empty($order->getBillingAddress()->getCompany())) {
-                $returnResult = $this->processB2BPayment($payOrder, $order, $order->getPayment());
-            } else {
+            $isB2B = !empty($order->getBillingAddress()->getCompany());
+            $ignoreB2B = $this->config->ignoreB2BInvoice($paymentMethod);
+
+            if ($this->config->shouldInvoiceAfterPayment() && !($ignoreB2B && $isB2B)) {
+                # Normal flow, creating invoice after payment.
                 $this->processPayment($payOrder, $order);
                 $order->setStatus(!empty($newStatus) ? $newStatus : Order::STATE_PROCESSING);
                 $this->orderRepository->save($order);
                 $this->sendInvoiceIfNeeded($order);
                 $returnResult = true;
+            } else {
+                # Creating no invoice, because of invoicesetting or b2b setting.
+                $returnResult = $this->processB2BPayment($payOrder, $order, $order->getPayment(), $newStatus);
             }
+
         }
 
         return $returnResult;
@@ -471,7 +477,11 @@ class PayPayment
         $order->setTotalPaid($order->getGrandTotal());
         $order->setBaseTotalPaid($order->getBaseGrandTotal());
         $order->setStatus(!empty($newStatus) ? $newStatus : Order::STATE_PROCESSING);
-        $order->addStatusHistoryComment(__('Pay. - B2B Setting: Skipped creating invoice'));
+
+        if (!$this->config->shouldInvoiceAfterPayment()) {
+            $order->addStatusHistoryComment(__('Pay. - Invoice skipped (B2B setting)'));
+        }
+
         $this->orderRepository->save($order);
 
         return true;

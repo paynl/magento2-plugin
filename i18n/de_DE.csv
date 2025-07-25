@@ -366,3 +366,7 @@ Note: This is not standard Magento behavior and may result in multiple orders be
 Hinweis: Dies ist kein standardmäßiges Magento-Verhalten und kann dazu führen, dass mehrere Bestellungen mit derselben Quote-ID aufgegeben werden. Aktivieren Sie diese Einstellung nur, wenn dies in Ihrem Anwendungsfall unproblematisch ist."
 "Cart preservation","Warenkorb beibehalten"
 "When enabled, the cart will be recovered when a customer returns to the cart using the browser's back button.","Wenn aktiviert, wird der Warenkorb wiederhergestellt, wenn ein Kunde über die Zurück-Schaltfläche des Browsers zurückkehrt."
+"Invoice creation","Rechnungserstellung"
+"Determine when in the order process the invoice is sent.","Legen Sie fest, wann im Bestellvorgang die Rechnung versendet wird."
+"Create invoice upon payment (default)","Rechnung bei Zahlung erstellen (Standard)"
+"Create invoice upon shipment","Rechnung bei Versand erstellen"
