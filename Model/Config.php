@@ -130,6 +130,7 @@ class Config
         "paynl_payment_podiumcadeaukaart" => "29",
         "paynl_payment_postepay" => "10",
         "paynl_payment_przelewy24" => "93",
+        "paynl_payment_profuomo" => "420",
         "paynl_payment_prontowonen" => "270",
         "paynl_payment_cardrefund" => "164",
         "paynl_payment_rotterdamcitycard" => "333",
