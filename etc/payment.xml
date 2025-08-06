@@ -210,6 +210,9 @@
         <method name="paynl_payment_prontowonen">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
+        <method name="paynl_payment_profuomo">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
         <method name="paynl_payment_przelewy24">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
