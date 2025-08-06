@@ -83,6 +83,7 @@ define(
             {type: 'paynl_payment_podiumcadeaukaart', component: defaultComponent},
             {type: 'paynl_payment_postepay', component: defaultComponent},
             {type: 'paynl_payment_prontowonen', component: defaultComponent},
+            {type: 'paynl_payment_profuomo', component: defaultComponent},
             {type: 'paynl_payment_przelewy24', component: defaultComponent},
             {type: 'paynl_payment_rotterdamcitycard', component: defaultComponent},
             {type: 'paynl_payment_rvrpas', component: defaultComponent},
