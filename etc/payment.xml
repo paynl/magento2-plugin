@@ -63,6 +63,9 @@
         <method name="paynl_payment_boekenbon">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
+        <method name="paynl_payment_boekencadeau">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
         <method name="paynl_payment_brite">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
@@ -151,6 +154,9 @@
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_kunstencultuurkaart">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_leescadeaukaart">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_maestro">
