@@ -62,7 +62,7 @@
                 <field id="active">1</field>
             </depends>
         </field>
-        <field id="showforgroup" translate="label" type="select" sortOrder="45" showInDefault="1" showInWebsite="1" showInStore="1">
+        <field id="showforgroup" translate="label" type="multiselect" sortOrder="45" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Customer Group</label>
             <source_model>Paynl\Payment\Model\Config\Source\UserGroups</source_model>
             <depends>
