@@ -2,39 +2,27 @@
 
 namespace Paynl\Payment\Observer;
 
-use Magento\CatalogInventory\Api\StockManagementInterface;
-use Magento\CatalogInventory\Model\Indexer\Stock\Processor as StockProcessor;
 use Magento\Framework\Event\Observer as EventObserver;
 use Magento\Framework\Event\ObserverInterface;
+use Magento\CatalogInventory\Api\StockRegistryInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
 
 class SubtractInventoryObserver implements ObserverInterface
 {
-    /**
-     * @var StockManagementInterface
-     */
-    protected $stockManagement;
 
-    /**
-     * @var \Magento\CatalogInventory\Observer\ItemsForReindex
+     /**
+     * @var StockRegistryInterface
      */
-    protected $itemsForReindex;
-
-    /**
-     * @var \Magento\CatalogInventory\Model\Indexer\Stock\Processor
-     */
-    protected $stockIndexerProcessor;
+    private $stockRegistry;
 
     /**
      * SubtractInventoryObserver constructor.
-     * @param StockManagementInterface $stockManagement
-     * @param StockProcessor $stockIndexerProcessor
+     * @param StockRegistryInterface $stockRegistry
      */
     public function __construct(
-        StockManagementInterface $stockManagement,
-        StockProcessor $stockIndexerProcessor
+        StockRegistryInterface $stockRegistry
     ) {
-        $this->stockManagement = $stockManagement;
-        $this->stockIndexerProcessor = $stockIndexerProcessor;
+        $this->stockRegistry = $stockRegistry;
     }
 
     /**
@@ -56,22 +44,21 @@ class SubtractInventoryObserver implements ObserverInterface
                 return $this;
             }
 
-            /**
-             * Reindex items
-             */
-            $itemsForReindex = $this->stockManagement->registerProductsSale(
-                $productQty,
-                $order->getStore()->getWebsiteId()
-            );
+            foreach ($order->getAllItems() as $item) {
+                $itemData = $item->getData();
+                
+                $itemId = $itemData['product_id'] ?? null;
+                $itemQty = $itemData['qty_ordered'] ?? null;
+                $itemSku = $itemData['sku'] ?? null;
 
-            $productIds = [];
-            foreach ($itemsForReindex as $item) {
-                $item->save();
-                $productIds[] = $item->getProductId();
-            }
-            if (!empty($productIds)) {
-                $this->stockIndexerProcessor->reindexList($productIds);
-            }
+                if(!empty($itemId) && !empty($itemQty) && !empty($itemSku)) {
+                    $stockItem = $this->stockRegistry->getStockItem($itemId);
+                    $currentQty = (int) $stockItem->getQty();
+                    $newQty = max(0, $currentQty - $itemQty);
+                    $stockItem->setQty($newQty);
+                    $this->stockRegistry->updateStockItemBySku($itemSku, $stockItem);
+                }
+            }                   
 
             $order->setInventoryProcessed(true);
             return $this;
