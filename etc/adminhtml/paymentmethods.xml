@@ -23,6 +23,7 @@
     <include path="Paynl_Payment::paymentmethods/blik.xml" />
     <include path="Paynl_Payment::paymentmethods/bloemencadeaukaart.xml" />
     <include path="Paynl_Payment::paymentmethods/boekenbon.xml" />
+    <include path="Paynl_Payment::paymentmethods/boekencadeau.xml" />
     <include path="Paynl_Payment::paymentmethods/brite.xml" />
     <include path="Paynl_Payment::paymentmethods/capayable_gespreid.xml" />
     <include path="Paynl_Payment::paymentmethods/cartebleue.xml" />
@@ -54,6 +55,7 @@
     <include path="Paynl_Payment::paymentmethods/klarna.xml" />
     <include path="Paynl_Payment::paymentmethods/klarnakp.xml" />
     <include path="Paynl_Payment::paymentmethods/kunstencultuurkaart.xml" />
+    <include path="Paynl_Payment::paymentmethods/leescadeaukaart.xml" />
     <include path="Paynl_Payment::paymentmethods/maestro.xml" />
     <include path="Paynl_Payment::paymentmethods/mastercard.xml" />
     <include path="Paynl_Payment::paymentmethods/mbway.xml" />
