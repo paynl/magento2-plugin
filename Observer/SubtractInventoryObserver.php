@@ -5,24 +5,47 @@ namespace Paynl\Payment\Observer;
 use Magento\Framework\Event\Observer as EventObserver;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
-use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Store\Api\StoreRepositoryInterface;
+use Magento\InventorySales\Model\ResourceModel\GetAssignedStockIdForWebsite;
+use Magento\InventoryReservationsApi\Model\ReservationBuilderInterface;
+use Magento\InventoryReservationsApi\Model\AppendReservationsInterface;
 
 class SubtractInventoryObserver implements ObserverInterface
 {
+    /**
+     * @var StoreRepositoryInterface
+     */
+    private $storeRepository;
 
     /**
-     * @var StockRegistryInterface
+     * @var GetAssignedStockIdForWebsite
      */
-    private $stockRegistry;
+    private $getAssignedStockIdForWebsite;
+
+    /**
+     * @var ReservationBuilderInterface
+     */
+    private $reservationBuilder;
+
+    /**
+     * @var AppendReservationsInterface
+     */
+    private $appendReservations;
 
     /**
      * SubtractInventoryObserver constructor.
      * @param StockRegistryInterface $stockRegistry
      */
     public function __construct(
-        StockRegistryInterface $stockRegistry
+        StoreRepositoryInterface $storeRepository,
+        GetAssignedStockIdForWebsite $getAssignedStockIdForWebsite,
+        ReservationBuilderInterface $reservationBuilder,
+        AppendReservationsInterface $appendReservations
     ) {
-        $this->stockRegistry = $stockRegistry;
+        $this->storeRepository = $storeRepository;
+        $this->getAssignedStockIdForWebsite = $getAssignedStockIdForWebsite;
+        $this->reservationBuilder = $reservationBuilder;
+        $this->appendReservations = $appendReservations;
     }
 
     /**
@@ -37,29 +60,37 @@ class SubtractInventoryObserver implements ObserverInterface
 
         $payment = $order->getPayment();
         $methodInstance = $payment->getMethodInstance();
-        if ($methodInstance instanceof \Paynl\Payment\Model\Paymentmethod\Paymentmethod) {         
+        if ($methodInstance instanceof \Paynl\Payment\Model\Paymentmethod\Paymentmethod) {
 
             if ($order->getInventoryProcessed()) {
                 return $this;
             }
 
+            $storeId = $order->getStoreId();
+            $website = $this->storeRepository->getById($storeId)->getWebsite();
+            $websiteCode = $website->getCode();
+            $stockId = $this->getAssignedStockIdForWebsite->execute($websiteCode);
+
+            $reservations = [];
+
             foreach ($order->getAllItems() as $item) {
                 $itemData = $item->getData();
 
-                $itemId = $itemData['product_id'] ?? null;
                 $itemQty = $itemData['qty_ordered'] ?? null;
                 $itemSku = $itemData['sku'] ?? null;
 
-                if (!empty($itemId) && !empty($itemQty) && !empty($itemSku)) {
-                    $stockItem = $this->stockRegistry->getStockItem($itemId);
-                    $currentQty = (int) $stockItem->getQty();
-                    $newQty = max(0, $currentQty - $itemQty);
-                    $stockItem->setQty($newQty);
-                    $this->stockRegistry->updateStockItemBySku($itemSku, $stockItem);
+                if (!empty($itemQty) && !empty($itemSku)) {
+                    $reservations[] = $this->reservationBuilder
+                        ->setSku($itemSku)
+                        ->setQuantity(-$itemQty)
+                        ->setStockId($stockId)
+                        ->build();
                 }
             }
 
-            $order->setInventoryProcessed(true);
+            $this->appendReservations->execute($reservations);
+
+            $order->setInventoryProcessed(true)->save();
             return $this;
         }
     }
