@@ -536,7 +536,7 @@ To finish your order, click the link below
             </paynl_payment_good4fun>
             <paynl_payment_googlepay>
                 <active>0</active>
-                <title>Google Pay</title>
+                <title>Google Wallet</title>
                 <payment_option_id>2558</payment_option_id>
                 <order_status>pending_payment</order_status>
                 <order_status_authorized>processing</order_status_authorized>
