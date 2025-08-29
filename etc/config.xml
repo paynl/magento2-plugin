@@ -135,6 +135,18 @@ To finish your order, click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_applepay>
+            <paynl_payment_babycadeaubon>
+                <active>0</active>
+                <title>Babycadeaubon</title>
+                <payment_option_id>4416</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Babycadeaubon</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_babycadeaubon>
             <paynl_payment_biercheque>
                 <active>0</active>
                 <title>Biercheque</title>
@@ -426,6 +438,18 @@ To finish your order, click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_fashioncheque>
+            <paynl_payment_fashionchequebeauty>
+                <active>0</active>
+                <title>Fashion cheque beauty</title>
+                <payment_option_id>4428</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Fashionchequebeauty</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_fashionchequebeauty>
             <paynl_payment_fashiongiftcard>
                 <active>0</active>
                 <title>Fashiongiftcard</title>
@@ -512,7 +536,7 @@ To finish your order, click the link below
             </paynl_payment_good4fun>
             <paynl_payment_googlepay>
                 <active>0</active>
-                <title>Google Pay</title>
+                <title>Google Wallet</title>
                 <payment_option_id>2558</payment_option_id>
                 <order_status>pending_payment</order_status>
                 <order_status_authorized>processing</order_status_authorized>
@@ -1041,6 +1065,18 @@ To finish your order, click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_sodexo>
+            <paynl_payment_sofort>
+                <active>0</active>
+                <title>Sofort (by Klarna)</title>
+                <payment_option_id>4761</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Sofort</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_sofort>
             <paynl_payment_sofortbanking>
                 <active>0</active>
                 <title>Sofortbanking</title>
@@ -1080,6 +1116,18 @@ To finish your order, click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>before_payment</send_new_order_email>
             </paynl_payment_sofortbanking_ds>
+            <paynl_payment_sportsgiftcard>
+                <active>0</active>
+                <title>Sports giftcard</title>
+                <payment_option_id>4422</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Sportsgiftcard</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_sportsgiftcard>
             <paynl_payment_spraypay>
                 <active>0</active>
                 <title>SprayPay</title>

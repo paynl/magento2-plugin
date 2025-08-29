@@ -26,7 +26,7 @@ SOFORT | PostePay | Gezondheidsbon | SprayPay | Instore Payments (POS) |
 Maestro | Dankort | Fashion Giftcard | Biller | Przelewy24 |
 Bank Transfer | Nexi | GivaCard |  | Creditclick | 
 Trustly |  | De Cadeaukaart |  | Payconiq | 
-| Multibanco |  | Paysafecard | | Google Pay |
+| Multibanco |  | Paysafecard | | Google Wallet |
 Blik |  | Huis en Tuin Cadeau| | Apple Pay |
 Online Bankbetaling| | Good4Fun | | |
 | | | YourGift | | 
