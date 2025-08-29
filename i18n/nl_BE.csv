@@ -262,9 +262,9 @@ Aan - via Sherpa - Capture automatisch via Sherpa."
 "Customer Type","Type klant"
 "By default payment methods are available in the checkout for all customer types.
 Private, B2C: Only show this payment method when the customer didn't enter a company name.
-Business, BB2: Only show this payment method when the customer entered a company name.","Standaard zijn betaalmethoden beschikbaar in de checkout voor alle klanttypen.
+Business, B2B: Only show this payment method when the customer entered a company name.","Standaard zijn betaalmethoden beschikbaar in de checkout voor alle klanttypen.
 Particulier, B2C: Laat deze betaalmethode alleen zien als de klant geen bedrijfsnaam heeft ingevoerd.
-Zakelijk, BB2: Laat deze betaalmethode alleen zien als de klant een bedrijfsnaam heeft opgegeven."
+Zakelijk, B2B: Laat deze betaalmethode alleen zien als de klant een bedrijfsnaam heeft opgegeven."
 "Specify which type of customer this payment method should be available to.","Specificeer voor welk type klant deze betaalmethode beschikbaar moet zijn."
 "Chargebacks","Terugboekingen"
 "Set to `on` to accept chargebacks initiated from Pay.","Stel in op `aan` om chargebacks te accepteren die zijn geïnitieerd vanuit Pay."
@@ -290,13 +290,13 @@ Geef deze keuze op bij het afrekenen: de klant kan bij het afrekenen kiezen tuss
 
 Private, B2C: Only show this payment method when the customer didn't enter a company name.
 
-Business, BB2: Only show this payment method when the customer entered a company name.
+Business, B2B: Only show this payment method when the customer entered a company name.
 
 This setting doesn't apply to fast checkout.","Standaard zijn betaalmethoden beschikbaar voor alle klanttypen. Om dit te beperken tot een klanttype, gebruikt u een van de volgende opties:
 
 Privé, B2C: Toon deze betaalmethode alleen als de klant geen bedrijfsnaam heeft ingevoerd.
 
-Zakelijk, BB2: Toon deze betaalmethode alleen als de klant een bedrijfsnaam heeft ingevoerd.
+Zakelijk, B2B: Toon deze betaalmethode alleen als de klant een bedrijfsnaam heeft ingevoerd.
 
 Deze instelling is niet van toepassing op snel bestellen."
 "Select to which customer group iDEAL is available. Customer groups are defined in Magento (Menu: Customers->Customer Groups).
