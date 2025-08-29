@@ -165,6 +165,10 @@ class Config
         "paynl_payment_xafaxmynetpay" => "345",
         "paynl_payment_yourgift" => "31",
         "paynl_payment_yourgreengift" => "246",
+        "paynl_payment_babycadeaubon" => "408",
+        "paynl_payment_fashionchequebeauty" => "411",
+        "paynl_payment_sofort" => "429",
+        "paynl_payment_sportsgiftcard" => "414",
     ];
 
     /**
