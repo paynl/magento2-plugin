@@ -51,6 +51,7 @@ define(
             {type: 'paynl_payment_festivalcadeaukaart', component: defaultComponent},
             {type: 'paynl_payment_flyingblueplus', component: defaultComponent},
             {type: 'paynl_payment_gezondheidsbon', component: defaultComponent},
+            {type: 'paynl_payment_giftforgood', component: defaultComponent},
             {type: 'paynl_payment_giropay', component: defaultComponent},
             {type: 'paynl_payment_givacard', component: defaultComponent},
             {type: 'paynl_payment_good4fun', component: defaultComponent},

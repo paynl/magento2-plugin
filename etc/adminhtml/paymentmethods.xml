@@ -41,6 +41,7 @@
     <include path="Paynl_Payment::paymentmethods/festivalcadeaukaart.xml" />
     <include path="Paynl_Payment::paymentmethods/flyingblueplus.xml" />
     <include path="Paynl_Payment::paymentmethods/gezondheidsbon.xml" />
+    <include path="Paynl_Payment::paymentmethods/giftforgood.xml" />
     <include path="Paynl_Payment::paymentmethods/giropay.xml" />
     <include path="Paynl_Payment::paymentmethods/givacard.xml" />
     <include path="Paynl_Payment::paymentmethods/good4fun.xml" />

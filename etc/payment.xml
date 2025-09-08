@@ -117,6 +117,9 @@
         <method name="paynl_payment_gezondheidsbon">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
+        <method name="paynl_payment_giftforgood">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
         <method name="paynl_payment_good4fun">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
