@@ -185,7 +185,7 @@ Provide this choice in the checkout: the customer can choose in the checkout bet
             </depends>
             <config_path>payment/paynl_payment_instore/exclusiveforuseragent_custom</config_path>
         </field>
-        <field id="showforgroup" translate="label" type="select" sortOrder="160" showInDefault="1" showInWebsite="1" showInStore="1">
+        <field id="showforgroup" translate="label" type="multiselect" sortOrder="160" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Customer Group</label>
             <source_model>Paynl\Payment\Model\Config\Source\UserGroups</source_model>
             <depends>
