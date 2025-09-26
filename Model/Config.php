@@ -87,6 +87,7 @@ class Config
         "paynl_payment_blik" => "234",
         "paynl_payment_bloemencadeaukaart" => "192",
         "paynl_payment_boekenbon" => "219",
+        "paynl_payment_boekencadeau" => "423",
         "paynl_payment_brite" => "405",
         "paynl_payment_cadeaubonnen" => "cadeaubonnen",
         "paynl_payment_capayable_gespreid" => "19",
@@ -119,6 +120,7 @@ class Config
         "paynl_payment_klarna" => "15",
         "paynl_payment_klarnakp" => "15",
         "paynl_payment_kunstencultuurkaart" => "315",
+        "paynl_payment_leescadeaukaart" => "426",
         "paynl_payment_maestro" => "33",
         "paynl_payment_mastercard" => "8",
         "paynl_payment_mbway" => "381",
@@ -171,6 +173,10 @@ class Config
         "paynl_payment_xafaxmynetpay" => "345",
         "paynl_payment_yourgift" => "31",
         "paynl_payment_yourgreengift" => "246",
+        "paynl_payment_babycadeaubon" => "408",
+        "paynl_payment_fashionchequebeauty" => "411",
+        "paynl_payment_sofort" => "429",
+        "paynl_payment_sportsgiftcard" => "414",
     ];
 
     /**

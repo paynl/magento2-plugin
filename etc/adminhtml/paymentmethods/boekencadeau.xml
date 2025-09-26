@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <group id="paynl_payment_boekencadeau" sortOrder="240" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Boeken Cadeau</label>
+        <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Enabled</label>
+            <source_model>Paynl\Payment\Model\Config\Source\Available\Boekencadeau</source_model>
+            <config_path>payment/paynl_payment_boekencadeau/active</config_path>
+        </field>
+        <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Title</label>
+            <config_path>payment/paynl_payment_boekencadeau/title</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+        <field id="order_status" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>New order status</label>
+            <source_model>Paynl\Payment\Model\Config\Source\Order\Status\PendingPayment</source_model>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+            <config_path>payment/paynl_payment_boekencadeau/order_status</config_path>
+        </field>
+        <field id="order_status_authorized" translate="label" type="select" sortOrder="32" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Authorized order status</label>
+            <source_model>Paynl\Payment\Model\Config\Source\Order\Status\Processing</source_model>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+            <config_path>payment/paynl_payment_boekencadeau/order_status_authorized</config_path>
+        </field>
+        <field id="order_status_processing" translate="label" type="select" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Paid order status</label>
+            <source_model>Paynl\Payment\Model\Config\Source\Order\Status\Processing</source_model>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+            <config_path>payment/paynl_payment_boekencadeau/order_status_processing</config_path>
+        </field>
+        <field id="allowspecific" translate="label" type="allowspecific" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Accepted billing country</label>
+            <source_model>Magento\Payment\Model\Config\Source\Allspecificcountries</source_model>
+            <config_path>payment/paynl_payment_boekencadeau/allowspecific</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+        <field id="specificcountry" translate="label" type="multiselect" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Select accepted countries</label>
+            <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
+            <can_be_empty>1</can_be_empty>
+            <config_path>payment/paynl_payment_boekencadeau/specificcountry</config_path>
+            <frontend_model>Paynl\Payment\Block\Adminhtml\Render\Multiselect</frontend_model>
+            <depends>
+                <field id="allowspecific">1</field>
+                <field id="active">1</field>
+            </depends>
+        </field>
+        <field id="instructions" translate="label" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Payment instructions</label>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+            <config_path>payment/paynl_payment_boekencadeau/instructions</config_path>
+        </field>
+        <field id="min_order_total" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Minimum order total</label>
+            <config_path>payment/paynl_payment_boekencadeau/min_order_total</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+        <field id="max_order_total" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Maximum order total</label>
+            <config_path>payment/paynl_payment_boekencadeau/max_order_total</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+        <field id="sort_order" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Sort order</label>
+            <frontend_class>validate-number</frontend_class>
+            <config_path>payment/paynl_payment_boekencadeau/sort_order</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+        <field id="send_new_order_email" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Send order confirmation email</label>
+            <source_model>Paynl\Payment\Model\Config\Source\SendNewOrderEmail</source_model>
+            <config_path>payment/paynl_payment_boekencadeau/send_new_order_email</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+        <field id="disallowedshipping" translate="label" type="multiselect" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Disallowed Shipping Methods</label>
+            <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>
+            <can_be_empty>1</can_be_empty>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+            <config_path>payment/paynl_payment_boekencadeau/disallowedshipping</config_path>
+            <frontend_model>Paynl\Payment\Block\Adminhtml\Render\Multiselect</frontend_model>
+        </field>
+        <field id="showforcompany" translate="label" type="select" sortOrder="150" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Customer Type</label>
+            <source_model>Paynl\Payment\Model\Config\Source\ShowCompanyOptions</source_model>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+            <config_path>payment/paynl_payment_boekencadeau/showforcompany</config_path>
+            <tooltip>By default payment methods are available in the checkout for all customer types.
+Private, B2C: Only show this payment method when the customer didn't enter a company name.
+Business, B2B: Only show this payment method when the customer entered a company name.</tooltip>
+            <comment><![CDATA[Specify which type of customer this payment method should be available to.]]></comment>
+        </field>
+        <field id="showforgroup" translate="label" type="select" sortOrder="160" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Customer Group</label>
+            <source_model>Paynl\Payment\Model\Config\Source\UserGroups</source_model>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+            <config_path>payment/paynl_payment_boekencadeau/showforgroup</config_path>
+            <comment><![CDATA[Show payment method only to specific customer groups.]]></comment>
+        </field>
+        <group id="advanced" translate="label" sortOrder="200" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Advanced</label>
+            <field id="payment_option_id" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Payment method ID</label>
+                <comment>Only change this if you are told to do so by Pay. Support</comment>
+                <config_path>payment/paynl_payment_boekencadeau/payment_option_id</config_path>
+            </field>
+        </group>
+    </group>
+</include>
