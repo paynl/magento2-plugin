@@ -184,7 +184,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             } elseif ($payOrder->isVoided()) {
                 $eResponse = $this->processVoid($order, $payOrder);
 
-            } elseif ($payOrder->isCancelled()) {
+            } elseif ($payOrder->isCancelled() || $payOrder->isDenied()) {
                 $eResponse = $this->processCancel($order, $payOrder);
 
             } elseif ($payOrder->isBeingVerified()) {
