@@ -303,9 +303,7 @@ class Finish extends PayAction
             } else {
                 $this->messageManager->addNoticeMessage(__('Unfortunately something went wrong'));
             }
-            if (!empty($order)) {
-                $this->config->maintainQuoteOnCancel() ? $this->reactivateCart($order) : $this->initiateNewQuote($order);
-            }
+
             $resultRedirect->setPath('checkout/cart');
         }
 
