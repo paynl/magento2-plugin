@@ -181,8 +181,12 @@ class PayPaymentCreate
             ->setReference($this->order->getEntityId())
             ->setExchangeUrl($this->paymentData['exchangeURL'])
             ->setCurrency($this->paymentData['currency'])
-            ->setDescription($this->getDescription())
-            ->setTransferData($this->methodInstance->getTransferData());
+            ->setDescription($this->getDescription());
+
+        $td = $this->methodInstance->getTransferData();
+        if (is_array($td)) {
+            $this->request->setTransferData($td);
+        }
 
         $this->request->setExpire($this->paymentData['expire'] ?? '');
         $this->request->setStats($this->getStats());
