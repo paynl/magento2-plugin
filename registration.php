@@ -7,8 +7,3 @@ ComponentRegistrar::register(
     'Paynl_Payment',
     __DIR__
 );
-
-$functionFile = __DIR__ . '/Helper/DisplayFunctions.php';
-if (file_exists($functionFile)) {
-    require_once $functionFile;
-}
