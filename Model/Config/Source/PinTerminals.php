@@ -96,7 +96,11 @@ class PinTerminals implements ArrayInterface
         if ($this->_isConfigured()) {
             if ($this->_config->isPaymentMethodActive('paynl_payment_instore')) {
                 [$scopeType, $scopeId] = $this->getScopeInfo();
-                $terminals = json_decode($this->_scopeConfig->getValue('payment/paynl/terminals', $scopeType, $scopeId), true);
+
+                $value = $this->_scopeConfig->getValue('payment/paynl/terminals', $scopeType, $scopeId);
+
+                $terminals = $value ? json_decode($value, true) : [];
+                
                 if (is_array($terminals)) {
                     foreach ($terminals as $terminal) {
                         array_push(
