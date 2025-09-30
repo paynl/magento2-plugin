@@ -707,7 +707,7 @@ class PayPaymentCreate
                                     $arrWeeeTax[$weeeTitle]['qty'] += 1;
                                 } else {
                                     $arrWeeeTax[$weeeTitle] = [
-                                        'id' => 'weee-' . substr(md5($weeeTitle), 0, 6),
+                                        'id' => 'weee-' . substr(uniqid(), 0, 6),
                                         'name' => $weeeTitle,
                                         'price' => $weeePrice,
                                         'tax' => $weeeTaxAmount,
