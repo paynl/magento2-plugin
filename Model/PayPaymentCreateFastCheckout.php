@@ -81,8 +81,12 @@ class PayPaymentCreateFastCheckout extends PayPaymentCreate
             ->setReference($this->reference)
             ->setExchangeUrl($this->paymentData['exchangeURL'])
             ->setCurrency($this->paymentData['currency'])
-            ->setDescription($this->getDescription())
-            ->setTransferData($this->methodInstance->getTransferData());
+            ->setDescription($this->getDescription());
+
+        $td = $this->methodInstance->getTransferData();
+        if (is_array($td) && count($td) > 0) {
+            $this->request->setTransferData([$td]);
+        }
 
         $this->request->setExpire($this->paymentData['expire'] ?? '');
         $this->request->setStats($this->getStats());

@@ -184,8 +184,8 @@ class PayPaymentCreate
             ->setDescription($this->getDescription());
 
         $td = $this->methodInstance->getTransferData();
-        if (is_array($td)) {
-            $this->request->setTransferData($td);
+        if (is_array($td) && count($td) > 0) {
+            $this->request->setTransferData([$td]);
         }
 
         $this->request->setExpire($this->paymentData['expire'] ?? '');
