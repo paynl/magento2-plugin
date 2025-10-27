@@ -51,12 +51,12 @@ class Paylink extends PaymentMethod
 
             $this->paynlConfig->setStore($store);
 
-            $transaction = (new PayPaymentCreate($order, $this))->create();
+            $payOrder = (new PayPaymentCreate($order, $this))->create();
 
-            $order->getPayment()->setAdditionalInformation('transactionId', $transaction->getTransactionId());
+            $order->getPayment()->setAdditionalInformation('transactionId', $payOrder->getOrderId());
 
             $status = $this->getConfigData('order_status');
-            $url = $transaction->getRedirectUrl();
+            $url = $payOrder->getPaymentUrl();
 
             $haystack = $this->getLocale->getLocale();
             $lang = strstr($haystack, '_', true);

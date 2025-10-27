@@ -1,42 +1,30 @@
 {
-    "name": "paynl/magento2-plugin",
-    "description": "PAY. Payment methods for Magento2",
-    "type": "magento2-module",
-    "version": "3.17.5",
-    "require": {
-        "magento/module-sales": "^102.0.0 || ^103.0.0",
-        "magento/module-payment": "^100.3.0",
-        "magento/module-quote": "^101.1.0",
-        "paynl/sdk": "^1.6.9"
-    },
-    "authors": [
-        {
-            "name": "Andy Pieters",
-            "email": "andy@pay.nl"
-        },
-        {
-            "name": "Kevin Verschoor",
-            "email": "k.verschoor@pay.nl"
-        },
-        {
-            "name": "Anne van Velden",
-            "email": "anne@pay.nl"
-        },
-        {
-            "name": "Wouter Jonker",
-            "email": "wouter@pay.nl"
-        }
+  "name": "paynl/magento2-plugin",
+  "description": "Pay. Payment methods for Magento 2",
+  "type": "magento2-module",
+  "version": "4.0.0",
+  "require": {
+    "php": "^8.1 || ^8.2 || ^8.3 || ^8.4",
+    "magento/module-sales": "^103.0.0",
+    "magento/module-payment": "^100.3.0",
+    "magento/module-quote": "^101.1.0",
+    "paynl/php-sdk": ">=1.0.7"
+  },
+  "authors": [
+    { "name": "Kevin Verschoor" },
+    { "name": "Anne van Velden" },
+    { "name": "Wouter Jonker" }
+  ],
+  "support": {
+    "email": "support@pay.nl",
+    "docs": "https://docs.pay.nl/plugins#magento-2"
+  },
+  "autoload": {
+    "files": [
+      "registration.php"
     ],
-    "support": {
-        "email": "support@pay.nl",
-        "docs": "https://docs.pay.nl/plugins#magento-2"
-    },
-    "autoload": {
-        "files": [
-            "registration.php"
-        ],
-        "psr-4": {
-            "Paynl\\Payment\\": ""
-        }
+    "psr-4": {
+      "Paynl\\Payment\\": ""
     }
+  }
 }

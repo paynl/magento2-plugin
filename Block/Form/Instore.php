@@ -3,6 +3,7 @@
 namespace Paynl\Payment\Block\Form;
 
 use Magento\Framework\App\CacheInterface;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\Store;
 use Magento\Store\Model\StoreManagerInterface;
 use Paynl\Payment\Helper\PayHelper;
@@ -83,36 +84,30 @@ class Instore extends \Magento\Payment\Block\Form
         $store = $this->storeManager->getStore();
         $storeId = $store->getId();
 
+        $scopeId = 0;
+        if ($storeId) {
+            $scope = 'stores';
+            $scopeId = $storeId;
+        }
+
         $this->config->setStore($store);
-        $configured = $this->config->configureSDK();
 
         if ($this->config->isPaymentMethodActive('paynl_payment_instore')) {
-            if ($configured) {
-                $cacheName = 'paynl_terminals_' . $store->getConfig('payment/paynl_payment_instore/payment_option_id') . '_' . $storeId;
-                $terminalJson = $this->cache->load($cacheName);
+            $scopeType = ScopeConfigInterface::SCOPE_TYPE_DEFAULT;
+            $terminals = json_decode($this->_scopeConfig->getValue('payment/paynl/terminals', $scopeType, $scopeId), true);
 
-                if ($terminalJson) {
-                    $terminalArr = json_decode($terminalJson);
-                } else {
-                    try {
-                        $terminals = \Paynl\Instore::getAllTerminals();
-                        $terminals = $terminals->getList();
-
-                        if (!is_array($terminals)) {
-                            $terminals = [];
-                        }
-
-                        foreach ($terminals as $terminal) {
-                            $terminal['visibleName'] = $terminal['name'];
-                            array_push($terminalArr, $terminal);
-                        }
-                        $this->cache->save(json_encode($terminalArr), $cacheName);
-                    } catch (\Paynl\Error\Error $e) {
-                        $this->payHelper->logNotice('PAY.: Pinterminal error, ' . $e->getMessage());
-                    }
+            if (is_array($terminals)) {
+                foreach ($terminals as $terminal) {
+                    array_push($terminalArr, [
+                            'name' => $terminal['name'],
+                            'visibleName' => $terminal['name'],
+                            'id' => $terminal['code'],
+                        ]
+                    );
                 }
             }
         }
+
         $optionArr = [];
         $optionArr[0] = __('Select card terminal');
         foreach ($terminalArr as $terminal) {

@@ -4,6 +4,16 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
     <default>
+        <csp>
+            <mode>
+                <storefront>
+                    <report_uri>{{base_url}}paynl/csp/report</report_uri>
+                </storefront>
+                <admin>
+                    <report_uri>{{base_url}}paynl/csp/report</report_uri>
+                </admin>
+            </mode>
+        </csp>
         <payment>
             <paynl>
                 <apitoken_encrypted backend_model="Magento\Config\Model\Config\Backend\Encrypted"></apitoken_encrypted>
@@ -14,6 +24,8 @@
                 <order_description_prefix>Order </order_description_prefix>
                 <pay_pending_page>1</pay_pending_page>
                 <follow_payment_method>1</follow_payment_method>
+                <sdk_caching>1</sdk_caching>
+                <multicore><![CDATA[https://connect.pay.nl]]></multicore>
             </paynl>
             <paynl_payment_paylink>
                 <active>0</active>
@@ -41,7 +53,7 @@ To finish your order, click the link below
             </paynl_payment_paylink>
             <paynl_payment_afterpay>
                 <active>0</active>
-                <title>Riverty</title>
+                <title>Riverty - Achteraf betalen</title>
                 <payment_option_id>739</payment_option_id>
                 <order_status>pending_payment</order_status>
                 <order_status_authorized>processing</order_status_authorized>
@@ -53,7 +65,7 @@ To finish your order, click the link below
             </paynl_payment_afterpay>
             <paynl_payment_afterpay_international>
                 <active>0</active>
-                <title>Riverty</title>
+                <title>Riverty - Achteraf betalen</title>
                 <payment_option_id>2561</payment_option_id>
                 <order_status>pending_payment</order_status>
                 <order_status_authorized>processing</order_status_authorized>
@@ -208,7 +220,7 @@ To finish your order, click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_beautycadeau>
-            <paynl_payment_beautyenmorecadeaukaart>
+            <paynl_payment_beautyandmorecadeaukaart>
                 <active>0</active>
                 <title>Beauty &amp; More cadeaukaart</title>
                 <payment_option_id>4173</payment_option_id>
@@ -216,10 +228,10 @@ To finish your order, click the link below
                 <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
                 <payment_action>order</payment_action>
-                <model>Paynl\Payment\Model\Paymentmethod\Beautyenmorecadeaukaart</model>
+                <model>Paynl\Payment\Model\Paymentmethod\Beautyandmorecadeaukaart</model>
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
-            </paynl_payment_beautyenmorecadeaukaart>
+            </paynl_payment_beautyandmorecadeaukaart>
             <paynl_payment_billink>
                 <active>0</active>
                 <title>Achteraf betalen via Billink</title>
@@ -510,6 +522,18 @@ To finish your order, click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_giftforgood>
+            <paynl_payment_cadeaubonnen>
+                <active>0</active>
+                <title>Cadeaubonnen</title>
+                <payment_option_id>3189</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Cadeaubonnen</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_cadeaubonnen>
             <paynl_payment_giropay>
                 <active>0</active>
                 <title>Giropay</title>
@@ -604,7 +628,7 @@ To finish your order, click the link below
                 <instructions>Veilig betalen via uw eigen bank</instructions>
                 <payment_action>order</payment_action>
                 <model>Paynl\Payment\Model\Paymentmethod\Ideal</model>
-                <group>paynl_payment</group>                
+                <group>paynl_payment</group>
                 <fast_checkout_show_modal>1</fast_checkout_show_modal>
             </paynl_payment_ideal>
             <paynl_payment_in3business>
@@ -633,7 +657,7 @@ To finish your order, click the link below
             <paynl_payment_instore>
                 <active>0</active>
                 <title>Pinnen</title>
-                <payment_option_id>1729</payment_option_id>
+                <payment_option_id>1927</payment_option_id>
                 <order_status>pending_payment</order_status>
                 <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
@@ -666,7 +690,6 @@ If you have questions about your order, you can email us at ((support_email))
 To finish your order, click the link below
 ((invoice))
                 </invoice_body>
-
             </paynl_payment_invoice>
             <paynl_payment_kidsorteen>
                 <active>0</active>

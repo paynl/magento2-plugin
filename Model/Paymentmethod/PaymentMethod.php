@@ -25,7 +25,11 @@ use Magento\Store\Model\StoreManagerInterface;
 use Paynl\Payment\Helper\PayHelper;
 use Paynl\Payment\Model\Config;
 use Paynl\Payment\Model\PayPaymentCreate;
-use Paynl\Transaction;
+
+use PayNL\Sdk\Model\Pay\PayOrder;
+use PayNL\Sdk\Model\Request\TransactionRefundRequest;
+use PayNL\Sdk\Model\Request\OrderCaptureRequest;
+use PayNL\Sdk\Model\Request\OrderVoidRequest;
 
 abstract class PaymentMethod extends AbstractMethod
 {
@@ -387,6 +391,32 @@ abstract class PaymentMethod extends AbstractMethod
     }
 
     /**
+     * @return false|void
+     */
+    public function getTerminals()
+    {
+        $this->paynlConfig->setStore($store);
+
+        if (!$this->paynlConfig->isPaymentMethodActive('paynl_payment_instore')) {
+            return false;
+        }
+
+        $terminalsArr = [];
+
+        $scopeType = ScopeConfigInterface::SCOPE_TYPE_DEFAULT;
+        $terminals = json_decode($this->_scopeConfig->getValue('payment/paynl/terminals', $scopeType), true);
+
+        foreach ($terminals as $terminal) {
+            array_push($terminalsArr, [
+                    'name' => $terminal['name'],
+                    'visibleName' => $terminal['name'],
+                    'id' => $terminal['code'],
+                ]
+            );
+        }
+    }
+
+    /**
      * @return string
      */
     public function getVersion()
@@ -431,14 +461,17 @@ abstract class PaymentMethod extends AbstractMethod
 
     /**
      * @param InfoInterface $payment
-     * @param float $amount
-     * @return object
+     * @param $amount
+     * @return $this
      */
     public function refund(InfoInterface $payment, $amount)
     {
+        $transactionId = $payment->getAdditionalInformation('transactionId');
+
+        $this->payHelper->logDebug('Paymentmethod:refund() ' . ($transactionId ?? 'empty'));
+
         if ($amount == null || $amount == 0) {
-            $this->messageManager->addError('Pay. did not process this refund due to an invalid amount.');
-            return $this;
+            throw new \Magento\Framework\Exception\LocalizedException(__('Pay. did not process this refund due to an invalid amount:' . $amount));;
         }
 
         $order = $payment->getOrder();
@@ -446,28 +479,33 @@ abstract class PaymentMethod extends AbstractMethod
         $baseCurrencyCode = $order->getBaseCurrencyCode();
 
         if ($currencyCode !== $baseCurrencyCode) {
-            $creditmemo = $payment->getCreditmemo();
-            if ($creditmemo) {
-                $amount = $creditmemo->getGrandTotal();
+            $creditMemo = $payment->getCreditmemo();
+            if ($creditMemo) {
+                $amount = $creditMemo->getGrandTotal();
+            } else {
+                $this->payHelper->logCritical('Creditmemo not found while adjusting refund amount for currency mismatch' . ($transactionId ?? 'empty'));
             }
         }
 
         $this->paynlConfig->setStore($order->getStore());
-        $this->paynlConfig->configureSDK();
-
-        $transactionId = $payment->getParentTransactionId();
-        $transactionId = str_replace('-capture', '', $transactionId);
 
         try {
-            Transaction::refund($transactionId, $amount, null, null, null, $currencyCode);
+            $config = $this->paynlConfig->getPayConfig();
+            $transactionRefundRequest = new TransactionRefundRequest($transactionId);
+            $transactionRefundRequest
+                ->setConfig($config)
+                ->setCurrency($currencyCode)
+                ->setAmount($amount)
+                ->start();
+
         } catch (\Exception $e) {
             $docsLink = 'https://docs.pay.nl/plugins#magento2-errordefinitions';
 
             $message = strtolower($e->getMessage());
-            if (substr($message, 0, 19) == '403 - access denied') {
+            if (str_starts_with($message, '403 - access denied')) {
                 $message = 'PAY. could not authorize this refund. Errorcode: PAY-MAGENTO2-001. See for more information ' . $docsLink;
             } else {
-                $message = 'PAY. could not process this refund (' . $message . '). Errorcode: PAY-MAGENTO2-002. Transaction: ' . $transactionId . '. More info: ' . $docsLink;
+                $message = 'PAY. could not process this refund (' . $message . '). Error code: PAY-MAGENTO2-002. Transaction: ' . $transactionId . '. More info: ' . $docsLink;
             }
 
             throw new \Magento\Framework\Exception\LocalizedException(__($message));
@@ -483,9 +521,10 @@ abstract class PaymentMethod extends AbstractMethod
      */
     public function capture(InfoInterface $payment, $amount)
     {
-        $transactionId = $payment->getParentTransactionId();
+        $payOrderId = $payment->getParentTransactionId();
+        $this->payHelper->logDebug('Paymentmethod:capture() ' . ($payOrderId ?? 'empty'));
 
-        if (empty($transactionId)) {
+        if (empty($payOrderId)) {
             $this->payHelper->logCritical('Pay. transaction ID missing, could not process capture.');
         } else {
             try {
@@ -493,11 +532,14 @@ abstract class PaymentMethod extends AbstractMethod
                 $order = $payment->getOrder();
                 $order->save();
                 $this->paynlConfig->setStore($order->getStore());
-                $this->paynlConfig->configureSDK();
-                Transaction::capture($transactionId);
+
+                $orderCaptureRequest = new OrderCaptureRequest($payOrderId);
+                $orderCaptureRequest->setConfig($this->paynlConfig->getPayConfig());
+                $orderCaptureRequest->start();
+
             } catch (\Exception $e) {
                 $message = strtolower($e->getMessage());
-                $this->payHelper->logCritical('Pay. could not process capture (' . $message . '). Transaction: ' . $transactionId . '. OrderId: ' . $order->getIncrementId());
+                $this->payHelper->logCritical('Pay. could not process capture (' . $message . '). Transaction: ' . $payOrderId . '. OrderId: ' . $order->getIncrementId());
             }
         }
         return $this;
@@ -517,8 +559,11 @@ abstract class PaymentMethod extends AbstractMethod
             try {
                 $order = $payment->getOrder();
                 $this->paynlConfig->setStore($order->getStore());
-                $this->paynlConfig->configureSDK();
-                Transaction::void($transactionId);
+
+                $orderVoidRequest = new OrderVoidRequest($transactionId);
+                $orderVoidRequest->setConfig($this->paynlConfig->getPayConfig());
+                $payOrder = $orderVoidRequest->start();
+
             } catch (\Exception $e) {
                 $message = strtolower($e->getMessage());
                 $this->payHelper->logCritical('Pay. could not process void (' . $message . '). Transaction: ' . $transactionId . '. OrderId: ' . $order->getIncrementId());
@@ -538,24 +583,25 @@ abstract class PaymentMethod extends AbstractMethod
     public function startTransaction(Order $order)
     {
         try {
-            $transaction = (new PayPaymentCreate($order, $this))->create();
+            $payOrder = (new PayPaymentCreate($order, $this))->create();
         } catch (\Exception $e) {
             $this->payHelper->logCritical('Transaction start failed: ' . $e->getMessage() . ' | ' . $e->getCode());
             $this->messageManager->addNoticeMessage($this->payHelper->getFriendlyMessage($e->getMessage()));
             return $order->getStore()->getBaseUrl() . 'checkout/cart/index';
         }
 
-        $this->payHelper->logDebug('Transaction: ' . $transaction->getTransactionId());
-        $order->getPayment()->setAdditionalInformation('transactionId', $transaction->getTransactionId());
+        $this->payHelper->logDebug(__METHOD__ . ': payOrderId: ' . $payOrder->getOrderId());
+        $order->getPayment()->setAdditionalInformation('transactionId', $payOrder->getOrderId());
         $this->paynlConfig->setStore($order->getStore());
 
         if ($this->shouldHoldOrder()) {
+            $this->payHelper->logDebug(__METHOD__ . ': order on hold due to setting "Set order on-hold" for orderid ' . $payOrder->getOrderId());
             $order->hold();
         }
 
         $this->orderRepository->save($order);
 
-        return $transaction->getRedirectUrl();
+        return $payOrder->getPaymentUrl();
     }
 
     /**

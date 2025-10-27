@@ -10,6 +10,7 @@ class LogOptions implements ArrayInterface
     public const LOG_CRITICAL_NOTICE = 1;
     public const LOG_ONLY_CRITICAL = 2;
     public const LOG_NONE = 3;
+    public const LOG_DEV = 4;
 
     /**
      * Options getter
@@ -39,6 +40,7 @@ class LogOptions implements ArrayInterface
             self::LOG_ONLY_CRITICAL => __('Only Critical errors are logged'),
             self::LOG_CRITICAL_NOTICE => __('Only Critical errors and Notices are logged'),
             self::LOG_ALL => __('Everything is logged, including Critical, Notice, Info and Debug'),
+            self::LOG_DEV => __('Everything is logged, including Critical, Notice, Info and Debug and Dev messages'),
         ];
     }
 }

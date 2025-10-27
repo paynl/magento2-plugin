@@ -136,7 +136,7 @@ Private, B2C: Only show this payment method when the customer didn't enter a com
 Business, B2B: Only show this payment method when the customer entered a company name.</tooltip>
             <comment><![CDATA[Specify which type of customer this payment method should be available to.]]></comment>
         </field>
-        <field id="showforgroup" translate="label" type="select" sortOrder="160" showInDefault="1" showInWebsite="1" showInStore="1">
+        <field id="showforgroup" translate="label" type="multiselect" sortOrder="160" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Customer Group</label>
             <source_model>Paynl\Payment\Model\Config\Source\UserGroups</source_model>
             <depends>

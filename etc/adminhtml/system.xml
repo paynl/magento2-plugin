@@ -174,14 +174,6 @@ On - via Sherpa - Capture automatically via Sherpa.</tooltip>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <config_path>payment/paynl/never_cancel</config_path>
                 </field>
-                <field id="recover_quote_on_redirect" translate="label,comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Recover quote on back button</label>
-                    <comment>
-                        <![CDATA[When enabled, the quote will be recovered when the customer returns to the cart using the browser's back button.]]>
-                    </comment>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <config_path>payment/paynl/recover_quote_on_redirect</config_path>
-                </field>
                 <field id="authorised_paid_amount" translate="label,tooltip" type="select" sortOrder="66" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Authorised paid amount</label>
                     <tooltip>In some implementations, when a payment is authorized, it may be desirable to indicate the 'Total paid' field in the order as fully paid. This setting takes care of this automatically.</tooltip>
@@ -214,6 +206,14 @@ The existing quote ID will be reused to start a new order.</tooltip>
                     </comment>
                     <source_model>Paynl\Payment\Model\Config\Source\ProductDataID</source_model>
                     <config_path>payment/paynl/use_sku_id</config_path>
+                </field>
+                <field id="invoice_creation" translate="label,comment" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Invoice creation</label>
+                    <comment>
+                        <![CDATA[Determine when in the order process the invoice is sent.]]>
+                    </comment>
+                    <source_model>Paynl\Payment\Model\Config\Source\InvoiceCreation</source_model>
+                    <config_path>payment/paynl/invoice_creation</config_path>
                 </field>
                 <field id="skip_fraud_detection" translate="label,comment" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Skip fraud detection</label>
@@ -271,22 +271,6 @@ The existing quote ID will be reused to start a new order.</tooltip>
                     <label>Pay. logs</label>
                     <frontend_model>Paynl\Payment\Block\Adminhtml\Render\Logs</frontend_model>
                 </field>
-                <field id="failover_gateway_select" translate="label,comment" type="select" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Failover gateway</label>
-                    <comment>
-                        <![CDATA[*Select the gateway to use for processing payments]]>
-                    </comment>
-                    <source_model>Paynl\Payment\Model\Config\Source\FailoverGateways</source_model>
-                    <config_path>payment/paynl/failover_gateway_select</config_path>
-                </field>
-                <field id="failover_gateway" translate="label" type="text" sortOrder="112" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Custom failover gateway</label>
-                    <comment><![CDATA[Leave this empty unless advised otherwise by Pay. Support]]></comment>
-                    <config_path>payment/paynl/failover_gateway</config_path>
-                    <depends>
-                        <field id="failover_gateway_select">custom</field>
-                    </depends>
-                </field>
                 <field id="google_analytics_ecommerce" translate="label,comment" type="select" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Google analytics</label>
                     <comment><![CDATA[Select whether you want to use Pay. as Google Analytics proxy.]]></comment>
@@ -299,10 +283,56 @@ The existing quote ID will be reused to start a new order.</tooltip>
                     <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
                     <config_path>payment/paynl/pay_pending_page</config_path>
                 </field>
-                <field id="custom_exchange_url" translate="label" type="text" sortOrder="140" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="multicore" translate="label,comment" type="select" sortOrder="140" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Multicore</label>
+                    <comment>
+                        <![CDATA[*Select the core to use for processing payments]]>
+                    </comment>
+                    <source_model>Paynl\Payment\Model\Config\Source\MultiCoreOptions</source_model>
+                    <config_path>payment/paynl/multicore</config_path>
+                </field>
+                <field id="failover_gateway" translate="label" type="text" sortOrder="150" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Custom failover gateway</label>
+                    <comment><![CDATA[Leave this empty unless advised otherwise by Pay. Support]]></comment>
+                    <config_path>payment/paynl/failover_gateway</config_path>
+                    <depends>
+                        <field id="multicore">custom</field>
+                    </depends>
+                </field>
+                <field id="custom_exchange_url" translate="label" type="text" sortOrder="160" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Custom exchange URL</label>
                     <comment><![CDATA[Use your own exchange-handler. Example: https://www.yourdomain.nl/exchange_handler?action=#action#&order_id=#order_id#]]></comment>
                     <config_path>payment/paynl/custom_exchange_url</config_path>
+                </field>
+                <field id="expire_time" translate="label,comment,tooltip" type="text" sortOrder="170" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Expire time</label>
+                    <comment><![CDATA[Enter your transaction expire time in minutes.]]></comment>
+                    <tooltip>Automatically cancel transactions and orders sooner than the default 4-hour expiry by setting your own time in minutes.</tooltip>
+                    <config_path>payment/paynl/expire_time</config_path>
+                </field>
+                <field id="recover_quote_on_redirect" translate="label,comment" type="select" sortOrder="175" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Cart preservation</label>
+                    <comment>
+                        <![CDATA[When enabled, the cart will be recovered when a customer returns to the cart using the browser's back button.]]>
+                    </comment>
+                    <tooltip>By default, Magento clears the shopping cart as soon as a payment is initiated. When this option is enabled, the cart remains available and will be restored if the customer returns to the store.
+
+                        Note: This is not standard Magento behavior and may result in multiple orders being placed using the same quote ID. Enable this setting only if this is acceptable in your specific use case.</tooltip>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <config_path>payment/paynl/recover_quote_on_redirect</config_path>
+                </field>
+                <field id="payment_redirect_mode" translate="label, comment" type="select" sortOrder="180" showInDefault="1">
+                    <label>Payment Redirect Mode</label>
+                    <comment><![CDATA[Configure how the payment process should be initiated.]]></comment>
+                    <config_path>payment/paynl/payment_redirect_mode</config_path>
+                    <source_model>Paynl\Payment\Model\Config\Source\PaymentRedirectModes</source_model>
+                    <tooltip>This is an advanced setting and should only be used if advised by Pay. support in case of issues.</tooltip>
+                </field>
+                <field id="sdk_caching" translate="label" type="select" sortOrder="190" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>SDK Caching</label>
+                    <comment><![CDATA[Select whether to use SDK caching for optimized data handling.]]></comment>
+                    <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
+                    <config_path>payment/paynl/sdk_caching</config_path>
                 </field>
             </group>
         </section>

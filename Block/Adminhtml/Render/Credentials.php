@@ -9,8 +9,10 @@ use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\UrlInterface;
 use Paynl\Payment\Helper\PayHelper;
-use Paynl\Paymentmethods;
 use Paynl\Payment\Model\Config;
+use PayNL\Sdk\Config\Config as PaySDKConfig;
+use PayNL\Sdk\Model\Request\ServiceGetConfigRequest;
+use Throwable;
 
 class Credentials extends Field
 {
@@ -106,17 +108,22 @@ class Credentials extends Field
         }
 
         $this->_config->setScope($scope, $scopeId);
-        $tokencode = $this->_config->getApiToken();
-        $apiToken = $this->_config->getServiceId();
-        $serviceId =  $this->_config->getTokencode();
+        $apiToken = $this->_config->getApiToken();
+        $serviceId = $this->_config->getServiceId();
+        $tokencode = $this->_config->getTokencode();
 
         $error = '';
         $status = 1;
         if (!empty($apiToken) && !empty($serviceId) && !empty($tokencode)) {
             try {
-                $this->_config->configureSDK();
-                Paymentmethods::getList();
-            } catch (\Exception $e) {
+                $request = new ServiceGetConfigRequest($serviceId);
+                $config = (new PaySDKConfig())->setUsername($tokencode)->setPassword($apiToken);
+                $service = $request->setConfig($config)->start();
+
+                $this->_config->saveCoresToConfig($service->getCores(), $scope);
+                $this->_config->saveTerminalsToConfig($service->getTerminals(), $scope, $scopeId);
+
+            } catch (Throwable $e) {
                 $error = $e->getMessage();
             }
         } elseif (!empty($apiToken) || !empty($serviceId) || !empty($tokencode)) {

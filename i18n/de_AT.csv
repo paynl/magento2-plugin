@@ -329,6 +329,11 @@ Please note that if an order is canceled, it may create a gap in your Magento or
 
 Bitte beachten Sie, dass bei einer Stornierung einer Bestellung eine Lücke in Ihrer Magento-Bestellreihenfolge entstehen kann."
 "Use the expected next order ID for order description.","Verwenden Sie die voraussichtlich nächste Bestell-ID zur Bestellbeschreibung."
+
+"Expire time","Verfallszeit"
+"Enter your transaction expire time in minutes.","Verfallszeit in Minuten, bevor eine Transaktion und damit die Bestellung automatisch storniert wird. Dies gilt für alle Zahlungsarten."
+"Automatically cancel transactions and orders sooner than the default 4-hour expiry by setting your own time in minutes.","Diese Option kann nützlich sein, wenn Sie Bestände schneller zurückgeben möchten als unsere Standard-Verfallszeit (die im Allgemeinen 4 Stunden beträgt). Die Transaktionen werden automatisch nach den von Ihnen festgelegten Minuten storniert, woraufhin die Bestellung storniert wird."
+
 "Authorised paid amount","Bezahlten Betrag erfassen"
 "In some implementations, when a payment is authorized, it may be desirable to indicate the 'Total paid' field in the order as fully paid. This setting takes care of this automatically.","In einigen Implementierungen kann es wünschenswert sein, bei autorisierter Zahlung im Feld „Gesamtbetrag“ der Bestellung anzugeben, dass der Betrag vollständig bezahlt ist. Mit dieser Einstellung wird dies automatisch erledigt."
 "Do nothing (default)","Nichts tun (Standard)"
@@ -350,3 +355,16 @@ Die bestehende Angebots-ID wird wiederverwendet, um eine neue Bestellung zu star
 "Title in checkout", "Titel beim Checkout"
 "Show in checkout", "Im Checkout anzeigen"
 "Paylink is normally only available for orders created via the backend and won't appear in the checkout. When this is enabled a 'Pay by invoice' will be shown to the customer and a paylink will be sent via email when an order is made.", "Paylink ist normalerweise nur für Bestellungen verfügbar, die über das Backend erstellt wurden, und erscheint nicht an der Kasse. Wenn dies aktiviert ist, wird dem Kunden bei der Bestellung eine „Zahlung per Rechnung“ angezeigt und ein Paylink per E-Mail gesendet."
+"Recover quote on back button","Warenkorb wiederherstellen, wenn Sie die Zurück-Schaltfläche verwenden"
+"When enabled, the quote will be recovered when the customer returns to the cart using the browser's back button.","Ist diese Option aktiviert, wird der Warenkorb wiederhergestellt, wenn der Kunde über die Zurück-Schaltfläche des Browsers zurückkehrt."
+"By default, Magento clears the shopping cart as soon as a payment is initiated. When this option is enabled, the cart remains available and will be restored if the customer returns to the store.
+
+Note: This is not standard Magento behavior and may result in multiple orders being placed using the same quote ID. Enable this setting only if this is acceptable in your specific use case.","Standardmäßig leert Magento den Warenkorb, sobald eine Zahlung gestartet wird. Wenn diese Option aktiviert ist, bleibt der Warenkorb erhalten und wird wiederhergestellt, wenn der Kunde in den Shop zurückkehrt.
+
+Hinweis: Dies ist kein standardmäßiges Magento-Verhalten und kann dazu führen, dass mehrere Bestellungen mit derselben Quote-ID aufgegeben werden. Aktivieren Sie diese Einstellung nur, wenn dies in Ihrem Anwendungsfall unproblematisch ist."
+"Cart preservation","Warenkorb beibehalten"
+"When enabled, the cart will be recovered when a customer returns to the cart using the browser's back button.","Wenn aktiviert, wird der Warenkorb wiederhergestellt, wenn ein Kunde über die Zurück-Schaltfläche des Browsers zurückkehrt."
+"Invoice creation","Rechnungserstellung"
+"Determine when in the order process the invoice is sent.","Legen Sie fest, wann im Bestellvorgang die Rechnung versendet wird."
+"Create invoice upon payment (default)","Rechnung bei Zahlung erstellen (Standard)"
+"Create invoice upon shipment","Rechnung bei Versand erstellen"

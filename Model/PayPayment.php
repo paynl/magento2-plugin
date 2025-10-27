@@ -7,27 +7,36 @@ use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment\Interceptor;
 use Magento\Sales\Model\OrderRepository;
 use Magento\SalesRule\Model\Coupon\UpdateCouponUsages;
-use Paynl\Result\Transaction\Transaction as PayTransaction;
 use Paynl\Payment\Helper\PayHelper;
 use Magento\Sales\Model\Order\CreditmemoFactory;
 use Magento\Sales\Model\Service\CreditmemoService;
+use PayNL\Sdk\Model\Pay\PayOrder;
+use Magento\Sales\Model\Service\InvoiceService;
+use Magento\Sales\Api\InvoiceRepositoryInterface;
 
 class PayPayment
 {
     /**
-     *
+     * @var InvoiceService
+     */
+    protected $invoiceService;
+
+    /**
+     * @var InvoiceRepositoryInterface
+     */
+    protected $invoiceRepository;
+
+    /**
      * @var \Paynl\Payment\Model\Config
      */
     private $config;
 
     /**
-     *
      * @var \Magento\Sales\Model\Order\Email\Sender\OrderSender
      */
     private $orderSender;
 
     /**
-     *
      * @var \Magento\Sales\Model\Order\Email\Sender\InvoiceSender
      */
     private $invoiceSender;
@@ -43,24 +52,19 @@ class PayPayment
     private $orderRepository;
 
     /**
-     *
      * @var Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface
      */
     private $builderInterface;
 
     /**
-     *
      * @var Magento\Sales\Model\Order\PaymentFactory
      */
     private $paymentFactory;
 
     /**
-     *
      * @var Magento\SalesRule\Model\Coupon\UpdateCouponUsages
      */
     private $updateCouponUsages;
-
-    private $paynlConfig;
 
     /**
      * @var \Paynl\Payment\Helper\PayHelper;
@@ -85,7 +89,6 @@ class PayPayment
      * @param \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender
      * @param \Magento\Framework\Event\ManagerInterface $eventManager
      * @param OrderRepository $orderRepository
-     * @param \Paynl\Payment\Model\Config $paynlConfig
      * @param \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $builderInterface
      * @param \Magento\Sales\Model\Order\PaymentFactory $paymentFactory
      * @param UpdateCouponUsages $updateCouponUsages
@@ -94,12 +97,13 @@ class PayPayment
      * @param \Magento\Sales\Model\Service\CreditmemoService $cmService
      */
     public function __construct(
+        InvoiceService $invoiceService,
+        InvoiceRepositoryInterface $invoiceRepository,
         \Paynl\Payment\Model\Config $config,
         \Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender,
         \Magento\Sales\Model\Order\Email\Sender\InvoiceSender $invoiceSender,
         \Magento\Framework\Event\ManagerInterface $eventManager,
         OrderRepository $orderRepository,
-        \Paynl\Payment\Model\Config $paynlConfig,
         \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $builderInterface,
         \Magento\Sales\Model\Order\PaymentFactory $paymentFactory,
         UpdateCouponUsages $updateCouponUsages,
@@ -107,12 +111,13 @@ class PayPayment
         \Magento\Sales\Model\Order\CreditmemoFactory $cmFac,
         \Magento\Sales\Model\Service\CreditmemoService $cmService
     ) {
+        $this->invoiceService = $invoiceService;
+        $this->invoiceRepository = $invoiceRepository;
         $this->eventManager = $eventManager;
         $this->config = $config;
         $this->orderSender = $orderSender;
         $this->invoiceSender = $invoiceSender;
         $this->orderRepository = $orderRepository;
-        $this->paynlConfig = $paynlConfig;
         $this->builderInterface = $builderInterface;
         $this->paymentFactory = $paymentFactory;
         $this->updateCouponUsages = $updateCouponUsages;
@@ -132,8 +137,10 @@ class PayPayment
             if ($order->getState() == 'holded') {
                 $order->unhold();
             }
+            $order->getPayment()->setAdditionalInformation('cancelByExchange', true);
+
             $order->cancel();
-            $order->addStatusHistoryComment(__('Pay. - order cancelled'));
+            $order->addStatusHistoryComment(__('Pay. - Order cancelled'));
             $this->orderRepository->save($order);
             if (!empty($order->getCouponCode())) {
                 $this->updateCouponUsages->execute($order, false);
@@ -186,7 +193,7 @@ class PayPayment
         $order->setBaseTotalCanceled(0);
         $order->setState($state);
         $order->setStatus($state);
-        $order->addStatusHistoryComment(__('PAY. - order uncancelled'), false);
+        $order->addStatusHistoryComment(__('Pay. - order uncancelled'), false);
         if (!empty($order->getCouponCode())) {
             $this->updateCouponUsages->execute($order, true);
         }
@@ -194,20 +201,19 @@ class PayPayment
     }
 
     /**
-     * @param integer $orderEntityId
+     * @param Order $order
      * @return true
      * @throws \Exception
      */
-    public function chargebackOrder($orderEntityId)
+    public function chargebackOrder($order)
     {
-        $order = $this->orderRepository->get($orderEntityId);
         if (!$this->config->chargebackFromPayEnabled() || $order->getTotalDue() != 0 || $order->getBaseTotalRefunded() == $order->getBaseGrandTotal()) {
             throw new \Exception("Ignoring chargeback");
         }
         try {
             $creditmemo = $this->cmFac->createByOrder($order);
             $this->cmService->refund($creditmemo);
-            $order->addStatusHistoryComment(__('PAY. - Chargeback initiated by customer'))->save();
+            $order->addStatusHistoryComment(__('Pay. - Chargeback initiated by customer'))->save();
         } catch (\Exception $e) {
             $this->payHelper->logDebug('Chargeback failed:', ['error' => $e->getMessage(), 'orderEntityId' => $orderEntityId]);
             throw new \Exception('Could not chargeback');
@@ -227,14 +233,16 @@ class PayPayment
             $creditmemo = $this->cmFac->createByOrder($order);
             $this->cmService->refund($creditmemo);
 
-            $order->addStatusHistoryComment(__('PAY. - Refund initiated from Pay.'))->save();
+            $order->addStatusHistoryComment(__('Pay. - Refund initiated from Pay.'))->save();
         } catch (\Exception $e) {
-            throw new \Exception('Could not refund'.$e->getMessage());
+            throw new \Exception('Could not refund ' . $e->getMessage());
         }
         return true;
     }
 
     /**
+     * Update the order to refunded
+     *
      * @param integer $orderEntityId
      * @return true
      * @throws \Exception
@@ -248,7 +256,7 @@ class PayPayment
         try {
             $creditmemo = $this->cmFac->createByOrder($order);
             $this->cmService->refund($creditmemo);
-            $order->addStatusHistoryComment(__('PAY. - Refund via Card initiated from Magento2 Backend'))->save();
+            $order->addStatusHistoryComment(__('Pay. - Refund via Card initiated from Magento2 Backend'))->save();
         } catch (\Exception $e) {
             throw new \Exception('Could not process Refund via Card');
         }
@@ -256,121 +264,210 @@ class PayPayment
     }
 
     /**
-     * @param $transaction
-     * @param Order $order
-     * @param integer $paymentProfileId
-     * @return boolean
+     * Refactored version of processPaidOrder - moderately split into logical parts
+     *
+     * @param PayOrder $payOrder
+     * @param Order $magOrder
+     * @param $paymentProfileId
+     * @return bool
      * @throws \Magento\Framework\Exception\AlreadyExistsException
      * @throws \Magento\Framework\Exception\InputException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function processPaidOrder($transaction, Order $order, $paymentProfileId = null)
+    public function processPaidOrder(PayOrder $payOrder, Order $magOrder, $paymentProfileId = null)
     {
         $returnResult = false;
         $multiShippingOrder = false;
-        $orderProcessList = [];
+        $orderProcessList = $this->getOrdersToProcess($magOrder, $multiShippingOrder);
 
-        # Before processing the payment, check if we should uncancel the corresponding order
-        if ($order->isCanceled() || $order->getTotalCanceled() == $order->getGrandTotal()) {
-            $this->uncancelOrder($order);
-        }
-
-        $paymentMethod = $order->getPayment()->getMethod();
-        $newStatus = ($transaction->isAuthorized()) ? $this->config->getAuthorizedStatus($paymentMethod) : $this->config->getPaidStatus($paymentMethod);
-        $order_ids = $order->getPayment()->getAdditionalInformation('order_ids');
-
-        if (!empty($order_ids)) {
-            $orderids = json_decode($order_ids, true);
-            $multiShippingOrder = true;
-            foreach ($orderids as $orderId) {
-                $this->payHelper->logDebug('Multishipping order:', ['orderid: ' => $orderId]);
-                $orderProcessList[] = $this->orderRepository->get($orderId);
-            }
-        } else {
-            $orderProcessList[] = $order;
-        }
-
-        $transactionPaid = [
-            $transaction->getCurrencyAmount(),
-            $transaction->getPaidCurrencyAmount(),
-            $transaction->getPaidAmount(),
-        ];
+        $paymentMethod = $magOrder->getPayment()->getMethod();
+        $newStatus = $payOrder->isAuthorized() ? $this->config->getAuthorizedStatus($paymentMethod) : $this->config->getPaidStatus($paymentMethod);
+        $transactionPaid = [$payOrder->getAmount()];
 
         foreach ($orderProcessList as $order) {
-            $payment = $order->getPayment();
-            $payment->setTransactionId($transaction->getId());
-            $payment->setPreparedMessage('PAY. - ');
-            $payment->setIsTransactionClosed(0);
+            $this->initializePayment($order, $payOrder, $paymentProfileId, $paymentMethod);
+            $this->validateAmount($order, $transactionPaid, $multiShippingOrder);
+            $this->processCustomerNotification($order);
 
-            if ($this->config->getFollowPaymentMethod() && !empty($paymentProfileId)) {
-                $transactionMethod = $this->config->getPaymentMethod($paymentProfileId);
-                if (!empty($transactionMethod['code']) && $transactionMethod['code'] !== $paymentMethod) {
-                    $payment->setMethod($transactionMethod['code']);
-                    $paymentMethodObj = $this->config->getPaymentMethodByCode($paymentMethod);
-                    $order->addStatusHistoryComment(__('PAY.: Payment method changed from %1 to %2', ($paymentMethodObj['title'] ?? ''), ($transactionMethod['title'] ?? '')))->save();
-                    $this->payHelper->logDebug('Follow payment method from ' . ($paymentMethodObj['title'] ?? '') . ' to ' . ($transactionMethod['title'] ?? ''));
-                }
-            }
+            $isB2B = !empty($order->getBillingAddress()->getCompany());
+            $ignoreB2B = $this->config->ignoreB2BInvoice($paymentMethod);
 
-            $orderAmount = round($order->getGrandTotal(), 2);
-            $orderBaseAmount = round($order->getBaseGrandTotal(), 2);
-            if (!in_array($orderAmount, $transactionPaid) && !in_array($orderBaseAmount, $transactionPaid) && $multiShippingOrder === false) {
-                $this->payHelper->logCritical('Amount validation error.', array($transactionPaid, $orderAmount, $order->getGrandTotal(), $order->getBaseGrandTotal()));
-                throw new \Exception('Amount validation error. Amounts: ' . print_r(array($transactionPaid, $orderAmount, $order->getGrandTotal(), $order->getBaseGrandTotal()), true));
-            }
-
-            # Force order state to processing
-            $order->setState(Order::STATE_PROCESSING);
-
-            # Notify customer
-            if ($order && !$order->getEmailSent()) {
-                $this->orderSender->send($order);
-                $order->addStatusHistoryComment(__('PAY. - Order confirmation sent'))->setIsCustomerNotified(true)->save();
-            }
-
-            # Skip creation of invoice for B2B if enabled
-            if ($this->config->ignoreB2BInvoice($paymentMethod) && !empty($order->getBillingAddress()->getCompany())) {
-                $returnResult = $this->processB2BPayment($transaction, $order, $payment);
-            } else {
-                if ($transaction->isAuthorized()) {
-                    if ($this->config->setTotalPaid()) {
-                        $this->payHelper->logDebug('Set total-paid according to setting');
-                        $order->setTotalPaid($order->getGrandTotal());
-                    }
-                    $payment->registerAuthorizationNotification($order->getBaseGrandTotal());
-                } else {
-                    $payment->registerCaptureNotification($order->getBaseGrandTotal(), $this->config->isSkipFraudDetection());
-                }
-
+            if ($this->config->shouldInvoiceAfterPayment() && !($ignoreB2B && $isB2B)) {
+                # Normal flow, creating invoice after payment.
+                $this->processPayment($payOrder, $order);
                 $order->setStatus(!empty($newStatus) ? $newStatus : Order::STATE_PROCESSING);
-
                 $this->orderRepository->save($order);
-
-                $invoice = $payment->getCreatedInvoice();
-                if ($invoice && !$invoice->getEmailSent()) {
-                    $this->invoiceSender->send($invoice);
-                    $order->addStatusHistoryComment(__('PAY. - You notified customer about invoice #%1', $invoice->getIncrementId()))->setIsCustomerNotified(true)->save();
-                }
-
+                $this->sendInvoiceIfNeeded($order);
                 $returnResult = true;
+            } else {
+                # Creating no invoice, because of invoicesetting or b2b setting.
+                $returnResult = $this->processB2BPayment($payOrder, $order, $order->getPayment(), $newStatus);
             }
+
         }
 
         return $returnResult;
     }
 
     /**
-     * @param PayTransaction $transaction
+     * @param Order $magOrder
+     * @param bool $multiShippingOrder
+     * @return array
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    private function getOrdersToProcess(Order $magOrder, bool &$multiShippingOrder): array
+    {
+        $orderProcessList = [];
+        $order_ids = $magOrder->getPayment()->getAdditionalInformation('order_ids');
+
+        if (!empty($order_ids)) {
+            $multiShippingOrder = true;
+            $orderids = json_decode($order_ids, true);
+            foreach ($orderids as $orderId) {
+                $this->payHelper->logDebug('Multishipping order:', ['orderid: ' => $orderId]);
+                $orderProcessList[] = $this->orderRepository->get($orderId);
+            }
+        } else {
+            if ($magOrder->isCanceled() || $magOrder->getTotalCanceled() == $magOrder->getGrandTotal()) {
+                $this->uncancelOrder($magOrder);
+            }
+            $orderProcessList[] = $magOrder;
+        }
+
+        return $orderProcessList;
+    }
+
+    /**
+     * @param Order $order
+     * @param PayOrder $payOrder
+     * @param $paymentProfileId
+     * @param $originalPaymentMethod
+     * @return void
+     * @throws \Exception
+     */
+    private function initializePayment(Order $order, PayOrder $payOrder, $paymentProfileId, $originalPaymentMethod)
+    {
+        $payment = $order->getPayment();
+        $payment->setTransactionId($payOrder->getOrderId());
+        $payment->setPreparedMessage('Pay. - ');
+        $payment->setIsTransactionClosed(0);
+
+        if ($this->config->getFollowPaymentMethod() && !empty($paymentProfileId)) {
+            $transactionMethod = $this->config->getPaymentMethod($paymentProfileId);
+            if (!empty($transactionMethod['code']) && $transactionMethod['code'] !== $originalPaymentMethod) {
+                $payment->setMethod($transactionMethod['code']);
+                $paymentMethodObj = $this->config->getPaymentMethodByCode($originalPaymentMethod);
+                $order->addStatusHistoryComment(__('Pay.: Payment method changed from %1 to %2', ($paymentMethodObj['title'] ?? ''), ($transactionMethod['title'] ?? '')))->save();
+                $this->payHelper->logDebug('Follow payment method from ' . ($paymentMethodObj['title'] ?? '') . ' to ' . ($transactionMethod['title'] ?? ''));
+            }
+        }
+
+        $order->setState(Order::STATE_PROCESSING);
+    }
+
+    /**
+     * @param Order $order
+     * @param array $transactionPaid
+     * @param bool $multiShippingOrder
+     * @return void
+     * @throws \Exception
+     */
+    private function validateAmount(Order $order, array $transactionPaid, bool $multiShippingOrder)
+    {
+        $orderAmount = round($order->getGrandTotal(), 2);
+        $orderBaseAmount = round($order->getBaseGrandTotal(), 2);
+
+        if (!in_array($orderAmount, $transactionPaid) && !in_array($orderBaseAmount, $transactionPaid) && !$multiShippingOrder) {
+            $this->payHelper->logCritical('Amount validation error.', [
+                'transactionPaid' => $transactionPaid,
+                'orderAmount' => $order->getGrandTotal(),
+                'orderBaseAmount' => $order->getBaseGrandTotal()
+            ]);
+            throw new \Exception('Amount validation error.');
+        }
+    }
+
+    /**
+     * @param Order $order
+     * @return void
+     */
+    private function processCustomerNotification(Order $order)
+    {
+        if (!$order->getEmailSent()) {
+            $this->orderSender->send($order);
+            $order->setEmailSent(true);
+            $order->addStatusHistoryComment(__('Pay. - Order confirmation sent'))->setIsCustomerNotified(true);
+        }
+    }
+
+    /**
+     * @param PayOrder $payOrder
+     * @param Order $order
+     * @return void
+     * @throws LocalizedException
+     */
+    private function processPayment(PayOrder $payOrder, Order $order)
+    {
+        $payment = $order->getPayment();
+
+        if ($payOrder->isAuthorized()) {
+            if ($this->config->setTotalPaid()) {
+                $this->payHelper->logDebug('Set total-paid according to setting');
+                $order->setTotalPaid($order->getGrandTotal());
+            }
+            $payment->registerAuthorizationNotification($order->getBaseGrandTotal());
+        } else {
+            $payOrderPayments = $payOrder->getPayments();
+            if ($this->config->registerPartialPayments() && count($payOrderPayments) > 1) {
+                foreach ($payOrderPayments as $partialPayment) {
+                    $this->addTransaction($partialPayment, $order);
+                }
+                if ($order->canInvoice()) {
+                    $invoice = $this->invoiceService->prepareInvoice($order);
+                    $invoice->register()->pay();
+                    $this->invoiceRepository->save($invoice);
+                    $order->addStatusHistoryComment(__('Pay.: Factuur aangemaakt na volledige deelbetalingen.'));
+                }
+                $order->setTotalPaid($order->getBaseGrandTotal());
+                $payment->setBaseAmountPaid($order->getBaseGrandTotal());
+            } else {
+                $payment->registerCaptureNotification($order->getBaseGrandTotal(), $this->config->isSkipFraudDetection());
+            }
+        }
+    }
+
+    /**
+     * @param Order $order
+     * @return void
+     * @throws \Exception
+     */
+    private function sendInvoiceIfNeeded(Order $order)
+    {
+        $invoice = $order->getPayment()->getCreatedInvoice();
+        if ($invoice && !$invoice->getEmailSent()) {
+            $this->invoiceSender->send($invoice);
+            $order->addStatusHistoryComment(__('Pay. - You notified customer about invoice #%1', $invoice->getIncrementId()))
+                ->setIsCustomerNotified(true)->save();
+        }
+    }
+
+    /**
+     * @param PayOrder $payOrder
      * @param Order $order
      * @param Interceptor $payment
-     * @return boolean
+     * @param $newStatus
+     * @return true
+     * @throws \Magento\Framework\Exception\AlreadyExistsException
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    private function processB2BPayment(PayTransaction $transaction, Order $order, Interceptor $payment)
+    private function processB2BPayment(PayOrder $payOrder, Order $order, Interceptor $payment, $newStatus)
     {
         # Create transaction
         $formatedPrice = $order->getBaseCurrency()->formatTxt($order->getGrandTotal());
-        $transactionMessage = __('PAY. - Captured amount of %1.', $formatedPrice);
-        $transactionBuilder = $this->builderInterface->setPayment($payment)->setOrder($order)->setTransactionId($transaction->getId())->setFailSafe(true)->build('capture');
+        $transactionMessage = __('Pay. - Captured amount of %1.', $formatedPrice);
+        $transactionBuilder = $this->builderInterface->setPayment($payment)->setOrder($order)->setTransactionId($payOrder->getId())->setFailSafe(true)->build('capture');
         $payment->addTransactionCommentsToOrder($transactionBuilder, $transactionMessage);
         $payment->setParentTransactionId(null);
         $payment->save();
@@ -380,71 +477,50 @@ class PayPayment
         $order->setTotalPaid($order->getGrandTotal());
         $order->setBaseTotalPaid($order->getBaseGrandTotal());
         $order->setStatus(!empty($newStatus) ? $newStatus : Order::STATE_PROCESSING);
-        $order->addStatusHistoryComment(__('B2B Setting: Skipped creating invoice'));
+
+        if (!$this->config->shouldInvoiceAfterPayment()) {
+            $order->addStatusHistoryComment(__('Pay. - Invoice skipped (B2B setting)'));
+        }
+
         $this->orderRepository->save($order);
 
         return true;
     }
 
     /**
+     * @param array $partialPayment
      * @param Order $order
-     * @param string $payOrderId
-     * @return boolean
+     * @return void
+     * @throws LocalizedException
      */
-    public function processPartiallyPaidOrder(Order $order, string $payOrderId)
+    private function addTransaction(array $partialPayment, Order $order)
     {
-        $returnResult = false;
-        try {
-            $this->config->configureSDK();
-            $details = \Paynl\Transaction::details($payOrderId);
+        $transactionId = $partialPayment['id'] ?? 'id';
+        $profileId = $partialPayment['paymentMethod']['id'] ?? '0';
+        $orderPayment = $order->getPayment();
+        $method = $this->config->getPaymentmethod($profileId) ?? 'empty';
+        $methodName = $method['code'] ?? 'empty';
 
-            $paymentDetails = $details->getPaymentDetails();
-            $transactionDetails = $paymentDetails['transactionDetails'];
-            $firstPayment = count($transactionDetails) == 1;
-            $totalpaid = 0;
-            foreach ($transactionDetails as $_dt) {
-                $totalpaid += $_dt['amount']['value'];
-            }
-            $_detail = end($transactionDetails);
+        $amount = ($partialPayment['amount']['value'] ?? 0) / 100;
+        $currency = $partialPayment['amount']['currency'] ?? 'EUR';
 
-            $subProfile = $_detail['orderId'];
-            $profileId = $_detail['paymentProfileId'];
-            $methodName = $_detail['paymentProfileName'];
-            $amount = $_detail['amount']['value'] / 100;
-            $currency = $_detail['amount']['currency'];
-            $method = $this->config->getPaymentmethod($profileId);
+        $transaction = $this->builderInterface->setPayment($orderPayment)
+            ->setOrder($order)
+            ->setTransactionId($transactionId)
+            ->setFailSafe(true)
+            ->build('capture')
+            ->setAdditionalInformation(
+                \Magento\Sales\Model\Order\Payment\Transaction::RAW_DETAILS,
+                [
+                    'Paymentmethod' => $methodName,
+                    'Amount' => $amount,
+                    'Currency' => $currency
+                ]
+            );
 
-            /** @var Interceptor $orderPayment */
-            if (!$firstPayment) {
-                $orderPayment = $this->paymentFactory->create();
-            } else {
-                $orderPayment = $order->getPayment();
-            }
-            $orderPayment->setMethod($method['code'] ?? '');
-            $orderPayment->setOrder($order);
-            $orderPayment->setBaseAmountPaid($amount);
-            $orderPayment->save();
+        $transaction->setIsClosed(true)->save();
 
-            $transactionBuilder = $this->builderInterface->setPayment($orderPayment)
-                ->setOrder($order)
-                ->setTransactionId($subProfile)
-                ->setFailSafe(true)
-                ->build('capture')
-                ->setAdditionalInformation(
-                    \Magento\Sales\Model\Order\Payment\Transaction::RAW_DETAILS,
-                    ["Paymentmethod" => $methodName, "Amount" => $amount, "Currency" => $currency]
-                );
-            $transactionBuilder->save();
-
-            $order->addStatusHistoryComment(__('PAY.: Partial payment received: ' . $subProfile . ' - Amount ' . $currency . ' ' . $amount . ' Method: ' . $methodName));
-            $order->setTotalPaid($totalpaid / 100);
-
-            $this->orderRepository->save($order);
-            $returnResult = true;
-        } catch (\Exception $e) {
-            throw new \Exception('Failed processing partial payment: ' . $e->getMessage());
-        }
-
-        return $returnResult;
+       $order->addStatusHistoryComment(__('Pay. - Partial payment received: ' . $currency . ' ' . $amount . ' Method: ' . $methodName));
     }
+
 }
