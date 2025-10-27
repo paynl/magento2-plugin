@@ -291,6 +291,16 @@ The existing quote ID will be reused to start a new order.</tooltip>
                     <source_model>Paynl\Payment\Model\Config\Source\MultiCoreOptions</source_model>
                     <config_path>payment/paynl/multicore</config_path>
                 </field>
+                <field id="product_exclusive" translate="label,comment" type="multiselect" sortOrder="141" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Product Exclusive</label>
+                    <comment>
+                        <![CDATA[Select payment methods that will only display in the checkout, when assigned to a product. ]]>
+                    </comment>
+                    <source_model>Paynl\Payment\Model\Config\Source\PaymentMethods</source_model>
+                    <config_path>payment/paynl/product_exclusive</config_path>
+                    <tooltip>Select the payment methods that will only be displayed in the checkout, when assigned to a product. The selected payment methods will be shown at the productpage. There you can select which methods can be used per product</tooltip>
+                </field>
+
                 <field id="failover_gateway" translate="label" type="text" sortOrder="150" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Custom failover gateway</label>
                     <comment><![CDATA[Leave this empty unless advised otherwise by Pay. Support]]></comment>

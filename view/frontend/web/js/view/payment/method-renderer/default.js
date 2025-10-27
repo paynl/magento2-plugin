@@ -77,6 +77,16 @@ define(
                 if (!this.showPin()){
                     return false;
                 }
+
+                let defaultInactive = window.checkoutConfig.payment.defaultinactive[this.item.method];
+                let methodAllowedByProduct = window.checkoutConfig.payment.allowedpaymentmethods[this.item.method];
+
+                if (defaultInactive) {
+                    if (!methodAllowedByProduct) {
+                        return false; // method should be configured as valid in the product page, but its not
+                    }
+                }
+
                 return true;
             },
             getCurrentShippingMethod: function () {
