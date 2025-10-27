@@ -766,4 +766,13 @@ class Config
         return $this->store->getConfig('payment/paynl/recover_quote_on_redirect') == 1;
     }
 
+    /**
+     * @return string
+     */
+    public function getProductExclusive()
+    {
+        return (string)$this->store->getConfig('payment/paynl/product_exclusive');
+    }
+
+
 }
