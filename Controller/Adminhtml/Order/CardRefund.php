@@ -96,7 +96,7 @@ class CardRefund extends \Magento\Backend\App\Action implements CsrfAwareActionI
             $order->save();
 
             $methodInstance = $this->paymentHelper->getMethodInstance('paynl_payment_cardrefund');
-            if ($methodInstance instanceof \Paynl\Payment\Model\Paymentmethod\Paymentmethod) {
+            if ($methodInstance instanceof \Paynl\Payment\Model\Paymentmethod\PaymentMethod) {
                 $redirectUrl = $methodInstance->startTransaction($order, true);
             }
         } catch (\Exception $e) {

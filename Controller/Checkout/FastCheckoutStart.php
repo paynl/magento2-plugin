@@ -10,6 +10,7 @@ use Magento\Quote\Api\ShippingMethodManagementInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Paynl\Payment\Helper\PayHelper;
 use Paynl\Payment\Model\PayPaymentCreateFastCheckout;
+use PayNL\Sdk\Model\Product;
 
 class FastCheckoutStart extends \Magento\Framework\App\Action\Action
 {
@@ -167,7 +168,7 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
                     'description' => $product->getName(),
                     'price' => $product->getPriceInclTax() * 100,
                     'currecny' => $this->storeManager->getStore()->getCurrentCurrencyCode(),
-                    'type' => \Paynl\Transaction::PRODUCT_TYPE_ARTICLE,
+                    'type' => Product::TYPE_ARTICLE,
                     'vatPercentage' => ($product->getPriceInclTax() - $product->getBasePrice()) / $product->getBasePrice() * 100,
                 ];
             }
@@ -181,7 +182,7 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
                 'description' => $shippingMethodArr[1],
                 'price' => $this->cart->getQuote()->getShippingAddress()->getShippingAmount() * 100,
                 'currecny' => $this->storeManager->getStore()->getCurrentCurrencyCode(),
-                'type' => \Paynl\Transaction::PRODUCT_TYPE_SHIPPING,
+                'type' => Product::TYPE_SHIPPING,
                 'vatPercentage' => ($this->cart->getQuote()->getShippingAddress()->getBaseShippingInclTax() - $this->cart->getQuote()->getShippingAddress()->getBaseShippingAmount()) / $this->cart->getQuote()->getShippingAddress()->getBaseShippingAmount() * 100, // phpcs:ignore
             ];
         }
@@ -249,7 +250,7 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
                 $quote->save();
             }
 
-            $payTransaction = (new PayPaymentCreateFastCheckout(
+            $payOrder = (new PayPaymentCreateFastCheckout(
                 $methodInstance,
                 $fcAmount * 100,
                 $arrProducts,
@@ -259,12 +260,12 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
                 $quote->getReservedOrderId() ?? null
             ))->create();
 
-            $quote->getPayment()->setAdditionalInformation('payOrderId', $payTransaction->getTransactionId());
-            $quote->getPayment()->setAdditionalInformation('fastcheckout', true);
-            $quote->getPayment()->setAdditionalInformation('transactionId', $payTransaction->getTransactionId())->save();
+            $this->payHelper->logDebug(__METHOD__ . ': Starting fc with order:' . $payOrder->getOrderId());
+
+            $quote->getPayment()->setAdditionalInformation('payOrderId', $payOrder->getOrderId())->save();
 
             $this->getResponse()->setNoCacheHeaders();
-            $this->getResponse()->setRedirect($payTransaction->getRedirectUrl());
+            $this->getResponse()->setRedirect($payOrder->getPaymentUrl());
         } catch (\Exception $e) {
             $message = __('Unfortunately fast checkout is currently not possible.');
             if ($e->getCode() == FastCheckoutStart::FC_EMPTY_BASKET) {

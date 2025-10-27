@@ -3,11 +3,10 @@
         <column xsi:type="int" name="id" unsigned="true" nullable="false" comment="Id" identity="true" />
         <column xsi:type="varchar" name="payOrderId" nullable="false" length="255" comment="payOrderId" />
         <column xsi:type="timestamp" name="created_at" default="CURRENT_TIMESTAMP" on_update="true" comment="Added" />
+        <column xsi:type="varchar" name="type" nullable="false" length="50" default="" comment="Type of processing action" />
+
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="id" />
         </constraint>
-        <constraint xsi:type="unique" referenceId="UNIQUE">
-            <column name="payOrderId" />
-        </constraint>
-    </table> 
+    </table>
 </schema>

@@ -332,6 +332,11 @@ Please note that if an order is canceled, it may create a gap in your Magento or
 
 Veuillez noter que si une commande est annulée, cela peut créer un écart dans votre séquence de commandes Magento."
 "Use the expected next order ID for order description.","Utilisez l’ID de commande suivant attendu pour la description de la commande."
+
+"Expire time","Délai d'expiration"
+"Enter your transaction expire time in minutes.","Délai d'expiration en minutes avant l'annulation automatique d'une transaction et donc de la commande. Ceci s'applique à tous les modes de paiement."
+"Automatically cancel transactions and orders sooner than the default 4-hour expiry by setting your own time in minutes.","Cette option peut être utile si vous souhaitez restaurer le stock plus rapidement que notre délai d'expiration par défaut (qui est généralement de 4 heures). Les transactions seront automatiquement annulées après le délai que vous avez défini, ce qui sera suivi d'une annulation de la commande."
+
 "Authorised paid amount","Capturer le montant payé"
 "In some implementations, when a payment is authorized, it may be desirable to indicate the 'Total paid' field in the order as fully paid. This setting takes care of this automatically.","Dans certaines implémentations, lorsqu'un paiement est autorisé, il peut être souhaitable d'indiquer le champ « Total payé » de la commande comme étant entièrement payé. Ce paramètre s'en charge automatiquement."
 "Do nothing (default)","Ne rien faire (par défaut)"
@@ -353,3 +358,14 @@ L'identifiant de devis existant sera réutilisé pour démarrer une nouvelle com
 "Title in checkout", "Titre à la caisse"
 "Show in checkout", "Afficher lors du paiement"
 "Paylink is normally only available for orders created via the backend and won't appear in the checkout. When this is enabled a 'Pay by invoice' will be shown to the customer and a paylink will be sent via email when an order is made.", "Le lien de paiement n'est normalement disponible que pour les commandes créées via le backend et n'apparaît pas lors du paiement. Lorsque cette option est activée, une option «Paiement par facture» s'affiche pour le client et un lien de paiement est envoyé par e-mail lors de la passation d'une commande."
+"By default, Magento clears the shopping cart as soon as a payment is initiated. When this option is enabled, the cart remains available and will be restored if the customer returns to the store.
+
+Note: This is not standard Magento behavior and may result in multiple orders being placed using the same quote ID. Enable this setting only if this is acceptable in your specific use case.","Par défaut, Magento vide le panier dès qu’un paiement est lancé. Si cette option est activée, le panier reste disponible et sera restauré si le client revient sur la boutique.
+
+Remarque : Ce comportement n’est pas standard dans Magento et peut entraîner la création de plusieurs commandes avec le même identifiant de devis. Activez cette option uniquement si cela ne pose pas de problème dans votre cas d’utilisation."
+"Cart preservation","Conservation du panier"
+"When enabled, the cart will be recovered when a customer returns to the cart using the browser's back button.","Lorsque cette option est activée, le panier sera restauré si le client revient en arrière via le bouton du navigateur."
+"Invoice creation","Rechnungserstellung"
+"Determine when in the order process the invoice is sent.","Déterminez à quel moment du processus de commande la facture est envoyée."
+"Create invoice upon payment (default)","Créer une facture lors du paiement (par défaut)"
+"Create invoice upon shipment","Créer une facture lors de l'expédition"

@@ -6,7 +6,6 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\RequestInterface;
 use Paynl\Payment\Model\Config;
 use Paynl\Payment\Model\Paymentmethod\PaymentMethod;
-use Paynl\Paymentmethods;
 use Paynl\Payment\Helper\PayHelper;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Framework\App\CacheInterface;
@@ -92,38 +91,35 @@ class PinTerminals implements ArrayInterface
      */
     public function toArray()
     {
-        $terminalArr = [];
+        $terminalsArr = [];
+
         if ($this->_isConfigured()) {
             if ($this->_config->isPaymentMethodActive('paynl_payment_instore')) {
-                $storeId = $this->_request->getParam('store');
-                $cacheName = 'paynl_terminals_' . $this->getConfigValue('payment/paynl_payment_instore/payment_option_id') . '_' . $storeId;
-                $terminalJson = $this->_cache->load($cacheName);
-                if ($terminalJson) {
-                    $terminalArr = json_decode($terminalJson);
-                } else {
-                    try {
-                        $terminals = \Paynl\Instore::getAllTerminals();
-                        $terminals = $terminals->getList();
+                [$scopeType, $scopeId] = $this->getScopeInfo();
 
-                        if (!is_array($terminals)) {
-                            $terminals = [];
-                        }
+                $value = $this->_scopeConfig->getValue('payment/paynl/terminals', $scopeType, $scopeId);
 
-                        foreach ($terminals as $terminal) {
-                            $terminal['visibleName'] = $terminal['name'];
-                            array_push($terminalArr, $terminal);
-                        }
-                        $this->_cache->save(json_encode($terminalArr), $cacheName);
-                    } catch (\Paynl\Error\Error $e) {
-                        $this->payHelper->logNotice('PAY.: Pinterminal error, ' . $e->getMessage());
+                $terminals = $value ? json_decode($value, true) : [];
+                
+                if (is_array($terminals)) {
+                    foreach ($terminals as $terminal) {
+                        array_push(
+                            $terminalsArr, [
+                                'name' => $terminal['name'],
+                                'visibleName' => $terminal['name'],
+                                'id' => $terminal['code'],
+                            ]
+                        );
                     }
                 }
+
             }
         }
+
         $optionArr = [];
         $optionArr[0] = __('Select card terminal');
-        foreach ($terminalArr as $terminal) {
-            $arr = (array) $terminal;
+        foreach ($terminalsArr as $terminal) {
+            $arr = (array)$terminal;
             $optionArr[$arr['id']] = $arr['visibleName'];
         }
 
@@ -136,17 +132,38 @@ class PinTerminals implements ArrayInterface
     protected function _isConfigured() // phpcs:ignore
     {
         $storeId = $this->_request->getParam('store');
+
         if ($storeId) {
             $store = $this->_storeManager->getStore($storeId);
             $this->_config->setStore($store);
         }
-        $configured = $this->_config->configureSDK();
-        if ($configured) {
-            return true;
+        $configured = $this->_config->getPayConfig();
+
+        return $configured !== false;
+    }
+
+    /**
+     * Summary of getScopeInfo
+     * @return array<mixed|string>
+     */
+    private function getScopeInfo(): array
+    {
+        $scopeType = ScopeConfigInterface::SCOPE_TYPE_DEFAULT;
+        $scopeValue = null;
+
+        $store = $this->_request->getParam('store');
+        $website = $this->_request->getParam('website');
+        if ($store) {
+            $scopeType = ScopeInterface::SCOPE_STORE;
+            $scopeValue = $store;
+        } elseif ($website) {
+            $scopeType = ScopeInterface::SCOPE_WEBSITE;
+            $scopeValue = $website;
         }
 
-        return false;
+        return [$scopeType, $scopeValue];
     }
+
 
     /**
      * @param string $path

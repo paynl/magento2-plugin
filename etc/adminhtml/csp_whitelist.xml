@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<csp_whitelist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Csp:etc/csp_whitelist.xsd">
+    <policies>
+        <policy id="connect-src">
+            <values>
+                <value id="github-api" type="host">https://api.github.com</value>
+                <value id="paynl" type="host">*.pay.nl</value>
+            </values>
+        </policy>
+        <policy id="style-src">
+            <values>
+                <value id="google-fonts" type="host">https://fonts.googleapis.com</value>
+            </values>
+        </policy>
+        <policy id="font-src">
+            <values>
+                <value id="google-fonts-static" type="host">https://fonts.gstatic.com</value>
+            </values>
+        </policy>
+    </policies>
+</csp_whitelist>

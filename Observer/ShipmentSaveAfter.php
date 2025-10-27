@@ -2,25 +2,37 @@
 
 namespace Paynl\Payment\Observer;
 
+use Magento\Framework\App\DeploymentConfig;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Sales\Model\Order;
-use Magento\Store\Model\Store;
 use Paynl\Payment\Helper\PayHelper;
 use Paynl\Payment\Model\Config;
 use Paynl\Payment\Model\PayPayment;
-use Paynl\Result\Transaction\Transaction;
+use Magento\Framework\UrlInterface;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use PayNL\Sdk\Model\Request\OrderStatusRequest;
+use Magento\Framework\HTTP\Client\Curl;
+use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
 
 class ShipmentSaveAfter implements ObserverInterface
 {
     /**
-     *
-     * @var Magento\Store\Model\Store;
+     * @var UrlInterface
      */
-    private $store;
+    private UrlInterface $urlBuilder;
 
     /**
-     *
+     * @var ScopeConfigInterface
+     */
+    private $scopeConfig;
+
+    /**
+     * @var Curl
+     */
+    private Curl $httpClient;
+
+    /**
      * @var Config
      */
     private $config;
@@ -31,27 +43,86 @@ class ShipmentSaveAfter implements ObserverInterface
     private $payPayment;
 
     /**
-     *
-     * @var \Paynl\Payment\Helper\PayHelper;
+     * @var \Paynl\Payment\Helper\PayHelper
      */
     private $payHelper;
 
     /**
+     * @var DeploymentConfig
+     */
+    private $deploymentConfig;
+
+    /**
+     * @var InvoiceSender
+     */
+    private $invoiceSender;
+
+    /**
      * @param Config $config
-     * @param Store $store
      * @param PayPayment $payPayment
      * @param PayHelper $payHelper
+     * @param UrlInterface $urlBuilder
+     * @param ScopeConfigInterface $scopeConfig
+     * @param DeploymentConfig $deploymentConfig
+     * @param Curl $httpClient
+     * @param InvoiceSender $invoiceSender
      */
     public function __construct(
-        Config $config,
-        Store $store,
-        PayPayment $payPayment,
-        PayHelper $payHelper
-    ) {
+        Config               $config,
+        PayPayment           $payPayment,
+        PayHelper            $payHelper,
+        UrlInterface         $urlBuilder,
+        ScopeConfigInterface $scopeConfig,
+        DeploymentConfig     $deploymentConfig,
+        Curl                 $httpClient,
+        InvoiceSender        $invoiceSender
+    )
+    {
         $this->config = $config;
-        $this->store = $store;
         $this->payPayment = $payPayment;
         $this->payHelper = $payHelper;
+        $this->urlBuilder = $urlBuilder;
+        $this->scopeConfig = $scopeConfig;
+        $this->deploymentConfig = $deploymentConfig;
+        $this->httpClient = $httpClient;
+        $this->invoiceSender = $invoiceSender;
+    }
+
+    /**
+     * @param string $payOrderId
+     * @return array
+     * @throws \Magento\Framework\Exception\FileSystemException
+     * @throws \Magento\Framework\Exception\RuntimeException
+     */
+    private function triggerInternalCaptureProcessing(string $payOrderId): array
+    {
+        $this->payHelper->logDebug('triggerInternalCaptureProcessing: ' . $payOrderId);
+
+        # Process_secret is generated on module-install
+        $secret = $this->scopeConfig->getValue('payment/paynl/process_secret', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $token = hash('sha256', $secret . $payOrderId);
+        $base = rtrim($this->deploymentConfig->get('custom_base_url') ?? $this->urlBuilder->getBaseUrl(), '/');
+        $url = $base . '/paynl/process/capture';
+
+        try {
+            $this->httpClient->addHeader("Content-Type", "application/x-www-form-urlencoded");
+            $this->httpClient->post($url, ['payOrderId' => $payOrderId, 'token' => $token]);
+
+            $responseBody = $this->httpClient->getBody();
+            $response = json_decode($responseBody, true);
+
+            if (!is_array($response)) {
+                throw new \UnexpectedValueException('Invalid JSON response');
+            }
+
+            return [
+                'success' => $response['success'] ?? false,
+                'message' => $response['message'] ?? 'Unknown response format'
+            ];
+        } catch (\Exception $e) {
+            $this->payHelper->logDebug('Failed to trigger internal capture processing: ' . $e->getMessage() . ' url: ' . $url);
+            return ['success' => false, 'message' => 'Internal request failed'];
+        }
     }
 
     /**
@@ -63,8 +134,37 @@ class ShipmentSaveAfter implements ObserverInterface
         $order = $observer->getEvent()->getShipment()->getOrder();
         $payment = $order->getPayment();
         $methodInstance = $payment->getMethodInstance();
-        if ($methodInstance instanceof \Paynl\Payment\Model\Paymentmethod\Paymentmethod) {
+        if ($methodInstance instanceof \Paynl\Payment\Model\Paymentmethod\PaymentMethod) {
             $this->config->setStore($order->getStore());
+
+            if (!$this->config->shouldInvoiceAfterPayment()) {
+                $this->payHelper->logDebug('Invoice creation on shipping', [], $order->getStore());
+                try {
+                    if (!$order->hasInvoices()) {
+                        $invoice = $order->prepareInvoice();
+                        $invoice->register();
+                        $invoice->setEmailSent(false);
+                        $invoice->getOrder()->setIsInProcess(true);
+                        $invoice->save();
+                        $order->addRelatedObject($invoice);
+                    }
+
+                    if ($order->hasInvoices()) {
+                        $invoices = $order->getInvoiceCollection();
+                        foreach ($invoices as $invoice) {
+                            if (!$invoice->getEmailSent()) {
+                                $this->invoiceSender->send($invoice);
+                                $order->addStatusHistoryComment(
+                                    __('Pay. - Invoice #%1 has been sent to the customer.', $invoice->getIncrementId())
+                                )->setIsCustomerNotified(true);
+                                $order->save();
+                            }
+                        }
+                    }
+                } catch (\Exception $e) {
+                    $this->payHelper->logError('Error sending invoice after shipment: ' . $e->getMessage(), [], $order->getStore());
+                }
+            }
 
             if ($this->config->autoCaptureEnabled()) {
                 $invoiceCheck = $this->config->sherpaEnabled() ? true : !$order->hasInvoices();
@@ -81,22 +181,18 @@ class ShipmentSaveAfter implements ObserverInterface
                         $amountPaidCheck = $this->config->sherpaEnabled() ? true : $amountPaid === null;
 
                         if ($bHasAmountAuthorized && $amountPaidCheck === true && $amountRefunded === null) {
-                            $this->payHelper->logDebug('AUTO-CAPTURING(shipment-save-after) ' . $payOrderId, [], $order->getStore());
+                            $this->payHelper->logDebug('AUTO-CAPTURING (shipment-save-after) ' . $payOrderId, [], $order->getStore());
                             $bCaptureResult = false;
                             try {
-                                # Handles Wuunder
-                                # Handles Picqer
-                                # Handles Sherpa
-                                # Handles Manual made shipment
-                                $this->config->configureSDK();
-                                $bCaptureResult = \Paynl\Transaction::capture($payOrderId);
+                                $this->payHelper->logDebug('ShipmentSaveAfter observer: triggering internal capture: ' . $payOrderId);
 
-                                if (!$bCaptureResult) {
-                                    throw new \Exception('Capture failed');
-                                }
+                                $bCaptureResult = $this->triggerInternalCaptureProcessing($payOrderId);
+                                $bCaptureMessage = $bCaptureResult['message'];
+                                $bCaptureResult = $bCaptureResult['success'];
+
                             } catch (\Exception $e) {
                                 $strMessage = $e->getMessage();
-                                $this->payHelper->logDebug('Order PAY error(rest): ' . $strMessage . ' EntityId: ' . $order->getEntityId(), [], $order->getStore());
+                                $this->payHelper->logDebug('Order Pay. error(rest): ' . $strMessage . ' EntityId: ' . $order->getEntityId(), [], $order->getStore());
 
                                 $strFriendlyMessage = 'Failed. Errorcode: PAY-MAGENTO2-004. See docs.pay.nl for more information';
 
@@ -105,25 +201,21 @@ class ShipmentSaveAfter implements ObserverInterface
                                 }
                             }
 
-                            $order->addStatusHistoryComment(
-                                __('Pay. - performed auto-capture. Result: ') . ($bCaptureResult ? 'Success' : 'Failed') . (empty($strFriendlyMessage) ? '' : '. ' . $strFriendlyMessage)
-                            )->save();
+                            $order->addStatusHistoryComment(__('Pay. -  Performed auto-capture. Result: ' . ($bCaptureMessage ?? '')));
 
                             # Whether capture failed or succeeded, we still might have to process paid order
-                            $this->config->configureSDK();
-                            $transaction = \Paynl\Transaction::get($payOrderId);
-                            if ($transaction->isPaid()) {
-                                $this->payPayment->processPaidOrder($transaction, $order);
+                            $payOrder = (new OrderStatusRequest($payOrderId))->setConfig($this->config->getPayConfig())->start();
+                            if ($order->canInvoice()) {
+                                if ($payOrder->isPaid()) {
+                                    $this->payPayment->processPaidOrder($payOrder, $order);
+                                }
                             }
+
                         } else {
-                            $this->payHelper->logDebug(
-                                'Auto-Capture conditions not met (yet). Amountpaid:' . $amountPaid . ' bHasAmountAuthorized: ' . ($bHasAmountAuthorized ? '1' : '0'),
-                                [],
-                                $order->getStore()
-                            );
+                            $this->payHelper->logDebug('Auto-Capture conditions not met (yet). Amountpaid:' . $amountPaid . ' bHasAmountAuthorized: ' . ($bHasAmountAuthorized ? '1' : '0'), [], $order->getStore());
                         }
                     } else {
-                        $this->payHelper->logDebug('Auto-Capture conditions not met (yet). No PAY-Order-id.', [], $order->getStore());
+                        $this->payHelper->logDebug('Auto-Capture conditions not met (yet). No Pay-Order-id.', [], $order->getStore());
                     }
                 } else {
                     $this->payHelper->logDebug('Auto-capture conditions not met (yet). State: ' . $order->getState(), [], $order->getStore());

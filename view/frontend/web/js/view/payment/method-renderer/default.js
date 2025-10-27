@@ -212,9 +212,6 @@ define(
             getPaymentOptions: function () {
                 var paymentOptions = window.checkoutConfig.payment.paymentoptions[this.item.method];
                 var message = null;
-                if (this.item.method == 'paynl_payment_ideal') {
-                    message = $.mage.__('Choose your bank');
-                }
                 if (this.item.method == 'paynl_payment_instore') {
                     message = $.mage.__('Select card terminal');
                 }
@@ -255,7 +252,7 @@ define(
                 return window.checkoutConfig.payment.pinmomentterminal[this.item.method];
             },
             afterPlaceOrder: function () {
-                window.location.replace(url.build('paynl/checkout/redirect?nocache=' + (new Date().getTime())));
+                window.location.replace(url.build('paynl/checkout/redirect?nocache=' + (new Date().getTime())) + '&mqid=' + quote.getQuoteId());
             },
             getCustomField: function (fieldname) {
                 var customFields = [];

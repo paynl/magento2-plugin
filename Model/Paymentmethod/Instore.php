@@ -2,10 +2,12 @@
 
 namespace Paynl\Payment\Model\Paymentmethod;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Sales\Model\Order;
 use Paynl\Payment\Helper\PayHelper;
 use Paynl\Payment\Model\Config\Source\PinMoment;
 use Paynl\Payment\Model\PayPaymentCreate;
+use PayNL\Sdk\Model\Method;
 
 class Instore extends PaymentMethod
 {
@@ -23,7 +25,7 @@ class Instore extends PaymentMethod
      */
     protected function getDefaultPaymentOptionId()
     {
-        return 1729;
+        return 1927;
     }
 
     /**
@@ -96,24 +98,18 @@ class Instore extends PaymentMethod
                 $redirectUrl = $order->getStore()->getBaseUrl() . 'paynl/checkout/finish/?entityid=' . $order->getEntityId() . '&pickup=1';
                 $order->addStatusHistoryComment(__('PAY.: Payment at pick-up'));
             } else {
-                $transaction = (new PayPaymentCreate($order, $this))->create();
 
-                if ($this->getPaymentOptionId() === 1927) {
-                    if (array_key_exists('terminal', $transaction->getData())) {
-                        $additionalData['terminal_hash'] = $transaction->getData()['terminal']['hash'];
-                    } else {
-                        throw new \Exception(__('Pin transaction can not be started in test mode'));
-                    }
+                $this->payHelper->logDebug('getPaymentOptionId();', [$this->getPaymentOptionId()]);
+                $payOrder = (new PayPaymentCreate($order, $this))->create();
 
-                    $redirectUrl = $transaction->getRedirectUrl();
-                } else {
-                    $instorePayment = \Paynl\Instore::payment(['transactionId' => $transaction->getTransactionId(), 'terminalId' => $terminalId]);
-                    $additionalData['terminal_hash'] = $instorePayment->getHash();
-                    $redirectUrl = $instorePayment->getRedirectUrl();
-                }
+                $redirectUrl = $payOrder->getPaymentUrl();
 
-                $additionalData['transactionId'] = $transaction->getTransactionId();
+                $additionalData['transactionId'] = $payOrder->getOrderId();
+                $additionalData['pintrans'] = true;
+                $additionalData['profile'] = 1927;
             }
+
+            $this->payHelper->logDebug('redirectUrl', [$redirectUrl]);
 
             $additionalData['payment_option'] = $terminalId;
 
@@ -180,34 +176,25 @@ class Instore extends PaymentMethod
      */
     public function getPaymentOptions()
     {
+        $terminalsArr = [];
         $store = $this->storeManager->getStore();
         $storeId = $store->getId();
-        $cacheName = 'paynl_terminals_' . $this->getPaymentOptionId() . '_' . $storeId;
-        $terminalsJson = $this->cache->load($cacheName);
+        $scopeId = $storeId ?? 0;
 
         $this->paynlConfig->setStore($store);
 
-        if (!$this->paynlConfig->isPaymentMethodActive('paynl_payment_instore')) {
-            return false;
-        }
-        if ($terminalsJson) {
-            $terminalsArr = json_decode($terminalsJson);
-        } else {
-            $terminalsArr = [];
-            try {
-                $this->paynlConfig->setStore($store);
-                $this->paynlConfig->configureSDK();
-
-                $terminals = \Paynl\Instore::getAllTerminals();
-                $terminals = $terminals->getList();
-
+        if ($this->paynlConfig->isPaymentMethodActive('paynl_payment_instore')) {
+            $scopeType = ScopeConfigInterface::SCOPE_TYPE_DEFAULT;
+            $terminals = json_decode($this->_scopeConfig->getValue('payment/paynl/terminals', $scopeType, $scopeId), true);
+            if (is_array($terminals)) {
                 foreach ($terminals as $terminal) {
-                    $terminal['visibleName'] = $terminal['name'];
-                    array_push($terminalsArr, $terminal);
+                    array_push($terminalsArr, [
+                            'name' => $terminal['name'],
+                            'visibleName' => $terminal['name'],
+                            'id' => $terminal['code'],
+                        ]
+                    );
                 }
-                $this->cache->save(json_encode($terminalsArr), $cacheName);
-            } catch (\Paynl\Error\Error $e) {
-                return false;
             }
         }
 

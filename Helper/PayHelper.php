@@ -68,8 +68,14 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
         if ($level == LogOptions::LOG_CRITICAL_NOTICE && ($type == 'critical' || $type == 'notice')) {
             return true;
         }
-        if ($level == LogOptions::LOG_ALL) {
+
+        if ($level == LogOptions::LOG_ALL && $type != 'dev') {
             return true;
+        }
+
+        if ($level == LogOptions::LOG_DEV) {
+            return true;
+
         }
 
         return false;
@@ -120,6 +126,17 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
+     * @param string $text
+     * @param array $params Optional dev parameters
+     * @param \Magento\Store\Model\Store|null $store
+     * @return void
+     */
+    public function logDev($text, array $params = array(), ?\Magento\Store\Model\Store $store = null)
+    {
+        $this->writeLog($text, 'dev', $params, $store);
+    }
+
+    /**
      * Logs while bypassing the loglevel setting.
      *
      * @param string $text
@@ -157,6 +174,7 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
                     $this->logger->info($text, $params);
                     break;
                 case 'debug':
+                case 'dev':
                     $this->logger->debug($text, $params);
                     break;
             }
@@ -206,51 +224,6 @@ class PayHelper extends \Magento\Framework\App\Helper\AbstractHelper
             $metadata->setPath('/');
             return $this->cookieManager->deleteCookie($cookieName, $metadata); // phpcs:ignore
         }
-    }
-
-    /**
-     * Checks if new-ppt is already processing, mark as processing if not marked already
-     *
-     * @param string $payOrderId
-     * @return boolean
-     */
-    public function checkProcessing($payOrderId)
-    {
-        try {
-            $connection = $this->resource->getConnection();
-            $tableName = $this->resource->getTableName('pay_processing');
-
-            $select = $connection->select()->from([$tableName])->where('payOrderId = ?', $payOrderId)->where('created_at > date_sub(now(), interval 1 minute)');
-            $result = $connection->fetchAll($select);
-
-            $processing = !empty($result[0]);
-            if (!$processing) {
-                $connection->insertOnDuplicate(
-                    $tableName,
-                    ['payOrderId' => $payOrderId],
-                    ['payOrderId', 'created_at']
-                );
-            }
-        } catch (\Exception $e) {
-            $processing = false;
-        }
-        return $processing;
-    }
-
-    /**
-     * Removes processing mark after new-ppt is finished
-     *
-     * @param string $payOrderId
-     * @return void
-     */
-    public function removeProcessing($payOrderId)
-    {
-        $connection = $this->resource->getConnection();
-        $tableName = $this->resource->getTableName('pay_processing');
-        $connection->delete(
-            $tableName,
-            ['payOrderId = ?' => $payOrderId]
-        );
     }
 
     /**
