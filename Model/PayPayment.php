@@ -156,14 +156,12 @@ class PayPayment
      * @param Order $order
      * @return void
      */
-    public function uncancelOrder(Order $order)
+    public function uncancelOrder(Order $order): void
     {
         $state = Order::STATE_PENDING_PAYMENT;
-        $productStockQty = [];
+
         foreach ($order->getAllVisibleItems() as $item) {
-            $productStockQty[$item->getProductId()] = $item->getQtyCanceled();
             foreach ($item->getChildrenItems() as $child) {
-                $productStockQty[$child->getProductId()] = $item->getQtyCanceled();
                 $child->setQtyCanceled(0);
                 $child->setTaxCanceled(0);
                 $child->setDiscountTaxCompensationCanceled(0);
@@ -173,12 +171,9 @@ class PayPayment
             $item->setDiscountTaxCompensationCanceled(0);
             $this->eventManager->dispatch('sales_order_item_uncancel', ['item' => $item]);
         }
-        $this->eventManager->dispatch(
-            'sales_order_uncancel_inventory',
-            [
-                'order' => $order
-            ]
-        );
+
+        $this->eventManager->dispatch('sales_order_uncancel_inventory', ['order' => $order]);
+
         $order->setSubtotalCanceled(0);
         $order->setBaseSubtotalCanceled(0);
         $order->setTaxCanceled(0);
@@ -192,6 +187,7 @@ class PayPayment
         $order->setState($state);
         $order->setStatus($state);
         $order->addStatusHistoryComment(__('Pay. - order uncancelled'), false);
+
         if (!empty($order->getCouponCode())) {
             $this->updateCouponUsages->execute($order, true);
         }
