@@ -129,12 +129,12 @@
 
 Private, B2C: Only show this payment method when the customer didn't enter a company name.
 
-Business, BB2: Only show this payment method when the customer entered a company name.
+Business, B2B: Only show this payment method when the customer entered a company name.
 
 This setting doesn't apply to fast checkout.</tooltip>
             <comment><![CDATA[Specify which type of customer this payment method should be available to.]]></comment>
         </field>
-        <field id="showforgroup" translate="label" type="select" sortOrder="160" showInDefault="1" showInWebsite="1" showInStore="1">
+        <field id="showforgroup" translate="label" type="multiselect" sortOrder="160" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Customer Group</label>
             <source_model>Paynl\Payment\Model\Config\Source\UserGroups</source_model>
             <depends>
@@ -252,7 +252,7 @@ Please note that if an order is canceled, it may create a gap in your Magento or
                 <frontend_model>Paynl\Payment\Block\Adminhtml\Render\Checkbox</frontend_model>
                 <config_path>payment/paynl_payment_ideal/fast_checkout_show_modal</config_path>
                 <tooltip>When enabled, a modal explaining on how fast checkout works will show before going through with fast checkout.</tooltip>
-                <comment>Open modal before fast checkout</comment>                
+                <comment>Open modal before fast checkout</comment>
             </field>
         </group>
         <group id="advanced" translate="label" sortOrder="200" showInDefault="1" showInWebsite="1" showInStore="1">

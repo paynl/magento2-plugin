@@ -9,7 +9,8 @@ use Magento\Payment\Model\Method\Factory as PaymentMethodFactory;
 use Magento\Store\Model\ScopeInterface;
 use Paynl\Payment\Model\Config;
 use Paynl\Payment\Model\Paymentmethod\PaymentMethod;
-use Paynl\Paymentmethods;
+use PayNL\Sdk\Config\Config as PaySDKConfig;
+use PayNL\Sdk\Model\Request\ServiceGetConfigRequest;
 
 abstract class Available implements ArrayInterface
 {
@@ -43,6 +44,11 @@ abstract class Available implements ArrayInterface
     protected $_storeManager;
 
     /**
+     * @var mixed|bool
+     */
+    protected static mixed $list = false;
+
+    /**
      * Available construct
      *
      * @param Config $config
@@ -52,12 +58,13 @@ abstract class Available implements ArrayInterface
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      */
     public function __construct(
-        Config $config,
-        RequestInterface $request,
-        ScopeConfigInterface $scopeConfig,
-        PaymentMethodFactory $paymentMethodFactory,
+        Config                                     $config,
+        RequestInterface                           $request,
+        ScopeConfigInterface                       $scopeConfig,
+        PaymentMethodFactory                       $paymentMethodFactory,
         \Magento\Store\Model\StoreManagerInterface $storeManager
-    ) {
+    )
+    {
         $this->_config = $config;
         $this->_request = $request;
         $this->_scopeConfig = $scopeConfig;
@@ -82,11 +89,9 @@ abstract class Available implements ArrayInterface
     }
 
     /**
-     * Get options in "key-value" format
-     *
      * @return array
      */
-    public function toArray()
+    private function getScopes()
     {
         $storeId = $this->_request->getParam('store');
         $websiteId = $this->_request->getParam('website');
@@ -103,8 +108,23 @@ abstract class Available implements ArrayInterface
             $scopeId = $websiteId;
         }
 
+        return ['scope' => $scope, 'scopeId' => $scopeId];
+    }
+
+    /**
+     * Get options in "key-value" format
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        $arrScopes = $this->getScopes();
+        $scope = $arrScopes['scope'];
+        $scopeId = $arrScopes['scopeId'];
+
         $this->_config->setScope($scope, $scopeId);
-        $configured = $this->_config->configureSDK();
+
+        $configured = $this->_config->getPayConfig() !== false;
         if (!$configured) {
             return [0 => __('Enter your API token and SL-code first')];
         }
@@ -154,37 +174,49 @@ abstract class Available implements ArrayInterface
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     protected function _isAvailable() // phpcs:ignore
     {
-        $storeId = $this->_request->getParam('store');
-        $websiteId = $this->_request->getParam('website');
+        $arrScopes = $this->getScopes();
+        $scope = $arrScopes['scope'];
+        $scopeId = $arrScopes['scopeId'];
 
-        $scope = 'default';
-        $scopeId = 0;
+        if (self::$list === false) {
+            $this->_config->setScope($scope, $scopeId);
+            $config = $this->_config->getPayConfig();
 
-        if ($storeId) {
-            $scope = 'stores';
-            $scopeId = $storeId;
-        }
-        if ($websiteId) {
-            $scope = 'websites';
-            $scopeId = $websiteId;
-        }
+            if ($config !== false) {
+                try {
+                    $request = new ServiceGetConfigRequest($this->_config->getServiceId());
+                    $service = $request->setConfig($config)->start();
 
-        $this->_config->setScope($scope, $scopeId);
-        $configured = $this->_config->configureSDK();
-        if ($configured) {
-            $paymentOptionId = $this->getPaymentOptionId();
+                    $this->_config->saveCoresToConfig($service->getCores(), $scope);
+                    $this->_config->saveTerminalsToConfig($service->getTerminals(), $scope,$scopeId);
 
-            $list = Paymentmethods::getList();
+                    $list = [];
+                    foreach ($service->getPaymentMethods() as $method) {
+                        $list[$method->getId()] = $method->getName();
+                    }
 
-            if (isset($list[$paymentOptionId])) {
-                return true;
+                    self::$list = $list;
+                } catch (\Exception $e) {
+                    self::$list = $e;
+                }
             }
         }
 
+        $paymentOptionId = $this->getPaymentOptionId();
+
+        if (!empty($paymentOptionId)) {
+            if ($paymentOptionId == 3189) {
+                return true;
+            }
+
+            if (is_array(self::$list)) {
+                return isset(self::$list[$paymentOptionId]);
+            }
+        }
         return false;
     }
 }

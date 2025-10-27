@@ -33,6 +33,9 @@
         <method name="paynl_payment_applepay">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
+        <method name="paynl_payment_babycadeaubon">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
         <method name="paynl_payment_biercheque">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
@@ -42,7 +45,7 @@
         <method name="paynl_payment_bbqcadeaukaart">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
-        <method name="paynl_payment_beautyenmorecadeaukaart">
+        <method name="paynl_payment_beautyandmorecadeaukaart">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_billink">
@@ -61,6 +64,9 @@
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_boekenbon">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_boekencadeau">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_brite">
@@ -96,6 +102,9 @@
         <method name="paynl_payment_fashioncheque">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
+        <method name="paynl_payment_fashionchequebeauty">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
         <method name="paynl_payment_fashiongiftcard">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
@@ -106,6 +115,9 @@
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_gezondheidsbon">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_cadeaubonnen">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_good4fun">
@@ -151,6 +163,9 @@
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_kunstencultuurkaart">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_leescadeaukaart">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_maestro">
@@ -237,6 +252,9 @@
         <method name="paynl_payment_sodexo">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
+        <method name="paynl_payment_sofort">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
         <method name="paynl_payment_sofortbanking">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
@@ -244,6 +262,9 @@
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_sofortbanking_ds">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_sportsgiftcard">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_spraypay">

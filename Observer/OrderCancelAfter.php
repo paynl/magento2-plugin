@@ -7,7 +7,8 @@ use Magento\Framework\Event\ObserverInterface;
 use Magento\Sales\Model\Order;
 use Paynl\Payment\Helper\PayHelper;
 use Paynl\Payment\Model\Config;
-use Paynl\Result\Transaction\Transaction;
+use PayNL\Sdk\Model\Pay\PayOrder;
+use PayNL\Sdk\Model\Request\OrderVoidRequest;
 
 class OrderCancelAfter implements ObserverInterface
 {
@@ -44,9 +45,13 @@ class OrderCancelAfter implements ObserverInterface
         $order = $observer->getEvent()->getOrder();
         $payment = $order->getPayment();
         $methodInstance = $payment->getMethodInstance();
-        if ($methodInstance instanceof \Paynl\Payment\Model\Paymentmethod\Paymentmethod) {
+        if ($methodInstance instanceof \Paynl\Payment\Model\Paymentmethod\PaymentMethod) {
             $this->config->setStore($order->getStore());
             if ($this->config->autoVoidEnabled()) {
+                if ($order->getData('is_manual_cancel')) {
+                    $this->payHelper->logDebug('OrderCancelAfter observer: is_manual_cancel so skipping auto procedures');
+                    return;
+                }
                 if ($order->getState() == Order::STATE_CANCELED && !$order->hasInvoices()) {
                     $data = $order->getPayment()->getData();
                     $payOrderId = !empty($data['last_trans_id']) ? str_replace('-void', '', $data['last_trans_id']) : null;
@@ -59,11 +64,16 @@ class OrderCancelAfter implements ObserverInterface
                             $this->payHelper->logDebug('AUTO-VOIDING(order-cancel-after) ' . $payOrderId, [], $order->getStore());
                             $bVoidResult = false;
                             try {
-                                $this->config->configureSDK();
-                                $bVoidResult = \Paynl\Transaction::void($payOrderId);
+
+                                $orderVoidRequest = new OrderVoidRequest($payOrderId);
+                                $orderVoidRequest->setConfig($this->config->getPayConfig());
+                                $payOrder = $orderVoidRequest->start();
+
+                                $bVoidResult = $payOrder instanceof PayOrder;
                                 if (!$bVoidResult) {
                                     throw new \Exception('Void failed');
                                 }
+
                             } catch (\Exception $e) {
                                 $strMessage = $e->getMessage();
                                 $this->payHelper->logDebug('Order PAY error: ' . $strMessage . ' EntityId: ' . $order->getEntityId(), [], $order->getStore());
@@ -72,15 +82,9 @@ class OrderCancelAfter implements ObserverInterface
                                     $strFriendlyMessage = 'Transaction seems to be already voided/paid';
                                 }
                             }
-                            $order->addStatusHistoryComment(
-                                __('PAY. - Performed auto-void. Result: ') . ($bVoidResult ? 'Success' : 'Failed') . (empty($strFriendlyMessage) ? '' : '. ' . $strFriendlyMessage)
-                            )->save();
+                            $order->addStatusHistoryComment(__('PAY. - Performed auto-void. Result: ') . ($bVoidResult ? 'Success' : 'Failed') . (empty($strFriendlyMessage) ? '' : '. ' . $strFriendlyMessage));
                         } else {
-                            $this->payHelper->logDebug(
-                                'Auto-Void conditions not met (yet). Amountpaid:' . $amountPaid . ' bHasAmountAuthorized: ' . ($bHasAmountAuthorized ? '1' : '0'),
-                                [],
-                                $order->getStore()
-                            );
+                            $this->payHelper->logDebug('Auto-Void conditions not met (yet). Amountpaid:' . $amountPaid . ' bHasAmountAuthorized: ' . ($bHasAmountAuthorized ? '1' : '0'), [], $order->getStore());
                         }
                     } else {
                         $this->payHelper->logDebug('Auto-Void conditions not met (yet). No PAY-Order-id.', [], $order->getStore());

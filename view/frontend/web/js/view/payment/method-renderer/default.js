@@ -48,13 +48,9 @@ define(
             isVisible:function () {
                 var group = window.checkoutConfig.payment.showforgroup[this.item.method];
                 if (group) {
-                    if (group == 0 && customer.isLoggedIn) {
-                        return false;
-                    }
-                    if (group > 0 && !customer.isLoggedIn) {
-                        return false;
-                    }
-                    if (group != customer.customerData.group_id) {
+                    var groupArray = group.split(',');
+                    var currentGroupId = customer.customerData.group_id ? customer.customerData.group_id : "0";
+                    if (!groupArray.includes(currentGroupId)) {
                         return false;
                     }
                 }
@@ -216,9 +212,6 @@ define(
             getPaymentOptions: function () {
                 var paymentOptions = window.checkoutConfig.payment.paymentoptions[this.item.method];
                 var message = null;
-                if (this.item.method == 'paynl_payment_ideal') {
-                    message = $.mage.__('Choose your bank');
-                }
                 if (this.item.method == 'paynl_payment_instore') {
                     message = $.mage.__('Select card terminal');
                 }
@@ -259,7 +252,7 @@ define(
                 return window.checkoutConfig.payment.pinmomentterminal[this.item.method];
             },
             afterPlaceOrder: function () {
-                window.location.replace(url.build('paynl/checkout/redirect?nocache=' + (new Date().getTime())));
+                window.location.replace(url.build('paynl/checkout/redirect?nocache=' + (new Date().getTime())) + '&mqid=' + quote.getQuoteId());
             },
             getCustomField: function (fieldname) {
                 var customFields = [];

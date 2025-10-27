@@ -11,10 +11,11 @@
     <include path="Paynl_Payment::paymentmethods/amazonpay.xml" />
     <include path="Paynl_Payment::paymentmethods/amex.xml" />
     <include path="Paynl_Payment::paymentmethods/applepay.xml" />
+    <include path="Paynl_Payment::paymentmethods/babycadeaubon.xml" />
     <include path="Paynl_Payment::paymentmethods/bataviacadeaukaart.xml" />
     <include path="Paynl_Payment::paymentmethods/bbqcadeaukaart.xml" />
     <include path="Paynl_Payment::paymentmethods/beautycadeau.xml" />
-    <include path="Paynl_Payment::paymentmethods/beautyenmorecadeaukaart.xml" />
+    <include path="Paynl_Payment::paymentmethods/beautyandmorecadeaukaart.xml" />
     <include path="Paynl_Payment::paymentmethods/biercheque.xml" />
     <include path="Paynl_Payment::paymentmethods/biller.xml" />
     <include path="Paynl_Payment::paymentmethods/billink.xml" />
@@ -23,7 +24,9 @@
     <include path="Paynl_Payment::paymentmethods/blik.xml" />
     <include path="Paynl_Payment::paymentmethods/bloemencadeaukaart.xml" />
     <include path="Paynl_Payment::paymentmethods/boekenbon.xml" />
+    <include path="Paynl_Payment::paymentmethods/boekencadeau.xml" />
     <include path="Paynl_Payment::paymentmethods/brite.xml" />
+    <include path="Paynl_Payment::paymentmethods/cadeaubonnen.xml" />
     <include path="Paynl_Payment::paymentmethods/capayable_gespreid.xml" />
     <include path="Paynl_Payment::paymentmethods/cartebleue.xml" />
     <include path="Paynl_Payment::paymentmethods/cashly.xml" />
@@ -34,6 +37,7 @@
     <include path="Paynl_Payment::paymentmethods/dinerbon.xml" />
     <include path="Paynl_Payment::paymentmethods/eps.xml" />
     <include path="Paynl_Payment::paymentmethods/fashioncheque.xml" />
+    <include path="Paynl_Payment::paymentmethods/fashionchequebeauty.xml" />
     <include path="Paynl_Payment::paymentmethods/fashiongiftcard.xml" />
     <include path="Paynl_Payment::paymentmethods/festivalcadeaukaart.xml" />
     <include path="Paynl_Payment::paymentmethods/flyingblueplus.xml" />
@@ -54,6 +58,7 @@
     <include path="Paynl_Payment::paymentmethods/klarna.xml" />
     <include path="Paynl_Payment::paymentmethods/klarnakp.xml" />
     <include path="Paynl_Payment::paymentmethods/kunstencultuurkaart.xml" />
+    <include path="Paynl_Payment::paymentmethods/leescadeaukaart.xml" />
     <include path="Paynl_Payment::paymentmethods/maestro.xml" />
     <include path="Paynl_Payment::paymentmethods/mastercard.xml" />
     <include path="Paynl_Payment::paymentmethods/mbway.xml" />
@@ -82,9 +87,11 @@
     <include path="Paynl_Payment::paymentmethods/scholierenpas.xml" />
     <include path="Paynl_Payment::paymentmethods/shoesandsneakers.xml" />
     <include path="Paynl_Payment::paymentmethods/sodexo.xml" />
+    <include path="Paynl_Payment::paymentmethods/sofort.xml" />
     <include path="Paynl_Payment::paymentmethods/sofortbanking.xml" />
     <include path="Paynl_Payment::paymentmethods/sofortbanking_hr.xml" />
     <include path="Paynl_Payment::paymentmethods/sofortbanking_ds.xml" />
+    <include path="Paynl_Payment::paymentmethods/sportsgiftcard.xml" />
     <include path="Paynl_Payment::paymentmethods/spraypay.xml" />
     <include path="Paynl_Payment::paymentmethods/stadspasamsterdam.xml" />
     <include path="Paynl_Payment::paymentmethods/swish.xml" />

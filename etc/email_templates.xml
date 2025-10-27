@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:noNamespaceSchemaLocation="../../../Magento/Email/etc/email_templates.xsd">
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../Magento/Email/etc/email_templates.xsd">
    <template id="paylink_email_template" label="paylink_email_template" file="paylink_email.html" type="html" module="Paynl_Payment" area="frontend" />
    <template id="paylink_email_order_template" label="paylink_email_order_template" file="paylink_email_order.html" type="html" module="Paynl_Payment" area="frontend" />
    <template id="feature_request_email" label="feature_request_email" file="feature_request_email.html" type="html" module="Paynl_Payment" area="frontend" />
