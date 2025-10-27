@@ -2,39 +2,50 @@
 
 namespace Paynl\Payment\Observer;
 
-use Magento\CatalogInventory\Api\StockManagementInterface;
-use Magento\CatalogInventory\Model\Indexer\Stock\Processor as StockProcessor;
 use Magento\Framework\Event\Observer as EventObserver;
 use Magento\Framework\Event\ObserverInterface;
+use Magento\CatalogInventory\Api\StockRegistryInterface;
+use Magento\Store\Api\StoreRepositoryInterface;
+use Magento\InventorySales\Model\ResourceModel\GetAssignedStockIdForWebsite;
+use Magento\InventoryReservationsApi\Model\ReservationBuilderInterface;
+use Magento\InventoryReservationsApi\Model\AppendReservationsInterface;
 
 class SubtractInventoryObserver implements ObserverInterface
 {
     /**
-     * @var StockManagementInterface
+     * @var StoreRepositoryInterface
      */
-    protected $stockManagement;
+    private $storeRepository;
 
     /**
-     * @var \Magento\CatalogInventory\Observer\ItemsForReindex
+     * @var GetAssignedStockIdForWebsite
      */
-    protected $itemsForReindex;
+    private $getAssignedStockIdForWebsite;
 
     /**
-     * @var \Magento\CatalogInventory\Model\Indexer\Stock\Processor
+     * @var ReservationBuilderInterface
      */
-    protected $stockIndexerProcessor;
+    private $reservationBuilder;
+
+    /**
+     * @var AppendReservationsInterface
+     */
+    private $appendReservations;
 
     /**
      * SubtractInventoryObserver constructor.
-     * @param StockManagementInterface $stockManagement
-     * @param StockProcessor $stockIndexerProcessor
+     * @param StockRegistryInterface $stockRegistry
      */
     public function __construct(
-        StockManagementInterface $stockManagement,
-        StockProcessor $stockIndexerProcessor
+        StoreRepositoryInterface $storeRepository,
+        GetAssignedStockIdForWebsite $getAssignedStockIdForWebsite,
+        ReservationBuilderInterface $reservationBuilder,
+        AppendReservationsInterface $appendReservations
     ) {
-        $this->stockManagement = $stockManagement;
-        $this->stockIndexerProcessor = $stockIndexerProcessor;
+        $this->storeRepository = $storeRepository;
+        $this->getAssignedStockIdForWebsite = $getAssignedStockIdForWebsite;
+        $this->reservationBuilder = $reservationBuilder;
+        $this->appendReservations = $appendReservations;
     }
 
     /**
@@ -49,31 +60,37 @@ class SubtractInventoryObserver implements ObserverInterface
 
         $payment = $order->getPayment();
         $methodInstance = $payment->getMethodInstance();
-        if ($methodInstance instanceof \Paynl\Payment\Model\Paymentmethod\PaymentMethod) {
-            $productQty = $observer->getEvent()->getProductQty();
+        if ($methodInstance instanceof \Paynl\Payment\Model\Paymentmethod\Paymentmethod) {
 
             if ($order->getInventoryProcessed()) {
                 return $this;
             }
 
-            /**
-             * Reindex items
-             */
-            $itemsForReindex = $this->stockManagement->registerProductsSale(
-                $productQty,
-                $order->getStore()->getWebsiteId()
-            );
+            $storeId = $order->getStoreId();
+            $website = $this->storeRepository->getById($storeId)->getWebsite();
+            $websiteCode = $website->getCode();
+            $stockId = $this->getAssignedStockIdForWebsite->execute($websiteCode);
 
-            $productIds = [];
-            foreach ($itemsForReindex as $item) {
-                $item->save();
-                $productIds[] = $item->getProductId();
-            }
-            if (!empty($productIds)) {
-                $this->stockIndexerProcessor->reindexList($productIds);
+            $reservations = [];
+
+            foreach ($order->getAllItems() as $item) {
+                $itemData = $item->getData();
+
+                $itemQty = $itemData['qty_ordered'] ?? null;
+                $itemSku = $itemData['sku'] ?? null;
+
+                if (!empty($itemQty) && !empty($itemSku)) {
+                    $reservations[] = $this->reservationBuilder
+                        ->setSku($itemSku)
+                        ->setQuantity(-$itemQty)
+                        ->setStockId($stockId)
+                        ->build();
+                }
             }
 
-            $order->setInventoryProcessed(true);
+            $this->appendReservations->execute($reservations);
+
+            $order->setInventoryProcessed(true)->save();
             return $this;
         }
     }

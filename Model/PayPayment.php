@@ -177,8 +177,7 @@ class PayPayment
         $this->eventManager->dispatch(
             'sales_order_uncancel_inventory',
             [
-                'order' => $order,
-                'product_qty' => $productStockQty
+                'order' => $order
             ]
         );
         $order->setSubtotalCanceled(0);
