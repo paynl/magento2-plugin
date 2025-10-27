@@ -129,10 +129,10 @@ class PayPayment
     /**
      * @param Order $order
      * @return boolean
+     * @throws \Exception
      */
-    public function cancelOrder(Order $order)
+    public function cancelOrder(Order $order): bool
     {
-        $returnResult = false;
         try {
             if ($order->getState() == 'holded') {
                 $order->unhold();
@@ -145,12 +145,11 @@ class PayPayment
             if (!empty($order->getCouponCode())) {
                 $this->updateCouponUsages->execute($order, false);
             }
-            $returnResult = true;
         } catch (\Exception $e) {
             throw new \Exception('Cannot cancel order: ' . $e->getMessage());
         }
 
-        return $returnResult;
+        return true;
     }
 
     /**
@@ -200,21 +199,21 @@ class PayPayment
     }
 
     /**
-     * @param Order $order
+     * @param $order
      * @return true
      * @throws \Exception
      */
-    public function chargebackOrder($order)
+    public function chargebackOrder($order): bool
     {
         if (!$this->config->chargebackFromPayEnabled() || $order->getTotalDue() != 0 || $order->getBaseTotalRefunded() == $order->getBaseGrandTotal()) {
             throw new \Exception("Ignoring chargeback");
         }
         try {
-            $creditmemo = $this->cmFac->createByOrder($order);
-            $this->cmService->refund($creditmemo);
+            $creditMemo = $this->cmFac->createByOrder($order);
+            $this->cmService->refund($creditMemo);
             $order->addStatusHistoryComment(__('Pay. - Chargeback initiated by customer'))->save();
         } catch (\Exception $e) {
-            $this->payHelper->logDebug('Chargeback failed:', ['error' => $e->getMessage(), 'orderEntityId' => $orderEntityId]);
+            $this->payHelper->logDebug('Chargeback failed:', ['error' => $e->getMessage(), 'orderEntityId' => $order->getEntityId()]);
             throw new \Exception('Could not chargeback');
         }
         return true;
@@ -225,12 +224,12 @@ class PayPayment
      * @return true
      * @throws \Exception
      */
-    public function refundOrder($orderEntityId)
+    public function refundOrder(int $orderEntityId)
     {
         try {
             $order = $this->orderRepository->get($orderEntityId);
-            $creditmemo = $this->cmFac->createByOrder($order);
-            $this->cmService->refund($creditmemo);
+            $creditMemo = $this->cmFac->createByOrder($order);
+            $this->cmService->refund($creditMemo);
 
             $order->addStatusHistoryComment(__('Pay. - Refund initiated from Pay.'))->save();
         } catch (\Exception $e) {
@@ -240,21 +239,21 @@ class PayPayment
     }
 
     /**
-     * Update the order to refunded
+     * Update the order to "refunded"
      *
-     * @param integer $orderEntityId
-     * @return true
+     * @param int $orderEntityId
+     * @return bool
      * @throws \Exception
      */
-    public function cardRefundOrder($orderEntityId)
+    public function cardRefundOrder(int $orderEntityId): bool
     {
         $order = $this->orderRepository->get($orderEntityId);
         if ($order->getTotalDue() != 0 || $order->getBaseTotalRefunded() == $order->getBaseGrandTotal()) {
             throw new \Exception("Ignoring cardRefundOrder (" . $order->getTotalDue() . '|' . $order->getBaseTotalRefunded() . '|' . $order->getBaseGrandTotal());
         }
         try {
-            $creditmemo = $this->cmFac->createByOrder($order);
-            $this->cmService->refund($creditmemo);
+            $creditMemo = $this->cmFac->createByOrder($order);
+            $this->cmService->refund($creditMemo);
             $order->addStatusHistoryComment(__('Pay. - Refund via Card initiated from Magento2 Backend'))->save();
         } catch (\Exception $e) {
             throw new \Exception('Could not process Refund via Card');
