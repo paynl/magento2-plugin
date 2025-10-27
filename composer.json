@@ -2,7 +2,7 @@
   "name": "paynl/magento2-plugin",
   "description": "Pay. Payment methods for Magento 2",
   "type": "magento2-module",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "require": {
     "php": "^8.1 || ^8.2 || ^8.3 || ^8.4",
     "magento/module-sales": "^103.0.0",
