@@ -104,6 +104,7 @@ class Config
         "paynl_payment_festivalcadeaukaart" => "144",
         "paynl_payment_flyingblueplus" => "339",
         "paynl_payment_gezondheidsbon" => "30",
+        "paynl_payment_giftforgood" => "432",
         "paynl_payment_giropay" => "3",
         "paynl_payment_givacard" => "61",
         "paynl_payment_good4fun" => "207",
@@ -764,5 +765,14 @@ class Config
     {
         return $this->store->getConfig('payment/paynl/recover_quote_on_redirect') == 1;
     }
+
+    /**
+     * @return string
+     */
+    public function getProductExclusive()
+    {
+        return (string)$this->store->getConfig('payment/paynl/product_exclusive');
+    }
+
 
 }

@@ -129,10 +129,10 @@ class PayPayment
     /**
      * @param Order $order
      * @return boolean
+     * @throws \Exception
      */
-    public function cancelOrder(Order $order)
+    public function cancelOrder(Order $order): bool
     {
-        $returnResult = false;
         try {
             if ($order->getState() == 'holded') {
                 $order->unhold();
@@ -145,26 +145,23 @@ class PayPayment
             if (!empty($order->getCouponCode())) {
                 $this->updateCouponUsages->execute($order, false);
             }
-            $returnResult = true;
         } catch (\Exception $e) {
             throw new \Exception('Cannot cancel order: ' . $e->getMessage());
         }
 
-        return $returnResult;
+        return true;
     }
 
     /**
      * @param Order $order
      * @return void
      */
-    public function uncancelOrder(Order $order)
+    public function uncancelOrder(Order $order): void
     {
         $state = Order::STATE_PENDING_PAYMENT;
-        $productStockQty = [];
+
         foreach ($order->getAllVisibleItems() as $item) {
-            $productStockQty[$item->getProductId()] = $item->getQtyCanceled();
             foreach ($item->getChildrenItems() as $child) {
-                $productStockQty[$child->getProductId()] = $item->getQtyCanceled();
                 $child->setQtyCanceled(0);
                 $child->setTaxCanceled(0);
                 $child->setDiscountTaxCompensationCanceled(0);
@@ -174,12 +171,9 @@ class PayPayment
             $item->setDiscountTaxCompensationCanceled(0);
             $this->eventManager->dispatch('sales_order_item_uncancel', ['item' => $item]);
         }
-        $this->eventManager->dispatch(
-            'sales_order_uncancel_inventory',
-            [
-                'order' => $order
-            ]
-        );
+
+        $this->eventManager->dispatch('sales_order_uncancel_inventory', ['order' => $order]);
+
         $order->setSubtotalCanceled(0);
         $order->setBaseSubtotalCanceled(0);
         $order->setTaxCanceled(0);
@@ -193,6 +187,7 @@ class PayPayment
         $order->setState($state);
         $order->setStatus($state);
         $order->addStatusHistoryComment(__('Pay. - order uncancelled'), false);
+
         if (!empty($order->getCouponCode())) {
             $this->updateCouponUsages->execute($order, true);
         }
@@ -200,21 +195,21 @@ class PayPayment
     }
 
     /**
-     * @param Order $order
+     * @param $order
      * @return true
      * @throws \Exception
      */
-    public function chargebackOrder($order)
+    public function chargebackOrder($order): bool
     {
         if (!$this->config->chargebackFromPayEnabled() || $order->getTotalDue() != 0 || $order->getBaseTotalRefunded() == $order->getBaseGrandTotal()) {
             throw new \Exception("Ignoring chargeback");
         }
         try {
-            $creditmemo = $this->cmFac->createByOrder($order);
-            $this->cmService->refund($creditmemo);
+            $creditMemo = $this->cmFac->createByOrder($order);
+            $this->cmService->refund($creditMemo);
             $order->addStatusHistoryComment(__('Pay. - Chargeback initiated by customer'))->save();
         } catch (\Exception $e) {
-            $this->payHelper->logDebug('Chargeback failed:', ['error' => $e->getMessage(), 'orderEntityId' => $orderEntityId]);
+            $this->payHelper->logDebug('Chargeback failed:', ['error' => $e->getMessage(), 'orderEntityId' => $order->getEntityId()]);
             throw new \Exception('Could not chargeback');
         }
         return true;
@@ -225,12 +220,12 @@ class PayPayment
      * @return true
      * @throws \Exception
      */
-    public function refundOrder($orderEntityId)
+    public function refundOrder(int $orderEntityId)
     {
         try {
             $order = $this->orderRepository->get($orderEntityId);
-            $creditmemo = $this->cmFac->createByOrder($order);
-            $this->cmService->refund($creditmemo);
+            $creditMemo = $this->cmFac->createByOrder($order);
+            $this->cmService->refund($creditMemo);
 
             $order->addStatusHistoryComment(__('Pay. - Refund initiated from Pay.'))->save();
         } catch (\Exception $e) {
@@ -240,21 +235,21 @@ class PayPayment
     }
 
     /**
-     * Update the order to refunded
+     * Update the order to "refunded"
      *
-     * @param integer $orderEntityId
-     * @return true
+     * @param int $orderEntityId
+     * @return bool
      * @throws \Exception
      */
-    public function cardRefundOrder($orderEntityId)
+    public function cardRefundOrder(int $orderEntityId): bool
     {
         $order = $this->orderRepository->get($orderEntityId);
         if ($order->getTotalDue() != 0 || $order->getBaseTotalRefunded() == $order->getBaseGrandTotal()) {
             throw new \Exception("Ignoring cardRefundOrder (" . $order->getTotalDue() . '|' . $order->getBaseTotalRefunded() . '|' . $order->getBaseGrandTotal());
         }
         try {
-            $creditmemo = $this->cmFac->createByOrder($order);
-            $this->cmService->refund($creditmemo);
+            $creditMemo = $this->cmFac->createByOrder($order);
+            $this->cmService->refund($creditMemo);
             $order->addStatusHistoryComment(__('Pay. - Refund via Card initiated from Magento2 Backend'))->save();
         } catch (\Exception $e) {
             throw new \Exception('Could not process Refund via Card');

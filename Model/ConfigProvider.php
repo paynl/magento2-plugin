@@ -5,6 +5,8 @@ namespace Paynl\Payment\Model;
 use Magento\Checkout\Model\ConfigProviderInterface;
 use Magento\Framework\Escaper;
 use Magento\Payment\Helper\Data as PaymentHelper;
+use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Checkout\Model\Cart;
 
 class ConfigProvider implements ConfigProviderInterface
 {
@@ -51,6 +53,7 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_festivalcadeaukaart',
         'paynl_payment_flyingblueplus',
         'paynl_payment_gezondheidsbon',
+        'paynl_payment_giftforgood',
         'paynl_payment_giropay',
         'paynl_payment_givacard',
         'paynl_payment_good4fun',
@@ -140,6 +143,21 @@ class ConfigProvider implements ConfigProviderInterface
     protected $paynlConfig;
 
     /**
+     * @var ProductRepositoryInterface
+     */
+    protected $productRepository;
+
+    /**
+     * @var Cart
+     */
+    protected $cart;
+
+    /**
+     * @var null
+     */
+    protected static $apm = null;
+
+    /**
      * ConfigProvider constructor.
      * @param PaymentHelper $paymentHelper
      * @param Escaper $escaper
@@ -149,10 +167,14 @@ class ConfigProvider implements ConfigProviderInterface
     public function __construct(
         PaymentHelper $paymentHelper,
         Escaper $escaper,
-        Config $paynlConfig
+        Config $paynlConfig,
+        ProductRepositoryInterface $productRepository,
+        Cart $cart
     ) {
         $this->paynlConfig = $paynlConfig;
         $this->escaper = $escaper;
+        $this->productRepository = $productRepository;
+        $this->cart = $cart;
         foreach ($this->methodCodes as $code) {
             $this->methods[$code] = $paymentHelper->getMethodInstance($code);
         }
@@ -186,12 +208,71 @@ class ConfigProvider implements ConfigProviderInterface
                 $config['payment']['currentipisvalid'][$code]    = $this->methods[$code]->isCurrentIpValid();
                 $config['payment']['currentagentisvalid'][$code] = $this->methods[$code]->isCurrentAgentValid();
                 $config['payment']['defaultpaymentmethod'][$code] = $this->methods[$code]->isDefaultPaymentOption();
+
+                $config['payment']['defaultinactive'][$code] = $this->isDefaultInactive($code);
+                $config['payment']['allowedpaymentmethods'][$code] = $this->getIsAllowedByProduct($code);
             }
         }
 
         $config['payment']['useAdditionalValidation'] = $this->paynlConfig->getUseAdditionalValidation();
 
         return $config;
+    }
+
+    /**
+     * @param $code
+     * @return bool
+     */
+    protected function getIsAllowedByProduct($code)
+    {
+        $availableMethodsForCartProducts = $this->getCustomProductPaymentMethods();
+        return in_array($code, $availableMethodsForCartProducts);
+    }
+
+    /**
+     * Retrieve the quote/cart and check which methods to display at checkout
+     *
+     * @return arrays
+     */
+    protected function getCustomProductPaymentMethods()
+    {
+        if (self::$apm === null) {
+            $methods = null;
+
+            foreach ($this->cart->getItems() as $product) {
+                $attr = $this->productRepository
+                    ->getById($product->getProductId())
+                    ->getCustomAttribute('paynl_product_allowed_payment_methods');
+
+                if (!$attr) {
+                    self::$apm = [];
+                    return self::$apm;
+                }
+
+                $current = explode(',', $attr->getValue());
+                $methods = $methods === null ? $current : array_intersect($methods, $current);
+
+                if (empty($methods)) {
+                    break;
+                }
+            }
+
+            self::$apm = $methods ?? [];
+        }
+
+        return self::$apm;
+    }
+
+
+    /**
+     * @param string $code
+     * @return string
+     */
+    protected function isDefaultInactive($code)
+    {
+        $methodsString = $this->paynlConfig->getProductExclusive();
+        $methodCodes = array_filter(explode(',', $methodsString));
+        return in_array($code, $methodCodes);
     }
 
     /**

@@ -203,6 +203,7 @@ class PayPaymentCreate
 
         $customer = $this->getCustomer();
         if (!empty($customer)) {
+            $customer->setCompany($this->getCompany());
             $this->request->setCustomer($customer);
         }
 
@@ -249,7 +250,7 @@ class PayPaymentCreate
     {
         $arrBillingAddress = $this->order->getBillingAddress();
 
-        $compName = !empty($arrBillingAddress['company']) ? $arrBillingAddress['company'] : ($this->companyField ?? null);
+        $compName = trim(!empty($arrBillingAddress['company']) ? $arrBillingAddress['company'] : ($this->companyField ?? ''));
         $vat = !empty($arrBillingAddress['vat_id']) ? $arrBillingAddress['vat_id'] : ($this->vatNumber ?? null);
 
         $company = new \PayNL\Sdk\Model\Company();
@@ -266,7 +267,7 @@ class PayPaymentCreate
             $company->setVat(mb_substr($vat, 0, 32));
         }
 
-        if (!empty($arrBillingAddress['country_id'])) {
+        if (!empty($arrBillingAddress['country_id']) && !empty($compName)) {
             $company->setCountryCode(mb_substr($arrBillingAddress['country_id'], 0, 2));
         }
         return $company;
@@ -423,44 +424,6 @@ class PayPaymentCreate
     }
 
     /**
-     * @return array
-     */
-    public function get3Dataoud()
-    {
-        $shippingAddress = $this->getShippingAddress();
-        $endUserData = $this->getEnduserData();
-        $invoiceAddress = $this->getInvoiceAddress();
-        $productData = $this->getProductData();
-
-        $data = [
-            'amount' => $this->paymentData['amount'],
-            'returnUrl' => $this->paymentData['returnURL'],
-            'paymentMethod' => $this->paymentMethodId,
-            'language' => $this->payConfig->getLanguage(),
-            'bank' => $this->paymentData['bank'] ?? '',
-            'orderNumber' => $this->orderId,
-            'description' => $this->getDescription(),
-            'extra1' => $this->orderId,
-            'extra2' => $this->order->getQuoteId(),
-            'extra3' => $this->order->getEntityId(),
-            'transferData' => $this->methodInstance->getTransferData(),
-            'exchangeUrl' => $this->paymentData['exchangeURL'],
-            'currency' => $this->paymentData['currency'],
-            'object' => $this->methodInstance->getVersion(),
-        ];
-
-        if (!empty($shippingAddress))   { $data['address'] = $shippingAddress;       }
-        if (!empty($invoiceAddress))    { $data['invoiceAddress'] = $invoiceAddress; }
-        if (!empty($endUserData))       { $data['enduser'] = $endUserData;           }
-        if (!empty($productData))       { $data['products'] = $productData;          }
-
-        $data['testmode'] = $this->testMode;
-        $data['ipaddress'] = $this->getIpAddress();
-
-        return $data;
-    }
-
-    /**
      * @return float|string|null
      */
     private function getIpAddress()
@@ -541,88 +504,6 @@ class PayPaymentCreate
             $devAddress->setCountryCode($arrShippingAddress['country_id']);
         }
         return $devAddress;
-    }
-
-
-    /**
-     * @return array
-     */
-    private function getShippingAddressOld()
-    {
-        $shippingAddress = null;
-        $orderShippingAddress = $this->order->getShippingAddress();
-
-        if (!empty($orderShippingAddress)) {
-            $arrShippingAddress = $orderShippingAddress->toArray();
-
-            if ($this->useBillingAddressInstorePickup() && class_exists(InStorePickup::class)) {
-                if ($this->order->getShippingMethod() === InStorePickup::DELIVERY_METHOD) {
-                    $arrBillingAddress = $this->order->getBillingAddress();
-                    if (!empty($arrBillingAddress)) {
-                        $arrShippingAddress = $arrBillingAddress->toArray();
-                    }
-                }
-            }
-
-            $shippingAddress = [
-                'initials' => mb_substr($arrShippingAddress['firstname'] ?? '', 0, 32),
-                'lastName' => mb_substr($arrShippingAddress['lastname'] ?? '', 0, 64),
-            ];
-            $arrAddress2 = paynl_split_address($arrShippingAddress['street']);
-            $shippingAddress['streetName'] = mb_substr($arrAddress2[0] ?? '', 0, 128);
-            $shippingAddress['houseNumber'] = mb_substr($arrAddress2[1] ?? '', 0, 10);
-            $shippingAddress['zipCode'] = mb_substr($arrShippingAddress['postcode'] ?? '', 0, 24);
-            $shippingAddress['city'] = mb_substr($arrShippingAddress['city'] ?? '', 0, 40);
-            $shippingAddress['country'] = $arrShippingAddress['country_id'];
-        }
-
-        return $shippingAddress;
-    }
-
-    /**
-     * @return array
-     */
-    private function getEnduserData()
-    {
-        $arrBillingAddress = $this->order->getBillingAddress();
-        $enduser = [];
-
-        if ($arrBillingAddress) {
-            $arrBillingAddress = $arrBillingAddress->toArray();
-            $enduser = [
-                'initials' => mb_substr($arrBillingAddress['firstname'] ?? '', 0, 32),
-                'lastName' => mb_substr($arrBillingAddress['lastname'] ?? '', 0, 64),
-                'phoneNumber' => payHelper::validatePhoneNumber($arrBillingAddress['telephone']),
-                'emailAddress' => mb_substr($arrBillingAddress['email'] ?? '', 0, 100),
-            ];
-
-            if (isset($this->additionalData['dob']) && !empty($this->additionalData['dob'])) {
-                $enduser['dob'] = mb_substr($this->additionalData['dob'], 0, 32);
-            }
-            if (isset($this->additionalData['gender'])) {
-                $enduser['gender'] = mb_substr($this->additionalData['gender'], 0, 1);
-            }
-            $enduser['gender'] = payHelper::genderConversion((empty($enduser['gender'])) ? $this->order->getCustomerGender($this->order) : $enduser['gender']);
-
-            if (!empty($arrBillingAddress['company'])) {
-                $enduser['company']['name'] = mb_substr($arrBillingAddress['company'], 0, 128);
-            } elseif (!empty($this->companyField)) {
-                $enduser['company']['name'] = mb_substr($this->companyField, 0, 128);
-            }
-            if (!empty($arrBillingAddress['country_id'])) {
-                $enduser['company']['countryCode'] = mb_substr($arrBillingAddress['country_id'], 0, 2);
-            }
-            if (!empty($this->cocNumber)) {
-                $enduser['company']['cocNumber'] = mb_substr($this->cocNumber, 0, 64);
-            }
-            if (!empty($arrBillingAddress['vat_id'])) {
-                $enduser['company']['vatNumber'] = mb_substr($arrBillingAddress['vat_id'], 0, 32);
-            } elseif (!empty($this->vatNumber)) {
-                $enduser['company']['vatNumber'] = mb_substr($this->vatNumber, 0, 32);
-            }
-        }
-
-        return $enduser;
     }
 
     /**
