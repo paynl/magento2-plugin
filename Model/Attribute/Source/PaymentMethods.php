@@ -58,7 +58,7 @@ class PaymentMethods extends AbstractSource
         }
 
         $configPath = 'payment/paynl/product_exclusive';
-        $methodsString = $this->scopeConfigInterface->getValue($configPath, $scope, $scopeId);
+        $methodsString = (string) $this->scopeConfigInterface->getValue($configPath, $scope, $scopeId);
 
         $methods = $methodCodes = array_filter(explode(',', $methodsString));
         $paynlMethods = [];
