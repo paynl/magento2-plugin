@@ -6,7 +6,7 @@ use Magento\Framework\Event\Observer as EventObserver;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Magento\Store\Api\StoreRepositoryInterface;
-use Magento\InventorySales\Model\ResourceModel\GetAssignedStockIdForWebsite;
+use Magento\InventorySales\Model\ResourceModel\GetAssignedStockIdForWebsite\Proxy as GetAssignedStockIdForWebsiteProxy;
 use Magento\InventoryReservationsApi\Model\ReservationBuilderInterface;
 use Magento\InventoryReservationsApi\Model\AppendReservationsInterface;
 
@@ -38,7 +38,7 @@ class SubtractInventoryObserver implements ObserverInterface
      */
     public function __construct(
         StoreRepositoryInterface $storeRepository,
-        GetAssignedStockIdForWebsite $getAssignedStockIdForWebsite,
+        GetAssignedStockIdForWebsiteProxy $getAssignedStockIdForWebsite,
         ReservationBuilderInterface $reservationBuilder,
         AppendReservationsInterface $appendReservations
     ) {
@@ -69,7 +69,10 @@ class SubtractInventoryObserver implements ObserverInterface
             $storeId = $order->getStoreId();
             $website = $this->storeRepository->getById($storeId)->getWebsite();
             $websiteCode = $website->getCode();
-            $stockId = $this->getAssignedStockIdForWebsite->execute($websiteCode);
+            $stockId = 1;
+            if (class_exists(\Magento\InventorySales\Model\ResourceModel\GetAssignedStockIdForWebsite::class)) {
+                $stockId = $this->getAssignedStockIdForWebsite->execute($websiteCode);
+            }
 
             $reservations = [];
 
