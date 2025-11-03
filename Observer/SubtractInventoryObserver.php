@@ -7,8 +7,8 @@ use Magento\Framework\Event\ObserverInterface;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Magento\Store\Api\StoreRepositoryInterface;
 use Magento\InventorySales\Model\ResourceModel\GetAssignedStockIdForWebsite\Proxy as GetAssignedStockIdForWebsiteProxy;
-use Magento\InventoryReservationsApi\Model\ReservationBuilderInterface;
-use Magento\InventoryReservationsApi\Model\AppendReservationsInterface;
+use Magento\InventoryReservationsApi\Model\ReservationBuilderInterface\Proxy as ReservationBuilderInterfaceProxy;
+use Magento\InventoryReservationsApi\Model\AppendReservationsInterface\Proxy as AppendReservationsInterfaceProxy;
 
 class SubtractInventoryObserver implements ObserverInterface
 {
@@ -33,19 +33,30 @@ class SubtractInventoryObserver implements ObserverInterface
     private $appendReservations;
 
     /**
+     * @var StockRegistryInterface
+     */
+    private $stockRegistry;
+
+    /**
      * SubtractInventoryObserver constructor.
+     * @param StoreRepositoryInterface $storeRepository
+     * @param GetAssignedStockIdForWebsiteProxy $getAssignedStockIdForWebsite
+     * @param ReservationBuilderInterfaceProxy $reservationBuilder
+     * @param AppendReservationsInterfaceProxy $appendReservations
      * @param StockRegistryInterface $stockRegistry
      */
     public function __construct(
         StoreRepositoryInterface $storeRepository,
         GetAssignedStockIdForWebsiteProxy $getAssignedStockIdForWebsite,
-        ReservationBuilderInterface $reservationBuilder,
-        AppendReservationsInterface $appendReservations
+        ReservationBuilderInterfaceProxy $reservationBuilder,
+        AppendReservationsInterfaceProxy $appendReservations,
+        StockRegistryInterface $stockRegistry
     ) {
         $this->storeRepository = $storeRepository;
         $this->getAssignedStockIdForWebsite = $getAssignedStockIdForWebsite;
         $this->reservationBuilder = $reservationBuilder;
         $this->appendReservations = $appendReservations;
+        $this->stockRegistry = $stockRegistry;
     }
 
     /**
@@ -69,29 +80,42 @@ class SubtractInventoryObserver implements ObserverInterface
             $storeId = $order->getStoreId();
             $website = $this->storeRepository->getById($storeId)->getWebsite();
             $websiteCode = $website->getCode();
-            $stockId = 1;
-            if (class_exists(\Magento\InventorySales\Model\ResourceModel\GetAssignedStockIdForWebsite::class)) {
+            $websiteId = $website->getId();
+
+            if (!class_exists(\Magento\InventorySales\Model\ResourceModel\GetAssignedStockIdForWebsite::class) && class_exists(\Magento\InventoryReservationsApi\Model\ReservationBuilderInterface::class) && class_exists(\Magento\InventoryReservationsApi\Model\AppendReservationsInterface::class)) {
                 $stockId = $this->getAssignedStockIdForWebsite->execute($websiteCode);
-            }
+                $reservations = [];
 
-            $reservations = [];
+                foreach ($order->getAllItems() as $item) {
+                    $itemData = $item->getData();
 
-            foreach ($order->getAllItems() as $item) {
-                $itemData = $item->getData();
+                    $itemQty = $itemData['qty_ordered'] ?? null;
+                    $itemSku = $itemData['sku'] ?? null;
 
-                $itemQty = $itemData['qty_ordered'] ?? null;
-                $itemSku = $itemData['sku'] ?? null;
+                    if (!empty($itemQty) && !empty($itemSku)) {
+                        $reservations[] = $this->reservationBuilder
+                            ->setSku($itemSku)
+                            ->setQuantity(-$itemQty)
+                            ->setStockId($stockId)
+                            ->build();
+                    }
+                }
 
-                if (!empty($itemQty) && !empty($itemSku)) {
-                    $reservations[] = $this->reservationBuilder
-                        ->setSku($itemSku)
-                        ->setQuantity(-$itemQty)
-                        ->setStockId($stockId)
-                        ->build();
+                $this->appendReservations->execute($reservations);
+            } else {
+                foreach ($order->getAllItems() as $item) {
+                    $itemData = $item->getData();
+
+                    $itemQty = $itemData['qty_ordered'] ?? null;
+                    $itemSku = $itemData['sku'] ?? null;
+
+                    $stockItem = $this->stockRegistry->getStockItemBySku($itemSku, $websiteId);
+                    $currentQty = (float) $stockItem->getQty();
+                    $stockItem->setQty($currentQty - $itemQty);
+                    $stockItem->setIsInStock((($currentQty - $itemQty) > 0) ? 1 : 0);
+                    $this->stockRegistry->updateStockItemBySku($itemSku, $stockItem);
                 }
             }
-
-            $this->appendReservations->execute($reservations);
 
             $order->setInventoryProcessed(true)->save();
             return $this;
