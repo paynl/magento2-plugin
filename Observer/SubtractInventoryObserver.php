@@ -82,7 +82,7 @@ class SubtractInventoryObserver implements ObserverInterface
             $websiteCode = $website->getCode();
             $websiteId = $website->getId();
 
-            if (!class_exists(\Magento\InventorySales\Model\ResourceModel\GetAssignedStockIdForWebsite::class) && class_exists(\Magento\InventoryReservationsApi\Model\ReservationBuilderInterface::class) && class_exists(\Magento\InventoryReservationsApi\Model\AppendReservationsInterface::class)) {
+            if (class_exists(\Magento\InventorySales\Model\ResourceModel\GetAssignedStockIdForWebsite::class) && class_exists(\Magento\InventoryReservationsApi\Model\ReservationBuilderInterface::class) && class_exists(\Magento\InventoryReservationsApi\Model\AppendReservationsInterface::class)) {
                 $stockId = $this->getAssignedStockIdForWebsite->execute($websiteCode);
                 $reservations = [];
 
