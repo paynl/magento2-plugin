@@ -218,7 +218,7 @@ class PayPaymentCreate
     /**
      * @return \PayNL\Sdk\Model\Customer
      */
-    private function getCustomer()
+    private function getCustomer(): \PayNL\Sdk\Model\Customer
     {
         $arrBillingAddress = $this->order->getBillingAddress();
 
@@ -226,19 +226,29 @@ class PayPaymentCreate
         $customer->setFirstName(mb_substr($arrBillingAddress['firstname'] ?? '', 0, 32));
         $customer->setLastName(mb_substr($arrBillingAddress['lastname'] ?? '', 0, 64));
 
-        $customer->setIpAddress($this->getIpAddress());
+        $customer->setIpAddress((string)$this->getIpAddress());
 
-        if (isset($this->additionalData['dob']) && !empty($this->additionalData['dob'])) {
-            $customer->setBirthDate(mb_substr($this->additionalData['dob'], 0, 32));
+        $dob = $this->additionalData['dob'] ?? null;
+        if (!empty($dob)) {
+            $customer->setBirthDate(mb_substr($dob, 0, 32));
         }
 
-        if (isset($this->additionalData['gender'])) {
-            $customer->setGender(mb_substr($this->additionalData['gender'], 0, 1));
+        $gender = $this->additionalData['gender'] ?? null;
+        if (!empty($gender)) {
+            $customer->setGender(mb_substr($gender, 0, 1));
         }
 
-        $customer->setPhone(payHelper::validatePhoneNumber($arrBillingAddress['telephone']));
-        $customer->setEmail(mb_substr($arrBillingAddress['email'] ?? '', 0, 100));
-        $customer->setLanguage($this->payConfig->getLanguage());
+        $phone = payHelper::validatePhoneNumber($arrBillingAddress['telephone'] ?? '');
+        if (!empty($phone)) {
+            $customer->setPhone($phone);
+        }
+
+        $email = $arrBillingAddress['email'] ?? null;
+        if (!empty($email)) {
+            $customer->setEmail(mb_substr($email, 0, 100));
+        }
+
+        $customer->setLanguage((string)$this->payConfig->getLanguage());
 
         return $customer;
     }
@@ -424,7 +434,7 @@ class PayPaymentCreate
     }
 
     /**
-     * @return float|string|null
+     * @return float|mixed|string|null
      */
     private function getIpAddress()
     {
