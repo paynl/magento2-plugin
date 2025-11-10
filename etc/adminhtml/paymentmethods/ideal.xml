@@ -185,6 +185,15 @@ This button allows users to checkout directly from the cart without the need to 
                 <label>Note</label>
                 <frontend_model>Paynl\Payment\Block\Adminhtml\Render\CacheButton</frontend_model>
             </field>
+            <field id="fast_checkout_css_enabled" translate="label" type="select" sortOrder="174" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Load FastCheckout CSS</label>
+                <source_model>Paynl\Payment\Model\Config\Source\OffOn</source_model>
+                <config_path>payment/paynl_payment_ideal/fast_checkout_css_enabled</config_path>
+                <depends>
+                    <field id="active">1</field>
+                </depends>
+                <comment>Enable or disable the default FastCheckout CSS styling.</comment>
+            </field>
             <field id="fast_checkout_shipping" translate="label" type="select" sortOrder="180" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Default shipping method</label>
                 <source_model>Paynl\Payment\Model\Config\Source\ActiveShippingMethods</source_model>

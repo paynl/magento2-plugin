@@ -433,3 +433,5 @@ Note: This is not standard Magento behavior and may result in multiple orders be
 "Determine when in the order process the invoice is sent.","Determine when in the order process the invoice is sent."
 "Create invoice upon payment (default)","Create invoice upon payment (default)"
 "Create invoice upon shipment","Create invoice upon shipment"
+"Load FastCheckout CSS","Load FastCheckout CSS"
+"Enable or disable the default FastCheckout CSS styling.","Enable or disable the default FastCheckout CSS styling."

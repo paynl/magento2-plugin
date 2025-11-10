@@ -421,3 +421,5 @@ Note: This is not standard Magento behavior and may result in multiple orders be
 "Determine when in the order process the invoice is sent.","Bepaal wanneer in het bestelproces de factuur wordt verzonden."
 "Create invoice upon payment (default)","Factuur aanmaken bij betaling (standaard)"
 "Create invoice upon shipment","Factuur aanmaken bij verzending"
+"Load FastCheckout CSS","FastCheckout CSS laden"
+"Enable or disable the default FastCheckout CSS styling.","Schakel de standaard FastCheckout CSS in of uit."

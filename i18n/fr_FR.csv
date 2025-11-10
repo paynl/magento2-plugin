@@ -370,3 +370,5 @@ Remarque : Ce comportement n’est pas standard dans Magento et peut entraîner 
 "Determine when in the order process the invoice is sent.","Déterminez à quel moment du processus de commande la facture est envoyée."
 "Create invoice upon payment (default)","Créer une facture lors du paiement (par défaut)"
 "Create invoice upon shipment","Créer une facture lors de l'expédition"
+"Load FastCheckout CSS","Charger le CSS de FastCheckout"
+"Enable or disable the default FastCheckout CSS styling.","Activer ou désactiver le style CSS par défaut de FastCheckout."
