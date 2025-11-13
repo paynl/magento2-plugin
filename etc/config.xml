@@ -26,6 +26,7 @@
                 <follow_payment_method>1</follow_payment_method>
                 <sdk_caching>1</sdk_caching>
                 <multicore><![CDATA[https://connect.pay.nl]]></multicore>
+                <terminals>[]</terminals>
             </paynl>
             <paynl_payment_paylink>
                 <active>0</active>
