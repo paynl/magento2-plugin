@@ -225,32 +225,37 @@ class CreateFastCheckoutOrder
             ));
 
             $shippingAddress = $quote->getShippingAddress();
-            $shippingAddress->setCollectShippingRates(true)->collectShippingRates();
 
-            $shippingData = $this->shippingMethodManagementInterface->getList($quote->getId());
-            $shippingMethodsAvailable = [];
-            foreach ($shippingData as $shipping) {
-                $code = $shipping->getCarrierCode() . '_' . $shipping->getMethodCode();
-                $shippingMethodsAvailable[$code] = $code;
+            if (!$quote->getIsVirtual()) {
+                $shippingAddress->setCollectShippingRates(true)->collectShippingRates();
+
+                $shippingData = $this->shippingMethodManagementInterface->getList($quote->getId());
+                $shippingMethodsAvailable = [];
+                foreach ($shippingData as $shipping) {
+                    $code = $shipping->getCarrierCode() . '_' . $shipping->getMethodCode();
+                    $shippingMethodsAvailable[$code] = $code;
+                }
+
+                $this->payHelper->logDebug('Fast checkout: Available shipping methods', $shippingMethodsAvailable);
+
+                if (!empty($shippingMethodsAvailable[$shippingMethodQuote])) {
+                    $shippingMethod = $shippingMethodQuote;
+                } elseif (!empty($shippingMethodsAvailable[$store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping')])) {
+                    $shippingMethod = $store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping');
+                } elseif (!empty($shippingMethodsAvailable[$store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping_backup')])) {
+                    $shippingMethod = $store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping_backup');
+                }
+
+                $this->payHelper->logDebug('Fast checkout: Shipping options', ['quote' => $shippingMethodQuote, 'setting' => $store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping'), 'setting_backup' => $store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping_backup')]); // phpcs:ignore
+
+                if (empty($shippingMethod)) {
+                    throw new \Exception("No shipping method available");
+                }
+
+                $shippingAddress->setShippingMethod($shippingMethod);
+            } else {
+                $this->payHelper->logDebug('Fast checkout: Virtual quote detected, skipping shipping method');
             }
-
-            $this->payHelper->logDebug('Fast checkout: Available shipping methods', $shippingMethodsAvailable);
-
-            if (!empty($shippingMethodsAvailable[$shippingMethodQuote])) {
-                $shippingMethod = $shippingMethodQuote;
-            } elseif (!empty($shippingMethodsAvailable[$store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping')])) {
-                $shippingMethod = $store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping');
-            } elseif (!empty($shippingMethodsAvailable[$store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping_backup')])) {
-                $shippingMethod = $store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping_backup');
-            }
-
-            $this->payHelper->logDebug('Fast checkout: Shipping options', ['quote' => $shippingMethodQuote, 'setting' => $store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping'), 'setting_backup' => $store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping_backup')]); // phpcs:ignore
-
-            if (empty($shippingMethod)) {
-                throw new \Exception("No shipping method available");
-            }
-
-            $shippingAddress->setShippingMethod($shippingMethod);
 
             $quote->setPaymentMethod('paynl_payment_ideal');
             $quote->setInventoryProcessed(false);
