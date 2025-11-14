@@ -115,7 +115,6 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
 
         $quote->save();
 
-        // Skip shipping method requirement for downloadable products
         if ($quote->getIsVirtual()) {
             $quote->collectTotals()->save();
             return;
@@ -180,7 +179,6 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
             }
         }
 
-        // Only add shipping costs for non-virtual products
         if (!$this->cart->getQuote()->getIsVirtual() && $this->cart->getQuote()->getShippingAddress()->getShippingAmount() > 0) {
             $shippingMethodArr = explode('_', $this->cart->getQuote()->getShippingAddress()->getShippingMethod());
             $productArr[] = [
@@ -238,7 +236,6 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
                 }
             }
 
-            // Skip shipping method validation for virtual/downloadable products
             if (!$this->cart->getQuote()->getIsVirtual()) {
                 if (empty($store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping')) && (!isset($params['fallbackShippingMethod']) || empty($params['fallbackShippingMethod'])) && (!isset($params['selected_estimate_shipping']) || empty($params['selected_estimate_shipping']))) { // phpcs:ignore
                     throw new \Exception('No shipping method selected', FastCheckoutStart::FC_SHIPPING_ERROR);
