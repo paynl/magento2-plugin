@@ -352,30 +352,32 @@ class Finish extends PayAction
             $newQuote->setCustomerId($cancelledOrder->getCustomerId());
         } else {
             # Guest-customers
-            $newQuote->setCustomerEmail($cancelledOrder->getCustomerEmail());
-            $newQuote->setCustomerFirstname($cancelledOrder->getCustomerFirstname());
-            $newQuote->setCustomerLastname($cancelledOrder->getCustomerLastname());
             $newQuote->setCustomerIsGuest(true);
-            $newQuote->setCustomerTelephone($cancelledOrder->getCustomerTelephone());
-            $newQuote->setCustomerGroupId(\Magento\Customer\Model\Group::NOT_LOGGED_IN_ID);
+            $newQuote->setCustomerGroupId(\Magento\Customer\Model\Group::NOT_LOGGED_IN_ID);            
+        }
 
-            $newQuote->setCustomerPrefix($cancelledOrder->getCustomerPrefix());
-            $newQuote->setCustomerSuffix($cancelledOrder->getCustomerSuffix());
-            $newQuote->setCustomerDob($cancelledOrder->getCustomerDob());
-            $newQuote->setCustomerTaxvat($cancelledOrder->getCustomerTaxvat());
-            $newQuote->setCustomerGender($cancelledOrder->getCustomerGender());
+        $newQuote->setCustomerEmail($cancelledOrder->getCustomerEmail());
+        $newQuote->setCustomerFirstname($cancelledOrder->getCustomerFirstname());
+        $newQuote->setCustomerLastname($cancelledOrder->getCustomerLastname());
+        
+        $newQuote->setCustomerTelephone($cancelledOrder->getCustomerTelephone());
 
-            $billingAddress = $cancelledOrder->getBillingAddress();
-            if ($billingAddress) {
-                $newBillingAddress = $newQuote->getBillingAddress();
-                $newBillingAddress->addData($billingAddress->getData());
-            }
+        $newQuote->setCustomerPrefix($cancelledOrder->getCustomerPrefix());
+        $newQuote->setCustomerSuffix($cancelledOrder->getCustomerSuffix());
+        $newQuote->setCustomerDob($cancelledOrder->getCustomerDob());
+        $newQuote->setCustomerTaxvat($cancelledOrder->getCustomerTaxvat());
+        $newQuote->setCustomerGender($cancelledOrder->getCustomerGender());
 
-            $shippingAddress = $cancelledOrder->getShippingAddress();
-            if ($shippingAddress) {
-                $newShippingAddress = $newQuote->getShippingAddress();
-                $newShippingAddress->addData($shippingAddress->getData());
-            }
+        $billingAddress = $cancelledOrder->getBillingAddress();
+        if ($billingAddress) {
+            $newBillingAddress = $newQuote->getBillingAddress();
+            $newBillingAddress->addData($billingAddress->getData());
+        }
+
+        $shippingAddress = $cancelledOrder->getShippingAddress();
+        if ($shippingAddress) {
+            $newShippingAddress = $newQuote->getShippingAddress();
+            $newShippingAddress->addData($shippingAddress->getData());
         }
 
         # Add products to the new quote
