@@ -25,7 +25,9 @@ class AddPaymentMethodAttribute implements DataPatchInterface, PatchRevertableIn
     {
         $setup = $this->moduleDataSetup;
         $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
-
+        
+        $setup->startSetup();
+        
         $eavSetup->addAttribute(Product::ENTITY, 'paynl_product_allowed_payment_methods', [
             'type' => 'text',
             'label' => 'Allowed Pay. Payment Methods',
