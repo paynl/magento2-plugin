@@ -137,10 +137,7 @@
                                                                         </item>
                                                                         <item name="paynl_payment_giftforgood" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
-                                                                        </item>
-                                                                        <item name="paynl_payment_giropay" xsi:type="array">
-                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
-                                                                        </item>
+                                                                        </item>                                                                    
                                                                         <item name="paynl_payment_givacard" xsi:type="array">
                                                                             <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
                                                                         </item>

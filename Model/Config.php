@@ -105,7 +105,6 @@ class Config
         "paynl_payment_flyingblueplus" => "339",
         "paynl_payment_gezondheidsbon" => "30",
         "paynl_payment_giftforgood" => "432",
-        "paynl_payment_giropay" => "3",
         "paynl_payment_givacard" => "61",
         "paynl_payment_good4fun" => "207",
         "paynl_payment_googlepay" => "176",
