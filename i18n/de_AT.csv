@@ -368,3 +368,5 @@ Hinweis: Dies ist kein standardmäßiges Magento-Verhalten und kann dazu führen
 "Determine when in the order process the invoice is sent.","Legen Sie fest, wann im Bestellvorgang die Rechnung versendet wird."
 "Create invoice upon payment (default)","Rechnung bei Zahlung erstellen (Standard)"
 "Create invoice upon shipment","Rechnung bei Versand erstellen"
+"Load FastCheckout CSS","FastCheckout-CSS laden"
+"Enable or disable the default FastCheckout CSS styling.","Aktivieren oder deaktivieren Sie die standardmäßige CSS-Formatierung für FastCheckout."

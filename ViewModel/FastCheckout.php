@@ -71,4 +71,13 @@ class FastCheckout implements ArgumentInterface
         }
         return true;
     }
+
+    /**
+     * @return boolean
+     */
+    public function cssEnabled()
+    {
+        $store = $this->storeManager->getStore();
+        return $store->getConfig('payment/paynl_payment_ideal/fast_checkout_css_enabled') == 1;
+    }
 }

@@ -57,13 +57,26 @@ class FastCheckoutFallback extends \Magento\Framework\View\Element\Template
         ManagerInterface $messageManager,
         array $data = []
     ) {
-        $page->addPageAsset('Paynl_Payment::css/payFastCheckout.css');
+        if ($this->isCssEnabled($context->getStoreManager())) {
+            $page->addPageAsset('Paynl_Payment::css/payFastCheckout.css');
+        }
+        
         parent::__construct($context, $data);
         $this->cart = $cart;
         $this->request = $request;
         $this->response = $response;
         $this->cache = $cache;
         $this->messageManager = $messageManager;
+    }
+
+    /**
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @return bool
+     */
+    protected function isCssEnabled($storeManager)
+    {
+        $store = $storeManager->getStore();
+        return $store->getConfig('payment/paynl_payment_ideal/fast_checkout_css_enabled') == 1;
     }
 
     /**

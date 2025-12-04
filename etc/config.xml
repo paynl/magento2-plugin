@@ -619,6 +619,7 @@ To finish your order, click the link below
                 <model>Paynl\Payment\Model\Paymentmethod\Ideal</model>
                 <group>paynl_payment</group>
                 <fast_checkout_show_modal>1</fast_checkout_show_modal>
+                <fast_checkout_css_enabled>1</fast_checkout_css_enabled>
             </paynl_payment_ideal>
             <paynl_payment_in3business>
                 <active>0</active>
