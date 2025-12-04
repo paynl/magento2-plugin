@@ -115,6 +115,11 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
 
         $quote->save();
 
+        if ($quote->getIsVirtual()) {
+            $quote->collectTotals()->save();
+            return;
+        }
+
         $shippingAddress = $quote->getShippingAddress();
         $shippingAddress->setCollectShippingRates(true)->collectShippingRates();
 
@@ -174,7 +179,7 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
             }
         }
 
-        if ($this->cart->getQuote()->getShippingAddress()->getShippingAmount() > 0) {
+        if (!$this->cart->getQuote()->getIsVirtual() && $this->cart->getQuote()->getShippingAddress()->getShippingAmount() > 0) {
             $shippingMethodArr = explode('_', $this->cart->getQuote()->getShippingAddress()->getShippingMethod());
             $productArr[] = [
                 'id' => $shippingMethodArr[0],
@@ -231,8 +236,10 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
                 }
             }
 
-            if (empty($store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping')) && (!isset($params['fallbackShippingMethod']) || empty($params['fallbackShippingMethod'])) && (!isset($params['selected_estimate_shipping']) || empty($params['selected_estimate_shipping']))) { // phpcs:ignore
-                throw new \Exception('No shipping method selected', FastCheckoutStart::FC_SHIPPING_ERROR);
+            if (!$this->cart->getQuote()->getIsVirtual()) {
+                if (empty($store->getConfig('payment/paynl_payment_ideal/fast_checkout_shipping')) && (!isset($params['fallbackShippingMethod']) || empty($params['fallbackShippingMethod'])) && (!isset($params['selected_estimate_shipping']) || empty($params['selected_estimate_shipping']))) { // phpcs:ignore
+                    throw new \Exception('No shipping method selected', FastCheckoutStart::FC_SHIPPING_ERROR);
+                }
             }
 
             $quote = $this->cart->getQuote();

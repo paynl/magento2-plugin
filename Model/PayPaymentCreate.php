@@ -506,14 +506,14 @@ class PayPaymentCreate
 
             $arrAddress2 = paynl_split_address($arrShippingAddress['street']);
 
-            $devAddress = new \PayNL\Sdk\Model\Address();
-            $devAddress->setStreetName(mb_substr($arrAddress2['street'] ?? '', 0, 128));
-            $devAddress->setStreetNumber(mb_substr($arrAddress2['number'] ?? '', 0, 10));
-            $devAddress->setZipCode(mb_substr($arrShippingAddress['postcode'] ?? '', 0, 24));
-            $devAddress->setCity(mb_substr($arrShippingAddress['city'] ?? '', 0, 40));
-            $devAddress->setCountryCode($arrShippingAddress['country_id']);
+            $deliveryAddress = new \PayNL\Sdk\Model\Address();
+            $deliveryAddress->setStreetName(mb_substr($arrAddress2['street'] ?? '', 0, 128));
+            $deliveryAddress->setStreetNumber(mb_substr($arrAddress2['number'] ?? '', 0, 10));
+            $deliveryAddress->setZipCode(mb_substr($arrShippingAddress['postcode'] ?? '', 0, 24));
+            $deliveryAddress->setCity(mb_substr($arrShippingAddress['city'] ?? '', 0, 40));
+            $deliveryAddress->setCountryCode($arrShippingAddress['country_id']);
         }
-        return $devAddress;
+        return $deliveryAddress;
     }
 
     /**
