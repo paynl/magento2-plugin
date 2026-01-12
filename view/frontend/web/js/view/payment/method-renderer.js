@@ -64,6 +64,7 @@ define(
             {type: 'paynl_payment_incasso', component: defaultComponent},
             {type: 'paynl_payment_instore', component: defaultComponent},
             {type: 'paynl_payment_invoice', component: defaultComponent},
+            {type: 'paynl_payment_keuzecadeau', component: defaultComponent},
             {type: 'paynl_payment_kidsorteen', component: defaultComponent},
             {type: 'paynl_payment_klarna', component: defaultComponent},
             {type: 'paynl_payment_klarnakp', component: defaultComponent},

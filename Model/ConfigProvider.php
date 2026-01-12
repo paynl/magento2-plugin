@@ -65,6 +65,7 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_incasso',
         'paynl_payment_instore',
         'paynl_payment_invoice',
+        'paynl_payment_keuzecadeau',
         'paynl_payment_kidsorteen',
         'paynl_payment_klarna',
         'paynl_payment_klarnakp',

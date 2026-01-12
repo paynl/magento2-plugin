@@ -116,6 +116,7 @@ class Config
         "paynl_payment_incasso" => "13",
         "paynl_payment_instore" => "164",
         "paynl_payment_invoice" => "invoice",
+        "paynl_payment_keuzecadeau" => "447",
         "paynl_payment_kidsorteen" => "330",
         "paynl_payment_klarna" => "15",
         "paynl_payment_klarnakp" => "15",
