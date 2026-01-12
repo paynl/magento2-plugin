@@ -97,6 +97,7 @@ class Config
         "paynl_payment_cult" => "291",
         "paynl_payment_dankort" => "58",
         "paynl_payment_decadeaukaart" => "189",
+        "paynl_payment_doenkado" => "285",
         "paynl_payment_dinerbon" => "198",
         "paynl_payment_eps" => "79",
         "paynl_payment_fashioncheque" => "27",
