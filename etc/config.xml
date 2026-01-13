@@ -693,6 +693,18 @@ To finish your order, click the link below
 ((invoice))
                 </invoice_body>
             </paynl_payment_invoice>
+            <paynl_payment_keuzecadeau>
+                <active>0</active>
+                <title>Keuze Cadeau</title>
+                <payment_option_id>4917</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Keuzecadeau</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_keuzecadeau>
             <paynl_payment_kidsorteen>
                 <active>0</active>
                 <title>Kids or teen</title>

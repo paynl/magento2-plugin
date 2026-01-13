@@ -55,6 +55,7 @@
     <include path="Paynl_Payment::paymentmethods/incasso.xml" />
     <include path="Paynl_Payment::paymentmethods/instore.xml" />
     <include path="Paynl_Payment::paymentmethods/invoice.xml" />
+    <include path="Paynl_Payment::paymentmethods/keuzecadeau.xml" />
     <include path="Paynl_Payment::paymentmethods/kidsorteen.xml" />
     <include path="Paynl_Payment::paymentmethods/klarna.xml" />
     <include path="Paynl_Payment::paymentmethods/klarnakp.xml" />
