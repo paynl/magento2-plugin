@@ -195,12 +195,16 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             }
 
         } catch (Throwable $exception) {
-            $eResponse = new ExchangeResponse(true, 'Exception message: ' . $exception->getMessage());
+            $eResponse = new ExchangeResponse(
+                $exception->getCode() !== PayExchange::ERROR_ACTION_FAULT,
+                'Exception message: ' . $exception->getMessage()
+            );
         }
 
         try {
             $this->removeProcessing($payOrderId ?? '', $exchange->eventPaid());
         } catch (Throwable $exception) {
+            $this->payHelper->logDebug('Exception removing processing: ' . $exception->getMessage());
         }
 
         return $this->result->setContents($exchange->setExchangeResponse($eResponse, true));
