@@ -34,6 +34,7 @@
     <include path="Paynl_Payment::paymentmethods/cult.xml" />
     <include path="Paynl_Payment::paymentmethods/dankort.xml" />
     <include path="Paynl_Payment::paymentmethods/decadeaukaart.xml" />
+    <include path="Paynl_Payment::paymentmethods/doenkado.xml" />
     <include path="Paynl_Payment::paymentmethods/dinerbon.xml" />
     <include path="Paynl_Payment::paymentmethods/eps.xml" />
     <include path="Paynl_Payment::paymentmethods/fashioncheque.xml" />
