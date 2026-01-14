@@ -36,6 +36,9 @@
         <method name="paynl_payment_babycadeaubon">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
+        <method name="paynl_payment_bancomat">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
         <method name="paynl_payment_biercheque">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
@@ -112,6 +115,9 @@
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_festivalcadeaukaart">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_floa">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_flyingblueplus">
@@ -217,6 +223,9 @@
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_paysafecard">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
+        <method name="paynl_payment_pix">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
         <method name="paynl_payment_podiumcadeaukaart">
