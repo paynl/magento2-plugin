@@ -160,6 +160,18 @@ To finish your order, click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_babycadeaubon>
+            <paynl_payment_bancomat>
+                <active>0</active>
+                <title>Bancomat</title>
+                <payment_option_id>4809</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Bancomat</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_bancomat>
             <paynl_payment_biercheque>
                 <active>0</active>
                 <title>Biercheque</title>
@@ -499,6 +511,18 @@ To finish your order, click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_festivalcadeaukaart>
+            <paynl_payment_floa>
+                <active>0</active>
+                <title>FLOA</title>
+                <payment_option_id>4815</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Floa</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_floa>
             <paynl_payment_flyingblueplus>
                 <active>0</active>
                 <title>Flying blue+</title>
@@ -958,6 +982,18 @@ To finish your order, click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_paysafecard>
+            <paynl_payment_pix>
+                <active>0</active>
+                <title>PIX</title>
+                <payment_option_id>4803</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Pix</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_pix>
             <paynl_payment_podiumcadeaukaart>
                 <active>0</active>
                 <title>Podiumcadeaukaart</title>
