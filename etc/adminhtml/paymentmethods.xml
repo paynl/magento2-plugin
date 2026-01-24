@@ -12,6 +12,7 @@
     <include path="Paynl_Payment::paymentmethods/amex.xml" />
     <include path="Paynl_Payment::paymentmethods/applepay.xml" />
     <include path="Paynl_Payment::paymentmethods/babycadeaubon.xml" />
+    <include path="Paynl_Payment::paymentmethods/bancomat.xml" />
     <include path="Paynl_Payment::paymentmethods/bataviacadeaukaart.xml" />
     <include path="Paynl_Payment::paymentmethods/bbqcadeaukaart.xml" />
     <include path="Paynl_Payment::paymentmethods/beautycadeau.xml" />
@@ -41,6 +42,7 @@
     <include path="Paynl_Payment::paymentmethods/fashionchequebeauty.xml" />
     <include path="Paynl_Payment::paymentmethods/fashiongiftcard.xml" />
     <include path="Paynl_Payment::paymentmethods/festivalcadeaukaart.xml" />
+    <include path="Paynl_Payment::paymentmethods/floa.xml" />
     <include path="Paynl_Payment::paymentmethods/flyingblueplus.xml" />
     <include path="Paynl_Payment::paymentmethods/gezondheidsbon.xml" />
     <include path="Paynl_Payment::paymentmethods/giftforgood.xml" />
@@ -77,6 +79,7 @@
     <include path="Paynl_Payment::paymentmethods/payconiq.xml" />
     <include path="Paynl_Payment::paymentmethods/paypal.xml" />
     <include path="Paynl_Payment::paymentmethods/paysafecard.xml" />
+    <include path="Paynl_Payment::paymentmethods/pix.xml" />
     <include path="Paynl_Payment::paymentmethods/podiumcadeaukaart.xml" />
     <include path="Paynl_Payment::paymentmethods/postepay.xml" />
     <include path="Paynl_Payment::paymentmethods/przelewy24.xml" />
