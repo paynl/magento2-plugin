@@ -151,7 +151,8 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
 
             # Now process this exchange request...
             $payOrder = $exchange->process($this->config->getPayConfig());
-
+            $order = $this->getOrder($payOrder->getReference());
+            
             if ($payOrder->isPending()) {
                 $eResponse = new ExchangeResponse(true, 'Ignoring pending state');
 
