@@ -18,44 +18,20 @@ class SubtractInventoryObserver implements ObserverInterface
     private $storeRepository;
 
     /**
-     * @var GetAssignedStockIdForWebsite
-     */
-    private $getAssignedStockIdForWebsite;
-
-    /**
-     * @var ReservationBuilderInterface
-     */
-    private $reservationBuilder;
-
-    /**
-     * @var AppendReservationsInterface
-     */
-    private $appendReservations;
-
-    /**
-     * @var StockRegistryInterface
+     * @var StockRegistryInterfaceX
      */
     private $stockRegistry;
 
     /**
      * SubtractInventoryObserver constructor.
      * @param StoreRepositoryInterface $storeRepository
-     * @param GetAssignedStockIdForWebsite $getAssignedStockIdForWebsite
-     * @param ReservationBuilderInterface $reservationBuilder
-     * @param AppendReservationsInterface $appendReservations
      * @param StockRegistryInterface $stockRegistry
      */
     public function __construct(
         StoreRepositoryInterface $storeRepository,
-        GetAssignedStockIdForWebsite $getAssignedStockIdForWebsite,
-        ReservationBuilderInterface $reservationBuilder,
-        AppendReservationsInterface $appendReservations,
         StockRegistryInterface $stockRegistry
     ) {
         $this->storeRepository = $storeRepository;
-        $this->getAssignedStockIdForWebsite = $getAssignedStockIdForWebsite;
-        $this->reservationBuilder = $reservationBuilder;
-        $this->appendReservations = $appendReservations;
         $this->stockRegistry = $stockRegistry;
     }
 
@@ -82,8 +58,14 @@ class SubtractInventoryObserver implements ObserverInterface
             $websiteCode = $website->getCode();
             $websiteId = $website->getId();
 
-            if (class_exists(\Magento\InventorySales\Model\ResourceModel\GetAssignedStockIdForWebsite::class) && class_exists(\Magento\InventoryReservationsApi\Model\ReservationBuilderInterface::class) && class_exists(\Magento\InventoryReservationsApi\Model\AppendReservationsInterface::class)) {
-                $stockId = $this->getAssignedStockIdForWebsite->execute($websiteCode);
+            if (class_exists(GetAssignedStockIdForWebsite::class) && interface_exists(ReservationBuilderInterface::class) && interface_exists(AppendReservationsInterface::class)) {
+                $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+
+                $getAssignedStockIdForWebsite = $objectManager->get(GetAssignedStockIdForWebsite::class);
+                $reservationBuilder = $objectManager->get(ReservationBuilderInterface::class);
+                $appendReservations = $objectManager->get(AppendReservationsInterface::class);
+
+                $stockId = $getAssignedStockIdForWebsite->execute($websiteCode);
                 $reservations = [];
 
                 foreach ($order->getAllItems() as $item) {
@@ -93,15 +75,14 @@ class SubtractInventoryObserver implements ObserverInterface
                     $itemSku = $itemData['sku'] ?? null;
 
                     if (!empty($itemQty) && !empty($itemSku)) {
-                        $reservations[] = $this->reservationBuilder
+                        $reservations[] = $reservationBuilder
                             ->setSku($itemSku)
                             ->setQuantity(-$itemQty)
                             ->setStockId($stockId)
                             ->build();
                     }
                 }
-
-                $this->appendReservations->execute($reservations);
+                $appendReservations->execute($reservations);
             } else {
                 foreach ($order->getAllItems() as $item) {
                     $itemData = $item->getData();
