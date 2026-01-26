@@ -18,7 +18,7 @@ class SubtractInventoryObserver implements ObserverInterface
     private $storeRepository;
 
     /**
-     * @var StockRegistryInterfaceX
+     * @var StockRegistryInterface
      */
     private $stockRegistry;
 
