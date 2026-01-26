@@ -30,17 +30,4 @@
 			</argument>
 		</arguments>
 	</type>
-    <type name="Paynl\Payment\Observer\SubtractInventoryObserver">
-        <arguments>
-            <argument name="getAssignedStockIdForWebsite" xsi:type="object">
-                Magento\InventorySales\Model\ResourceModel\GetAssignedStockIdForWebsite\Proxy
-            </argument>
-            <argument name="reservationBuilder" xsi:type="object">
-                Magento\InventoryReservationsApi\Model\ReservationBuilderInterface\Proxy
-            </argument>
-            <argument name="appendReservations" xsi:type="object">
-                Magento\InventoryReservationsApi\Model\AppendReservationsInterface\Proxy
-            </argument>            
-        </arguments>
-    </type>
 </config>
