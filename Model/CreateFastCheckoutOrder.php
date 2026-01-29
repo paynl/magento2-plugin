@@ -128,7 +128,7 @@ class CreateFastCheckoutOrder
         }
 
         $payOrderId = $payLoad->getPayOrderId();
-        $quoteId = $payLoad->getReference();
+        $quoteId = $payLoad->getExtra3();
 
         $this->payHelper->logDebug(__METHOD__ .': Creating fast checkout order', ['quoteId' => $quoteId]);
 

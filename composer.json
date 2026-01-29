@@ -8,7 +8,7 @@
     "magento/module-sales": "^103.0.0",
     "magento/module-payment": "^100.3.0",
     "magento/module-quote": "^101.1.0",
-    "paynl/php-sdk": ">=1.0.9"
+    "paynl/php-sdk": ">=1.1.3"
   },
   "authors": [
     { "name": "Kevin Verschoor" },

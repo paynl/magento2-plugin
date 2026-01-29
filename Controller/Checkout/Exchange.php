@@ -106,13 +106,13 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
     }
 
     /**
-     * @param string $reference
+     * @param string $entityId
      * @return \Magento\Sales\Api\Data\OrderInterface|null
      */
-    private function getOrder(string $reference)
+    private function getOrder(string $entityId)
     {
         try {
-            $order = $this->orderRepository->get($reference);
+            $order = $this->orderRepository->get($entityId);
         } catch (\Exception $e) {
             $order = null;
         }
@@ -130,7 +130,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
         try {
             $payOrderId = $exchange->getPayOrderId();
             $action = $exchange->getAction();
-            $reference = $exchange->getReference();
+            $extra3 = $exchange->getPayLoad()->getExtra3();
 
             if ($action == 'pending') {
                 return $this->result->setContents($exchange->setResponse(true, 'Ignoring pending'));
@@ -144,15 +144,15 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             }
 
             # We need to load the order to get the credentials matching the store/storeview
-            $order = $this->getOrder($reference);
+            $order = $this->getOrder($extra3);
 
             # Retrieve credentials
             if (!empty($order)) { $this->config->setStore($order->getStore()); }
 
             # Now process this exchange request...
             $payOrder = $exchange->process($this->config->getPayConfig());
-            $order = $this->getOrder($payOrder->getReference());
-            
+            $order = $this->getOrder($payOrder->getExtra3());
+
             if ($payOrder->isPending()) {
                 $eResponse = new ExchangeResponse(true, 'Ignoring pending state');
 
@@ -176,7 +176,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
 
                 # Retourpin - doesnt need to be -processPaid-, only set the order to refunded
                 } elseif (Method::RETOURPIN == $payOrder->getPaymentMethod() && $exchange->eventPaid(true)) {
-                    $eResponse = $this->processRetourPin($reference);
+                    $eResponse = $this->processRetourPin($payOrder->getExtra3());
 
                 } else {
                     $eResponse = $this->processPaid($payOrder, $order);
@@ -288,16 +288,16 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
     }
 
     /**
-     * @param $reference
+     * @param $orderEntityId
      * @return ExchangeResponse
      */
-    private function processRetourPin($reference): ExchangeResponse
+    private function processRetourPin($orderEntityId): ExchangeResponse
     {
         $message = 'Refund by card success';
         $response = false;
 
         try {
-            $response = $this->payPayment->cardRefundOrder($reference);
+            $response = $this->payPayment->cardRefundOrder($orderEntityId);
         } catch (\Exception $e) {
             $message = $e->getMessage();
         }

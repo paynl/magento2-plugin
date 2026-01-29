@@ -184,10 +184,9 @@ class Finish extends PayAction
         $payOrderId = $params['id'] ?? null;
         $statusAction = $params['statusAction'] ?? null;
 
-        $orderStatusId = empty($params['statusCode']) ? null : (int)$params['statusCode'];
+        $orderStatusId = empty($params['statusCode']) ? null : (int)$params['statusCode'];   
 
         $entityid = $params['entityid'] ?? null;
-        $magOrderId = $params['reference'] ?? null;
         $orderIds = empty($params['order_ids']) ? null : $params['order_ids'];
         $pickupMode = !empty($params['pickup']);
         $invoice = !empty($params['invoice']);
@@ -207,8 +206,8 @@ class Finish extends PayAction
                 return $resultRedirect;
             }
 
-            $this->checkEmpty($magOrderId, 'magOrderId', 1012);
-            $order = $this->orderRepository->get($magOrderId);
+            $this->checkEmpty($entityid, 'entityid', 1012);
+            $order = $this->orderRepository->get($entityid);
             $this->checkEmpty($order, 'order', 1013);
 
             if ($pickupMode || $invoice) {
@@ -234,7 +233,7 @@ class Finish extends PayAction
 
             if (empty($bSuccess) && !$isPinTransaction) {
                 $payOrder = (new OrderStatusRequest($payOrderId))->setConfig($this->config->getPayConfig())->start();
-                $orderNumber = $payOrder->getReference();
+                $orderNumber = $payOrder->getExtra3();
                 $this->checkEmpty($order->getId() == $orderNumber, '', 104, 'order mismatch');
                 $bSuccess = ($payOrder->isPaid() || $payOrder->isAuthorized());
             }
