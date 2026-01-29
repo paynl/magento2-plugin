@@ -78,7 +78,7 @@ class PayPaymentCreateFastCheckout extends PayPaymentCreate
         $this->request->setAmount($this->paymentData['amount'])
             ->setReturnurl($this->paymentData['returnURL'])
             ->setPaymentMethodId($this->paymentMethodId)
-            ->setReference($this->reference)
+            ->setReference(null)
             ->setExchangeUrl($this->paymentData['exchangeURL'])
             ->setCurrency($this->paymentData['currency'])
             ->setDescription($this->getDescription());

@@ -178,7 +178,7 @@ class PayPaymentCreate
         $this->request->setAmount($this->paymentData['amount'])
             ->setReturnurl($this->paymentData['returnURL'])
             ->setPaymentMethodId($this->paymentMethodId)
-            ->setReference($this->order->getEntityId())
+            ->setReference($this->orderId)
             ->setExchangeUrl($this->paymentData['exchangeURL'])
             ->setCurrency($this->paymentData['currency'])
             ->setDescription($this->getDescription());
