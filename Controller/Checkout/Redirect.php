@@ -109,7 +109,7 @@ class Redirect extends PayAction
 
             $sessionQuote = $this->checkoutSession->getQuote();
 
-            # Check if a user is logged
+            # Check if a user is logged in
             if (!$sessionQuote->getCustomerId()) {
                 throw new \Exception('Invalid reference: ' . $mqId);
             }
