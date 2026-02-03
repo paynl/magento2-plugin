@@ -101,15 +101,29 @@ class Redirect extends PayAction
         try {
             $quoteId = $this->maskedQuoteIdToQuoteId->execute($mqId);
         } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
-            # Id is not masked when user is logged in
-            if (ctype_digit($mqId)) {
-                $quoteId = (int)$mqId;
-            } else {
+
+            # Numeric id's only for logged-in customers
+            if (!ctype_digit((string)$mqId)) {
+                throw new \Exception('Invalid quote reference: ' . $mqId);
+            }
+
+            $sessionQuote = $this->checkoutSession->getQuote();
+
+            # Check if a user is logged
+            if (!$sessionQuote->getCustomerId()) {
+                throw new \Exception('Invalid reference: ' . $mqId);
+            }
+
+            $quoteId = (int)$mqId;
+            $quote = $this->quoteRepository->get($quoteId);
+
+            # Check if the user is owner of the given quote
+            if ((int)$quote->getCustomerId() !== (int)$sessionQuote->getCustomerId()) {
                 throw new \Exception('Invalid quote reference: ' . $mqId);
             }
         }
 
-        $quote = $this->quoteRepository->get($quoteId);
+        $quote ??= $this->quoteRepository->get($quoteId);
         $incrementId = $quote->getReservedOrderId();
         $orderId = $this->orderModel->loadByIncrementId($incrementId)->getId();
         $order = $this->orderRepository->get($orderId);
