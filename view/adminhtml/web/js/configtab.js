@@ -27,4 +27,26 @@ require([
             return false;
         }
     })
+
+    function hideInactivePaymentMethods() {
+        $('select[id$="_active"]').each(function() {
+            var $select = $(this);
+
+            var $parentGroup = $select.parent().parent().parent().parent().parent().parent();
+
+            var selectedOption = $select.find('option:selected');
+            var optionText = selectedOption.text().trim();
+            var isInactive = optionText.indexOf('My.pay.nl') !== -1;
+
+            if (isInactive) {
+                console.log($parentGroup);
+            }
+        });
+    }
+    
+    hideInactivePaymentMethods();
+    
+    $(document).on('ajaxComplete', function() {
+        setTimeout(hideInactivePaymentMethods, 100);
+    });
 })
