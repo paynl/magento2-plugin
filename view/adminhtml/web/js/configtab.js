@@ -39,7 +39,7 @@ require([
             var isInactive = optionText.indexOf('My.pay.nl') !== -1;
 
             if (isInactive) {
-                console.log($parentGroup);
+                $parentGroup.hide();
             }
         });
     }
