@@ -32,7 +32,7 @@ require([
         $('select[id$="_active"]').each(function() {
             var $select = $(this);
 
-            var $parentGroup = $select.parent().parent().parent().parent().parent().parent();
+            var $parentGroup = $select.closest('.section-config');
 
             var selectedOption = $select.find('option:selected');
             var optionText = selectedOption.text().trim();
