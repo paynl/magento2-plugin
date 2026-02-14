@@ -41,6 +41,7 @@ define(
             {type: 'paynl_payment_capayable_gespreid', component: defaultComponent},
             {type: 'paynl_payment_cartebleue', component: defaultComponent},
             {type: 'paynl_payment_cashly', component: defaultComponent},
+            {type: 'paynl_payment_creditcardgroup', component: defaultComponent},
             {type: 'paynl_payment_creditclick', component: defaultComponent},
             {type: 'paynl_payment_cult', component: defaultComponent},
             {type: 'paynl_payment_dankort', component: defaultComponent},
