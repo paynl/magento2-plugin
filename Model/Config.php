@@ -640,20 +640,6 @@ class Config
     }
 
     /**
-     * @param string $issuerId
-     * @return mixed
-     */
-    public function getIconUrlIssuer(string $issuerId)
-    {
-        return $this->resources->getViewFileUrl(
-            "Paynl_Payment::logos_issuers/qr-" . $issuerId . ".svg",
-            array(
-                'area' => 'frontend',
-            )
-        );
-    }
-
-    /**
      * @return string
      */
     public function getUseAdditionalValidation()
