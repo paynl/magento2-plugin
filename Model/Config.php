@@ -83,6 +83,7 @@ class Config
         "paynl_payment_biercheque" => "204",
         "paynl_payment_biller" => "252",
         "paynl_payment_billink" => "16",
+        "paynl_payment_creditcardgroup" => "CNP",
         "paynl_payment_bizum" => "378",
         "paynl_payment_bioscoopbon" => "87",
         "paynl_payment_blik" => "234",
@@ -632,20 +633,6 @@ class Config
         }
         return $this->resources->getViewFileUrl(
             "Paynl_Payment::logos/" . $brandId . ".png",
-            array(
-                'area' => 'frontend',
-            )
-        );
-    }
-
-    /**
-     * @param string $issuerId
-     * @return mixed
-     */
-    public function getIconUrlIssuer(string $issuerId)
-    {
-        return $this->resources->getViewFileUrl(
-            "Paynl_Payment::logos_issuers/qr-" . $issuerId . ".svg",
             array(
                 'area' => 'frontend',
             )

@@ -209,10 +209,6 @@ abstract class Available implements ArrayInterface
         $paymentOptionId = $this->getPaymentOptionId();
 
         if (!empty($paymentOptionId)) {
-            if ($paymentOptionId == 3189) {
-                return true;
-            }
-
             if (is_array(self::$list)) {
                 return isset(self::$list[$paymentOptionId]);
             }

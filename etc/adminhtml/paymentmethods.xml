@@ -20,6 +20,7 @@
     <include path="Paynl_Payment::paymentmethods/biercheque.xml" />
     <include path="Paynl_Payment::paymentmethods/biller.xml" />
     <include path="Paynl_Payment::paymentmethods/billink.xml" />
+    <include path="Paynl_Payment::paymentmethods/creditcardgroup.xml" />
     <include path="Paynl_Payment::paymentmethods/bizum.xml" />
     <include path="Paynl_Payment::paymentmethods/bioscoopbon.xml" />
     <include path="Paynl_Payment::paymentmethods/blik.xml" />

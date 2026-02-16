@@ -38,6 +38,7 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_boekenbon',
         'paynl_payment_boekencadeau',
         'paynl_payment_brite',
+        'paynl_payment_creditcardgroup',
         'paynl_payment_cadeaubonnen',
         'paynl_payment_capayable_gespreid',
         'paynl_payment_cartebleue',
