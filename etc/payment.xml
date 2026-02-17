@@ -234,6 +234,9 @@
         <method name="paynl_payment_podiumcadeaukaart">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
+        <method name="paynl_payment_poortvliet">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
         <method name="paynl_payment_postepay">
             <allow_multiple_address>0</allow_multiple_address>
         </method>

@@ -145,6 +145,7 @@ class Config
         "paynl_payment_pix" => "435",
         "paynl_payment_podiumcadeaukaart" => "29",
         "paynl_payment_postepay" => "10",
+        "paynl_payment_poortvliet" => "450",
         "paynl_payment_przelewy24" => "93",
         "paynl_payment_profuomo" => "420",
         "paynl_payment_prontowonen" => "270",

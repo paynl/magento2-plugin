@@ -93,6 +93,7 @@ define(
             {type: 'paynl_payment_pix', component: defaultComponent},
             {type: 'paynl_payment_podiumcadeaukaart', component: defaultComponent},
             {type: 'paynl_payment_postepay', component: defaultComponent},
+            {type: 'paynl_payment_poortvliet', component: defaultComponent},
             {type: 'paynl_payment_prontowonen', component: defaultComponent},
             {type: 'paynl_payment_profuomo', component: defaultComponent},
             {type: 'paynl_payment_przelewy24', component: defaultComponent},
