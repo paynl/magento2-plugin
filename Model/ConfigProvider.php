@@ -113,6 +113,7 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_sportsgiftcard',
         'paynl_payment_spraypay',
         'paynl_payment_stadspasamsterdam',
+        'paynl_payment_stadspaspurmerend',
         'paynl_payment_swish',
         'paynl_payment_telefonischbetalen',
         'paynl_payment_trustly',

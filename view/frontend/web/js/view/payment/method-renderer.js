@@ -111,6 +111,7 @@ define(
             {type: 'paynl_payment_sportsgiftcard', component: defaultComponent},
             {type: 'paynl_payment_spraypay', component: defaultComponent},
             {type: 'paynl_payment_stadspasamsterdam', component: defaultComponent},
+            {type: 'paynl_payment_stadspaspurmerend', component: defaultComponent},
             {type: 'paynl_payment_swish', component: defaultComponent},
             {type: 'paynl_payment_telefonischbetalen', component: defaultComponent},
             {type: 'paynl_payment_trustly', component: defaultComponent},
