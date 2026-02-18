@@ -74,10 +74,10 @@ class CardRefund extends \Magento\Backend\App\Action implements CsrfAwareActionI
     public function execute()
     {
         $params = $this->getRequest()->getParams();
-        $orderId = isset($params['order_id']) ? $params['order_id'] : null;
+        $orderId = isset($params['order_id']) ? htmlspecialchars(strip_tags($params['order_id'])) : null;
         $returnUrl = isset($params['return_url']) ? urldecode($params['return_url']) : null;
-        $refundAmount = isset($params['refund_amount']) ? $params['refund_amount'] : 0;
-        $terminalId = isset($params['paynl_terminal']) ? $params['paynl_terminal'] : null;
+        $refundAmount = isset($params['refund_amount']) ? (float)$params['refund_amount'] : 0;
+        $terminalId = isset($params['paynl_terminal']) ? htmlspecialchars(strip_tags($params['paynl_terminal'])) : null;
         $redirectUrl = '';
 
         try {
