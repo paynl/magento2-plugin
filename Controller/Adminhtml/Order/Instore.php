@@ -74,7 +74,7 @@ class Instore extends \Magento\Backend\App\Action implements CsrfAwareActionInte
     public function execute()
     {
         $params = $this->getRequest()->getParams();
-        $orderId = isset($params['order_id']) ? htmlspecialchars(strip_tags($params['order_id']), ENT_QUOTES, 'UTF-8') : null;
+        $orderId = isset($params['order_id']) ? strip_tags($params['order_id']) : null;
         $returnUrl = isset($params['return_url']) ? urldecode($params['return_url']) : null;
         $redirectUrl = '';
 
