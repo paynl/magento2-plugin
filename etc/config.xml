@@ -1251,7 +1251,7 @@ To finish your order, click the link below
             </paynl_payment_spraypay>
             <paynl_payment_stadspasamsterdam>
                 <active>0</active>
-                <title>Stadpas Amsterdam</title>
+                <title>Stadspas Amsterdam</title>
                 <payment_option_id>3609</payment_option_id>
                 <order_status>pending_payment</order_status>
                 <order_status_authorized>processing</order_status_authorized>
@@ -1261,6 +1261,18 @@ To finish your order, click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_stadspasamsterdam>
+            <paynl_payment_stadspaspurmerend>
+                <active>0</active>
+                <title>Stadspas Purmerend</title>
+                <payment_option_id>5177</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Stadspaspurmerend</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_stadspaspurmerend>
             <paynl_payment_swish>
                 <active>0</active>
                 <title>Swish</title>
