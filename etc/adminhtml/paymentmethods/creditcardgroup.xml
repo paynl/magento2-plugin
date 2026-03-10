@@ -51,6 +51,7 @@
             <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
             <can_be_empty>1</can_be_empty>
             <config_path>payment/paynl_payment_creditcardgroup/specificcountry</config_path>
+            <frontend_model>Paynl\Payment\Block\Adminhtml\Render\Multiselect</frontend_model>
             <depends>
                 <field id="allowspecific">1</field>
                 <field id="active">1</field>
@@ -112,7 +113,7 @@
             <config_path>payment/paynl_payment_creditcardgroup/showforcompany</config_path>
             <comment><![CDATA[Allow payment method to be used for companies, private, or both.]]></comment>
         </field>
-        <field id="showforgroup" translate="label" type="select" sortOrder="160" showInDefault="1" showInWebsite="1" showInStore="1">
+        <field id="showforgroup" translate="label" type="multiselect"  sortOrder="160" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Customer Group</label>
             <source_model>Paynl\Payment\Model\Config\Source\UserGroups</source_model>
             <depends>

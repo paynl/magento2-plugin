@@ -8,10 +8,6 @@
     <span class="ms_options">
         <?php foreach ($element->getValues() as $value):
             if (!empty($value) && !empty($value['value'])):
-                if (isset($value['is_region_visible']) && $value['is_region_visible'] === false):
-                    continue;
-                endif;
-
                 if (is_array($value['value'])):
                     $label = $block->escapeHtml($value['label']);
                     $multiValues = $value['value'];
