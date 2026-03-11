@@ -1,19 +1,29 @@
 define([
-    'jquery',
-], function (jQuery) {
-    var enableMultiSelect = function (element) {
-        var multiSelect = jQuery('#' + element.element).parent();
-        multiSelect.find('option').click(function () {
-            if (jQuery(this).hasClass('selected')) {
-                jQuery(this).removeClass('selected');
-            } else {
-                jQuery(this).addClass('selected');
-            }
-            var selectedValues = jQuery.map(multiSelect.find('option.selected'), function (n, i) {
-                return n.value;
-            }).join(',');
-            multiSelect.find('input').val(selectedValues);
+    'jquery'
+], function ($) {
+    'use strict';
+
+    return function (config) {
+        var $hiddenInput = $('#' + config.element);
+        var $multiSelect = $hiddenInput.closest('.multiselectPay');
+
+        if (!$multiSelect.length) {
+            return;
+        }
+
+        var updateValue = function () {
+            var selectedValues = $.map($multiSelect.find('.ms_option.selected'), function (option) {
+                return $(option).data('value');
+            });
+
+            $hiddenInput.val(selectedValues.join(','));
+        };
+
+        $multiSelect.on('click', '.ms_option', function () {
+            $(this).toggleClass('selected');
+            updateValue();
         });
+
+        updateValue();
     };
-    return enableMultiSelect;
 });

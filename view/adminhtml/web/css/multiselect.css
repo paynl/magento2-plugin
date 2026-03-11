@@ -45,3 +45,36 @@ tr:has(input.config-inherit:checked) .option {
     -o-user-select: none;
     user-select: none;
 }
+
+.ms_options {
+    display: block;
+    max-height: 260px;
+    overflow-y: auto;
+    padding: 5px;
+}
+
+.ms_option {
+    display: block;
+    padding: 4px 6px;
+    cursor: pointer;
+}
+
+.ms_option:hover {
+    background: #f2f2f2;
+}
+
+.ms_option.selected {
+    background: #1979c3;
+    color: #fff;
+}
+
+.ms_optgroup {
+    display: block;
+    margin-top: 6px;
+}
+
+.ms_optgroup_label {
+    display: block;
+    font-weight: 600;
+    margin: 6px 0 2px;
+}
