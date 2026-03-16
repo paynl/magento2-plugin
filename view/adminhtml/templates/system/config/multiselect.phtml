@@ -5,36 +5,48 @@
            id="<?= $block->escapeHtmlAttr($element->getHtmlId()) ?>"
            name="<?= $block->escapeHtmlAttr($element->getName()) ?>"
            value="<?= $block->escapeHtmlAttr($element->getValue()) ?>" />
+
     <span class="ms_options">
-        <?php foreach ($element->getValues() as $value):
-            if (!empty($value) && !empty($value['value'])):
-                if (is_array($value['value'])):
-                    $label = $block->escapeHtml($value['label']);
-                    $multiValues = $value['value'];
-                    $option = '<optgroup label="' . $label . '">';
-                    foreach ($multiValues as $multiValue) {
-                        $selected = in_array($multiValue['value'], explode(',', $element->getValue() ?? '')) ? 'selected' : '';
-                        $option .= '<option class="' . $block->escapeHtmlAttr($selected) . '" value="' . $block->escapeHtmlAttr($multiValue['value']) . '">' . $block->escapeHtml($multiValue['label']) . '</option>';
-                    }
-                    $option .= '</optgroup>';
-                else:
-                    $selected = in_array($value['value'], explode(',', $element->getValue() ?? '')) ? 'selected' : '';
-                    $option = '<option class="' . $block->escapeHtmlAttr($selected) . '" value="' . $block->escapeHtmlAttr($value['value']) . '">' . $block->escapeHtml($value['label']) . '</option>';
-                endif;
-                ?>
-                <?= /* @noEscape */ $option ?>
-            <?php
+        <?php
+        $selectedValues = explode(',', (string)($element->getValue() ?? ''));
+
+        foreach ($element->getValues() as $value):
+            if (empty($value) || empty($value['value'])):
+                continue;
             endif;
-        endforeach; ?>
+
+            if (is_array($value['value'])):
+                ?>
+                <span class="ms_optgroup">
+                    <span class="ms_optgroup_label"><?= $block->escapeHtml($value['label']) ?></span>
+
+                    <?php foreach ($value['value'] as $multiValue):
+                        $isSelected = in_array($multiValue['value'], $selectedValues, true);
+                        ?>
+                        <span class="ms_option <?= $isSelected ? 'selected' : '' ?>"
+                              data-value="<?= $block->escapeHtmlAttr($multiValue['value']) ?>">
+                            <?= $block->escapeHtml($multiValue['label']) ?>
+                        </span>
+                    <?php endforeach; ?>
+                </span>
+            <?php else:
+                $isSelected = in_array($value['value'], $selectedValues, true);
+                ?>
+                <span class="ms_option <?= $isSelected ? 'selected' : '' ?>"
+                      data-value="<?= $block->escapeHtmlAttr($value['value']) ?>">
+                    <?= $block->escapeHtml($value['label']) ?>
+                </span>
+            <?php endif; ?>
+        <?php endforeach; ?>
     </span>
 </span>
 
 <script type="text/x-magento-init">
     {
         "*": {
-            "Paynl_Payment/js/multiselect" : {
-                "element" : "<?= $block->escapeJs($element->getHtmlId()) ?>"
-            }
+            "Paynl_Payment/js/multiselect": {
+                "element": "<?= $block->escapeJs($element->getHtmlId()) ?>"
         }
     }
+}
 </script>
