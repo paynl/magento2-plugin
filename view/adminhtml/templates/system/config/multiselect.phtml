@@ -15,10 +15,6 @@
                 continue;
             endif;
 
-            if (isset($value['is_region_visible']) && $value['is_region_visible'] === false):
-                continue;
-            endif;
-
             if (is_array($value['value'])):
                 ?>
                 <span class="ms_optgroup">
