@@ -147,9 +147,16 @@ class Redirect extends PayAction
                 try {
                     $order = $this->getOrder($mqId);
                 } catch (Exception $e) {
-                    throw new Exception('Could not retrieve order by mqId. Exception: ' . $e->getMessage());
+                    $this->payHelper->logDebug(__METHOD__ . ': Could not retrieve order by mqId, falling back to session. Exception: ' . $e->getMessage());
+
+                    $order = $this->checkoutSession->getLastRealOrder();
+
+                    if (empty($order)) {
+                        throw new Exception('Could not retrieve order by mqId, and no order found in session. Exception: ' . $e->getMessage());
+                    }
                 }
-                $this->payHelper->logDebug(__METHOD__.': OrderId from quote: ' . $order->getId() ?? null, array(), $order->getStore() ?? null);
+
+                $this->payHelper->logDebug(__METHOD__. ': OrderId from quote/session: ' . ($order->getId() ?? null), array(), $order->getStore() ?? null);
             } else {
                 $order = $this->checkoutSession->getLastRealOrder();
             }
