@@ -29,7 +29,7 @@ require([
     })
 
     function hideInactivePaymentMethods() {
-        $('select[id$="_active"]').each(function() {
+        $('select[id$="_active"]').each(function () {
             var $select = $(this);
 
             var $parentGroup = $select.closest('.section-config');
@@ -43,10 +43,46 @@ require([
             }
         });
     }
-    
+
+    function showPaymentMethodsButtons() {
+        if ($('#inactive-methods-button').length) {
+
+            $('#inactive-methods-button').unbind('click');
+            $('#inactive-methods-button-hide').unbind('click');
+
+            $('#inactive-methods-button').show().css('display', 'block');;
+            $('#inactive-methods-button').prependTo('#container');
+            $('#inactive-methods-button-hide').prependTo('#container');
+
+            $('#inactive-methods-button').click(function (e) {
+                $('select[id$="_active"]').each(function () {
+                    var $select = $(this);
+                    var $parentGroup = $select.closest('.section-config');
+                    $parentGroup.show();
+                });
+
+                $('#inactive-methods-button').hide();
+                $('#inactive-methods-button-hide').show().css('display', 'block');;
+
+                e.preventDefault();
+                return false;
+            });
+
+            $('#inactive-methods-button-hide').click(function (e) {
+                hideInactivePaymentMethods();
+                $('#inactive-methods-button').show().css('display', 'block');;
+                $('#inactive-methods-button-hide').hide();
+                e.preventDefault();
+                return false;
+            });
+        }
+    }
+
     hideInactivePaymentMethods();
-    
-    $(document).on('ajaxComplete', function() {
+    showPaymentMethodsButtons();
+
+    $(document).on('ajaxComplete', function () {
         setTimeout(hideInactivePaymentMethods, 100);
+        setTimeout(showPaymentMethodsButtons, 100);
     });
 })
