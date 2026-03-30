@@ -370,3 +370,5 @@ Hinweis: Dies ist kein standardmäßiges Magento-Verhalten und kann dazu führen
 "Create invoice upon shipment","Rechnung bei Versand erstellen"
 "Load FastCheckout CSS","FastCheckout-CSS laden"
 "Enable or disable the default FastCheckout CSS styling.","Aktivieren oder deaktivieren Sie die standardmäßige CSS-Formatierung für FastCheckout."
+"Show all payment methods","Alle Zahlungsmethoden anzeigen"
+"Hide inactive payment methods","Inaktive Zahlungsmethoden ausblenden"

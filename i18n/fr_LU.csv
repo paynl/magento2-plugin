@@ -371,3 +371,5 @@ Remarque : Ce comportement n’est pas standard dans Magento et peut entraîner 
 "Create invoice upon shipment","Créer une facture lors de l'expédition"
 "Load FastCheckout CSS","Charger le CSS de FastCheckout"
 "Enable or disable the default FastCheckout CSS styling.","Activer ou désactiver le style CSS par défaut de FastCheckout."
+"Show all payment methods","Afficher tous les modes de paiement"
+"Hide inactive payment methods","Masquer les moyens de paiement inactifs"

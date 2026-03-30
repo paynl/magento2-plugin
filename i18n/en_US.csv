@@ -435,3 +435,5 @@ Note: This is not standard Magento behavior and may result in multiple orders be
 "Create invoice upon shipment","Create invoice upon shipment"
 "Load FastCheckout CSS","Load FastCheckout CSS"
 "Enable or disable the default FastCheckout CSS styling.","Enable or disable the default FastCheckout CSS styling."
+"Show all payment methods","Show all payment methods"
+"Hide inactive payment methods","Hide inactive payment methods"
