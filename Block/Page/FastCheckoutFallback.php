@@ -100,9 +100,11 @@ class FastCheckoutFallback extends \Magento\Framework\View\Element\Template
         if (empty($shippingMethodJson)) {
             $this->messageManager->addNoticeMessage(__('Unfortunately fast checkout is currently not possible.'));
             $this->response->setRedirect('/checkout/cart');
-        } else {
-            return json_decode($shippingMethodJson);
+            return [];
         }
+
+        $shippingMethods = json_decode($shippingMethodJson);
+        return is_array($shippingMethods) ? $shippingMethods : [];
     }
 
     /**
