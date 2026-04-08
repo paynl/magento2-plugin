@@ -1239,7 +1239,7 @@ To finish your order, click the link below
             </paynl_payment_sportsgiftcard>
             <paynl_payment_spraypay>
                 <active>0</active>
-                <title>SprayPay</title>
+                <title>SprayPay - Gespreid betalen</title>
                 <payment_option_id>1987</payment_option_id>
                 <order_status>pending_payment</order_status>
                 <order_status_authorized>processing</order_status_authorized>
