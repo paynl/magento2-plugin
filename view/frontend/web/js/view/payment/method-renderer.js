@@ -74,6 +74,7 @@ define(
             {type: 'paynl_payment_klarnakp', component: defaultComponent},
             {type: 'paynl_payment_kunstencultuurkaart', component: defaultComponent},
             {type: 'paynl_payment_leescadeaukaart', component: defaultComponent},
+            {type: 'paynl_payment_nationalegolfbon', component: defaultComponent},
             {type: 'paynl_payment_maestro', component: defaultComponent},
             {type: 'paynl_payment_mastercard', component: defaultComponent},
             {type: 'paynl_payment_mbway', component: defaultComponent},

@@ -134,6 +134,7 @@ class Config
         "paynl_payment_monizze" => "183",
         "paynl_payment_mooigiftcard" => "294",
         "paynl_payment_multibanco" => "141",
+        "paynl_payment_nationalegolfbon" => "459",
         "paynl_payment_nationaletuinbon" => "387",
         "paynl_payment_nexi" => "76",
         "paynl_payment_overboeking" => "12",
