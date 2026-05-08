@@ -2,38 +2,17 @@
 
 namespace Paynl\Payment\Controller\Adminhtml\Order;
 
-use Magento\Framework\App\RequestInterface;
-use Magento\Framework\App\Request\InvalidRequestException;
 use Magento\Payment\Helper\Data as PaymentHelper;
 use Magento\Quote\Model\QuoteRepository;
 use Magento\Sales\Model\OrderRepository;
-use Paynl\Payment\Controller\CsrfAwareActionInterface;
 use Paynl\Payment\Helper\PayHelper;
 
-class CardRefund extends \Magento\Backend\App\Action implements CsrfAwareActionInterface
+class CardRefund extends \Magento\Backend\App\Action
 {
     private $orderRepository;
     private $quoteRepository;
     private $paymentHelper;
     protected $resultFactory;
-
-    /**
-     * @param RequestInterface $request
-     * @return boolean
-     */
-    public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
-    {
-        return null;
-    }
-
-    /**
-     * @param RequestInterface $request
-     * @return boolean
-     */
-    public function validateForCsrf(RequestInterface $request): bool
-    {
-        return true;
-    }
 
     /**
      *
@@ -76,7 +55,7 @@ class CardRefund extends \Magento\Backend\App\Action implements CsrfAwareActionI
         $params = $this->getRequest()->getParams();
         $orderId = isset($params['order_id']) ? strip_tags($params['order_id']) : null;
         $returnUrl = isset($params['return_url']) ? urldecode($params['return_url']) : null;
-        $refundAmount = isset($params['refund_amount']) ? (float)$params['refund_amount'] : 0;
+        $refundAmount = isset($params['refund_amount']) ? (float) $params['refund_amount'] : 0;
         $terminalId = isset($params['paynl_terminal']) ? strip_tags($params['paynl_terminal']) : null;
         $redirectUrl = '';
 
