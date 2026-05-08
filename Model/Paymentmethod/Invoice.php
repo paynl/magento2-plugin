@@ -50,10 +50,10 @@ class Invoice extends PaymentMethod
 
             $transaction = (new PayPaymentCreate($order, $this))->create();
 
-            $order->getPayment()->setAdditionalInformation('transactionId', $transaction->getTransactionId());
+            $order->getPayment()->setAdditionalInformation('transactionId', $transaction->getOrderId());
 
             $status = $this->getConfigData('order_status');
-            $url = $transaction->getRedirectUrl();
+            $url = $transaction->getPaymentUrl();
 
             $haystack = $this->getLocale->getLocale();
             $lang = strstr($haystack, '_', true);
