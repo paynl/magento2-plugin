@@ -9,6 +9,8 @@ use Magento\Quote\Model\QuoteRepository;
 use Magento\Sales\Model\OrderRepository;
 use Paynl\Payment\Controller\CsrfAwareActionInterface;
 use Paynl\Payment\Helper\PayHelper;
+use Magento\Framework\AuthorizationInterface;
+
 
 class CardRefund extends \Magento\Backend\App\Action implements CsrfAwareActionInterface
 {
@@ -16,6 +18,8 @@ class CardRefund extends \Magento\Backend\App\Action implements CsrfAwareActionI
     private $quoteRepository;
     private $paymentHelper;
     protected $resultFactory;
+    private $authorization;
+
 
     /**
      * @param RequestInterface $request
@@ -40,7 +44,6 @@ class CardRefund extends \Magento\Backend\App\Action implements CsrfAwareActionI
      * @var \Paynl\Payment\Helper\PayHelper;
      */
     protected $payHelper;
-
     /**
      * Instore constructor.
      *
@@ -50,6 +53,7 @@ class CardRefund extends \Magento\Backend\App\Action implements CsrfAwareActionI
      * @param Magento\Quote\Model\QuoteRepository $quoteRepository
      * @param \Magento\Framework\Controller\ResultFactory $resultFactory
      * @param PayHelper $payHelper
+     * @param AuthorizationInterface $authorization
      */
     public function __construct(
         \Magento\Backend\App\Action\Context $context,
@@ -57,15 +61,25 @@ class CardRefund extends \Magento\Backend\App\Action implements CsrfAwareActionI
         PaymentHelper $paymentHelper,
         QuoteRepository $quoteRepository,
         \Magento\Framework\Controller\ResultFactory $resultFactory,
-        PayHelper $payHelper
+        PayHelper $payHelper,
+        AuthorizationInterface $authorization
     ) {
         $this->orderRepository = $orderRepository;
         $this->paymentHelper = $paymentHelper;
         $this->quoteRepository = $quoteRepository;
         $this->resultFactory = $resultFactory;
         $this->payHelper = $payHelper;
+        $this->authorization = $authorization;
 
         parent::__construct($context);
+    }
+
+    /**
+     * @return boolean
+     */
+    protected function isAllowed()
+    {
+        return $this->authorization->isAllowed('Paynl_Payment::cardrefund');
     }
 
     /**
@@ -73,10 +87,15 @@ class CardRefund extends \Magento\Backend\App\Action implements CsrfAwareActionI
      */
     public function execute()
     {
+
+        if (!$this->isAllowed()) {
+            return false;
+        }
+
         $params = $this->getRequest()->getParams();
         $orderId = isset($params['order_id']) ? strip_tags($params['order_id']) : null;
         $returnUrl = isset($params['return_url']) ? urldecode($params['return_url']) : null;
-        $refundAmount = isset($params['refund_amount']) ? (float)$params['refund_amount'] : 0;
+        $refundAmount = isset($params['refund_amount']) ? (float) $params['refund_amount'] : 0;
         $terminalId = isset($params['paynl_terminal']) ? strip_tags($params['paynl_terminal']) : null;
         $redirectUrl = '';
 
