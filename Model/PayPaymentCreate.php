@@ -248,7 +248,13 @@ class PayPaymentCreate
             $customer->setEmail(mb_substr($email, 0, 100));
         }
 
-        $customer->setLanguage((string)$this->payConfig->getLanguage());
+        $language = (string)$this->payConfig->getLanguage();
+        $language = strtolower(substr($language ?: 'nl', 0, 2));
+
+        $country = strtoupper((string)($arrBillingAddress['country_id'] ?? 'NL'));
+
+        $customer->setLanguage($language);
+        $customer->setLocale($language . '_' . $country);
 
         return $customer;
     }
