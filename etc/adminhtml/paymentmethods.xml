@@ -72,6 +72,7 @@
     <include path="Paynl_Payment::paymentmethods/monizze.xml" />
     <include path="Paynl_Payment::paymentmethods/mooigiftcard.xml" />
     <include path="Paynl_Payment::paymentmethods/multibanco.xml" />
+    <include path="Paynl_Payment::paymentmethods/nationalegolfbon.xml" />
     <include path="Paynl_Payment::paymentmethods/nationaletuinbon.xml" />
     <include path="Paynl_Payment::paymentmethods/nexi.xml" />
     <include path="Paynl_Payment::paymentmethods/overboeking.xml" />

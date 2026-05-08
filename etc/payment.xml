@@ -204,6 +204,9 @@
         <method name="paynl_payment_multibanco">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
+        <method name="paynl_payment_nationalegolfbon">
+            <allow_multiple_address>0</allow_multiple_address>
+        </method>
         <method name="paynl_payment_nationaletuinbon">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
