@@ -4,6 +4,7 @@ namespace Paynl\Payment\Plugin;
 
 use Magento\Framework\UrlInterface;
 use Paynl\Payment\Helper\PayHelper;
+use Magento\Framework\AuthorizationInterface;
 
 class InstoreButton
 {
@@ -12,6 +13,7 @@ class InstoreButton
     protected $backendUrl;
     protected $urlInterface;
     protected $_request;
+    private $authorization;
 
     /**
      *
@@ -25,19 +27,30 @@ class InstoreButton
      * @param \Magento\Backend\Model\Url $backendUrl
      * @param UrlInterface $urlInterface
      * @param PayHelper $payHelper
+     * @param AuthorizationInterface $authorization
      */
     public function __construct(
         \Magento\Framework\Message\ManagerInterface $messageManager,
         \Magento\Sales\Model\Order $order,
         \Magento\Backend\Model\Url $backendUrl,
         UrlInterface $urlInterface,
-        PayHelper $payHelper
+        PayHelper $payHelper,
+        AuthorizationInterface $authorization,
     ) {
         $this->messageManager = $messageManager;
         $this->order = $order;
         $this->backendUrl = $backendUrl;
         $this->urlInterface = $urlInterface;
         $this->payHelper = $payHelper;
+        $this->authorization = $authorization;
+    }
+
+    /**
+     * @return boolean
+     */
+    protected function isCardRefundAllowed()
+    {
+        return $this->authorization->isAllowed('Paynl_Payment::cardrefund');
     }
 
     /**
@@ -88,7 +101,7 @@ class InstoreButton
                 $this->payHelper->deleteCookie('pinError');
             }
 
-            if (!isset($buttonList->getItems()['paynl']['start_card_refund'])) {
+            if (!isset($buttonList->getItems()['paynl']['start_card_refund']) && $this->isCardRefundAllowed()) {
                 if ($payment_method == 'paynl_payment_instore' && $order->hasInvoices() && $order->getBaseTotalRefunded() == 0) {
                     $cardRefundUrl = $this->backendUrl->getUrl('paynl/order/cardrefundform') . '?order_id=' . $order_id . '&return_url=' . urlencode($currentUrl);
                     $buttonList->add(

@@ -6,7 +6,8 @@
                 <resource id="Paynl_Payment::acl" title="Pay." sortOrder="1">
                     <resource id="Paynl_Payment::config" title="Configure Pay." sortOrder="1" />
                     <resource id="Paynl_Payment::logs" title="Download logs" sortOrder="2" />
-                    <resource id="Paynl_Payment::graphql_refund" title="GraphQl - Refund" sortOrder="3" />
+                    <resource id="Paynl_Payment::cardrefund" title="Card Refund" sortOrder="3" />
+                    <resource id="Paynl_Payment::graphql_refund" title="GraphQl - Refund" sortOrder="4" />                    
                 </resource>
             </resource>
         </resources>
