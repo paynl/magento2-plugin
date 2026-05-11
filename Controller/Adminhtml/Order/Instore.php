@@ -2,38 +2,17 @@
 
 namespace Paynl\Payment\Controller\Adminhtml\Order;
 
-use Magento\Framework\App\RequestInterface;
-use Magento\Framework\App\Request\InvalidRequestException;
 use Magento\Payment\Helper\Data as PaymentHelper;
 use Magento\Quote\Model\QuoteRepository;
 use Magento\Sales\Model\OrderRepository;
-use Paynl\Payment\Controller\CsrfAwareActionInterface;
 use Paynl\Payment\Helper\PayHelper;
 
-class Instore extends \Magento\Backend\App\Action implements CsrfAwareActionInterface
+class Instore extends \Magento\Backend\App\Action
 {
     private $orderRepository;
     private $quoteRepository;
     private $paymentHelper;
     protected $resultFactory;
-
-    /**
-     * @param RequestInterface $request
-     * @return boolean
-     */
-    public function createCsrfValidationException(RequestInterface $request): ?InvalidRequestException
-    {
-        return null;
-    }
-
-    /**
-     * @param RequestInterface $request
-     * @return boolean
-     */
-    public function validateForCsrf(RequestInterface $request): bool
-    {
-        return true;
-    }
 
     /**
      *
