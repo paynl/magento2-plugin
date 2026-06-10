@@ -565,7 +565,16 @@ class PayPaymentCreate
                 }
 
                 $productId = $this->payConfig->useSkuId() ? $arrItem['sku'] : $arrItem['product_id'];
-                $rate = paynl_calc_vat_percentage($price, $taxAmount);
+
+                # Used VAT percentage might be available in tax_percent
+                $tax_percent = $arrItem['tax_percent'] ?? false;
+
+                if (empty($tax_percent)) {
+                    # Calculate VAT percentage as fallback, also when value is 0.00
+                    $rate = round(paynl_calc_vat_percentage($price, $taxAmount));
+                } else {
+                    $rate = round($tax_percent);
+                }
 
                 $productIdFinal = $productId;
                 $productName = $arrItem['name'] ?? 'Unknown';
