@@ -66,7 +66,7 @@ class Capture extends Action implements CsrfAwareActionInterface
     {
         $connection = $this->resourceConnection->getConnection();
         $select = $connection->select()
-            ->from($connection->getTableName('core_config_data'), ['value'])
+            ->from($this->resourceConnection->getTableName('core_config_data'), ['value'])
             ->where('path = ?', 'payment/paynl/process_secret')
             ->where('scope = ?', $scope)
             ->where('scope_id = ?', $scopeId)
