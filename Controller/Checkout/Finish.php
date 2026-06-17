@@ -367,16 +367,18 @@ class Finish extends PayAction
         $newQuote->setCustomerTaxvat($cancelledOrder->getCustomerTaxvat());
         $newQuote->setCustomerGender($cancelledOrder->getCustomerGender());
 
+        $unsafeAddressKeys = array_flip(['extension_attributes', 'entity_id', 'address_id', 'address_type']);
+
         $billingAddress = $cancelledOrder->getBillingAddress();
         if ($billingAddress) {
             $newBillingAddress = $newQuote->getBillingAddress();
-            $newBillingAddress->addData($billingAddress->getData());
+            $newBillingAddress->addData(array_diff_key($billingAddress->getData(), $unsafeAddressKeys));
         }
 
         $shippingAddress = $cancelledOrder->getShippingAddress();
         if ($shippingAddress) {
             $newShippingAddress = $newQuote->getShippingAddress();
-            $newShippingAddress->addData($shippingAddress->getData());
+            $newShippingAddress->addData(array_diff_key($shippingAddress->getData(), $unsafeAddressKeys));
         }
 
         # Add products to the new quote
