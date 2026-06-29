@@ -53,7 +53,7 @@ class MultiCoreOptions implements ArrayInterface
     {
         $connection = $this->resourceConnection->getConnection();
         $select = $connection->select()
-            ->from('core_config_data', ['value'])
+            ->from($this->resourceConnection->getTableName('core_config_data'), ['value'])
             ->where('path = ?', 'payment/paynl/cores')
             ->where('scope = ?', $scope)
             ->where('scope_id = ?', $scopeId)
