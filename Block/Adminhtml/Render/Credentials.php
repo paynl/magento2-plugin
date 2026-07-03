@@ -113,6 +113,7 @@ class Credentials extends Field
         $tokencode = $this->_config->getTokencode();
 
         $error = '';
+        $displayError = '';
         $status = 1;
         if (!empty($apiToken) && !empty($serviceId) && !empty($tokencode)) {
             try {
@@ -135,17 +136,24 @@ class Credentials extends Field
         if (!empty($error)) {
             switch ($error) {
                 case 'HTTP/1.0 401 Unauthorized':
-                    $error = __('SL-code, API token or token code invalid');
+                case 'Unauthorized':
+                case 'Forbidden':
+                    $error = 'SL-code, API token or token code invalid';
+                    $displayError = __('SL-code, API token or token code invalid');
                     break;
                 case 'PAY-404 - Service not found':
-                    $error = __('SL-code is invalid');
+                case 'PAY-404 - code: {}':
+                    $error = 'SL-code is invalid';
+                    $displayError = __('SL-code is invalid');
                     break;
                 case 'PAY-403 - Access denied: Token not valid for this company':
-                    $error = __('SL-code / API token combination invalid');
+                    $error = 'SL-code / API token combination invalid';
+                    $displayError = __('SL-code / API token combination invalid');
                     break;
                 default:
                     $this->payHelper->logCritical('Pay. API exception: ' . $error);
-                    $error = __('Could not authorize');
+                    $error = 'Could not authorize';
+                    $displayError = __('Could not authorize');
             }
             $status = 0;
         }
@@ -153,6 +161,6 @@ class Credentials extends Field
         $currentUrl = $this->urlInterface->getCurrentUrl();
         $payUrl = str_replace("paynl_setup", "paynl_settings", $currentUrl);
 
-        return ['status' => $status, 'error' => $error, 'payUrl' => $payUrl];
+        return ['status' => $status, 'error' => $error, 'displayError' => $displayError, 'payUrl' => $payUrl];
     }
 }
