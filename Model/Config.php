@@ -101,6 +101,7 @@ class Config
         "paynl_payment_decadeaukaart" => "189",
         "paynl_payment_doenkado" => "285",
         "paynl_payment_dinerbon" => "198",
+        "paynl_payment_energieloketcadeaukaart" => "465",
         "paynl_payment_eps" => "79",
         "paynl_payment_fashioncheque" => "27",
         "paynl_payment_fashiongiftcard" => "28",

@@ -48,6 +48,7 @@ define(
             {type: 'paynl_payment_decadeaukaart', component: defaultComponent},
             {type: 'paynl_payment_doenkado', component: defaultComponent},
             {type: 'paynl_payment_dinerbon', component: defaultComponent},
+            {type: 'paynl_payment_energieloketcadeaukaart', component: defaultComponent},
             {type: 'paynl_payment_eps', component: defaultComponent},
             {type: 'paynl_payment_fashioncheque', component: defaultComponent},
             {type: 'paynl_payment_fashionchequebeauty', component: defaultComponent},
