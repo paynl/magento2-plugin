@@ -471,7 +471,7 @@ To finish your order, click the link below
                 <order_status_authorized>processing</order_status_authorized>
                 <order_status_processing>processing</order_status_processing>
                 <payment_action>order</payment_action>
-                <model>Paynl\Payment\Model\Paymentmethod\EnergieloketCadeaukaart</model>
+                <model>Paynl\Payment\Model\Paymentmethod\Energieloketcadeaukaart</model>
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_energieloketcadeaukaart>
