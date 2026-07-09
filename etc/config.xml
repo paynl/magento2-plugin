@@ -463,6 +463,18 @@ To finish your order, click the link below
                 <group>paynl_payment</group>
                 <send_new_order_email>after_payment</send_new_order_email>
             </paynl_payment_dinerbon>
+            <paynl_payment_energieloketcadeaukaart>
+                <active>0</active>
+                <title>Energieloket Cadeaukaart</title>
+                <payment_option_id>5313</payment_option_id>
+                <order_status>pending_payment</order_status>
+                <order_status_authorized>processing</order_status_authorized>
+                <order_status_processing>processing</order_status_processing>
+                <payment_action>order</payment_action>
+                <model>Paynl\Payment\Model\Paymentmethod\Energieloketcadeaukaart</model>
+                <group>paynl_payment</group>
+                <send_new_order_email>after_payment</send_new_order_email>
+            </paynl_payment_energieloketcadeaukaart>
             <paynl_payment_eps>
                 <active>0</active>
                 <title>EPS Überweisung</title>
