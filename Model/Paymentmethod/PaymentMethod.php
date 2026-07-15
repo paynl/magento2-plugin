@@ -73,7 +73,15 @@ abstract class PaymentMethod extends AbstractMethod
      */
     protected $cookieManager;
 
+    /**
+     * @var 
+     */
     protected $graphqlVersion;
+
+    /**
+     * @var 
+     */
+    protected $hyvaVersion;
 
     /**
      * @var \Paynl\Payment\Helper\PayHelper;
@@ -391,6 +399,15 @@ abstract class PaymentMethod extends AbstractMethod
     }
 
     /**
+     * @param string $version
+     * @return void
+     */
+    public function setHyvaVersion($version)
+    {
+        $this->hyvaVersion = $version;
+    }
+
+    /**
      * @return false|void
      */
     public function getTerminals()
@@ -423,7 +440,10 @@ abstract class PaymentMethod extends AbstractMethod
     {
         $version = substr('magento2 ' . $this->paynlConfig->getVersion() . ' | ' . $this->paynlConfig->getMagentoVersion() . ' | ' . $this->paynlConfig->getPHPVersion(), 0, 64);
         if (!empty($this->graphqlVersion)) {
-            $version .= ' | ' . $this->graphqlVersion;
+            $version .= ' | graphql ' . $this->graphqlVersion;
+        }
+        if (!empty($this->hyvaVersion)) {
+            $version .= ' | hyva ' . $this->hyvaVersion;
         }
 
         return $version;
