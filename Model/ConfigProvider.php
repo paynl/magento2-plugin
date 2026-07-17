@@ -48,6 +48,7 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_dankort',
         'paynl_payment_decadeaukaart',
         'paynl_payment_doenkado',
+        'paynl_payment_doenkadoticket',
         'paynl_payment_dinerbon',
         'paynl_payment_energieloketcadeaukaart',
         'paynl_payment_eps',
