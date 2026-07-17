@@ -13,6 +13,6 @@ class Doenkadoticket extends PaymentMethod
      */
     protected function getDefaultPaymentOptionId()
     {
-        return 5340;
+        return 5337;
     }
 }
