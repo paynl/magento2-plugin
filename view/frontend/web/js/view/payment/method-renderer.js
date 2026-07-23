@@ -47,6 +47,7 @@ define(
             {type: 'paynl_payment_dankort', component: defaultComponent},
             {type: 'paynl_payment_decadeaukaart', component: defaultComponent},
             {type: 'paynl_payment_doenkado', component: defaultComponent},
+            {type: 'paynl_payment_doenkadoticket', component: defaultComponent},
             {type: 'paynl_payment_dinerbon', component: defaultComponent},
             {type: 'paynl_payment_energieloketcadeaukaart', component: defaultComponent},
             {type: 'paynl_payment_eps', component: defaultComponent},
