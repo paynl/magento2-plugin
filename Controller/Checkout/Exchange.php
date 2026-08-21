@@ -392,6 +392,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             $message = 'Cancel ignored. Order is refunded';
         } else {
             if ($this->config->isNeverCancel()) {
+                $result = ['result' => true];
                 $message = "Not Canceled because option `never-cancel-order` is enabled";
             } else {
                 $result = $this->cancelOrder($order);
