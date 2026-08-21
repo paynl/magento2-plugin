@@ -390,7 +390,6 @@ class PayPayment
     {
         if (!$order->getEmailSent()) {
             $this->orderSender->send($order);
-            $order->setEmailSent(true);
             $order->addStatusHistoryComment(__('Pay. - Order confirmation sent'))->setIsCustomerNotified(true);
         }
     }
