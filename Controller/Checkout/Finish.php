@@ -182,7 +182,6 @@ class Finish extends PayAction
         $resultRedirect = $this->resultRedirectFactory->create();
         $params = $this->getRequest()->getParams();
         $payOrderId = $params['id'] ?? null;
-        $statusAction = $params['statusAction'] ?? null;
 
         $orderStatusId = empty($params['statusCode']) ? null : (int)$params['statusCode'];
 
@@ -231,7 +230,7 @@ class Finish extends PayAction
             if (($information['pintrans'] ?? false) === true) {
                 $bPending = false;
                 $isPinTransaction = true;
-                $pinStatus = $this->handlePin($order, $statusAction);
+                $pinStatus = $this->handlePin($order, (new OrderStatusRequest($payOrderId))->setConfig($this->config->getPayConfig())->start()->getStatusName());
                 $bSuccess = $pinStatus === true;
             }
 
