@@ -171,7 +171,7 @@ class CreateFastCheckoutOrder
                     ->setFirstname($customerData['firstName'])
                     ->setLastname($customerData['lastName'])
                     ->setEmail($email)
-                    ->setPassword('Aa1!' . bin2hex(random_bytes(32)));
+                    ->setPassword(bin2hex(random_bytes(32)));
                 $customer->save();
             }
 
