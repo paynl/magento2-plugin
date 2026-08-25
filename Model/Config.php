@@ -131,6 +131,7 @@ class Config
         "paynl_payment_maestro" => "33",
         "paynl_payment_mastercard" => "8",
         "paynl_payment_mbway" => "381",
+        "paynl_payment_metjebank" => "471",
         "paynl_payment_mistercash" => "2",
         "paynl_payment_mobilepay" => "324",
         "paynl_payment_monizze" => "183",
