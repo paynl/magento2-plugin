@@ -297,6 +297,7 @@ The existing quote ID will be reused to start a new order.</tooltip>
                         <![CDATA[Select payment methods that will only display in the checkout, when assigned to a product. ]]>
                     </comment>
                     <source_model>Paynl\Payment\Model\Config\Source\PaymentMethods</source_model>
+                    <can_be_empty>1</can_be_empty>
                     <config_path>payment/paynl/product_exclusive</config_path>
                     <tooltip>Be careful: the payment methods you select here will not appear at checkout by default.
                         However, these payment methods will be shown in a configuration setting on the product page called `Allowed Pay. Payment Methods.`
