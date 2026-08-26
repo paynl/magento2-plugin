@@ -182,9 +182,8 @@ class Finish extends PayAction
         $resultRedirect = $this->resultRedirectFactory->create();
         $params = $this->getRequest()->getParams();
         $payOrderId = $params['id'] ?? null;
-        $statusAction = $params['statusAction'] ?? null;
 
-        $orderStatusId = empty($params['statusCode']) ? null : (int)$params['statusCode'];   
+        $orderStatusId = empty($params['statusCode']) ? null : (int)$params['statusCode'];
 
         $entityid = $params['entityid'] ?? null;
         $orderIds = empty($params['order_ids']) ? null : $params['order_ids'];
@@ -210,6 +209,10 @@ class Finish extends PayAction
             $order = $this->orderRepository->get($entityid);
             $this->checkEmpty($order, 'order', 1013);
 
+            if ((int) $this->checkoutSession->getLastOrderId() !== (int) $order->getId() || (int) $this->checkoutSession->getLastQuoteId() !== (int) $order->getQuoteId()) {
+                throw new \Exception('Finish: order does not belong to current checkout session', 1015);
+            }
+
             if ($pickupMode || $invoice) {
                 $this->unloadCart();
                 $resultRedirect->setPath($pickupMode ? Config::FINISH_PICKUP : Config::FINISH_INVOICE, ['_query' => ['utm_nooverride' => '1']]);
@@ -227,7 +230,11 @@ class Finish extends PayAction
             if (($information['pintrans'] ?? false) === true) {
                 $bPending = false;
                 $isPinTransaction = true;
-                $pinStatus = $this->handlePin($order, $statusAction);
+                $statusName = (new OrderStatusRequest($payOrderId))
+                    ->setConfig($this->config->getPayConfig())
+                    ->start()
+                    ->getStatusName();
+                $pinStatus = $this->handlePin($order, $statusName);
                 $bSuccess = $pinStatus === true;
             }
 
@@ -352,13 +359,13 @@ class Finish extends PayAction
         } else {
             # Guest-customers
             $newQuote->setCustomerIsGuest(true);
-            $newQuote->setCustomerGroupId(\Magento\Customer\Model\Group::NOT_LOGGED_IN_ID);            
+            $newQuote->setCustomerGroupId(\Magento\Customer\Model\Group::NOT_LOGGED_IN_ID);
         }
 
         $newQuote->setCustomerEmail($cancelledOrder->getCustomerEmail());
         $newQuote->setCustomerFirstname($cancelledOrder->getCustomerFirstname());
         $newQuote->setCustomerLastname($cancelledOrder->getCustomerLastname());
-        
+
         $newQuote->setCustomerTelephone($cancelledOrder->getCustomerTelephone());
 
         $newQuote->setCustomerPrefix($cancelledOrder->getCustomerPrefix());
