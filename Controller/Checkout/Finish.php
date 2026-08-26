@@ -230,7 +230,11 @@ class Finish extends PayAction
             if (($information['pintrans'] ?? false) === true) {
                 $bPending = false;
                 $isPinTransaction = true;
-                $pinStatus = $this->handlePin($order, (new OrderStatusRequest($payOrderId))->setConfig($this->config->getPayConfig())->start()->getStatusName());
+                $statusName = (new OrderStatusRequest($payOrderId))
+                    ->setConfig($this->config->getPayConfig())
+                    ->start()
+                    ->getStatusName();
+                $pinStatus = $this->handlePin($order, $statusName);
                 $bSuccess = $pinStatus === true;
             }
 
