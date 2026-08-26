@@ -80,6 +80,7 @@ class ConfigProvider implements ConfigProviderInterface
         'paynl_payment_maestro',
         'paynl_payment_mastercard',
         'paynl_payment_mbway',
+        'paynl_payment_metjebank',
         'paynl_payment_mistercash',
         'paynl_payment_mobilepay',
         'paynl_payment_monizze',
