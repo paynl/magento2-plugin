@@ -347,6 +347,12 @@ class PayPayment
         $payment->setPreparedMessage('Pay. - ');
         $payment->setIsTransactionClosed(0);
 
+        foreach ($payOrder->getPayments() as $payOrderPayment) {
+            if (($payOrderPayment['status']['code'] ?? null) == 100) {
+                $paymentProfileId = $payOrderPayment['paymentMethod']['id'] ?? $paymentProfileId;
+            }
+        }
+
         if ($this->config->getFollowPaymentMethod() && !empty($paymentProfileId)) {
             $transactionMethod = $this->config->getPaymentMethod($paymentProfileId);
             if (!empty($transactionMethod['code']) && $transactionMethod['code'] !== $originalPaymentMethod) {
