@@ -354,6 +354,16 @@ class Config
     }
 
     /**
+     * @param string $issuerId
+     * @return string
+     */
+    public function getIconUrlIssuer($issuerId)
+    {
+        return $this->resources->getViewFileUrl("Paynl_Payment::logos_issuers/qr-" . $issuerId . ".svg");
+    }
+
+
+    /**
      * @return boolean
      */
     public function useSkuId()

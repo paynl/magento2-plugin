@@ -3,6 +3,7 @@
 namespace Paynl\Payment\Model\Paymentmethod;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Paynl\Payment\Model\Config;
 
 class Metjebank extends PaymentMethod
 {
@@ -72,7 +73,7 @@ class Metjebank extends PaymentMethod
                             'name' => $issuer['name'],
                             'visibleName' => $issuer['name'],
                             'id' => $issuer['issuerId'],
-                            'logo' => 'https://static.pay.nl' . ($issuer['image'] ?? ''),
+                            'logo' => $this->paynlConfig->getIconUrlIssuer($issuer['id']),
                         ]
                     );
                 }
