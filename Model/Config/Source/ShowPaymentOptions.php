@@ -1,39 +1,15 @@
 <?php
+
 namespace Paynl\Payment\Model\Config\Source;
 
-use \Magento\Framework\Option\ArrayInterface;
-
-class ShowPaymentOptions implements ArrayInterface
+class ShowPaymentOptions extends PayOption
 {
-
-    /**
-     * Options getter
-     *
-     * @return array
-     */
-    public function toOptionArray()
+    public function __construct($options = array())
     {
-        $arrOptions = $this->toArray();
-
-        $arrResult = [];
-        foreach ($arrOptions as $value => $label) {
-            $arrResult[] = ['value' => $value, 'label' => $label];
-        }
-        return $arrResult;
-    }
-
-    /**
-     * Get options in "key-value" format
-     *
-     * @return array
-     */
-    public function toArray()
-    {
-        return [
+        parent::__construct([
             0 => __('Off'),
             1 => __('On, as dropdown'),
-            2 => __('On, as list')
-        ];
+            2 => __('On, as list'),
+        ]);
     }
-
 }
