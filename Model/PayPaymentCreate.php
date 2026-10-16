@@ -135,6 +135,9 @@ class PayPaymentCreate
         if ($this->methodInstance->getPaymentOptionId() == 1927) {
             $this->request->setTerminal($this->additionalData['payment_option'] ?? '');
         }
+        if ($this->methodInstance->getPaymentOptionId() == 5358) {            
+            $this->request->setPaymentInputData(['issuerId' => $this->additionalData['payment_option'] ?? '']);
+        }
 
         $validDays = $this->additionalData['valid_days'] ?? null;
         if (!empty($validDays)) {

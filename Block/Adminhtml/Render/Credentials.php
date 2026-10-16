@@ -123,6 +123,7 @@ class Credentials extends Field
 
                 $this->_config->saveCoresToConfig($service->getCores(), $scope);
                 $this->_config->saveTerminalsToConfig($service->getTerminals(), $scope, $scopeId);
+                $this->_config->saveBanksToConfig($service->getBanks(), $scope,$scopeId);
 
             } catch (Throwable $e) {
                 $error = $e->getMessage();

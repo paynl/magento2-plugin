@@ -192,7 +192,8 @@ abstract class Available implements ArrayInterface
                     $service = $request->setConfig($config)->start();
 
                     $this->_config->saveCoresToConfig($service->getCores(), $scope);
-                    $this->_config->saveTerminalsToConfig($service->getTerminals(), $scope,$scopeId);
+                    $this->_config->saveTerminalsToConfig($service->getTerminals(), $scope,$scopeId);                    
+                    $this->_config->saveBanksToConfig($service->getBanks(), $scope,$scopeId);
 
                     $list = [];
                     foreach ($service->getPaymentMethods() as $method) {

@@ -57,3 +57,33 @@
     margin: 20px 0 10px 18px;
     display: inline-block;
 }
+
+.checkout-payment-method .paynl .paymentOptionsList{
+    list-style-type:none;
+    padding: 0;
+    padding-top:20px;
+}
+
+.checkout-payment-method .paynl .paymentOptionsList li{
+    border-top: 1px solid #cccccc;
+    margin: 0;
+    padding: 0;
+}
+
+.checkout-payment-method .paynl .paymentOptionsList li input,
+.checkout-payment-method .paynl .paymentOptionsList li label,
+.checkout-payment-method .paynl .paymentOptionsList li label .payment-icon,
+.checkout-payment-method .paynl .paymentOptionsList li label span{
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.checkout-payment-method .paynl .paymentOptionsList li label{ 
+    width: calc(100% - 25px);
+    padding: 20px 0px;
+    position: relative;
+}
+
+.checkout-payment-method .paynl .paymentOptionsList li label .payment-icon{
+    margin-right: 5px;
+}

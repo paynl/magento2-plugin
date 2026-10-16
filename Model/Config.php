@@ -354,6 +354,16 @@ class Config
     }
 
     /**
+     * @param string $issuerId
+     * @return string
+     */
+    public function getIconUrlIssuer($issuerId)
+    {
+        return $this->resources->getViewFileUrl("Paynl_Payment::logos_issuers/qr-" . $issuerId . ".svg");
+    }
+
+
+    /**
      * @return boolean
      */
     public function useSkuId()
@@ -558,6 +568,17 @@ class Config
     public function saveTerminalsToConfig(mixed $terminals, $scope, $scopeId)
     {
         $this->configWriter->save('payment/paynl/terminals', json_encode($terminals), $scope, $scopeId);
+    }
+
+    /**
+     * @param mixed $banks
+     * @param $scope
+     * @param $scopeId
+     * @return void
+     */
+    public function saveBanksToConfig(mixed $banks, $scope, $scopeId)
+    {
+        $this->configWriter->save('payment/paynl/issuers', json_encode($banks), $scope, $scopeId);
     }
 
     /**
