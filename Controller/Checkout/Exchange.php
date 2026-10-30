@@ -196,10 +196,7 @@ class Exchange extends PayAction implements CsrfAwareActionInterface
             }
 
         } catch (Throwable $exception) {
-            $eResponse = new ExchangeResponse(
-                $exception->getCode() !== PayExchange::ERROR_ACTION_FAULT,
-                'Exception message: ' . $exception->getMessage()
-            );
+            $eResponse = new ExchangeResponse(false, 'Exception message: ' . $exception->getMessage());
         }
 
         try {
