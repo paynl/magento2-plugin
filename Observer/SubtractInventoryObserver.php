@@ -4,6 +4,7 @@ namespace Paynl\Payment\Observer;
 
 use Magento\Framework\Event\Observer as EventObserver;
 use Magento\Framework\Event\ObserverInterface;
+use Magento\CatalogInventory\Api\StockConfigurationInterface;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Magento\Store\Api\StoreRepositoryInterface;
 use Magento\InventorySales\Model\ResourceModel\GetAssignedStockIdForWebsite;
@@ -29,19 +30,27 @@ class SubtractInventoryObserver implements ObserverInterface
     private $moduleManager;
 
     /**
+     * @var StockConfigurationInterface
+     */
+    private $stockConfiguration;
+
+    /**
      * SubtractInventoryObserver constructor.
      * @param StoreRepositoryInterface $storeRepository
      * @param StockRegistryInterface $stockRegistry
      * @param ModuleManager $moduleManager
+     * @param StockConfigurationInterface $stockConfiguration
      */
     public function __construct(
         StoreRepositoryInterface $storeRepository,
         StockRegistryInterface $stockRegistry,
-        ModuleManager $moduleManager
+        ModuleManager $moduleManager,
+        StockConfigurationInterface $stockConfiguration
     ) {
         $this->storeRepository = $storeRepository;
         $this->stockRegistry = $stockRegistry;
         $this->moduleManager = $moduleManager;
+        $this->stockConfiguration = $stockConfiguration;
     }
 
     /**
@@ -99,9 +108,11 @@ class SubtractInventoryObserver implements ObserverInterface
                     $itemSku = $itemData['sku'] ?? null;
 
                     $stockItem = $this->stockRegistry->getStockItemBySku($itemSku, $websiteId);
+                    if (!$stockItem->getManageStock() || !$this->stockConfiguration->canSubtractQty()) {
+                        continue;
+                    }
                     $currentQty = (float) $stockItem->getQty();
                     $stockItem->setQty($currentQty - $itemQty);
-                    $stockItem->setIsInStock((($currentQty - $itemQty) > 0) ? 1 : 0);
                     $this->stockRegistry->updateStockItemBySku($itemSku, $stockItem);
                 }
             }
