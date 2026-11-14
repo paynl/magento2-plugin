@@ -32,7 +32,7 @@ class Paylink extends PaymentMethod
     /**
      * @param string $paymentAction
      * @param object $stateObject
-     * @return false|void
+     * @return void
      * @throws \Magento\Framework\Exception\AlreadyExistsException
      * @throws \Magento\Framework\Exception\InputException
      * @throws \Magento\Framework\Exception\LocalizedException
@@ -51,7 +51,7 @@ class Paylink extends PaymentMethod
 
             $this->paynlConfig->setStore($store);
 
-            $payOrder = (new PayPaymentCreate($order, $this))->create();
+            $payOrder = $this->createPayOrder($order);
 
             $order->getPayment()->setAdditionalInformation('transactionId', $payOrder->getOrderId());
 
@@ -68,19 +68,16 @@ class Paylink extends PaymentMethod
 
             $send_paylink_email = $this->_scopeConfig->getValue('payment/paynl_payment_paylink/send_paylink_email', 'store', $storeId);
 
+            $customerEmail = $order->getCustomerEmail();
+
             if ($send_paylink_email == 0) {
+                $this->addPaylinkComment($order, $url, $status);
+            } elseif (empty($customerEmail)) {
+                # Can't send email without customer email so add paylink as a comment instead.
+                $order->addStatusHistoryComment(__('Pay.: customer e-mail is empty, cannot send e-mail'), $status)->save();
                 $this->addPaylinkComment($order, $url, $status);
             } else {
                 try {
-                    $customerEmail = [$order->getCustomerEmail()];
-
-                    if (empty($customerEmail)) {
-                        # Can't send email without customer email so add paylink as a comment instead.
-                        $order->addStatusHistoryComment(__('Pay.: customer e-mail is empty, cannot send e-mail'), $status)->save();
-                        $this->addPaylinkComment($order, $url, $status);
-                        return false;
-                    }
-
                     $supportEmail = $this->_scopeConfig->getValue('trans_email/ident_support/email', 'store', $storeId);
                     $senderName = $this->_scopeConfig->getValue('trans_email/ident_sales/name', 'store', $storeId);
                     $senderEmail = $this->_scopeConfig->getValue('trans_email/ident_sales/email', 'store', $storeId);
@@ -153,7 +150,7 @@ class Paylink extends PaymentMethod
                         ->setTemplateOptions(['area' => \Magento\Framework\App\Area::AREA_FRONTEND, 'store' => $storeId])
                         ->setTemplateVars($templateVars)
                         ->setFrom($sender)
-                        ->addTo($customerEmail)
+                        ->addTo([$customerEmail])
                         ->setReplyTo($supportEmail)
                         ->getTransport();
                     $transport->sendMessage();
@@ -169,6 +166,15 @@ class Paylink extends PaymentMethod
 
             parent::initialize($paymentAction, $stateObject);
         }
+    }
+
+    /**
+     * @param Order $order
+     * @return \PayNL\Sdk\Model\Pay\PayOrder
+     */
+    protected function createPayOrder(Order $order)
+    {
+        return (new PayPaymentCreate($order, $this))->create();
     }
 
     /**
