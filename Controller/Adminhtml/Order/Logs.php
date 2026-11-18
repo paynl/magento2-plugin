@@ -38,7 +38,7 @@ class Logs extends \Magento\Backend\App\Action
         $this->authorization = $authorization;
         $this->resultFactory = $resultFactory;
         $this->redirect = $redirect;
-        return parent::__construct($context);
+        parent::__construct($context);
     }
 
     /**

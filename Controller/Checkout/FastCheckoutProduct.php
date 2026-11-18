@@ -4,7 +4,6 @@ namespace Paynl\Payment\Controller\Checkout;
 
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Checkout\Model\Cart as CustomerCart;
-use Magento\Checkout\Model\Cart\RequestQuantityProcessor;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Config\ScopeConfigInterface;
@@ -36,7 +35,6 @@ class FastCheckoutProduct extends \Magento\Checkout\Controller\Cart\Add
      * @param Validator $formKeyValidator
      * @param CustomerCart $cart
      * @param ProductRepositoryInterface $productRepository
-     * @param RequestQuantityProcessor $quantityProcessor
      */
     public function __construct(
         Context $context,
@@ -47,13 +45,12 @@ class FastCheckoutProduct extends \Magento\Checkout\Controller\Cart\Add
         StoreManagerInterface $storeManager,
         Validator $formKeyValidator,
         CustomerCart $cart,
-        ProductRepositoryInterface $productRepository,
-        ?RequestQuantityProcessor $quantityProcessor = null
+        ProductRepositoryInterface $productRepository
     ) {
         $this->resolverInterface = $resolverInterface;
         $this->payHelper = $payHelper;
 
-        return parent::__construct(
+        parent::__construct(
             $context,
             $scopeConfig,
             $checkoutSession,

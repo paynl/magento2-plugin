@@ -155,7 +155,7 @@ class PayPaymentCreate
     }
 
     /**
-     * @return void
+     * @return \PayNL\Sdk\Model\Stats
      */
     private function getStats()
     {
@@ -205,14 +205,9 @@ class PayPaymentCreate
         }
 
         $customer = $this->getCustomer();
-        if (!empty($customer)) {
-            $customer->setCompany($this->getCompany());
-            $this->request->setCustomer($customer);
-        }
-
-        if (!empty($productData)) {
-            $order->setProducts($productData);
-        }
+        $customer->setCompany($this->getCompany());
+        $this->request->setCustomer($customer);
+        $order->setProducts($productData);
 
         $this->request->setOrder($order);
         $this->request->setTestmode($this->testMode);

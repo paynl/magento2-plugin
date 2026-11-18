@@ -80,7 +80,8 @@ class Finish extends PayAction
         PayHelper $payHelper,
         ManagerInterface $eventManager,
         QuoteFactory $quoteFactory,
-        \Magento\Catalog\Api\ProductRepositoryInterface $productRepository
+        \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
+        private \Magento\Quote\Model\ResourceModel\Quote $quoteResource
     ) {
         $this->config = $config;
         $this->checkoutSession = $checkoutSession;
@@ -286,7 +287,8 @@ class Finish extends PayAction
                     $sessionId = $session->getLastQuoteId();
                     $quote = $this->quoteFactory->create()->loadByIdWithoutStore($sessionId);
                     if (!empty($quote->getId())) {
-                        $quote->setIsActive(true)->setReservedOrderId(null)->save();
+                        $quote->setIsActive(true)->setReservedOrderId(null);
+                        $this->quoteResource->save($quote);
                         $session->replaceQuote($quote);
                     }
                 }
@@ -338,7 +340,8 @@ class Finish extends PayAction
     private function initiateNewQuote(Order $cancelledOrder)
     {
         # Retrieve the quote
-        $quote = $this->quoteFactory->create()->load($cancelledOrder->getQuoteId());
+        $quote = $this->quoteFactory->create();
+        $this->quoteResource->load($quote, $cancelledOrder->getQuoteId());
         $orderItems = $quote->getAllItems();
 
         $newQuote = $this->quoteFactory->create();

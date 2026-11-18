@@ -78,7 +78,7 @@ class FeatureRequest extends Action
         $this->transportBuilder = $transportBuilder;
         $this->scopeConfig = $scopeConfig;
         $this->payHelper = $payHelper;
-        return parent::__construct($context);
+        parent::__construct($context);
     }
 
     /**

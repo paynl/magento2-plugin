@@ -47,6 +47,7 @@ class AddPaymentMethodAttribute implements DataPatchInterface, PatchRevertableIn
         ]);
 
         $setup->endSetup();
+        return $this;
     }
 
     public function revert()

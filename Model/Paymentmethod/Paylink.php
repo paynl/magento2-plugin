@@ -74,7 +74,7 @@ class Paylink extends PaymentMethod
                 try {
                     $customerEmail = [$order->getCustomerEmail()];
 
-                    if (empty($customerEmail)) {
+                    if (empty($customerEmail[0])) {
                         # Can't send email without customer email so add paylink as a comment instead.
                         $order->addStatusHistoryComment(__('Pay.: customer e-mail is empty, cannot send e-mail'), $status)->save();
                         $this->addPaylinkComment($order, $url, $status);
@@ -122,7 +122,6 @@ class Paylink extends PaymentMethod
                         'body' => $body,
                         'order' => $order,
                         'store' => $store,
-                        'customer_name' => $order->getCustomerName(),
                         'paylink' => $url,
                         'support_email' => $supportEmail,
                         'current_language' => $lang,

@@ -75,7 +75,7 @@ class Cardrefund extends PaymentMethod
             if (empty($terminalId)) {
                 if (!empty($this->getDefaultPaymentOption())) {
                     $order->getPayment()->setAdditionalInformation('payment_option', $this->getDefaultPaymentOption());
-                    $order->save();
+                    $this->orderResource->save($order);
                 } else {
                     throw new \Exception(__('Please select a pin-terminal'), 201);
                 }
@@ -86,7 +86,7 @@ class Cardrefund extends PaymentMethod
             $transaction = $transation->create();
 
             $order->getPayment()->setAdditionalInformation($additionalData);
-            $order->save();
+            $this->orderResource->save($order);
         } catch (\Exception $e) {
             $this->payHelper->logCritical($e->getMessage(), [], $store);
 
@@ -105,7 +105,7 @@ class Cardrefund extends PaymentMethod
             }
         }
 
-        return $transaction->getRedirectUrl();
+        return isset($transaction) ? $transaction->getRedirectUrl() : $url;
     }
 
     /**

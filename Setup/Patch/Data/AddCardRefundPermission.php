@@ -40,6 +40,7 @@ class AddCardRefundPermission implements DataPatchInterface
         }
 
         $this->moduleDataSetup->endSetup();
+        return $this;
     }
 
     public static function getDependencies()

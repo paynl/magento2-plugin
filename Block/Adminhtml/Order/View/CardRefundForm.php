@@ -93,7 +93,7 @@ class CardRefundForm extends Template
 
             if (is_array($terminals)) {
                 foreach ($terminals as $terminal) {
-                    array_push($terminalsArr, [
+                    array_push($terminalArr, [
                             'name' => $terminal['name'],
                             'visibleName' => $terminal['name'],
                             'id' => $terminal['code'],
@@ -131,11 +131,13 @@ class CardRefundForm extends Template
     }
 
     /**
-     * @return \Magento\Sales\Api\Data\OrderInterface
+     * @return \Magento\Sales\Api\Data\OrderInterface|null
      */
     public function getOrder()
     {
+        $params = $this->getRequest()->getParams();
         $orderId = $this->getOrderId();
+        $order = null;
         try {
             $order = $this->orderRepository->get($orderId);
         } catch (\Exception $e) {

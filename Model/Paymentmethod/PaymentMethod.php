@@ -157,6 +157,7 @@ abstract class PaymentMethod extends AbstractMethod
         Resolver $getLocale,
         Renderer $addressRenderer,
         TransportBuilder $transportBuilder,
+        protected \Magento\Sales\Model\ResourceModel\Order $orderResource,
         ?\Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         ?\Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = []
@@ -412,6 +413,7 @@ abstract class PaymentMethod extends AbstractMethod
      */
     public function getTerminals()
     {
+        $store = $this->storeManager->getStore();
         $this->paynlConfig->setStore($store);
 
         if (!$this->paynlConfig->isPaymentMethodActive('paynl_payment_instore')) {
@@ -541,6 +543,7 @@ abstract class PaymentMethod extends AbstractMethod
      */
     public function capture(InfoInterface $payment, $amount)
     {
+        $order = null;
         $payOrderId = $payment->getParentTransactionId();
         $this->payHelper->logDebug('Paymentmethod:capture() ' . ($payOrderId ?? 'empty'));
 
@@ -550,7 +553,7 @@ abstract class PaymentMethod extends AbstractMethod
             try {
                 $payment->setAdditionalInformation('manual_capture', 'true');
                 $order = $payment->getOrder();
-                $order->save();
+                $this->orderResource->save($order);
                 $this->paynlConfig->setStore($order->getStore());
 
                 $orderCaptureRequest = new OrderCaptureRequest($payOrderId);
@@ -559,7 +562,7 @@ abstract class PaymentMethod extends AbstractMethod
 
             } catch (\Exception $e) {
                 $message = strtolower($e->getMessage());
-                $this->payHelper->logCritical('Pay. could not process capture (' . $message . '). Transaction: ' . $payOrderId . '. OrderId: ' . $order->getIncrementId());
+                $this->payHelper->logCritical('Pay. could not process capture (' . $message . '). Transaction: ' . $payOrderId . '. OrderId: ' . ($order ? $order->getIncrementId() : ''));
             }
         }
         return $this;
@@ -571,6 +574,7 @@ abstract class PaymentMethod extends AbstractMethod
      */
     public function void(InfoInterface $payment)
     {
+        $order = null;
         $transactionId = $payment->getParentTransactionId();
 
         if (empty($transactionId)) {
@@ -586,7 +590,7 @@ abstract class PaymentMethod extends AbstractMethod
 
             } catch (\Exception $e) {
                 $message = strtolower($e->getMessage());
-                $this->payHelper->logCritical('Pay. could not process void (' . $message . '). Transaction: ' . $transactionId . '. OrderId: ' . $order->getIncrementId());
+                $this->payHelper->logCritical('Pay. could not process void (' . $message . '). Transaction: ' . $transactionId . '. OrderId: ' . ($order ? $order->getIncrementId() : ''));
             }
         }
         return $this;
