@@ -21,7 +21,7 @@ class Finish extends \Magento\Framework\App\Action\Action
     ) {
         $this->_pageFactory = $pageFactory;
         $this->checkoutSession = $checkoutSession;
-        return parent::__construct($context);
+        parent::__construct($context);
     }
 
     /**

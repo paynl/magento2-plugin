@@ -90,7 +90,7 @@ class Capture extends Action implements CsrfAwareActionInterface
         $secret = $this->getProcessSecretFromDb();
         $expectedToken = hash('sha256', $secret . $payOrderId);
 
-        if (empty($expectedToken) || $token !== $expectedToken) {
+        if ($token !== $expectedToken) {
             return $this->jsonResponse([
                 'success' => false,
                 'message' => 'Forbidden: invalid token'

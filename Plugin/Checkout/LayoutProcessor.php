@@ -26,14 +26,12 @@ class LayoutProcessor
 
     /**
      * @param \Magento\Framework\View\Element\Template\Context $context
-     * @param \Magento\CheckoutAgreements\Model\ResourceModel\Agreement\CollectionFactory $agreementCollectionFactory
      * @param \Magento\Checkout\Model\Session $checkoutSession
      * @param \Magento\Customer\Model\AddressFactory $customerAddressFactory
      * @return void
      */
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
-        \Magento\CheckoutAgreements\Model\ResourceModel\Agreement\CollectionFactory $agreementCollectionFactory,
         \Magento\Checkout\Model\Session $checkoutSession,
         \Magento\Customer\Model\AddressFactory $customerAddressFactory
     ) {

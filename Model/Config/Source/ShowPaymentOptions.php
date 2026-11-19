@@ -4,7 +4,7 @@ namespace Paynl\Payment\Model\Config\Source;
 
 class ShowPaymentOptions extends PayOption
 {
-    public function __construct($options = array())
+    public function __construct()
     {
         parent::__construct([
             0 => __('Off'),

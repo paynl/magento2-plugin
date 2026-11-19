@@ -109,5 +109,6 @@ class SubtractInventoryObserver implements ObserverInterface
             $order->setInventoryProcessed(true)->save();
             return $this;
         }
+        return $this;
     }
 }

@@ -6,6 +6,10 @@ use Magento\Framework\Option\ArrayInterface;
 
 class FailoverGateways implements ArrayInterface
 {
+    public function __construct(private readonly MultiCoreOptions $multiCoreOptions)
+    {
+    }
+
     /**
      * Options getter
      *
@@ -29,7 +33,6 @@ class FailoverGateways implements ArrayInterface
      */
     public function toArray()
     {
-        $cores = \Paynl\Config::getCores();
-        return array_merge($cores, ['custom' => __('Custom')]);
+        return $this->multiCoreOptions->toArray();
     }
 }

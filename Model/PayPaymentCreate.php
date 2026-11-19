@@ -15,6 +15,7 @@ use PayNL\Sdk\Exception\PayException;
 use PayNL\Sdk\Config\Config;
 use PayNL\Sdk\Model\Products;
 use PayNL\Sdk\Model\Product as PayProduct;
+use PayNL\Sdk\Model\Stats;
 
 class PayPaymentCreate
 {
@@ -155,7 +156,7 @@ class PayPaymentCreate
     }
 
     /**
-     * @return void
+     * @return Stats
      */
     private function getStats()
     {
@@ -205,14 +206,9 @@ class PayPaymentCreate
         }
 
         $customer = $this->getCustomer();
-        if (!empty($customer)) {
-            $customer->setCompany($this->getCompany());
-            $this->request->setCustomer($customer);
-        }
-
-        if (!empty($productData)) {
-            $order->setProducts($productData);
-        }
+        $customer->setCompany($this->getCompany());
+        $this->request->setCustomer($customer);
+        $order->setProducts($productData);
 
         $this->request->setOrder($order);
         $this->request->setTestmode($this->testMode);

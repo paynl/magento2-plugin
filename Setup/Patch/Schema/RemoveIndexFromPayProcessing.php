@@ -33,6 +33,7 @@ class RemoveIndexFromPayProcessing implements SchemaPatchInterface
         }
 
         $this->schemaSetup->endSetup();
+        return $this;
     }
 
     public static function getDependencies()

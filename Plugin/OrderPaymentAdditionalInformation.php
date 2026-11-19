@@ -23,9 +23,7 @@ class OrderPaymentAdditionalInformation
             }
             if (empty($result['gender']) && $order->getCustomerGender()) {
                 $gender = $order->getCustomerGender();
-                if (!empty($gender)) {
-                    $result['gender'] = $gender;
-                }
+                $result['gender'] = $gender;
             }
         }
         return $result;

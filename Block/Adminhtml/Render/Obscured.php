@@ -89,6 +89,6 @@ class Obscured extends Field
         }
 
         $apiToken = trim((string) $this->scopeConfig->getValue($this->configPath, $scope, $scopeId));
-        return $apiToken ?? $this->getValue();
+        return $apiToken;
     }
 }

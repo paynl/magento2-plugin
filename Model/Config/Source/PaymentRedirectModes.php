@@ -6,7 +6,7 @@ use Paynl\Payment\Model\Config\Source\PayOption;
 
 class PaymentRedirectModes extends PayOption
 {
-    public function __construct($options = array())
+    public function __construct()
     {
         $options = [
             'get' => __('GET (Default)'),

@@ -42,19 +42,19 @@ class PayPaymentCreateFastCheckout extends PayPaymentCreate
      */
     public function __construct($methodInstance, $amount, $products, $baseUrl, $quoteId, $currency, $reservedOrderId)
     {
-        $fastCheckout = parent::__construct(null, $methodInstance);
+        parent::__construct(null, $methodInstance);
 
         $finishUrl = $baseUrl . 'paynl/checkout/finish/?entityid=fc';
         $exchangeUrl = $baseUrl . 'paynl/checkout/exchange/';
 
-        $fastCheckout->setAmount($amount/100);
-        $fastCheckout->setCurrency($currency);
-        $fastCheckout->setFinishURL($finishUrl);
-        $fastCheckout->setExchangeURL($exchangeUrl);
-        $fastCheckout->setProducts($products);
+        $this->setAmount($amount/100);
+        $this->setCurrency($currency);
+        $this->setFinishURL($finishUrl);
+        $this->setExchangeURL($exchangeUrl);
+        $this->setProducts($products);
 
-        $fastCheckout->reservedOrderId = $reservedOrderId;
-        $fastCheckout->reference = $quoteId;
+        $this->reservedOrderId = $reservedOrderId;
+        $this->reference = $quoteId;
     }
 
     /**

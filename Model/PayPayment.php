@@ -13,6 +13,7 @@ use Magento\Sales\Model\Service\CreditmemoService;
 use PayNL\Sdk\Model\Pay\PayOrder;
 use Magento\Sales\Model\Service\InvoiceService;
 use Magento\Sales\Api\InvoiceRepositoryInterface;
+use Magento\Sales\Model\ResourceModel\Order\Payment as OrderPaymentResource;
 
 class PayPayment
 {
@@ -109,7 +110,8 @@ class PayPayment
         UpdateCouponUsages $updateCouponUsages,
         PayHelper $payHelper,
         \Magento\Sales\Model\Order\CreditmemoFactory $cmFac,
-        \Magento\Sales\Model\Service\CreditmemoService $cmService
+        \Magento\Sales\Model\Service\CreditmemoService $cmService,
+        private readonly OrderPaymentResource $orderPaymentResource
     ) {
         $this->invoiceService = $invoiceService;
         $this->invoiceRepository = $invoiceRepository;
@@ -470,7 +472,7 @@ class PayPayment
         $transactionBuilder = $this->builderInterface->setPayment($payment)->setOrder($order)->setTransactionId($payOrder->getId())->setFailSafe(true)->build('capture');
         $payment->addTransactionCommentsToOrder($transactionBuilder, $transactionMessage);
         $payment->setParentTransactionId(null);
-        $payment->save();
+        $this->orderPaymentResource->save($payment);
         $transactionBuilder->save();
 
         # Change amount paid manually

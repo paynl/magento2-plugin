@@ -7,6 +7,8 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\CacheInterface;
 use Magento\Payment\Helper\Data as PaymentHelper;
 use Magento\Quote\Api\ShippingMethodManagementInterface;
+use Magento\Quote\Model\ResourceModel\Quote as QuoteResource;
+use Magento\Quote\Model\ResourceModel\Quote\Payment as QuotePaymentResource;
 use Magento\Store\Model\StoreManagerInterface;
 use Paynl\Payment\Helper\PayHelper;
 use Paynl\Payment\Model\PayPaymentCreateFastCheckout;
@@ -65,7 +67,9 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
         PayHelper $payHelper,
         StoreManagerInterface $storeManager,
         ShippingMethodManagementInterface $shippingMethodManagementInterface,
-        CacheInterface $cache
+        CacheInterface $cache,
+        private readonly QuoteResource $quoteResource,
+        private readonly QuotePaymentResource $quotePaymentResource
     ) {
         $this->cart = $cart;
         $this->paymentHelper = $paymentHelper;
@@ -74,7 +78,7 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
         $this->shippingMethodManagementInterface = $shippingMethodManagementInterface;
         $this->cache = $cache;
 
-        return parent::__construct($context);
+        parent::__construct($context);
     }
 
     /**
@@ -113,10 +117,11 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
         $billingAddress = $quote->getBillingAddress()->addData($dummyData);
         $shippingAddress = $quote->getShippingAddress()->addData($dummyData);
 
-        $quote->save();
+        $this->quoteResource->save($quote);
 
         if ($quote->getIsVirtual()) {
-            $quote->collectTotals()->save();
+            $quote->collectTotals();
+            $this->quoteResource->save($quote);
             return;
         }
 
@@ -154,7 +159,8 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
         }
 
         $shippingAddress->setShippingMethod($shippingMethod);
-        $quote->collectTotals()->save();
+        $quote->collectTotals();
+        $this->quoteResource->save($quote);
     }
 
     /**
@@ -223,6 +229,7 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
      */
     public function execute()
     {
+        $store = null;
         try {
             $methodInstance = $this->paymentHelper->getMethodInstance('paynl_payment_ideal');
             $store = $this->storeManager->getStore();
@@ -254,7 +261,7 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
 
             if (!empty($store->getConfig('payment/paynl_payment_ideal/fast_checkout_reserveOrderId')) && $store->getConfig('payment/paynl_payment_ideal/fast_checkout_reserveOrderId') == 1) { // phpcs:ignore
                 $quote->reserveOrderId();
-                $quote->save();
+                $this->quoteResource->save($quote);
             }
 
             $payOrder = (new PayPaymentCreateFastCheckout(
@@ -269,7 +276,9 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
 
             $this->payHelper->logDebug(__METHOD__ . ': Starting fc with order:' . $payOrder->getOrderId());
 
-            $quote->getPayment()->setAdditionalInformation('payOrderId', $payOrder->getOrderId())->save();
+            $quotePayment = $quote->getPayment();
+            $quotePayment->setAdditionalInformation('payOrderId', $payOrder->getOrderId());
+            $this->quotePaymentResource->save($quotePayment);
 
             $this->getResponse()->setNoCacheHeaders();
             $this->getResponse()->setRedirect($payOrder->getPaymentUrl());
@@ -285,7 +294,7 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
                 $this->payHelper->logCritical('FC ERROR: ' . $e->getMessage(), []);
             }
 
-            if ($store->getConfig('payment/paynl_payment_ideal/fast_checkout_use_fallback') == 1 && $e->getCode() == FastCheckoutStart::FC_SHIPPING_ERROR) {
+            if ($store && $store->getConfig('payment/paynl_payment_ideal/fast_checkout_use_fallback') == 1 && $e->getCode() == FastCheckoutStart::FC_SHIPPING_ERROR) {
                 $this->cacheShippingMethods();
                 $this->_redirect('paynl/checkout/fastcheckoutfallback');
             } else {

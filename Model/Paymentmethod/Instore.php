@@ -114,7 +114,7 @@ class Instore extends PaymentMethod
             $additionalData['payment_option'] = $terminalId;
 
             $order->getPayment()->setAdditionalInformation($additionalData);
-            $order->save();
+            $this->orderResource->save($order);
         } catch (\Exception $e) {
             $this->payHelper->logCritical($e->getMessage(), [], $store);
 
