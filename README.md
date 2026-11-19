@@ -9,7 +9,7 @@ For an overview off all features check https://docs.pay.nl/plugins#magento-2
 
 # Requirements
     Minimum PHP 8.1  
-    Maximum PHP 8.4  
+    Maximum PHP 8.5  
     Magento minimum version: 2.4.4
     Magento maximum version: 2.4.8  
 
