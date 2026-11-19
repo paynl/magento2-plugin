@@ -7,6 +7,8 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\CacheInterface;
 use Magento\Payment\Helper\Data as PaymentHelper;
 use Magento\Quote\Api\ShippingMethodManagementInterface;
+use Magento\Quote\Model\ResourceModel\Quote as QuoteResource;
+use Magento\Quote\Model\ResourceModel\Quote\Payment as QuotePaymentResource;
 use Magento\Store\Model\StoreManagerInterface;
 use Paynl\Payment\Helper\PayHelper;
 use Paynl\Payment\Model\PayPaymentCreateFastCheckout;
@@ -66,8 +68,8 @@ class FastCheckoutStart extends \Magento\Framework\App\Action\Action
         StoreManagerInterface $storeManager,
         ShippingMethodManagementInterface $shippingMethodManagementInterface,
         CacheInterface $cache,
-        private \Magento\Quote\Model\ResourceModel\Quote $quoteResource,
-        private \Magento\Quote\Model\ResourceModel\Quote\Payment $quotePaymentResource
+        private readonly QuoteResource $quoteResource,
+        private readonly QuotePaymentResource $quotePaymentResource
     ) {
         $this->cart = $cart;
         $this->paymentHelper = $paymentHelper;

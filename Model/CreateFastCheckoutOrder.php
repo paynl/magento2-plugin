@@ -4,13 +4,16 @@ namespace Paynl\Payment\Model;
 
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Model\CustomerFactory;
+use Magento\Customer\Model\ResourceModel\Customer as CustomerResource;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Quote\Api\ShippingMethodManagementInterface;
 use Magento\Quote\Model\QuoteFactory;
 use Magento\Quote\Model\QuoteManagement;
+use Magento\Quote\Model\ResourceModel\Quote as QuoteResource;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\OrderFactory;
+use Magento\Sales\Model\ResourceModel\Order as OrderResource;
 use Magento\Store\Model\StoreManagerInterface;
 use Paynl\Payment\Helper\PayHelper;
 use PayNL\Sdk\Model\Pay\PayLoad;
@@ -95,9 +98,9 @@ class CreateFastCheckoutOrder
         OrderRepositoryInterface $orderRepositoryInterface,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         PayHelper $payHelper,
-        private \Magento\Quote\Model\ResourceModel\Quote $quoteResource,
-        private \Magento\Customer\Model\ResourceModel\Customer $customerResource,
-        private \Magento\Sales\Model\ResourceModel\Order $orderResource
+        private readonly QuoteResource $quoteResource,
+        private readonly CustomerResource $customerResource,
+        private readonly OrderResource $orderResource
     ) {
         $this->storeManager = $storeManager;
         $this->quote = $quote;

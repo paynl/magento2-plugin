@@ -7,6 +7,7 @@ use Magento\Backend\Block\Template\Context;
 use Magento\Backend\Model\Url as BackendUrl;
 use Magento\Framework\App\CacheInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\OrderRepository;
 use Magento\Store\Model\Store;
 use Magento\Store\Model\StoreManagerInterface;
@@ -131,7 +132,7 @@ class CardRefundForm extends Template
     }
 
     /**
-     * @return \Magento\Sales\Api\Data\OrderInterface|null
+     * @return OrderInterface|null
      */
     public function getOrder()
     {

@@ -6,6 +6,7 @@ use Magento\Framework\Api\AttributeValueFactory;
 use Magento\Framework\Api\ExtensionAttributesFactory;
 use Magento\Framework\App\CacheInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\Locale\Resolver;
 use Magento\Framework\Mail\Template\TransportBuilder;
@@ -21,6 +22,7 @@ use Magento\Payment\Model\Method\Logger;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderRepository;
 use Magento\Sales\Model\Order\Address\Renderer;
+use Magento\Sales\Model\ResourceModel\Order as OrderResource;
 use Magento\Store\Model\StoreManagerInterface;
 use Paynl\Payment\Helper\PayHelper;
 use Paynl\Payment\Model\Config;
@@ -113,10 +115,7 @@ abstract class PaymentMethod extends AbstractMethod
      */
     public $transportBuilder;
 
-    /**
-     * @var \Magento\Sales\Model\ResourceModel\Order
-     */
-    protected $orderResource;
+    protected readonly OrderResource $orderResource;
 
     /**
      * PaymentMethod constructor.
@@ -142,7 +141,7 @@ abstract class PaymentMethod extends AbstractMethod
      * @param \Magento\Framework\Model\ResourceModel\AbstractResource $resource
      * @param \Magento\Framework\Data\Collection\AbstractDb $resourceCollection
      * @param array $data
-     * @param \Magento\Sales\Model\ResourceModel\Order|null $orderResource
+     * @param OrderResource|null $orderResource
      */
     public function __construct(
         Context $context,
@@ -166,7 +165,7 @@ abstract class PaymentMethod extends AbstractMethod
         ?\Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         ?\Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = [],
-        ?\Magento\Sales\Model\ResourceModel\Order $orderResource = null
+        ?OrderResource $orderResource = null
     ) {
         parent::__construct(
             $context,
@@ -193,8 +192,8 @@ abstract class PaymentMethod extends AbstractMethod
         $this->getLocale = $getLocale;
         $this->addressRenderer = $addressRenderer;
         $this->transportBuilder = $transportBuilder;
-        $this->orderResource = $orderResource ?? \Magento\Framework\App\ObjectManager::getInstance()
-            ->get(\Magento\Sales\Model\ResourceModel\Order::class);
+        $this->orderResource = $orderResource ?? ObjectManager::getInstance()
+            ->get(OrderResource::class);
     }
 
     /**

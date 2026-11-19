@@ -6,7 +6,7 @@ use Magento\Framework\Option\ArrayInterface;
 
 class FailoverGateways implements ArrayInterface
 {
-    public function __construct(private MultiCoreOptions $multiCoreOptions)
+    public function __construct(private readonly MultiCoreOptions $multiCoreOptions)
     {
     }
 

@@ -15,6 +15,7 @@ use PayNL\Sdk\Exception\PayException;
 use PayNL\Sdk\Config\Config;
 use PayNL\Sdk\Model\Products;
 use PayNL\Sdk\Model\Product as PayProduct;
+use PayNL\Sdk\Model\Stats;
 
 class PayPaymentCreate
 {
@@ -155,7 +156,7 @@ class PayPaymentCreate
     }
 
     /**
-     * @return \PayNL\Sdk\Model\Stats
+     * @return Stats
      */
     private function getStats()
     {

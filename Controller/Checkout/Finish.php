@@ -7,6 +7,7 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\Event\ManagerInterface;
 use Magento\Quote\Model\QuoteFactory;
 use Magento\Quote\Model\QuoteRepository;
+use Magento\Quote\Model\ResourceModel\Quote as QuoteResource;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderRepository;
 use Paynl\Payment\Controller\PayAction;
@@ -81,7 +82,7 @@ class Finish extends PayAction
         ManagerInterface $eventManager,
         QuoteFactory $quoteFactory,
         \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
-        private \Magento\Quote\Model\ResourceModel\Quote $quoteResource
+        private readonly QuoteResource $quoteResource
     ) {
         $this->config = $config;
         $this->checkoutSession = $checkoutSession;

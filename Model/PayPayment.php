@@ -13,6 +13,7 @@ use Magento\Sales\Model\Service\CreditmemoService;
 use PayNL\Sdk\Model\Pay\PayOrder;
 use Magento\Sales\Model\Service\InvoiceService;
 use Magento\Sales\Api\InvoiceRepositoryInterface;
+use Magento\Sales\Model\ResourceModel\Order\Payment as OrderPaymentResource;
 
 class PayPayment
 {
@@ -110,7 +111,7 @@ class PayPayment
         PayHelper $payHelper,
         \Magento\Sales\Model\Order\CreditmemoFactory $cmFac,
         \Magento\Sales\Model\Service\CreditmemoService $cmService,
-        private \Magento\Sales\Model\ResourceModel\Order\Payment $orderPaymentResource
+        private readonly OrderPaymentResource $orderPaymentResource
     ) {
         $this->invoiceService = $invoiceService;
         $this->invoiceRepository = $invoiceRepository;
