@@ -114,6 +114,11 @@ abstract class PaymentMethod extends AbstractMethod
     public $transportBuilder;
 
     /**
+     * @var \Magento\Sales\Model\ResourceModel\Order
+     */
+    protected $orderResource;
+
+    /**
      * PaymentMethod constructor.
      *
      * @param \Magento\Framework\App\Action\Context $context
@@ -137,6 +142,7 @@ abstract class PaymentMethod extends AbstractMethod
      * @param \Magento\Framework\Model\ResourceModel\AbstractResource $resource
      * @param \Magento\Framework\Data\Collection\AbstractDb $resourceCollection
      * @param array $data
+     * @param \Magento\Sales\Model\ResourceModel\Order|null $orderResource
      */
     public function __construct(
         Context $context,
@@ -157,10 +163,10 @@ abstract class PaymentMethod extends AbstractMethod
         Resolver $getLocale,
         Renderer $addressRenderer,
         TransportBuilder $transportBuilder,
-        protected \Magento\Sales\Model\ResourceModel\Order $orderResource,
         ?\Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         ?\Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
-        array $data = []
+        array $data = [],
+        ?\Magento\Sales\Model\ResourceModel\Order $orderResource = null
     ) {
         parent::__construct(
             $context,
@@ -187,6 +193,8 @@ abstract class PaymentMethod extends AbstractMethod
         $this->getLocale = $getLocale;
         $this->addressRenderer = $addressRenderer;
         $this->transportBuilder = $transportBuilder;
+        $this->orderResource = $orderResource ?? \Magento\Framework\App\ObjectManager::getInstance()
+            ->get(\Magento\Sales\Model\ResourceModel\Order::class);
     }
 
     /**

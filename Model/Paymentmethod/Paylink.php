@@ -74,13 +74,6 @@ class Paylink extends PaymentMethod
                 try {
                     $customerEmail = [$order->getCustomerEmail()];
 
-                    if (empty($customerEmail[0])) {
-                        # Can't send email without customer email so add paylink as a comment instead.
-                        $order->addStatusHistoryComment(__('Pay.: customer e-mail is empty, cannot send e-mail'), $status)->save();
-                        $this->addPaylinkComment($order, $url, $status);
-                        return false;
-                    }
-
                     $supportEmail = $this->_scopeConfig->getValue('trans_email/ident_support/email', 'store', $storeId);
                     $senderName = $this->_scopeConfig->getValue('trans_email/ident_sales/name', 'store', $storeId);
                     $senderEmail = $this->_scopeConfig->getValue('trans_email/ident_sales/email', 'store', $storeId);
