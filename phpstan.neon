@@ -14,3 +14,5 @@ parameters:
         -
             message: '#^Attribute class PHPUnit\\Framework\\Attributes\\\w+ does not exist\.$#'
             path: Test/*
+        -
+            message: '#^Class .+ extends @final class Monolog\\Logger\.$#'
