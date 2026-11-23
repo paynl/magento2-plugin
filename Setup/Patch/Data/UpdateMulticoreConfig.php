@@ -33,6 +33,7 @@ class UpdateMulticoreConfig implements DataPatchInterface
             $secret = bin2hex(random_bytes(32)); // 64 random chars
             $this->configWriter->save('payment/paynl/process_secret', $secret, Scope::SCOPE_TYPE_DEFAULT, 0);
         }
+        return $this;
     }
 
     public static function getDependencies()

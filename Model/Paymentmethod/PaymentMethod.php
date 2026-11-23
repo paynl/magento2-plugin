@@ -6,6 +6,7 @@ use Magento\Framework\Api\AttributeValueFactory;
 use Magento\Framework\Api\ExtensionAttributesFactory;
 use Magento\Framework\App\CacheInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\Locale\Resolver;
 use Magento\Framework\Mail\Template\TransportBuilder;
@@ -21,6 +22,7 @@ use Magento\Payment\Model\Method\Logger;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderRepository;
 use Magento\Sales\Model\Order\Address\Renderer;
+use Magento\Sales\Model\ResourceModel\Order as OrderResource;
 use Magento\Store\Model\StoreManagerInterface;
 use Paynl\Payment\Helper\PayHelper;
 use Paynl\Payment\Model\Config;
@@ -113,6 +115,8 @@ abstract class PaymentMethod extends AbstractMethod
      */
     public $transportBuilder;
 
+    protected readonly OrderResource $orderResource;
+
     /**
      * PaymentMethod constructor.
      *
@@ -137,6 +141,7 @@ abstract class PaymentMethod extends AbstractMethod
      * @param \Magento\Framework\Model\ResourceModel\AbstractResource $resource
      * @param \Magento\Framework\Data\Collection\AbstractDb $resourceCollection
      * @param array $data
+     * @param OrderResource|null $orderResource
      */
     public function __construct(
         Context $context,
@@ -159,7 +164,8 @@ abstract class PaymentMethod extends AbstractMethod
         TransportBuilder $transportBuilder,
         ?\Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         ?\Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
-        array $data = []
+        array $data = [],
+        ?OrderResource $orderResource = null
     ) {
         parent::__construct(
             $context,
@@ -186,6 +192,8 @@ abstract class PaymentMethod extends AbstractMethod
         $this->getLocale = $getLocale;
         $this->addressRenderer = $addressRenderer;
         $this->transportBuilder = $transportBuilder;
+        $this->orderResource = $orderResource ?? ObjectManager::getInstance()
+            ->get(OrderResource::class);
     }
 
     /**
@@ -412,6 +420,7 @@ abstract class PaymentMethod extends AbstractMethod
      */
     public function getTerminals()
     {
+        $store = $this->storeManager->getStore();
         $this->paynlConfig->setStore($store);
 
         if (!$this->paynlConfig->isPaymentMethodActive('paynl_payment_instore')) {
@@ -541,6 +550,7 @@ abstract class PaymentMethod extends AbstractMethod
      */
     public function capture(InfoInterface $payment, $amount)
     {
+        $order = null;
         $payOrderId = $payment->getParentTransactionId();
         $this->payHelper->logDebug('Paymentmethod:capture() ' . ($payOrderId ?? 'empty'));
 
@@ -550,7 +560,7 @@ abstract class PaymentMethod extends AbstractMethod
             try {
                 $payment->setAdditionalInformation('manual_capture', 'true');
                 $order = $payment->getOrder();
-                $order->save();
+                $this->orderResource->save($order);
                 $this->paynlConfig->setStore($order->getStore());
 
                 $orderCaptureRequest = new OrderCaptureRequest($payOrderId);
@@ -559,7 +569,7 @@ abstract class PaymentMethod extends AbstractMethod
 
             } catch (\Exception $e) {
                 $message = strtolower($e->getMessage());
-                $this->payHelper->logCritical('Pay. could not process capture (' . $message . '). Transaction: ' . $payOrderId . '. OrderId: ' . $order->getIncrementId());
+                $this->payHelper->logCritical('Pay. could not process capture (' . $message . '). Transaction: ' . $payOrderId . '. OrderId: ' . ($order ? $order->getIncrementId() : ''));
             }
         }
         return $this;
@@ -571,6 +581,7 @@ abstract class PaymentMethod extends AbstractMethod
      */
     public function void(InfoInterface $payment)
     {
+        $order = null;
         $transactionId = $payment->getParentTransactionId();
 
         if (empty($transactionId)) {
@@ -586,7 +597,7 @@ abstract class PaymentMethod extends AbstractMethod
 
             } catch (\Exception $e) {
                 $message = strtolower($e->getMessage());
-                $this->payHelper->logCritical('Pay. could not process void (' . $message . '). Transaction: ' . $transactionId . '. OrderId: ' . $order->getIncrementId());
+                $this->payHelper->logCritical('Pay. could not process void (' . $message . '). Transaction: ' . $transactionId . '. OrderId: ' . ($order ? $order->getIncrementId() : ''));
             }
         }
         return $this;

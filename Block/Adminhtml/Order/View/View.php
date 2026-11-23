@@ -49,6 +49,7 @@ class View extends Template
         $params = $this->getRequest()->getParams();
         $orderId = isset($params['order_id']) ? $params['order_id'] : null;
 
+        $getPayment = null;
         try {
             $order = $this->orderRepository->get($orderId);
             $getPayment = $order->getPayment();

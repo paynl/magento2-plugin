@@ -17,7 +17,7 @@ class FastCheckoutFallback extends \Magento\Framework\App\Action\Action
         \Magento\Framework\View\Result\PageFactory $pageFactory
     ) {
         $this->_pageFactory = $pageFactory;
-        return parent::__construct($context);
+        parent::__construct($context);
     }
 
     /**

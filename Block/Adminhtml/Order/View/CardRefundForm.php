@@ -7,6 +7,7 @@ use Magento\Backend\Block\Template\Context;
 use Magento\Backend\Model\Url as BackendUrl;
 use Magento\Framework\App\CacheInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Model\OrderRepository;
 use Magento\Store\Model\Store;
 use Magento\Store\Model\StoreManagerInterface;
@@ -93,7 +94,7 @@ class CardRefundForm extends Template
 
             if (is_array($terminals)) {
                 foreach ($terminals as $terminal) {
-                    array_push($terminalsArr, [
+                    array_push($terminalArr, [
                             'name' => $terminal['name'],
                             'visibleName' => $terminal['name'],
                             'id' => $terminal['code'],
@@ -131,11 +132,13 @@ class CardRefundForm extends Template
     }
 
     /**
-     * @return \Magento\Sales\Api\Data\OrderInterface
+     * @return OrderInterface|null
      */
     public function getOrder()
     {
+        $params = $this->getRequest()->getParams();
         $orderId = $this->getOrderId();
+        $order = null;
         try {
             $order = $this->orderRepository->get($orderId);
         } catch (\Exception $e) {

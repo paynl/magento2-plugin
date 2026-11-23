@@ -54,6 +54,7 @@ class RenameCartebleue implements DataPatchInterface
         );
 
         $this->moduleDataSetup->endSetup();
+        return $this;
     }
 
     /**

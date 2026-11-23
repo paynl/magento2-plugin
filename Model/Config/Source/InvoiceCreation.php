@@ -6,7 +6,7 @@ use Magento\Framework\Option\ArrayInterface;
 
 class InvoiceCreation extends PayOption
 {
-    public function __construct($options = array())
+    public function __construct()
     {
         parent::__construct([
             '0' => __('Create invoice upon payment (default)'),

@@ -4,13 +4,16 @@ namespace Paynl\Payment\Model;
 
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Model\CustomerFactory;
+use Magento\Customer\Model\ResourceModel\Customer as CustomerResource;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Quote\Api\ShippingMethodManagementInterface;
 use Magento\Quote\Model\QuoteFactory;
 use Magento\Quote\Model\QuoteManagement;
+use Magento\Quote\Model\ResourceModel\Quote as QuoteResource;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\OrderFactory;
+use Magento\Sales\Model\ResourceModel\Order as OrderResource;
 use Magento\Store\Model\StoreManagerInterface;
 use Paynl\Payment\Helper\PayHelper;
 use PayNL\Sdk\Model\Pay\PayLoad;
@@ -94,7 +97,10 @@ class CreateFastCheckoutOrder
         ShippingMethodManagementInterface $shippingMethodManagementInterface,
         OrderRepositoryInterface $orderRepositoryInterface,
         SearchCriteriaBuilder $searchCriteriaBuilder,
-        PayHelper $payHelper
+        PayHelper $payHelper,
+        private readonly QuoteResource $quoteResource,
+        private readonly CustomerResource $customerResource,
+        private readonly OrderResource $orderResource
     ) {
         $this->storeManager = $storeManager;
         $this->quote = $quote;
@@ -147,7 +153,7 @@ class CreateFastCheckoutOrder
                 if (empty($existingOrder)) {
                     $this->payHelper->logDebug('Fast checkout: Reactivating quote', ['quoteId' => $quoteId]);
                     $quote->setIsActive(true);
-                    $quote->save();
+                    $this->quoteResource->save($quote);
                 } else {
                     return $existingOrder;
                 }
@@ -172,7 +178,7 @@ class CreateFastCheckoutOrder
                     ->setLastname($customerData['lastName'])
                     ->setEmail($email)
                     ->setPassword(bin2hex(random_bytes(32)));
-                $customer->save();
+                $this->customerResource->save($customer);
             }
 
             $customer = $this->customerRepository->getById($customer->getEntityId());
@@ -259,11 +265,12 @@ class CreateFastCheckoutOrder
 
             $quote->setPaymentMethod('paynl_payment_ideal');
             $quote->setInventoryProcessed(false);
-            $quote->save();
+            $this->quoteResource->save($quote);
 
             # Set Sales Order Payment
             $quote->getPayment()->importData(['method' => 'paynl_payment_ideal']);
-            $quote->collectTotals()->save();
+            $quote->collectTotals();
+            $this->quoteResource->save($quote);
 
             $service = $this->quoteManagement->submit($quote);
             $increment_id = $service->getRealOrderId();
@@ -273,7 +280,7 @@ class CreateFastCheckoutOrder
             $additionalData = $order->getPayment()->getAdditionalInformation();
             $additionalData['transactionId'] = $payOrderId;
             $order->getPayment()->setAdditionalInformation($additionalData);
-            $order->save();
+            $this->orderResource->save($order);
             $this->payHelper->logDebug('Fast checkout: Created order_id', [$order->getId()]);
 
             $order->addStatusHistoryComment(__('PAY. - Created iDEAL Fast Checkout order'))->save();
@@ -285,7 +292,7 @@ class CreateFastCheckoutOrder
             throw new \Exception("Exception on create. " . $e->getMessage());
         }
         if (empty($order)) {
-            $this->payHelper->logCritical('Fast checkout: Both order & quote not found', ['quoteId' => $quoteId, 'searchCriteria' => $searchCriteria, 'searchResult' => $searchResult]);
+            $this->payHelper->logCritical('Fast checkout: Both order & quote not found', ['quoteId' => $quoteId]);
             throw new \Exception("Order & Quote can't be found. " . $quoteId, 404);
         }
         return $order;
