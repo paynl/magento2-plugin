@@ -11,6 +11,7 @@ use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderRepository;
 use Paynl\Payment\Controller\PayAction;
 use Paynl\Payment\Helper\PayHelper;
+use Paynl\Payment\Model\Checkout\ReturnParams;
 use Paynl\Payment\Model\Config;
 use PayNL\Sdk\Exception\PayException;
 use PayNL\Sdk\Model\Method;
@@ -107,7 +108,7 @@ class Finish extends PayAction
             $additionalInformation = $order->getPayment()->getAdditionalInformation();
             $transactionId = (isset($additionalInformation['transactionId'])) ? $additionalInformation['transactionId'] : null;
 
-            if ($orderId == $transactionId || !empty($emptyOrder)) {
+            if (ReturnParams::transactionMatches($transactionId, $orderId) || !empty($emptyOrder)) {
                 $this->checkoutSession->setLastQuoteId($order->getQuoteId())
                     ->setLastSuccessQuoteId($order->getQuoteId())
                     ->setLastOrderId($order->getId())
@@ -181,12 +182,13 @@ class Finish extends PayAction
     {
         $resultRedirect = $this->resultRedirectFactory->create();
         $params = $this->getRequest()->getParams();
-        $payOrderId = $params['id'] ?? null;
-        $statusAction = $params['statusAction'] ?? null;
+        $payOrderId = ReturnParams::getString($params, 'id');
+        $statusAction = ReturnParams::getString($params, 'statusAction');
 
-        $orderStatusId = empty($params['statusCode']) ? null : (int)$params['statusCode'];
+        $statusCode = ReturnParams::getScalar($params, 'statusCode');
+        $orderStatusId = empty($statusCode) ? null : (int)$statusCode;
 
-        $entityid = $params['entityid'] ?? null;
+        $entityid = ReturnParams::getScalar($params, 'entityid');
         $orderIds = empty($params['order_ids']) ? null : $params['order_ids'];
         $pickupMode = !empty($params['pickup']);
         $invoice = !empty($params['invoice']);
@@ -222,7 +224,7 @@ class Finish extends PayAction
             $payment = $order->getPayment();
             $information = $payment->getAdditionalInformation();
 
-            $this->checkEmpty(($information['transactionId'] ?? null) == $payOrderId, '', 1014, 'transaction mismatch');
+            $this->checkEmpty(ReturnParams::transactionMatches($information['transactionId'] ?? null, $payOrderId), '', 1014, 'transaction mismatch');
 
             if (($information['pintrans'] ?? false) === true) {
                 $bPending = false;
